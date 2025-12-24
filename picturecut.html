@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片剪裁工具 - 700×808像素</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 30px;
+            border-right: 1px solid #eee;
+        }
+
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            padding-left: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .upload-area {
+            border: 3px dashed #6a11cb;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #f9f9ff;
+            margin-bottom: 25px;
+        }
+
+        .upload-area:hover {
+            background-color: #f0f2ff;
+            border-color: #2575fc;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .upload-hint {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin-bottom: 25px;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            display: none;
+        }
+
+        .dimensions-info {
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #2575fc;
+        }
+
+        .dimensions-info h3 {
+            color: #2575fc;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .dimensions-info p {
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #6a11cb;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #5809b5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: #6a11cb;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .upload-section, .preview-section {
+                padding: 0;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 30px;
+                margin-bottom: 30px;
+            }
+
+            .preview-section {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1><i class="fas fa-crop-alt"></i> 图片剪裁工具</h1>
+        <p class="subtitle">上传图片后自动剪裁为700×808像素，并下载为JPG格式</p>
+    </header>
+
+    <div class="main-content">
+        <div class="upload-section">
+            <h2 class="section-title"><i class="fas fa-cloud-upload-alt"></i> 上传图片</h2>
+
+            <div class="dimensions-info">
+                <h3><i class="fas fa-ruler-combined"></i> 目标尺寸</h3>
+                <p><strong>宽度:</strong> 700像素</p>
+                <p><strong>高度:</strong> 808像素</p>
+                <p><strong>格式:</strong> JPG (高质量)</p>
+            </div>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-file-image"></i>
+                </div>
+                <p class="upload-text">点击选择或拖拽图片到此处</p>
+                <p class="upload-hint">支持 JPG, PNG, GIF, BMP 格式</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在处理图片...</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="resetBtn" disabled>
+                    <i class="fas fa-redo"></i> 重置
+                </button>
+                <button class="btn btn-primary" id="cropBtn" disabled>
+                    <i class="fas fa-crop"></i> 剪裁并下载
+                </button>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h2 class="section-title"><i class="fas fa-eye"></i> 预览</h2>
+
+            <div class="preview-container">
+                <img id="originalPreview" class="preview-image" alt="原始图片预览">
+                <img id="croppedPreview" class="preview-image" alt="剪裁后图片预览">
+                <p id="previewPlaceholder">剪裁后的图片将在此处显示</p>
+            </div>
+
+            <div class="dimensions-info">
+                <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+                <p>1. 点击上传区域选择图片文件</p>
+                <p>2. 图片将自动调整为700×808像素</p>
+                <p>3. 剪裁将保持原始图片的宽高比，可能会填充空白区域</p>
+                <p>4. 点击"剪裁并下载"按钮保存为JPG格式</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>图片剪裁工具 &copy; 2023 | 输出尺寸: 700×808像素 | 格式: JPG</p>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取DOM元素
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const originalPreview = document.getElementById('originalPreview');
+        const croppedPreview = document.getElementById('croppedPreview');
+        const previewPlaceholder = document.getElementById('previewPlaceholder');
+        const cropBtn = document.getElementById('cropBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const loading = document.getElementById('loading');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // 目标尺寸
+        const TARGET_WIDTH = 700;
+        const TARGET_HEIGHT = 808;
+
+        let originalImage = null;
+
+        // 点击上传区域触发文件输入
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // 拖拽上传功能
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#2575fc';
+            uploadArea.style.backgroundColor = '#f0f2ff';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#6a11cb';
+            uploadArea.style.backgroundColor = '#f9f9ff';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#6a11cb';
+            uploadArea.style.backgroundColor = '#f9f9ff';
+
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect(e);
+            }
+        });
+
+        // 文件选择处理
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // 检查文件类型
+            if (!file.type.match('image.*')) {
+                showMessage('请选择图片文件 (JPG, PNG, GIF, BMP)', 'error');
+                return;
+            }
+
+            // 显示加载状态
+            showLoading(true);
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                originalImage = new Image();
+
+                originalImage.onload = function() {
+                    // 显示原始图片预览
+                    originalPreview.src = event.target.result;
+                    originalPreview.style.display = 'block';
+                    croppedPreview.style.display = 'none';
+                    previewPlaceholder.style.display = 'none';
+
+                    // 启用按钮
+                    cropBtn.disabled = false;
+                    resetBtn.disabled = false;
+
+                    // 隐藏加载状态
+                    showLoading(false);
+
+                    showMessage('图片上传成功！点击"剪裁并下载"按钮处理图片', 'success');
+                };
+
+                originalImage.onerror = function() {
+                    showLoading(false);
+                    showMessage('图片加载失败，请尝试其他图片', 'error');
+                };
+
+                originalImage.src = event.target.result;
+            };
+
+            reader.onerror = function() {
+                showLoading(false);
+                showMessage('文件读取失败，请重试', 'error');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // 剪裁并下载图片
+        cropBtn.addEventListener('click', function() {
+            if (!originalImage) return;
+
+            showLoading(true);
+
+            // 创建Canvas进行剪裁
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // 设置目标尺寸
+            canvas.width = TARGET_WIDTH;
+            canvas.height = TARGET_HEIGHT;
+
+            // 计算图片缩放和位置，保持宽高比并填满整个区域
+            const imgRatio = originalImage.width / originalImage.height;
+            const targetRatio = TARGET_WIDTH / TARGET_HEIGHT;
+
+            let drawWidth, drawHeight, offsetX, offsetY;
+
+            if (imgRatio > targetRatio) {
+                // 图片更宽，以高度为基准
+                drawHeight = TARGET_HEIGHT;
+                drawWidth = originalImage.width * (TARGET_HEIGHT / originalImage.height);
+                offsetX = (TARGET_WIDTH - drawWidth) / 2;
+                offsetY = 0;
+            } else {
+                // 图片更高，以宽度为基准
+                drawWidth = TARGET_WIDTH;
+                drawHeight = originalImage.height * (TARGET_WIDTH / originalImage.width);
+                offsetX = 0;
+                offsetY = (TARGET_HEIGHT - drawHeight) / 2;
+            }
+
+            // 填充背景色（白色）
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+
+            // 绘制图片
+            ctx.drawImage(originalImage, offsetX, offsetY, drawWidth, drawHeight);
+
+            // 显示剪裁后的预览
+            croppedPreview.src = canvas.toDataURL('image/jpeg', 0.95);
+            originalPreview.style.display = 'none';
+            croppedPreview.style.display = 'block';
+            previewPlaceholder.style.display = 'none';
+
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.download = `cropped-image-${TARGET_WIDTH}x${TARGET_HEIGHT}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+
+            // 隐藏加载状态
+            showLoading(false);
+
+            showMessage(`图片已成功剪裁为${TARGET_WIDTH}×${TARGET_HEIGHT}像素并下载为JPG格式`, 'success');
+        });
+
+        // 重置功能
+        resetBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            originalPreview.src = '';
+            originalPreview.style.display = 'none';
+            croppedPreview.src = '';
+            croppedPreview.style.display = 'none';
+            previewPlaceholder.style.display = 'block';
+            cropBtn.disabled = true;
+            resetBtn.disabled = true;
+            originalImage = null;
+            hideMessage();
+        });
+
+        // 显示/隐藏加载状态
+        function showLoading(show) {
+            loading.style.display = show ? 'block' : 'none';
+            cropBtn.disabled = show;
+        }
+
+        // 显示状态消息
+        function showMessage(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+
+            // 5秒后自动隐藏消息
+            setTimeout(hideMessage, 5000);
+        }
+
+        // 隐藏状态消息
+        function hideMessage() {
+            statusMessage.style.display = 'none';
+        }
+
+        // 初始显示使用说明
+        showMessage('请上传图片进行剪裁处理，目标尺寸：700×808像素，输出格式：JPG', 'success');
+    });
+</script>
+</body>
+</html>

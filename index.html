@@ -514,7 +514,7 @@
                 <i class="fas fa-toolbox"></i>
             </div>
             <div class="logo-text">
-                <h1>舞立方自制谱谱师工具</h1>
+                <h1>舞立方自制谱谱师工具（持续更新）</h1>
                 <p>本页面工具已经测试，如有bug请联系：miqimiaomiaowushi@163.com</p>
             </div>
         </div>
@@ -596,13 +596,24 @@
         {
             id: 1,
             name: "txt转mc/mcz",
-            category: "editor",
+            category: "change",
             description: "将txt文件转换为mc文件，并且支持打包为mcz文件",
             icon: "fas fa-music",
             iconColor: "#6a11cb",
             featured: true,
             features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包", "如果偏移不准请在游戏内重新测试"],
             url: "../txt-mc.html" // 替换为实际链接
+        },
+        {
+            id: 2,
+            name: "歌曲封面剪裁",
+            category: "cut",
+            description: "将图片裁剪为可上传大小",
+            icon: "fas fa-image",
+            iconColor: "#6a11cb",
+            featured: true,
+            features: ["自动裁剪", "jpg格式", "直接下载"],
+            url: "../picturecut.html" // 替换为实际链接
         }
     ];
 
@@ -656,7 +667,7 @@
                         <h3>${tool.name}</h3>
                         <p>${getCategoryName(tool.category)}</p>
                     </div>
-                    ${tool.featured ? '<div class="tool-badge featured-badge">特色</div>' : ''}
+                    ${tool.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}
                     ${tool.new ? '<div class="tool-badge new-badge">新</div>' : ''}
                 </div>
                 <div class="tool-description">
@@ -778,7 +789,8 @@
     // 获取分类名称
     function getCategoryName(category) {
         const categoryNames = {
-            'editor': '转换工具',
+            'change': '转换工具',
+            'cut': '剪裁工具',
         };
         return categoryNames[category] || '其他工具';
     }

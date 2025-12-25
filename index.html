@@ -548,7 +548,7 @@
 
     <!-- 底部区域 -->
     <footer class="footer">
-        <p>© 2026 舞立方自制谱师工具 | 本页面由 妙妙 进行开发 | 源码公开免费给大家使用 </p>
+        <p>2025 舞立方自制谱师工具 | 本页面由 Mouseke 进行开发 | 源码公开免费给大家使用 </p>
     </footer>
 </div>
 
@@ -648,6 +648,17 @@
             new: true,
             features: ["自动转换ncm文件", "多文件转换", "直接下载", "仅供学习"],
             url: "../ncmexchange.html"
+        },
+        {
+            id: 6,
+            name: "mc/mcz转txt",
+            category: "exchange",
+            description: "将mc/mcz文件转换为mc文件，并且支持打包为zip文件",
+            icon: "fas fa-right-left",
+            iconColor: "#e600ff",
+            new: true,
+            features: ["自动转换", "不同小节转换", "自动打包zip", "支持自动解包", "包含变速转换","支持自动下载","自动生成上传数据文本文件","禁止导入官方制谱器，否则后果自负"],
+            url: "../mc-txt.html"
         }
     ];
 
@@ -703,6 +714,7 @@
                     </div>
                     ${tool.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}
                     ${tool.new ? '<div class="tool-badge new-badge">新</div>' : ''}
+                    ${tool.second ? '<div class="tool-badge new-badge">更新</div>' : ''}
                 </div>
                 <div class="tool-description">
                     ${tool.description}

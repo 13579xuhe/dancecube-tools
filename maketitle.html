@@ -1952,6 +1952,55 @@
             handleScroll();
         }, 100);
     });
+
+    //禁止右键
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        console.log('右键已被禁用');
+        return false;
+    });
+
+    // 禁止选择文本（可选，防止用户复制内容）
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // 禁止拖拽图片（可选，防止用户拖拽保存图片）
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // 禁止F12开发者工具（简单版本，但容易被绕过）
+    document.addEventListener('keydown', function(e) {
+        // 禁用F12
+        if (e.key === 'F12') {
+            e.preventDefault();
+            console.log('F12已被禁用');
+            return false;
+        }
+        // 禁用Ctrl+Shift+I (Chrome开发者工具)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            console.log('Ctrl+Shift+I已被禁用');
+            return false;
+        }
+        // 禁用Ctrl+Shift+J (Chrome控制台)
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+            e.preventDefault();
+            console.log('Ctrl+Shift+J已被禁用');
+            return false;
+        }
+        // 禁用Ctrl+U (查看源代码)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            console.log('Ctrl+U已被禁用');
+            return false;
+        }
+    });
 </script>
 </body>
 </html>

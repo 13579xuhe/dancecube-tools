@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>谱面设计图片生成器 - 384x128</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 初始预览区域 */
+        #initialPreview {
+            padding: 25px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* 吸附的预览区域 */
+        .sticky-preview {
+            position: fixed;
+            top: -200px;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: top 0.3s ease;
+        }
+
+        .sticky-preview.active {
+            top: 0;
+        }
+
+        .sticky-preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            color: #fad0c4;
+            font-weight: bold;
+        }
+
+        .preview-badges {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dimension-badge {
+            display: inline-block;
+            background: rgba(255, 154, 158, 0.2);
+            color: #ff9a9e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 154, 158, 0.3);
+        }
+
+        .effects-badge {
+            display: inline-block;
+            background: rgba(74, 144, 226, 0.2);
+            color: #4a90e2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        .sticker-badge {
+            display: inline-block;
+            background: rgba(154, 255, 158, 0.2);
+            color: #9aff9e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(154, 255, 158, 0.3);
+        }
+
+        .image-container {
+            width: 384px;
+            height: 128px;
+            background:
+                    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05)),
+                    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05));
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+
+        .preview-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0c0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editor-panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fad0c4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #b0b0d0;
+        }
+
+        .label-with-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .value-display {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #fad0c4;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff9a9e;
+            box-shadow: 0 0 0 2px rgba(255, 154, 158, 0.2);
+        }
+
+        input[type="range"] {
+            padding: 10px 0;
+            height: 30px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: rgba(255, 154, 158, 0.2);
+            border: 1px solid rgba(255, 154, 158, 0.3);
+            color: #ff9a9e;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-family: 'Noto Sans SC', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: rgba(255, 154, 158, 0.3);
+        }
+
+        .position-controls {
+            margin-top: 10px;
+        }
+
+        .position-group {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .position-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fad0c4;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .position-slider {
+            margin-bottom: 15px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-container label {
+            width: 30px;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn {
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #1a1a2e;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(255, 154, 158, 0.4);
+        }
+
+        .download-btn {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: #1a1a2e;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        /* 贴纸控制区域样式 */
+        .sticker-controls {
+            background: rgba(154, 255, 158, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px dashed rgba(154, 255, 158, 0.3);
+        }
+
+        .sticker-controls-title {
+            font-size: 1.2rem;
+            color: #9aff9e;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sticker-list {
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .sticker-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .sticker-item:hover {
+            background: rgba(154, 255, 158, 0.1);
+        }
+
+        .sticker-item.active {
+            background: rgba(154, 255, 158, 0.2);
+            border-color: #9aff9e;
+        }
+
+        .sticker-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sticker-item-name {
+            font-size: 0.9rem;
+            color: #9aff9e;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+
+        .sticker-item-remove {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff6464;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sticker-item-remove:hover {
+            background: rgba(255, 100, 100, 0.3);
+        }
+
+        .sticker-preview-small {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .sticker-preview-small img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sticker-control-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .no-sticker-selected {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+
+        .sticker-control-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .sticker-control-action-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(154, 255, 158, 0.1);
+            color: #9aff9e;
+            border: 1px solid rgba(154, 255, 158, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .sticker-control-action-btn:hover {
+            background: rgba(154, 255, 158, 0.2);
+        }
+
+        .sticker-control-action-btn.remove-all {
+            background: rgba(255, 100, 100, 0.1);
+            color: #ff6464;
+            border-color: rgba(255, 100, 100, 0.3);
+        }
+
+        .sticker-control-action-btn.remove-all:hover {
+            background: rgba(255, 100, 100, 0.2);
+        }
+
+        .text-sizes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .text-size-group {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .text-size-label {
+            font-size: 0.9rem;
+            color: #b0b0d0;
+            margin-bottom: 8px;
+        }
+
+        .text-size-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fad0c4;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #fad0c4;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .effects-details {
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .effects-details h4 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .effects-details ul {
+            padding-left: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* 字体选择框样式 */
+        .font-select-container {
+            position: relative;
+        }
+
+        .font-select {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.15) 0%, rgba(250, 208, 196, 0.15) 100%);
+            border: 2px solid rgba(255, 154, 158, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fad0c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.1);
+        }
+
+        .font-select:hover {
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.25) 0%, rgba(250, 208, 196, 0.25) 100%);
+            border-color: rgba(255, 154, 158, 0.5);
+            box-shadow: 0 6px 15px rgba(255, 154, 158, 0.2);
+        }
+
+        .font-select:focus {
+            outline: none;
+            border-color: #ff9a9e;
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.3) 0%, rgba(250, 208, 196, 0.3) 100%);
+            box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.3);
+        }
+
+        .font-select option {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .font-select optgroup {
+            background: #2b2d42;
+            color: #fad0c4;
+            font-weight: bold;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .custom-font-input {
+            margin-top: 15px;
+            display: none;
+            padding: 15px;
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #4a90e2;
+        }
+
+        .custom-font-input.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-font-input label {
+            color: #4a90e2;
+            font-weight: bold;
+        }
+
+        .font-info {
+            font-size: 0.85rem;
+            color: #a0a0c0;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .font-preview-label {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 10px;
+            background: rgba(255, 154, 158, 0.1);
+            color: #ff9a9e;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 154, 158, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .image-container {
+                width: 100%;
+                max-width: 384px;
+                height: 128px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .text-sizes {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .preview-badges {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .sticker-list {
+                max-height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .slider-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .slider-container label {
+                width: auto;
+            }
+
+            .font-select {
+                padding: 10px 40px 10px 12px;
+                font-size: 0.95rem;
+            }
+
+            .sticker-control-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* 蓝色置顶返回按钮 */
+        .back-home-btn {
+            position: fixed;
+            top: 20px; /* 置顶 */
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow:
+                    0 6px 20px rgba(30, 144, 255, 0.4),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: slideInFromTop 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* 从上向下滑入动画 */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .back-home-btn:hover {
+            transform: translateY(-2px) scale(1.08);
+            box-shadow:
+                    0 10px 30px rgba(30, 144, 255, 0.5),
+                    0 0 0 4px rgba(30, 144, 255, 0.1),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
+        }
+
+        .back-home-btn:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow:
+                    0 3px 10px rgba(30, 144, 255, 0.3),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-home-btn .material-icons {
+            color: white;
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .back-home-btn:hover .material-icons {
+            transform: translateX(-2px);
+        }
+
+        /* 添加发光效果 */
+        .back-home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* 添加返回文字提示（悬停时显示） */
+        .back-home-btn::after {
+            content: '返回首页';
+            position: absolute;
+            top: 65px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-home-btn:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .back-home-btn {
+                top: 15px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 22px;
+            }
+
+            .back-home-btn::after {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        /* 手机横屏适配 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .back-home-btn {
+                top: 10px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 20px;
+            }
+        }
+
+        /* 超小屏幕 */
+        @media (max-width: 480px) {
+            .back-home-btn {
+                width: 44px;
+                height: 44px;
+                top: 12px;
+                right: 15px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="back-home-btn" onclick="window.location.href='../index.html'">
+    <span class="material-icons">←</span>
+</div>
+
+<!-- 初始预览区域 -->
+<div id="initialPreview">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 15px;">
+            <div style="font-size: 1.2rem; color: #fad0c4; font-weight: bold; margin-bottom: 10px;">标题图预览</div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
+                <div class="dimension-badge">384 × 128 px</div>
+                <div class="sticker-badge" id="stickerBadge" style="display: none;">贴纸功能 (0)</div>
+            </div>
+        </div>
+        <div class="image-container">
+            <div id="previewPlaceholder" class="preview-placeholder">
+                编辑下方内容实时预览效果<br>
+                <small>网格表示透明区域</small>
+            </div>
+            <canvas id="resultCanvas" style="display: none;"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- 吸附的预览区域 -->
+<div class="sticky-preview" id="stickyPreview">
+    <div class="sticky-preview-container">
+        <div class="preview-header">
+            <div class="preview-title">标题图预览</div>
+            <div class="preview-badges">
+                <div class="dimension-badge">384 × 128 像素</div>
+                <div class="effects-badge">描边 + 投影效果</div>
+                <div class="sticker-badge" id="stickyStickerBadge" style="display: none;">贴纸功能 (0)</div>
+            </div>
+        </div>
+        <div class="image-container">
+            <div id="stickyPreviewPlaceholder" class="preview-placeholder">
+                预览加载中...
+            </div>
+            <canvas id="stickyResultCanvas" style="display: none;"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <h1>自制谱标题图生成器</h1>
+        <p class="subtitle">生成舞立方自制谱官方规定大小和格式图片，尺寸为384×128px</p>
+    </header>
+
+    <div class="main-content">
+        <!-- 编辑区域 -->
+        <div class="editor-panel">
+            <h2 class="panel-title">编辑内容</h2>
+
+            <div class="form-group">
+                <label for="mainTitle">谱师</label>
+                <input type="text" id="mainTitle" value="谱面设计：输入谱师名称" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label for="subTitle">歌名</label>
+                <input type="text" id="subTitle" value="歌曲名称" maxlength="30">
+            </div>
+
+            <div class="form-group">
+                <label for="author">曲师</label>
+                <input type="text" id="author" value="曲师名称" maxlength="20">
+            </div>
+
+            <!-- 字体选择功能 -->
+            <div class="form-group">
+                <label for="fontSelect">选择字体 <span class="font-preview-label">预览效果</span></label>
+                <div class="font-select-container">
+                    <select id="fontSelect" class="font-select">
+                        <optgroup label="默认字体">
+                            <option value="'Noto Sans SC', sans-serif">思源黑体 (默认)</option>
+                        </optgroup>
+                        <optgroup label="中文字体">
+                            <option value="'Microsoft YaHei', '微软雅黑', sans-serif">微软雅黑</option>
+                            <option value="'SimHei', '黑体', sans-serif">黑体</option>
+                            <option value="'SimSun', '宋体', serif">宋体</option>
+                            <option value="'FangSong', '仿宋', serif">仿宋</option>
+                            <option value="'KaiTi', '楷体', serif">楷体</option>
+                            <option value="'NSimSun', '新宋体', serif">新宋体</option>
+                            <option value="'YouYuan', '幼圆', sans-serif">幼圆</option>
+                            <option value="'LiSu', '隶书', serif">隶书</option>
+                            <option value="'STXihei', '华文细黑', sans-serif">华文细黑</option>
+                            <option value="'STHeiti', '华文黑体', sans-serif">华文黑体</option>
+                            <option value="'STSong', '华文宋体', serif">华文宋体</option>
+                            <option value="'STKaiti', '华文楷体', serif">华文楷体</option>
+                            <option value="'STFangsong', '华文仿宋', serif">华文仿宋</option>
+                        </optgroup>
+                        <optgroup label="英文字体">
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="Helvetica, sans-serif">Helvetica</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Tahoma, sans-serif">Tahoma</option>
+                            <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                        </optgroup>
+                        <option value="custom">自定义字体...</option>
+                    </select>
+                </div>
+                <div class="font-info">选择您系统中已安装的字体，默认为思源黑体。选择后会实时预览效果。</div>
+
+                <div id="customFontInput" class="custom-font-input">
+                    <label for="customFontName">自定义字体名称</label>
+                    <input type="text" id="customFontName" placeholder="输入字体名称，如: '华文行楷', '方正舒体'">
+                    <div class="font-info">请输入您系统中已安装的字体名称，确保拼写正确。输入后会实时预览效果。</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-with-value">
+                    谱师大小
+                    <span class="value-display" id="mainTitleSizeValue">16px</span>
+                </label>
+                <input type="range" id="mainTitleSize" min="10" max="32" step="1" value="16">
+            </div>
+
+            <div class="form-group">
+                <label class="label-with-value">
+                    歌名大小
+                    <span class="value-display" id="subTitleSizeValue">25px</span>
+                </label>
+                <input type="range" id="subTitleSize" min="12" max="40" step="1" value="25">
+            </div>
+
+            <div class="form-group">
+                <label class="label-with-value">
+                    曲师大小
+                    <span class="value-display" id="authorSizeValue">12px</span>
+                </label>
+                <input type="range" id="authorSize" min="8" max="24" step="1" value="12">
+            </div>
+
+            <div class="form-group">
+                <label>文字位置调整</label>
+                <div class="position-controls">
+                    <div class="position-group">
+                        <div class="position-title">谱师位置</div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>水平位置 (X轴)</span>
+                                <span class="value-display" id="mainTitleXValue">192</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="mainTitleX" min="0" max="384" step="1" value="192">
+                                <label>384</label>
+                            </div>
+                        </div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>垂直位置 (Y轴)</span>
+                                <span class="value-display" id="mainTitleYValue">40</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="mainTitleY" min="0" max="128" step="1" value="40">
+                                <label>128</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="position-group">
+                        <div class="position-title">歌名位置</div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>水平位置 (X轴)</span>
+                                <span class="value-display" id="subTitleXValue">192</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="subTitleX" min="0" max="384" step="1" value="192">
+                                <label>384</label>
+                            </div>
+                        </div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>垂直位置 (Y轴)</span>
+                                <span class="value-display" id="subTitleYValue">75</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="subTitleY" min="0" max="128" step="1" value="75">
+                                <label>128</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="position-group">
+                        <div class="position-title">曲师位置</div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>水平位置 (X轴)</span>
+                                <span class="value-display" id="authorXValue">192</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="authorX" min="0" max="384" step="1" value="192">
+                                <label>384</label>
+                            </div>
+                        </div>
+                        <div class="position-slider">
+                            <div class="label-with-value">
+                                <span>垂直位置 (Y轴)</span>
+                                <span class="value-display" id="authorYValue">105</span>
+                            </div>
+                            <div class="slider-container">
+                                <label>0</label>
+                                <input type="range" id="authorY" min="0" max="128" step="1" value="105">
+                                <label>128</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 多贴纸功能 -->
+            <div class="sticker-controls">
+                <div class="sticker-controls-title">贴纸功能</div>
+
+                <div class="form-group">
+                    <label for="stickerUpload">上传贴纸图片</label>
+                    <input type="file" id="stickerUpload" accept="image/*" multiple>
+                    <div class="font-info">支持PNG、JPG、GIF等格式，可多选上传，建议使用透明背景的PNG图片</div>
+                </div>
+
+                <div class="sticker-list" id="stickerList">
+                    <div class="no-sticker-selected" id="noStickersMessage">
+                        暂无贴纸，请上传图片
+                    </div>
+                </div>
+
+                <div class="sticker-control-panel" id="stickerControlPanel">
+                    <div class="no-sticker-selected" id="noStickerSelectedMessage">
+                        请选择一个贴纸进行编辑
+                    </div>
+
+                    <div id="stickerControls" style="display: none;">
+                        <div class="form-group">
+                            <label class="label-with-value">
+                                贴纸大小
+                                <span class="value-display" id="currentStickerSizeValue">100%</span>
+                            </label>
+                            <input type="range" id="currentStickerSize" min="1" max="200" step="1" value="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label-with-value">
+                                贴纸旋转
+                                <span class="value-display" id="currentStickerRotationValue">0°</span>
+                            </label>
+                            <input type="range" id="currentStickerRotation" min="0" max="360" step="1" value="0">
+                        </div>
+
+                        <div class="position-controls">
+                            <div class="position-group">
+                                <div class="position-title">贴纸位置</div>
+                                <div class="position-slider">
+                                    <div class="label-with-value">
+                                        <span>水平位置 (X轴)</span>
+                                        <span class="value-display" id="currentStickerXValue">192</span>
+                                    </div>
+                                    <div class="slider-container">
+                                        <label>0</label>
+                                        <input type="range" id="currentStickerX" min="0" max="384" step="1" value="192">
+                                        <label>384</label>
+                                    </div>
+                                </div>
+                                <div class="position-slider">
+                                    <div class="label-with-value">
+                                        <span>垂直位置 (Y轴)</span>
+                                        <span class="value-display" id="currentStickerYValue">64</span>
+                                    </div>
+                                    <div class="slider-container">
+                                        <label>0</label>
+                                        <input type="range" id="currentStickerY" min="0" max="128" step="1" value="64">
+                                        <label>128</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sticker-control-actions">
+                    <button type="button" id="moveStickerUpBtn" class="sticker-control-action-btn">上移图层</button>
+                    <button type="button" id="moveStickerDownBtn" class="sticker-control-action-btn">下移图层</button>
+                    <button type="button" id="removeAllStickersBtn" class="sticker-control-action-btn remove-all">清除所有贴纸</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="generate-btn" id="generateBtn">显示预览</button>
+                <button class="download-btn" id="downloadBtn">下载图片</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h3>使用说明</h3>
+        <ul>
+            <li>修改标题、副标题和作者名称</li>
+            <li>如果您的字体不在列表中，可以选择"自定义字体..."并输入字体名称</li>
+            <li>可以上传多个贴纸图片，每个贴纸都可以独立调整位置、大小（1%-200%）和旋转角度</li>
+            <li>点击贴纸列表中的项目选择要编辑的贴纸</li>
+            <li>使用"上移图层"/"下移图层"调整贴纸的显示顺序</li>
+            <li>使用滑块调整不同文本的大小（主标题默认16px，副标题25px，作者12px）</li>
+            <li>使用滑块调整X/Y坐标值来改变文字位置（0-384为X轴，0-128为Y轴）</li>
+            <li>点击"下载图片"保存PNG格式到本地</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 元素引用 - 修复重复声明
+        const mainTitleInput = document.getElementById('mainTitle');
+        const subTitleInput = document.getElementById('subTitle');
+        const authorInput = document.getElementById('author');
+
+        const mainTitleSize = document.getElementById('mainTitleSize');
+        const subTitleSize = document.getElementById('subTitleSize');
+        const authorSize = document.getElementById('authorSize');
+
+        const mainTitleSizeValue = document.getElementById('mainTitleSizeValue');
+        const subTitleSizeValue = document.getElementById('subTitleSizeValue');
+        const authorSizeValue = document.getElementById('authorSizeValue');
+
+        const mainTitleSizeDisplay = document.getElementById('mainTitleSizeDisplay');
+        const subTitleSizeDisplay = document.getElementById('subTitleSizeDisplay');
+        const authorSizeDisplay = document.getElementById('authorSizeDisplay');
+
+        // 位置滑块元素
+        const mainTitleX = document.getElementById('mainTitleX');
+        const mainTitleY = document.getElementById('mainTitleY');
+        const subTitleX = document.getElementById('subTitleX');
+        const subTitleY = document.getElementById('subTitleY');
+        const authorX = document.getElementById('authorX');
+        const authorY = document.getElementById('authorY');
+
+        // 位置值显示元素
+        const mainTitleXValue = document.getElementById('mainTitleXValue');
+        const mainTitleYValue = document.getElementById('mainTitleYValue');
+        const subTitleXValue = document.getElementById('subTitleXValue');
+        const subTitleYValue = document.getElementById('subTitleYValue');
+        const authorXValue = document.getElementById('authorXValue');
+        const authorYValue = document.getElementById('authorYValue');
+
+        // 字体选择元素
+        const fontSelect = document.getElementById('fontSelect');
+        const customFontInput = document.getElementById('customFontInput');
+        const customFontName = document.getElementById('customFontName');
+
+        // 贴纸相关元素
+        const stickerUpload = document.getElementById('stickerUpload');
+        const stickerList = document.getElementById('stickerList');
+        const noStickersMessage = document.getElementById('noStickersMessage');
+        const stickerControls = document.getElementById('stickerControls');
+        const noStickerSelectedMessage = document.getElementById('noStickerSelectedMessage');
+
+        // 贴纸控制滑块元素（重命名以避免重复）
+        const currentStickerSize = document.getElementById('currentStickerSize');
+        const currentStickerRotation = document.getElementById('currentStickerRotation');
+        const currentStickerX = document.getElementById('currentStickerX');
+        const currentStickerY = document.getElementById('currentStickerY');
+
+        const currentStickerSizeValue = document.getElementById('currentStickerSizeValue');
+        const currentStickerRotationValue = document.getElementById('currentStickerRotationValue');
+        const currentStickerXValue = document.getElementById('currentStickerXValue');
+        const currentStickerYValue = document.getElementById('currentStickerYValue');
+
+        // 贴纸控制按钮
+        const moveStickerUpBtn = document.getElementById('moveStickerUpBtn');
+        const moveStickerDownBtn = document.getElementById('moveStickerDownBtn');
+        const removeAllStickersBtn = document.getElementById('removeAllStickersBtn');
+
+        // 徽章元素
+        const stickerBadge = document.getElementById('stickerBadge');
+        const stickyStickerBadge = document.getElementById('stickyStickerBadge');
+
+        // 预览相关元素
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewPlaceholder = document.getElementById('previewPlaceholder');
+        const stickyPreviewPlaceholder = document.getElementById('stickyPreviewPlaceholder');
+        const resultCanvas = document.getElementById('resultCanvas');
+        const stickyResultCanvas = document.getElementById('stickyResultCanvas');
+        const initialPreview = document.getElementById('initialPreview');
+        const stickyPreview = document.getElementById('stickyPreview');
+
+        // Canvas上下文
+        const ctx = resultCanvas.getContext('2d');
+        const stickyCtx = stickyResultCanvas.getContext('2d');
+
+        // 设置画布尺寸 - 384x128像素
+        resultCanvas.width = 384;
+        resultCanvas.height = 128;
+        stickyResultCanvas.width = 384;
+        stickyResultCanvas.height = 128;
+
+        // 描边和投影参数（固定不可调整）
+        const strokeWidth = 2;
+        const strokeOpacity = 0.54;
+        const shadowColor = 'rgba(0, 0, 0, 0.88)';
+        const shadowAngle = 130 * (Math.PI / 180);
+        const shadowDistance = 5;
+        const shadowBlur = 5;
+
+        // 计算投影偏移量
+        const shadowOffsetX = Math.cos(shadowAngle) * shadowDistance;
+        const shadowOffsetY = Math.sin(shadowAngle) * shadowDistance;
+
+        // 当前选中的字体
+        let selectedFont = "'Noto Sans SC', sans-serif";
+
+        // 贴纸相关变量
+        let stickers = [];
+        let activeStickerIndex = -1;
+
+        // 滚动监听相关
+        let isStickyActive = false;
+        let initialPreviewHeight = 0;
+        let initialPreviewTop = 0;
+
+        // 更新字体大小显示
+        function updateSizeDisplays() {
+            mainTitleSizeValue.textContent = mainTitleSize.value + 'px';
+            subTitleSizeValue.textContent = subTitleSize.value + 'px';
+            authorSizeValue.textContent = authorSize.value + 'px';
+
+            mainTitleSizeDisplay.textContent = mainTitleSize.value + 'px';
+            subTitleSizeDisplay.textContent = subTitleSize.value + 'px';
+            authorSizeDisplay.textContent = authorSize.value + 'px';
+        }
+
+        // 更新位置值显示
+        function updatePositionDisplays() {
+            mainTitleXValue.textContent = mainTitleX.value;
+            mainTitleYValue.textContent = mainTitleY.value;
+            subTitleXValue.textContent = subTitleX.value;
+            subTitleYValue.textContent = subTitleY.value;
+            authorXValue.textContent = authorX.value;
+            authorYValue.textContent = authorY.value;
+        }
+
+        // 更新贴纸控制值显示
+        function updateStickerDisplays() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
+                const sticker = stickers[activeStickerIndex];
+                currentStickerSizeValue.textContent = sticker.size + '%';
+                currentStickerRotationValue.textContent = sticker.rotation + '°';
+                currentStickerXValue.textContent = sticker.x;
+                currentStickerYValue.textContent = sticker.y;
+            }
+        }
+
+        // 更新贴纸徽章
+        function updateStickerBadge() {
+            const count = stickers.length;
+            if (count > 0) {
+                stickerBadge.textContent = `贴纸功能 (${count})`;
+                stickyStickerBadge.textContent = `贴纸功能 (${count})`;
+                stickerBadge.style.display = 'inline-block';
+                stickyStickerBadge.style.display = 'inline-block';
+            } else {
+                stickerBadge.style.display = 'none';
+                stickyStickerBadge.style.display = 'none';
+            }
+        }
+
+        // 贴纸对象构造函数
+        function Sticker(id, name, imageSrc, size = 100, rotation = 0, x = 192, y = 64) {
+            this.id = id;
+            this.name = name;
+            this.imageSrc = imageSrc;
+            this.image = new Image();
+            this.loaded = false;
+            this.size = size;
+            this.rotation = rotation;
+            this.x = x;
+            this.y = y;
+
+            const self = this;
+            this.image.onload = function() {
+                self.loaded = true;
+                generateImage();
+            };
+            this.image.src = imageSrc;
+        }
+
+        // 渲染贴纸列表
+        function renderStickerList() {
+            stickerList.innerHTML = '';
+
+            if (stickers.length === 0) {
+                noStickersMessage.style.display = 'block';
+                return;
+            }
+
+            noStickersMessage.style.display = 'none';
+
+            stickers.forEach((sticker, index) => {
+                const stickerItem = document.createElement('div');
+                stickerItem.className = `sticker-item ${index === activeStickerIndex ? 'active' : ''}`;
+                stickerItem.dataset.index = index;
+
+                stickerItem.innerHTML = `
+                        <div class="sticker-item-header">
+                            <div class="sticker-item-name" title="${sticker.name}">${sticker.name}</div>
+                            <button class="sticker-item-remove" data-index="${index}">移除</button>
+                        </div>
+                        <div class="sticker-preview-small">
+                            <img src="${sticker.imageSrc}" alt="${sticker.name}">
+                        </div>
+                    `;
+
+                stickerItem.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('sticker-item-remove')) {
+                        setActiveSticker(index);
+                    }
+                });
+
+                const removeBtn = stickerItem.querySelector('.sticker-item-remove');
+                removeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    removeSticker(index);
+                });
+
+                stickerList.appendChild(stickerItem);
+            });
+        }
+
+        // 设置活动贴纸
+        function setActiveSticker(index) {
+            if (index >= 0 && index < stickers.length) {
+                activeStickerIndex = index;
+                const sticker = stickers[index];
+
+                // 更新控制滑块的值
+                currentStickerSize.value = sticker.size;
+                currentStickerRotation.value = sticker.rotation;
+                currentStickerX.value = sticker.x;
+                currentStickerY.value = sticker.y;
+
+                // 更新显示值
+                updateStickerDisplays();
+
+                // 显示控制界面
+                stickerControls.style.display = 'block';
+                noStickerSelectedMessage.style.display = 'none';
+
+                // 更新列表中的活动状态
+                renderStickerList();
+            } else {
+                activeStickerIndex = -1;
+                stickerControls.style.display = 'none';
+                noStickerSelectedMessage.style.display = 'block';
+                renderStickerList();
+            }
+        }
+
+        // 添加贴纸
+        function addSticker(name, imageSrc) {
+            const id = 'sticker_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const sticker = new Sticker(id, name, imageSrc);
+            stickers.push(sticker);
+
+            if (stickers.length === 1) {
+                setActiveSticker(0);
+            }
+
+            renderStickerList();
+            updateStickerBadge();
+        }
+
+        // 移除贴纸
+        function removeSticker(index) {
+            if (index >= 0 && index < stickers.length) {
+                stickers.splice(index, 1);
+
+                if (index === activeStickerIndex) {
+                    if (stickers.length > 0) {
+                        setActiveSticker(Math.min(index, stickers.length - 1));
+                    } else {
+                        setActiveSticker(-1);
+                    }
+                } else if (index < activeStickerIndex) {
+                    setActiveSticker(activeStickerIndex - 1);
+                }
+
+                renderStickerList();
+                updateStickerBadge();
+                generateImage();
+            }
+        }
+
+        // 移除所有贴纸
+        function removeAllStickers() {
+            stickers = [];
+            activeStickerIndex = -1;
+            renderStickerList();
+            updateStickerBadge();
+            setActiveSticker(-1);
+            generateImage();
+        }
+
+        // 上移贴纸图层
+        function moveStickerUp() {
+            if (activeStickerIndex > 0 && activeStickerIndex < stickers.length) {
+                [stickers[activeStickerIndex], stickers[activeStickerIndex - 1]] =
+                    [stickers[activeStickerIndex - 1], stickers[activeStickerIndex]];
+
+                activeStickerIndex--;
+                renderStickerList();
+                generateImage();
+            }
+        }
+
+        // 下移贴纸图层
+        function moveStickerDown() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length - 1) {
+                [stickers[activeStickerIndex], stickers[activeStickerIndex + 1]] =
+                    [stickers[activeStickerIndex + 1], stickers[activeStickerIndex]];
+
+                activeStickerIndex++;
+                renderStickerList();
+                generateImage();
+            }
+        }
+
+        // 检测系统字体
+        function detectSystemFonts() {
+            const chineseFonts = [
+                {name: "Microsoft YaHei", display: "微软雅黑"},
+                {name: "SimHei", display: "黑体"},
+                {name: "SimSun", display: "宋体"},
+                {name: "NSimSun", display: "新宋体"},
+                {name: "FangSong", display: "仿宋"},
+                {name: "KaiTi", display: "楷体"},
+                {name: "LiSu", display: "隶书"},
+                {name: "YouYuan", display: "幼圆"},
+                {name: "STXihei", display: "华文细黑"},
+                {name: "STHeiti", display: "华文黑体"},
+                {name: "STSong", display: "华文宋体"},
+                {name: "STKaiti", display: "华文楷体"},
+                {name: "STFangsong", display: "华文仿宋"}
+            ];
+
+            const englishFonts = [
+                {name: "Arial", display: "Arial"},
+                {name: "Helvetica", display: "Helvetica"},
+                {name: "Times New Roman", display: "Times New Roman"},
+                {name: "Georgia", display: "Georgia"},
+                {name: "Courier New", display: "Courier New"},
+                {name: "Verdana", display: "Verdana"},
+                {name: "Tahoma", display: "Tahoma"},
+                {name: "Trebuchet MS", display: "Trebuchet MS"},
+                {name: "Impact", display: "Impact"},
+                {name: "Comic Sans MS", display: "Comic Sans MS"}
+            ];
+
+            const testDiv = document.createElement('div');
+            testDiv.style.position = 'absolute';
+            testDiv.style.left = '-9999px';
+            testDiv.style.top = '-9999px';
+            testDiv.style.fontSize = '20px';
+            testDiv.innerHTML = '测试字体 ABC abc 123';
+            document.body.appendChild(testDiv);
+
+            const availableFonts = {
+                chinese: [],
+                english: []
+            };
+
+            chineseFonts.forEach(font => {
+                testDiv.style.fontFamily = font.name;
+                const computedFont = window.getComputedStyle(testDiv).fontFamily;
+                if (computedFont.indexOf(font.name) !== -1) {
+                    let fontString = `'${font.name}'`;
+                    if (font.name === 'Microsoft YaHei') {
+                        fontString += ", '微软雅黑'";
+                    } else if (font.name === 'SimHei') {
+                        fontString += ", '黑体'";
+                    } else if (font.name === 'SimSun') {
+                        fontString += ", '宋体'";
+                    } else if (font.name === 'NSimSun') {
+                        fontString += ", '新宋体'";
+                    } else if (font.name === 'FangSong') {
+                        fontString += ", '仿宋'";
+                    } else if (font.name === 'KaiTi') {
+                        fontString += ", '楷体'";
+                    }
+                    fontString += ", sans-serif";
+                    availableFonts.chinese.push({name: fontString, display: font.display});
+                }
+            });
+
+            englishFonts.forEach(font => {
+                testDiv.style.fontFamily = font.name;
+                const computedFont = window.getComputedStyle(testDiv).fontFamily;
+                if (computedFont.indexOf(font.name) !== -1) {
+                    let fontString = font.name;
+                    if (font.name === 'Times New Roman' || font.name === 'Courier New' || font.name === 'Comic Sans MS') {
+                        fontString = `'${font.name}'`;
+                    }
+                    fontString += ", sans-serif";
+                    availableFonts.english.push({name: fontString, display: font.display});
+                }
+            });
+
+            document.body.removeChild(testDiv);
+            return availableFonts;
+        }
+
+        // 填充字体选择器
+        function populateFontSelector() {
+            const availableFonts = detectSystemFonts();
+            const fontSelectElement = document.getElementById('fontSelect');
+
+            while (fontSelectElement.options.length > 1) {
+                fontSelectElement.remove(1);
+            }
+
+            let chineseOptgroup = document.querySelector('optgroup[label="中文字体"]');
+            let englishOptgroup = document.querySelector('optgroup[label="英文字体"]');
+
+            if (!chineseOptgroup) {
+                chineseOptgroup = document.createElement('optgroup');
+                chineseOptgroup.label = "中文字体";
+                fontSelectElement.insertBefore(chineseOptgroup, fontSelectElement.lastElementChild);
+            }
+
+            if (!englishOptgroup) {
+                englishOptgroup = document.createElement('optgroup');
+                englishOptgroup.label = "英文字体";
+                fontSelectElement.insertBefore(englishOptgroup, fontSelectElement.lastElementChild);
+            }
+
+            chineseOptgroup.innerHTML = '';
+            englishOptgroup.innerHTML = '';
+
+            availableFonts.chinese.forEach(font => {
+                const option = document.createElement('option');
+                option.value = font.name;
+                option.textContent = font.display;
+                chineseOptgroup.appendChild(option);
+            });
+
+            availableFonts.english.forEach(font => {
+                const option = document.createElement('option');
+                option.value = font.name;
+                option.textContent = font.display;
+                englishOptgroup.appendChild(option);
+            });
+
+            fontSelectElement.value = "'Noto Sans SC', sans-serif";
+        }
+
+        // 字体选择处理
+        fontSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customFontInput.classList.add('active');
+                if (customFontName.value.trim()) {
+                    selectedFont = `'${customFontName.value.trim()}', sans-serif`;
+                    generateImage();
+                }
+            } else {
+                customFontInput.classList.remove('active');
+                selectedFont = this.value;
+                generateImage();
+            }
+        });
+
+        // 自定义字体输入处理
+        customFontName.addEventListener('input', function() {
+            if (this.value.trim()) {
+                selectedFont = `'${this.value.trim()}', sans-serif`;
+                generateImage();
+            }
+        });
+
+        // 贴纸上传处理
+        stickerUpload.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!file.type.match('image.*')) {
+                    alert(`文件 "${file.name}" 不是图片文件，已跳过`);
+                    continue;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let fileName = file.name;
+                    if (fileName.length > 20) {
+                        fileName = fileName.substring(0, 17) + '...';
+                    }
+
+                    addSticker(fileName, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            stickerUpload.value = '';
+        });
+
+        // 贴纸控制滑块事件处理
+        currentStickerSize.addEventListener('input', function() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
+                stickers[activeStickerIndex].size = parseInt(this.value);
+                updateStickerDisplays();
+                generateImage();
+            }
+        });
+
+        currentStickerRotation.addEventListener('input', function() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
+                stickers[activeStickerIndex].rotation = parseInt(this.value);
+                updateStickerDisplays();
+                generateImage();
+            }
+        });
+
+        currentStickerX.addEventListener('input', function() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
+                stickers[activeStickerIndex].x = parseInt(this.value);
+                updateStickerDisplays();
+                generateImage();
+            }
+        });
+
+        currentStickerY.addEventListener('input', function() {
+            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
+                stickers[activeStickerIndex].y = parseInt(this.value);
+                updateStickerDisplays();
+                generateImage();
+            }
+        });
+
+        // 图层控制按钮事件
+        moveStickerUpBtn.addEventListener('click', moveStickerUp);
+        moveStickerDownBtn.addEventListener('click', moveStickerDown);
+        removeAllStickersBtn.addEventListener('click', removeAllStickers);
+
+        // 绑定滑块事件
+        mainTitleSize.addEventListener('input', function() {
+            updateSizeDisplays();
+            generateImage();
+        });
+
+        subTitleSize.addEventListener('input', function() {
+            updateSizeDisplays();
+            generateImage();
+        });
+
+        authorSize.addEventListener('input', function() {
+            updateSizeDisplays();
+            generateImage();
+        });
+
+        // 绑定位置滑块事件
+        [mainTitleX, mainTitleY, subTitleX, subTitleY, authorX, authorY].forEach(slider => {
+            slider.addEventListener('input', function() {
+                updatePositionDisplays();
+                generateImage();
+            });
+        });
+
+        // 绘制带描边和投影的文字
+        function drawTextWithEffects(context, text, x, y, fontSize, isBold = true, isCenter = true) {
+            const fontWeight = isBold ? 'bold' : 'normal';
+            context.font = `${fontWeight} ${fontSize}px ${selectedFont}`;
+
+            context.textAlign = isCenter ? 'center' : 'left';
+            context.textBaseline = 'middle';
+
+            const maxWidth = 384 - 40;
+            const lines = wrapText(context, text, maxWidth, fontSize);
+
+            for (let i = 0; i < lines.length; i++) {
+                const lineY = y + (i * fontSize);
+
+                context.save();
+                context.shadowColor = shadowColor;
+                context.shadowBlur = shadowBlur;
+                context.shadowOffsetX = shadowOffsetX;
+                context.shadowOffsetY = shadowOffsetY;
+                context.fillStyle = '#ffffff';
+                context.fillText(lines[i], x, lineY);
+                context.restore();
+
+                context.save();
+                context.strokeStyle = `rgba(0, 0, 0, ${strokeOpacity})`;
+                context.lineWidth = strokeWidth;
+                context.lineJoin = 'round';
+                context.strokeText(lines[i], x, lineY);
+                context.restore();
+
+                context.fillStyle = '#ffffff';
+                context.fillText(lines[i], x, lineY);
+            }
+
+            return lines.length;
+        }
+
+        // 绘制所有贴纸
+        function drawStickers(context) {
+            stickers.forEach(sticker => {
+                if (!sticker.loaded) return;
+
+                const size = sticker.size / 100;
+                const rotation = sticker.rotation;
+                const x = sticker.x;
+                const y = sticker.y;
+
+                const originalWidth = sticker.image.width;
+                const originalHeight = sticker.image.height;
+                const scaledWidth = originalWidth * size;
+                const scaledHeight = originalHeight * size;
+
+                context.save();
+
+                context.translate(x, y);
+
+                context.rotate(rotation * Math.PI / 180);
+
+                context.drawImage(
+                    sticker.image,
+                    -scaledWidth / 2,
+                    -scaledHeight / 2,
+                    scaledWidth,
+                    scaledHeight
+                );
+
+                context.restore();
+            });
+        }
+
+        // 文本换行函数
+        function wrapText(context, text, maxWidth, fontSize) {
+            const words = text.split('');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = context.measureText(currentLine + word).width;
+                if (width < maxWidth) {
+                    currentLine += word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // 生成图片到两个画布
+        function generateImage() {
+            const mainTitle = mainTitleInput.value || "谱面设计：在游戏中的妙妙";
+            const subTitle = subTitleInput.value || "地球Online";
+            const author = authorInput.value || "歪歪超";
+            const mainTitleFontSize = parseInt(mainTitleSize.value);
+            const subTitleFontSize = parseInt(subTitleSize.value);
+            const authorFontSize = parseInt(authorSize.value);
+
+            // 获取位置值
+            const mainX = parseInt(mainTitleX.value) || 192;
+            const mainY = parseInt(mainTitleY.value) || 40;
+            const subX = parseInt(subTitleX.value) || 192;
+            const subY = parseInt(subTitleY.value) || 75;
+            const authX = parseInt(authorX.value) || 192;
+            const authY = parseInt(authorY.value) || 105;
+
+            // 清除画布（设置为透明）
+            ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+            stickyCtx.clearRect(0, 0, stickyResultCanvas.width, stickyResultCanvas.height);
+
+            // 先绘制所有贴纸（在文字下方）
+            drawStickers(ctx);
+            drawStickers(stickyCtx);
+
+            // 绘制主标题（带描边和投影）到两个画布
+            drawTextWithEffects(ctx, mainTitle, mainX, mainY, mainTitleFontSize, true);
+            drawTextWithEffects(stickyCtx, mainTitle, mainX, mainY, mainTitleFontSize, true);
+
+            // 绘制副标题（带描边和投影）到两个画布
+            drawTextWithEffects(ctx, subTitle, subX, subY, subTitleFontSize, false);
+            drawTextWithEffects(stickyCtx, subTitle, subX, subY, subTitleFontSize, false);
+
+            // 绘制作者（带描边和投影）到两个画布
+            drawTextWithEffects(ctx, author, authX, authY, authorFontSize, true);
+            drawTextWithEffects(stickyCtx, author, authX, authY, authorFontSize, true);
+
+            // 显示预览
+            previewPlaceholder.style.display = 'none';
+            stickyPreviewPlaceholder.style.display = 'none';
+            resultCanvas.style.display = 'block';
+            stickyResultCanvas.style.display = 'block';
+
+            // 将canvas转换为图片并显示
+            const dataUrl = resultCanvas.toDataURL('image/png');
+            const img = new Image();
+            img.src = dataUrl;
+            img.className = 'preview-image';
+            img.id = 'resultImage';
+
+            const existingImg = document.querySelector('#initialPreview .image-container #resultImage');
+            if (existingImg) {
+                existingImg.remove();
+            }
+
+            document.querySelector('#initialPreview .image-container').appendChild(img);
+
+            // 更新吸附预览
+            const stickyDataUrl = stickyResultCanvas.toDataURL('image/png');
+            const stickyImg = new Image();
+            stickyImg.src = stickyDataUrl;
+            stickyImg.className = 'preview-image';
+            stickyImg.id = 'stickyResultImage';
+
+            const existingStickyImg = document.querySelector('.sticky-preview .image-container #stickyResultImage');
+            if (existingStickyImg) {
+                existingStickyImg.remove();
+            }
+
+            document.querySelector('.sticky-preview .image-container').appendChild(stickyImg);
+        }
+
+        // 处理滚动事件，检测初始预览区域是否被遮挡50%
+        function handleScroll() {
+            if (!initialPreviewHeight) {
+                initialPreviewHeight = initialPreview.offsetHeight;
+                const rect = initialPreview.getBoundingClientRect();
+                initialPreviewTop = rect.top + window.scrollY;
+            }
+
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+
+            const previewBottom = initialPreviewTop + initialPreviewHeight;
+            const visibleTop = Math.max(0, initialPreviewTop - scrollTop);
+            const visibleBottom = Math.min(windowHeight, previewBottom - scrollTop);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+            const visibleRatio = visibleHeight / initialPreviewHeight;
+
+            if (visibleRatio < 0.5 && !isStickyActive) {
+                stickyPreview.classList.add('active');
+                isStickyActive = true;
+            }
+            else if (visibleRatio >= 0.5 && isStickyActive) {
+                stickyPreview.classList.remove('active');
+                isStickyActive = false;
+            }
+        }
+
+        // 绑定输入变化事件
+        mainTitleInput.addEventListener('input', generateImage);
+        subTitleInput.addEventListener('input', generateImage);
+        authorInput.addEventListener('input', generateImage);
+
+        // 绑定下载按钮事件
+        downloadBtn.addEventListener('click', function() {
+            const link = document.createElement('a');
+            const title = mainTitleInput.value.substring(0, 10) || '谱面设计';
+            link.download = `${title}-${authorInput.value || '设计'}.png`;
+            link.href = resultCanvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // 绑定生成按钮事件
+        generateBtn.addEventListener('click', generateImage);
+
+        // 绑定滚动事件
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', function() {
+            initialPreviewHeight = 0;
+            handleScroll();
+        });
+
+        // 初始更新显示
+        updateSizeDisplays();
+        updatePositionDisplays();
+        updateStickerDisplays();
+
+        // 检测并填充系统字体
+        populateFontSelector();
+
+        // 初始生成图片
+        generateImage();
+
+        // 初始计算预览区域位置
+        setTimeout(() => {
+            handleScroll();
+        }, 100);
+    });
+</script>
+</body>
+</html>

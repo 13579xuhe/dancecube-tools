@@ -272,10 +272,169 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+        /* 蓝色置顶返回按钮 */
+        .back-home-btn {
+            position: fixed;
+            top: 20px; /* 置顶 */
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow:
+                    0 6px 20px rgba(30, 144, 255, 0.4),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: slideInFromTop 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* 从上向下滑入动画 */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .back-home-btn:hover {
+            transform: translateY(-2px) scale(1.08);
+            box-shadow:
+                    0 10px 30px rgba(30, 144, 255, 0.5),
+                    0 0 0 4px rgba(30, 144, 255, 0.1),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
+        }
+
+        .back-home-btn:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow:
+                    0 3px 10px rgba(30, 144, 255, 0.3),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-home-btn .material-icons {
+            color: white;
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .back-home-btn:hover .material-icons {
+            transform: translateX(-2px);
+        }
+
+        /* 添加发光效果 */
+        .back-home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* 添加返回文字提示（悬停时显示） */
+        .back-home-btn::after {
+            content: '返回首页';
+            position: absolute;
+            top: 65px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-home-btn:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .back-home-btn {
+                top: 15px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 22px;
+            }
+
+            .back-home-btn::after {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        /* 手机横屏适配 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .back-home-btn {
+                top: 10px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 20px;
+            }
+        }
+
+        /* 超小屏幕 */
+        @media (max-width: 480px) {
+            .back-home-btn {
+                width: 44px;
+                height: 44px;
+                top: 12px;
+                right: 15px;
+            }
+
+            .back-home-btn .material-icons {
+                font-size: 20px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
+<div class="back-home-btn" onclick="window.location.href='../index.html'">
+    <span class="material-icons">←</span>
+</div>
+
 <div class="container">
     <header>
         <h1><i class="fas fa-crop-alt"></i> 图片剪裁工具</h1>

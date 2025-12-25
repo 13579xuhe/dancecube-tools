@@ -518,6 +518,7 @@
                 <p>本页面工具已经测试，如有bug请联系：miqimiaomiaowushi@163.com</p>
             </div>
         </div>
+
     </header>
 
     <!-- 搜索区域 -->
@@ -610,10 +611,21 @@
             category: "cut",
             description: "将图片裁剪为可上传大小",
             icon: "fas fa-image",
-            iconColor: "#6a11cb",
-            featured: true,
+            iconColor: "#117ecb",
+            new: true,
             features: ["自动裁剪", "jpg格式", "直接下载"],
             url: "../picturecut.html" // 替换为实际链接
+        },
+        {
+            id: 3,
+            name: "标题图制作",
+            category: "make",
+            description: "绘制标题图图片",
+            icon: "fas fa-heading",
+            iconColor: "#cb6511",
+            new: true,
+            features: ["自动绘制", "png格式", "直接下载"],
+            url: "../maketitle.html" // 替换为实际链接
         }
     ];
 
@@ -791,6 +803,7 @@
         const categoryNames = {
             'change': '转换工具',
             'cut': '剪裁工具',
+            'make': '绘制工具',
         };
         return categoryNames[category] || '其他工具';
     }

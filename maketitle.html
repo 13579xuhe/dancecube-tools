@@ -900,17 +900,17 @@
 
             <div class="form-group">
                 <label for="mainTitle">谱师</label>
-                <input type="text" id="mainTitle" value="谱面设计：输入谱师名称" maxlength="20">
+                <input type="text" id="mainTitle" value="谱面设计：输入谱师名称">
             </div>
 
             <div class="form-group">
                 <label for="subTitle">歌名</label>
-                <input type="text" id="subTitle" value="歌曲名称" maxlength="30">
+                <input type="text" id="subTitle" value="歌曲名称">
             </div>
 
             <div class="form-group">
                 <label for="author">曲师</label>
-                <input type="text" id="author" value="曲师名称" maxlength="20">
+                <input type="text" id="author" value="曲师名称">
             </div>
 
             <!-- 字体选择功能 -->
@@ -1152,7 +1152,7 @@
     <div class="instructions">
         <h3>使用说明</h3>
         <ul>
-            <li>修改标题、副标题和作者名称</li>
+            <li>修改标题、副标题和作者名称（现在无字数限制）</li>
             <li>如果您的字体不在列表中，可以选择"自定义字体..."并输入字体名称</li>
             <li>可以上传多个贴纸图片，每个贴纸都可以独立调整位置、大小（1%-200%）和旋转角度</li>
             <li>点击贴纸列表中的项目选择要编辑的贴纸</li>
@@ -1166,7 +1166,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 元素引用 - 修复重复声明
+        // 元素引用
         const mainTitleInput = document.getElementById('mainTitle');
         const subTitleInput = document.getElementById('subTitle');
         const authorInput = document.getElementById('author');
@@ -1178,10 +1178,6 @@
         const mainTitleSizeValue = document.getElementById('mainTitleSizeValue');
         const subTitleSizeValue = document.getElementById('subTitleSizeValue');
         const authorSizeValue = document.getElementById('authorSizeValue');
-
-        const mainTitleSizeDisplay = document.getElementById('mainTitleSizeDisplay');
-        const subTitleSizeDisplay = document.getElementById('subTitleSizeDisplay');
-        const authorSizeDisplay = document.getElementById('authorSizeDisplay');
 
         // 位置滑块元素
         const mainTitleX = document.getElementById('mainTitleX');
@@ -1211,7 +1207,7 @@
         const stickerControls = document.getElementById('stickerControls');
         const noStickerSelectedMessage = document.getElementById('noStickerSelectedMessage');
 
-        // 贴纸控制滑块元素（重命名以避免重复）
+        // 贴纸控制滑块元素
         const currentStickerSize = document.getElementById('currentStickerSize');
         const currentStickerRotation = document.getElementById('currentStickerRotation');
         const currentStickerX = document.getElementById('currentStickerX');
@@ -1280,10 +1276,6 @@
             mainTitleSizeValue.textContent = mainTitleSize.value + 'px';
             subTitleSizeValue.textContent = subTitleSize.value + 'px';
             authorSizeValue.textContent = authorSize.value + 'px';
-
-            mainTitleSizeDisplay.textContent = mainTitleSize.value + 'px';
-            subTitleSizeDisplay.textContent = subTitleSize.value + 'px';
-            authorSizeDisplay.textContent = authorSize.value + 'px';
         }
 
         // 更新位置值显示
@@ -1481,134 +1473,6 @@
             }
         }
 
-        // 检测系统字体
-        function detectSystemFonts() {
-            const chineseFonts = [
-                {name: "Microsoft YaHei", display: "微软雅黑"},
-                {name: "SimHei", display: "黑体"},
-                {name: "SimSun", display: "宋体"},
-                {name: "NSimSun", display: "新宋体"},
-                {name: "FangSong", display: "仿宋"},
-                {name: "KaiTi", display: "楷体"},
-                {name: "LiSu", display: "隶书"},
-                {name: "YouYuan", display: "幼圆"},
-                {name: "STXihei", display: "华文细黑"},
-                {name: "STHeiti", display: "华文黑体"},
-                {name: "STSong", display: "华文宋体"},
-                {name: "STKaiti", display: "华文楷体"},
-                {name: "STFangsong", display: "华文仿宋"}
-            ];
-
-            const englishFonts = [
-                {name: "Arial", display: "Arial"},
-                {name: "Helvetica", display: "Helvetica"},
-                {name: "Times New Roman", display: "Times New Roman"},
-                {name: "Georgia", display: "Georgia"},
-                {name: "Courier New", display: "Courier New"},
-                {name: "Verdana", display: "Verdana"},
-                {name: "Tahoma", display: "Tahoma"},
-                {name: "Trebuchet MS", display: "Trebuchet MS"},
-                {name: "Impact", display: "Impact"},
-                {name: "Comic Sans MS", display: "Comic Sans MS"}
-            ];
-
-            const testDiv = document.createElement('div');
-            testDiv.style.position = 'absolute';
-            testDiv.style.left = '-9999px';
-            testDiv.style.top = '-9999px';
-            testDiv.style.fontSize = '20px';
-            testDiv.innerHTML = '测试字体 ABC abc 123';
-            document.body.appendChild(testDiv);
-
-            const availableFonts = {
-                chinese: [],
-                english: []
-            };
-
-            chineseFonts.forEach(font => {
-                testDiv.style.fontFamily = font.name;
-                const computedFont = window.getComputedStyle(testDiv).fontFamily;
-                if (computedFont.indexOf(font.name) !== -1) {
-                    let fontString = `'${font.name}'`;
-                    if (font.name === 'Microsoft YaHei') {
-                        fontString += ", '微软雅黑'";
-                    } else if (font.name === 'SimHei') {
-                        fontString += ", '黑体'";
-                    } else if (font.name === 'SimSun') {
-                        fontString += ", '宋体'";
-                    } else if (font.name === 'NSimSun') {
-                        fontString += ", '新宋体'";
-                    } else if (font.name === 'FangSong') {
-                        fontString += ", '仿宋'";
-                    } else if (font.name === 'KaiTi') {
-                        fontString += ", '楷体'";
-                    }
-                    fontString += ", sans-serif";
-                    availableFonts.chinese.push({name: fontString, display: font.display});
-                }
-            });
-
-            englishFonts.forEach(font => {
-                testDiv.style.fontFamily = font.name;
-                const computedFont = window.getComputedStyle(testDiv).fontFamily;
-                if (computedFont.indexOf(font.name) !== -1) {
-                    let fontString = font.name;
-                    if (font.name === 'Times New Roman' || font.name === 'Courier New' || font.name === 'Comic Sans MS') {
-                        fontString = `'${font.name}'`;
-                    }
-                    fontString += ", sans-serif";
-                    availableFonts.english.push({name: fontString, display: font.display});
-                }
-            });
-
-            document.body.removeChild(testDiv);
-            return availableFonts;
-        }
-
-        // 填充字体选择器
-        function populateFontSelector() {
-            const availableFonts = detectSystemFonts();
-            const fontSelectElement = document.getElementById('fontSelect');
-
-            while (fontSelectElement.options.length > 1) {
-                fontSelectElement.remove(1);
-            }
-
-            let chineseOptgroup = document.querySelector('optgroup[label="中文字体"]');
-            let englishOptgroup = document.querySelector('optgroup[label="英文字体"]');
-
-            if (!chineseOptgroup) {
-                chineseOptgroup = document.createElement('optgroup');
-                chineseOptgroup.label = "中文字体";
-                fontSelectElement.insertBefore(chineseOptgroup, fontSelectElement.lastElementChild);
-            }
-
-            if (!englishOptgroup) {
-                englishOptgroup = document.createElement('optgroup');
-                englishOptgroup.label = "英文字体";
-                fontSelectElement.insertBefore(englishOptgroup, fontSelectElement.lastElementChild);
-            }
-
-            chineseOptgroup.innerHTML = '';
-            englishOptgroup.innerHTML = '';
-
-            availableFonts.chinese.forEach(font => {
-                const option = document.createElement('option');
-                option.value = font.name;
-                option.textContent = font.display;
-                chineseOptgroup.appendChild(option);
-            });
-
-            availableFonts.english.forEach(font => {
-                const option = document.createElement('option');
-                option.value = font.name;
-                option.textContent = font.display;
-                englishOptgroup.appendChild(option);
-            });
-
-            fontSelectElement.value = "'Noto Sans SC', sans-serif";
-        }
-
         // 字体选择处理
         fontSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
@@ -1722,7 +1586,7 @@
             });
         });
 
-        // 绘制带描边和投影的文字
+        // 绘制带描边和投影的文字（改进版，支持自动换行）
         function drawTextWithEffects(context, text, x, y, fontSize, isBold = true, isCenter = true) {
             const fontWeight = isBold ? 'bold' : 'normal';
             context.font = `${fontWeight} ${fontSize}px ${selectedFont}`;
@@ -1730,11 +1594,11 @@
             context.textAlign = isCenter ? 'center' : 'left';
             context.textBaseline = 'middle';
 
-            const maxWidth = 384 - 40;
+            const maxWidth = 384 - 40; // 左右留20px边距
             const lines = wrapText(context, text, maxWidth, fontSize);
 
             for (let i = 0; i < lines.length; i++) {
-                const lineY = y + (i * fontSize);
+                const lineY = y + (i * fontSize * 1.2); // 增加行间距
 
                 context.save();
                 context.shadowColor = shadowColor;
@@ -1792,11 +1656,11 @@
             });
         }
 
-        // 文本换行函数
+        // 改进的文本换行函数，支持长文本
         function wrapText(context, text, maxWidth, fontSize) {
             const words = text.split('');
             const lines = [];
-            let currentLine = words[0];
+            let currentLine = words[0] || '';
 
             for (let i = 1; i < words.length; i++) {
                 const word = words[i];
@@ -1808,7 +1672,9 @@
                     currentLine = word;
                 }
             }
-            lines.push(currentLine);
+            if (currentLine) {
+                lines.push(currentLine);
+            }
             return lines;
         }
 
@@ -1838,15 +1704,15 @@
             drawStickers(stickyCtx);
 
             // 绘制主标题（带描边和投影）到两个画布
-            drawTextWithEffects(ctx, mainTitle, mainX, mainY, mainTitleFontSize, true);
+            const mainTitleLines = drawTextWithEffects(ctx, mainTitle, mainX, mainY, mainTitleFontSize, true);
             drawTextWithEffects(stickyCtx, mainTitle, mainX, mainY, mainTitleFontSize, true);
 
             // 绘制副标题（带描边和投影）到两个画布
-            drawTextWithEffects(ctx, subTitle, subX, subY, subTitleFontSize, false);
+            const subTitleLines = drawTextWithEffects(ctx, subTitle, subX, subY, subTitleFontSize, false);
             drawTextWithEffects(stickyCtx, subTitle, subX, subY, subTitleFontSize, false);
 
             // 绘制作者（带描边和投影）到两个画布
-            drawTextWithEffects(ctx, author, authX, authY, authorFontSize, true);
+            const authorLines = drawTextWithEffects(ctx, author, authX, authY, authorFontSize, true);
             drawTextWithEffects(stickyCtx, author, authX, authY, authorFontSize, true);
 
             // 显示预览
@@ -1941,9 +1807,6 @@
         updatePositionDisplays();
         updateStickerDisplays();
 
-        // 检测并填充系统字体
-        populateFontSelector();
-
         // 初始生成图片
         generateImage();
 
@@ -1953,20 +1816,19 @@
         }, 100);
     });
 
-    //禁止右键
+    // 禁用右键
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
-        console.log('右键已被禁用');
         return false;
     });
 
-    // 禁止选择文本（可选，防止用户复制内容）
+    // 禁用文本选择
     document.addEventListener('selectstart', function(e) {
         e.preventDefault();
         return false;
     });
 
-    // 禁止拖拽图片（可选，防止用户拖拽保存图片）
+    // 禁用图片拖拽
     document.addEventListener('dragstart', function(e) {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -1974,30 +1836,22 @@
         }
     });
 
-    // 禁止F12开发者工具（简单版本，但容易被绕过）
+    // 禁用开发者工具快捷键
     document.addEventListener('keydown', function(e) {
-        // 禁用F12
         if (e.key === 'F12') {
             e.preventDefault();
-            console.log('F12已被禁用');
             return false;
         }
-        // 禁用Ctrl+Shift+I (Chrome开发者工具)
         if (e.ctrlKey && e.shiftKey && e.key === 'I') {
             e.preventDefault();
-            console.log('Ctrl+Shift+I已被禁用');
             return false;
         }
-        // 禁用Ctrl+Shift+J (Chrome控制台)
         if (e.ctrlKey && e.shiftKey && e.key === 'J') {
             e.preventDefault();
-            console.log('Ctrl+Shift+J已被禁用');
             return false;
         }
-        // 禁用Ctrl+U (查看源代码)
         if (e.ctrlKey && e.key === 'u') {
             e.preventDefault();
-            console.log('Ctrl+U已被禁用');
             return false;
         }
     });

@@ -171,6 +171,14 @@
             border-top: 5px solid #6a11cb;
         }
 
+        .tool-card.second {
+            border-top: 5px solid #ff0000;
+        }
+
+        .tool-card.official {
+            border-top: 5px solid #003cff;
+        }
+
         .tool-header {
             padding: 25px 25px 15px;
             display: flex;
@@ -209,7 +217,7 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            color: white;
+            color: #ffffff;
         }
 
         .featured-badge {
@@ -218,6 +226,14 @@
 
         .new-badge {
             background-color: #6a11cb;
+        }
+
+        .official-badge {
+            background-color: #0059ff;
+        }
+
+        .second-badge {
+            background-color: #ff0000;
         }
 
         .tool-description {
@@ -596,6 +612,17 @@
     const toolsData = [
         {
             id: 1,
+            name: "自制谱上传工具",
+            category: "upload",
+            description: "上传您的自制谱到机器上",
+            icon: "fa-solid fa-upload",
+            iconColor: "#0033ff",
+            official: true,
+            features: ["直接跳转"],
+            url: "https://danceweb.shenghuayule.com/MusicMaker/#/"
+        },
+        {
+            id: 2,
             name: "txt转mc/mcz",
             category: "exchange",
             description: "将txt文件转换为mc文件，并且支持打包为mcz文件",
@@ -606,7 +633,7 @@
             url: "../txt-mc.html"
         },
         {
-            id: 2,
+            id: 3,
             name: "歌曲封面剪裁",
             category: "cut",
             description: "将图片裁剪为可上传大小",
@@ -617,7 +644,7 @@
             url: "../picturecut.html"
         },
         {
-            id: 3,
+            id: 4,
             name: "标题图制作",
             category: "make",
             description: "绘制标题图图片",
@@ -628,7 +655,7 @@
             url: "../maketitle.html"
         },
         {
-            id: 4,
+            id: 5,
             name: "音频转换",
             category: "exchange",
             description: "转换音频格式",
@@ -639,7 +666,7 @@
             url: "../exchange-radio.html"
         },
         {
-            id: 5,
+            id: 6,
             name: "ncm转换",
             category: "exchange",
             description: "转换ncm格式",
@@ -650,7 +677,7 @@
             url: "../ncmexchange.html"
         },
         {
-            id: 6,
+            id: 7,
             name: "mc/mcz转txt",
             category: "exchange",
             description: "将mc/mcz文件转换为mc文件，并且支持打包为zip文件",
@@ -661,7 +688,7 @@
             url: "../mc-txt.html"
         },
         {
-            id: 7,
+            id: 8,
             name: "免费mp3下载",
             category: "download",
             description: "免费下载歌曲mp3音频、封面等等",
@@ -713,6 +740,12 @@
             if (tool.new) {
                 toolCard.classList.add('new');
             }
+            if (tool.second) {
+                toolCard.classList.add('second');
+            }
+            if (tool.official) {
+                toolCard.classList.add('official');
+            }
 
             toolCard.innerHTML = `
                 <div class="tool-header">
@@ -725,7 +758,8 @@
                     </div>
                     ${tool.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}
                     ${tool.new ? '<div class="tool-badge new-badge">新</div>' : ''}
-                    ${tool.second ? '<div class="tool-badge new-badge">更新</div>' : ''}
+                    ${tool.second ? '<div class="tool-badge second-badge">更新</div>' : ''}
+                    ${tool.official ? '<div class="tool-badge official-badge">官方</div>' : ''}
                 </div>
                 <div class="tool-description">
                     ${tool.description}

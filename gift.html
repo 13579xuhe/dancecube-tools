@@ -812,6 +812,48 @@
             line-height: 1.5;
         }
 
+        /* 生成数量设置 */
+        .code-count-info {
+            font-size: 0.9rem;
+            color: #4cc9f0;
+            margin-top: 8px;
+        }
+
+        /* 简化版的生成数量输入框 */
+        .code-count-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e6e6e6;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .code-count-input:focus {
+            outline: none;
+            border-color: #4cc9f0;
+            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
+        }
+
+        .code-count-input:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: #888;
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .count-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-input-wrapper input {
+            flex: 1;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -884,168 +926,14 @@
                 justify-content: center;
                 padding: 10px;
             }
-        }
 
-        /* 蓝色置顶返回按钮 */
-        .back-home-btn {
-            position: fixed;
-            top: 20px; /* 置顶 */
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10000;
-            box-shadow:
-                    0 6px 20px rgba(30, 144, 255, 0.4),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            animation: slideInFromTop 0.5s ease forwards;
-            animation-delay: 0.3s;
-        }
-
-        /* 从上向下滑入动画 */
-        @keyframes slideInFromTop {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .back-home-btn:hover {
-            transform: translateY(-2px) scale(1.08);
-            box-shadow:
-                    0 10px 30px rgba(30, 144, 255, 0.5),
-                    0 0 0 4px rgba(30, 144, 255, 0.1),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
-        }
-
-        .back-home-btn:active {
-            transform: translateY(1px) scale(0.98);
-            box-shadow:
-                    0 3px 10px rgba(30, 144, 255, 0.3),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .back-home-btn .material-icons {
-            color: white;
-            font-size: 26px;
-            font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .back-home-btn:hover .material-icons {
-            transform: translateX(-2px);
-        }
-
-        /* 添加发光效果 */
-        .back-home-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 100%);
-            pointer-events: none;
-        }
-
-        /* 添加返回文字提示（悬停时显示） */
-        .back-home-btn::after {
-            content: '返回首页';
-            position: absolute;
-            top: 65px;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .back-home-btn:hover::after {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .back-home-btn {
-                top: 15px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 22px;
-            }
-
-            .back-home-btn::after {
-                font-size: 11px;
-                padding: 5px 10px;
-            }
-        }
-
-        /* 手机横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .back-home-btn {
-                top: 10px;
-                right: 15px;
-                width: 44px;
-                height: 44px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
-        }
-
-        /* 超小屏幕 */
-        @media (max-width: 480px) {
-            .back-home-btn {
-                width: 44px;
-                height: 44px;
-                top: 12px;
-                right: 15px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
+            .count-input-wrapper {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
 </head>
-
-<div class="back-home-btn" onclick="window.location.href='../index.html'">
-    <span class="material-icons">←</span>
-</div>
-
 <body>
 <div class="container">
     <header>
@@ -1204,13 +1092,24 @@
                 </div>
             </div>
 
+            <!-- 生成数量设置 -->
+            <div class="form-group">
+                <label><i class="fas fa-hashtag"></i> 生成兑换码数量</label>
+                <div class="count-input-wrapper">
+                    <input type="number" id="code-count" class="code-count-input" min="1" value="1" placeholder="输入生成数量">
+                </div>
+                <div class="expire-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="code-count-info">最多可生成 <span id="max-codes">--</span> 个</span>
+                </div>
+            </div>
+
             <!-- 一个码兑换全部选项 -->
             <div class="onecode-option">
                 <label class="onecode-label">
                     <input type="checkbox" id="onecode-checkbox" class="onecode-checkbox">
                     <span>一个兑换码兑换全部选中的歌曲</span>
                 </label>
-                <div class="onecode-description"></div>
             </div>
 
             <!-- 隐藏API接口格式 -->
@@ -1255,7 +1154,7 @@
         <div id="logs-content">
             <div class="log-entry">
                 <span class="log-time">系统启动</span>
-                <span class="log-info">兑换码管理系统已就绪</span>
+                <span class="log-info">兑换码生成系统已就绪</span>
             </div>
         </div>
         <button class="btn btn-secondary" id="clear-logs-btn" style="margin-top: 15px;">
@@ -1305,6 +1204,11 @@
     const logsContent = document.getElementById('logs-content');
     const clearLogsBtn = document.getElementById('clear-logs-btn');
 
+    // 新增DOM元素
+    const codeCountInput = document.getElementById('code-count');
+    const codeCountInfo = document.getElementById('code-count-info');
+    const maxCodesSpan = document.getElementById('max-codes');
+
     // 初始化
     document.addEventListener('DOMContentLoaded', function() {
         updateTokenDisplay();
@@ -1334,11 +1238,57 @@
         // 有效期数值输入事件
         expireValueInput.addEventListener('input', validateExpireValue);
 
+        // 生成数量相关事件
+        codeCountInput.addEventListener('input', updateCodeCount);
+        onecodeCheckbox.addEventListener('change', handleOnecodeChange);
+        selectedCount.addEventListener('DOMSubtreeModified', () => {
+            setTimeout(updateCodeCount, 100);
+        });
+
         // 初始化有效期UI
         updateExpireTypeUI();
 
+        // 初始化生成数量限制
+        updateCodeCount();
+
         addLog('系统初始化完成', 'success');
     });
+
+    // 处理一个码兑换全部选项变化
+    function handleOnecodeChange() {
+        const onecode = onecodeCheckbox.checked;
+
+        if (onecode) {
+            // 当选择"一个码兑换全部"时，强制生成数量为1且不可更改
+            codeCountInput.value = 1;
+            codeCountInput.disabled = true;
+            codeCountInput.style.cursor = 'not-allowed';
+            codeCountInput.title = '一个码兑换全部模式固定生成1个兑换码';
+
+            // 更新描述
+            document.querySelector('.onecode-description').textContent =
+                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
+
+            // 更新生成按钮文本
+            if (selectedMusicIds.size > 0) {
+                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成通用兑换码`;
+            }
+        } else {
+            // 恢复生成数量输入框
+            codeCountInput.disabled = false;
+            codeCountInput.style.cursor = 'text';
+            codeCountInput.title = '';
+
+            // 恢复描述
+            document.querySelector('.onecode-description').textContent =
+                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
+        }
+
+        // 更新生成数量限制
+        updateCodeCount();
+
+        addLog(`一个码兑换全部模式: ${onecode ? '开启' : '关闭'}`, 'info');
+    }
 
     // 生成二维码
     async function generateQRCode() {
@@ -1347,7 +1297,7 @@
             qrStatus.textContent = '生成中';
             qrStatus.className = 'status-value';
 
-            // 调用二维码接口
+            // 调用二维码接口 - 使用完整URL
             const response = await fetch(`${API_BASE}/api/Common/GetQrCode`, {
                 method: 'GET',
                 headers: {
@@ -1356,10 +1306,16 @@
             });
 
             if (!response.ok) {
-                throw new Error(`二维码接口错误: ${response.status}`);
+                throw new Error(`二维码接口错误: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
+
+            // 检查响应数据格式
+            if (!data || !data.QrcodeUrl) {
+                throw new Error('二维码接口返回数据格式错误');
+            }
+
             qrCodeData = data;
 
             // 显示二维码
@@ -1368,17 +1324,22 @@
             qrcodeImg.style.display = 'block';
 
             // 显示过期时间和client_id
-            expireTimeDiv.textContent = `二维码有效期至: ${data.ExpireTime}`;
-            expireTimeDiv.style.display = 'block';
-            currentClientId.textContent = data.ID;
+            if (data.ExpireTime) {
+                expireTimeDiv.textContent = `二维码有效期至: ${data.ExpireTime}`;
+                expireTimeDiv.style.display = 'block';
+            }
+
+            if (data.ID) {
+                currentClientId.textContent = data.ID;
+            }
 
             // 更新状态
             qrStatus.textContent = '已生成';
             qrStatus.className = 'status-value success';
             checkLoginBtn.disabled = false;
 
-            addLog(`二维码生成成功，有效期至: ${data.ExpireTime}`, 'success');
-            addLog(`client_id: ${data.ID}`, 'info');
+            addLog(`二维码生成成功`, 'success');
+            addLog(`client_id: ${data.ID || '未知'}`, 'info');
 
             // 开始轮询检查登录状态
             if (loginCheckInterval) {
@@ -1387,19 +1348,21 @@
 
             loginCheckInterval = setInterval(checkLoginStatus, 3000);
 
-            // 设置二维码过期检查
-            const expireTime = new Date(data.ExpireTime);
-            const now = new Date();
-            const timeDiff = expireTime - now;
+            // 设置二维码过期检查（如果提供了过期时间）
+            if (data.ExpireTime) {
+                const expireTime = new Date(data.ExpireTime);
+                const now = new Date();
+                const timeDiff = expireTime - now;
 
-            if (timeDiff > 0) {
-                setTimeout(() => {
-                    qrStatus.textContent = '已过期';
-                    qrStatus.className = 'status-value error';
-                    expireTimeDiv.textContent = '二维码已过期，点击刷新';
-                    expireTimeDiv.style.color = '#f87171';
-                    addLog('二维码已过期', 'warning');
-                }, timeDiff);
+                if (timeDiff > 0) {
+                    setTimeout(() => {
+                        qrStatus.textContent = '已过期';
+                        qrStatus.className = 'status-value error';
+                        expireTimeDiv.textContent = '二维码已过期，点击刷新';
+                        expireTimeDiv.style.color = '#f87171';
+                        addLog('二维码已过期', 'warning');
+                    }, timeDiff);
+                }
             }
 
         } catch (error) {
@@ -1407,6 +1370,11 @@
             qrStatus.textContent = '生成失败';
             qrStatus.className = 'status-value error';
             addLog(`二维码生成失败: ${error.message}`, 'error');
+
+            // 显示二维码生成失败提示
+            qrPlaceholder.style.display = 'flex';
+            qrcodeImg.style.display = 'none';
+            expireTimeDiv.style.display = 'none';
         }
     }
 
@@ -1428,7 +1396,7 @@
             params.append('grant_type', 'client_credentials');
             params.append('client_id', qrCodeData.ID);
 
-            // 调用Token获取接口
+            // 调用Token获取接口 - 使用完整URL
             const response = await fetch(`${API_BASE}/token`, {
                 method: 'POST',
                 headers: {
@@ -1456,7 +1424,8 @@
             }
 
             if (!response.ok) {
-                throw new Error(`Token接口错误: ${response.status} ${response.statusText}`);
+                const errorText = await response.text();
+                throw new Error(`Token接口错误: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
             const data = await response.json();
@@ -1534,7 +1503,7 @@
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `bearer ${userToken}`,
+                    'Authorization': `Bearer ${userToken}`,
                     'Accept': 'application/json'
                 }
             });
@@ -1613,6 +1582,9 @@
         } finally {
             refreshMusicBtn.disabled = false;
             refreshMusicBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新列表';
+
+            // 更新生成数量限制
+            setTimeout(updateCodeCount, 100);
         }
     }
 
@@ -1749,6 +1721,130 @@
         }
     }
 
+    // 更新生成数量限制
+    function updateCodeCount() {
+        const onecode = onecodeCheckbox.checked;
+        const selectedCount = selectedMusicIds.size;
+        const currentRemain = parseInt(remainTimes.textContent);
+
+        if (isNaN(currentRemain) || currentRemain <= 0) {
+            // 如果没有剩余次数信息，限制为1
+            codeCountInput.max = 1;
+
+            // 一个码兑换全部模式强制为1
+            if (onecode) {
+                codeCountInput.value = 1;
+                codeCountInput.disabled = true;
+            } else {
+                codeCountInput.value = 1;
+                codeCountInput.disabled = false;
+            }
+
+            maxCodesSpan.textContent = '1';
+            codeCountInfo.innerHTML = ` <span>请先查询剩余次数</span>`;
+            return;
+        }
+
+        // 计算最大生成数量
+        let maxCodes = 0;
+
+        if (onecode) {
+            // 一个码兑换全部模式 - 固定为1
+            if (selectedCount === 0) {
+                // 没有选择任何歌曲时，不能生成
+                maxCodes = 0;
+            } else {
+                // 一个码兑换全部，固定生成1个码
+                maxCodes = 1;
+                codeCountInput.value = 1;
+                codeCountInput.disabled = true;
+            }
+        } else {
+            // 单独生成模式
+            if (selectedCount === 0) {
+                // 没有选择任何歌曲时，不能生成
+                maxCodes = 0;
+            } else if (selectedCount === 1) {
+                // 只选择了一个歌曲时，可以生成多个该歌曲的兑换码
+                maxCodes = currentRemain;
+                codeCountInput.disabled = false;
+            } else {
+                // 选择了多个歌曲时，每个码消耗的剩余次数等于选择的歌曲数量
+                maxCodes = Math.floor(currentRemain / selectedCount);
+                codeCountInput.disabled = false;
+            }
+        }
+
+        // 设置输入框最大值
+        codeCountInput.max = maxCodes;
+
+        // 验证当前值
+        let currentValue = parseInt(codeCountInput.value);
+        if (isNaN(currentValue) || currentValue < 1) {
+            currentValue = 1;
+        }
+
+        if (currentValue > maxCodes) {
+            currentValue = maxCodes;
+        }
+
+        codeCountInput.value = currentValue;
+
+        // 更新显示信息
+        maxCodesSpan.textContent = maxCodes;
+
+        // 计算总共需要消耗的次数
+        let totalRequired = 0;
+        if (onecode) {
+            totalRequired = 1; // 固定消耗1次
+        } else {
+            if (selectedCount === 0) {
+                totalRequired = 0;
+            } else if (selectedCount === 1) {
+                totalRequired = currentValue; // 每个码消耗1次
+            } else {
+                totalRequired = currentValue * selectedCount; // 每个码消耗selectedCount次
+            }
+        }
+
+        // 更新提示信息
+        let infoText = '';
+        if (maxCodes === 0) {
+            if (selectedCount === 0) {
+                infoText = '请至少选择一个谱面';
+            } else {
+                infoText = `剩余次数不足，需要 ${onecode ? 1 : selectedCount} 次，剩余 ${currentRemain} 次`;
+            }
+        } else {
+            if (onecode) {
+                infoText = `一个码兑换全部模式固定生成1个通用兑换码，将消耗1次剩余次数`;
+            } else {
+                infoText = `最多可生成 ${maxCodes} 个，将消耗 ${totalRequired} 次剩余次数`;
+            }
+        }
+
+        codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> <span>${infoText}</span>`;
+
+        // 更新生成按钮文本
+        if (onecode) {
+            if (selectedCount > 0) {
+                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成通用兑换码`;
+            } else {
+                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码`;
+            }
+        } else {
+            if (selectedCount > 0) {
+                if (selectedCount === 1) {
+                    generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成 ${currentValue} 个兑换码`;
+                } else {
+                    generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成 ${currentValue} 组兑换码（每组 ${selectedCount} 个）`;
+                }
+            } else {
+                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码`;
+            }
+        }
+    }
+
     // 获取有效期类型文本
     function getExpireTypeText() {
         const expireType = expireTypeSelect.value;
@@ -1789,24 +1885,42 @@
         return unitMap[expireType] || 2; // 默认返回天
     }
 
-    // 构建请求体数据 - 按照API模型格式
+    // 构建请求体数据 - 按照新的API格式
     function buildRequestBody() {
         const expireType = expireTypeSelect.value;
         const expireValue = expireValueInput.value;
         const expireUnitType = getExpireUnitType(expireType);
+        const codeCount = parseInt(codeCountInput.value) || 1;
+        const onecode = onecodeCheckbox.checked;
 
-        // 构建请求体数组，格式：[{MusicID, ExpireDuration, ExpireUnitType}, ...]
+        // 构建请求体数组
         const requestBody = [];
 
-        selectedMusicIds.forEach(musicId => {
-            const expireDuration = expireType === 'forever' ? 0 : Math.max(1, parseInt(expireValue));
+        if (onecode) {
+            // 一个码兑换全部模式
+            // 为每个选中的歌曲ID生成一个独立的请求数据对象
+            selectedMusicIds.forEach(musicId => {
+                const expireDuration = expireType === 'forever' ? 0 : Math.max(1, parseInt(expireValue));
 
-            requestBody.push({
-                MusicID: parseInt(musicId),
-                ExpireDuration: expireDuration,
-                ExpireUnitType: expireUnitType
+                requestBody.push({
+                    "MusicID": parseInt(musicId),
+                    "ExpireDuration": expireDuration,
+                    "ExpireUnitType": expireUnitType
+                });
             });
-        });
+        } else {
+            // 单独生成模式 - 每个歌曲生成指定数量的兑换码
+            selectedMusicIds.forEach(musicId => {
+                const expireDuration = expireType === 'forever' ? 0 : Math.max(1, parseInt(expireValue));
+
+                requestBody.push({
+                    "MusicID": parseInt(musicId),
+                    "Count": codeCount, // 每个歌曲生成指定数量的兑换码
+                    "ExpireDuration": expireDuration,
+                    "ExpireUnitType": expireUnitType
+                });
+            });
+        }
 
         return requestBody;
     }
@@ -1826,6 +1940,7 @@
         }
 
         updateSelectedCount();
+        updateCodeCount();
     }
 
     // 全选谱面
@@ -1856,11 +1971,7 @@
         // 根据选择数量更新生成按钮状态
         generateCodeBtn.disabled = selectedMusicIds.size === 0;
 
-        if (selectedMusicIds.size > 0) {
-            generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码 (${selectedMusicIds.size})`;
-        } else {
-            generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码`;
-        }
+        updateCodeCount();
     }
 
     // 查询剩余发码次数
@@ -1880,7 +1991,7 @@
             const response = await fetch(`${API_BASE}/api/MusicData/GetCodeRemainTimes`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `bearer ${userToken}`,
+                    'Authorization': `Bearer ${userToken}`,
                     'Accept': 'application/json'
                 }
             });
@@ -1891,11 +2002,15 @@
 
             if (!response.ok) {
                 const errorText = await response.text();
+                addLog(`接口响应: ${errorText}`, 'error');
                 throw new Error(`接口错误: ${response.status} - ${errorText}`);
             }
 
             const data = await response.json();
-            const remainCount = data.Remain;
+            addLog(`接口返回数据: ${JSON.stringify(data)}`, 'info');
+
+            // 尝试多种可能的字段名
+            const remainCount = data.Remain || data.remain || data.count || data.times;
 
             if (remainCount !== undefined) {
                 remainTimes.textContent = remainCount;
@@ -1920,6 +2035,9 @@
         } finally {
             checkRemainBtn.disabled = false;
             checkRemainBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 查询剩余次数';
+
+            // 更新生成数量限制
+            setTimeout(updateCodeCount, 100);
         }
     }
 
@@ -1937,10 +2055,11 @@
 
         const expireTypeText = getExpireTypeText();
         const selectedCount = selectedMusicIds.size;
-        const onecode = onecodeCheckbox.checked ? 'True' : 'False';
+        const onecode = onecodeCheckbox.checked;
+        const codeCount = parseInt(codeCountInput.value) || 1;
 
         try {
-            addLog(`开始为 ${selectedCount} 个谱面生成兑换码...`, 'info');
+            addLog(`开始生成兑换码，模式: ${onecode ? '一个码兑换全部' : '单独生成'}，数量: ${codeCount}`, 'info');
             generateCodeBtn.disabled = true;
             generateCodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
 
@@ -1948,7 +2067,16 @@
             await checkRemainTimes();
 
             const currentRemain = parseInt(remainTimes.textContent);
-            const requiredRemain = onecode === 'True' ? 1 : selectedCount;
+
+            // 计算所需剩余次数
+            let requiredRemain = 0;
+            if (onecode) {
+                // 一个码兑换全部模式 - 固定需要1次
+                requiredRemain = 1;
+            } else {
+                // 单独生成模式
+                requiredRemain = codeCount * selectedCount; // 每个码消耗selectedCount次
+            }
 
             if (isNaN(currentRemain) || currentRemain < requiredRemain) {
                 throw new Error(`剩余发码次数不足。需要: ${requiredRemain}，剩余: ${currentRemain}`);
@@ -1958,20 +2086,23 @@
             const requestBody = buildRequestBody();
 
             // 调试信息
-            addLog(`请求参数: onecode=${onecode}`, 'info');
+            addLog(`请求参数: onecode=${onecode}, count=${codeCount}`, 'info');
             addLog(`选中的谱面ID: ${Array.from(selectedMusicIds).join(', ')}`, 'info');
             console.log('请求体:', JSON.stringify(requestBody, null, 2));
 
             // 构建请求URL
-            const url = `${API_BASE}/api/MusicData/GetAllMusicCodes?onecode=${onecode}`;
+            const url = `${API_BASE}/api/MusicData/GetAllMusicCodes`;
+
+            // 添加onecode参数到URL（如果需要）
+            const requestUrl = onecode ? `${url}?onecode=true` : url;
 
             // 发送POST请求
-            addLog(`调用接口: ${url}`, 'info');
+            addLog(`调用接口: ${requestUrl}`, 'info');
 
-            const response = await fetch(url, {
+            const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `bearer ${userToken}`,
+                    'Authorization': `Bearer ${userToken}`,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
@@ -1981,13 +2112,14 @@
             // 获取响应文本
             const responseText = await response.text();
             addLog(`接口响应状态: ${response.status}`, 'info');
+            addLog(`接口响应内容: ${responseText}`, 'info');
 
             // 解析响应
             let resultData;
             try {
                 if (responseText && responseText.trim().length > 0) {
                     resultData = JSON.parse(responseText);
-                    addLog(`接口响应解析成功，数据长度: ${responseText.length}`, 'info');
+                    addLog(`接口响应解析成功`, 'info');
                 } else {
                     resultData = {};
                     addLog('响应为空', 'warning');
@@ -2014,6 +2146,8 @@
                             errorMsg += ' - ExpireUnitType参数错误';
                         } else if (responseText.includes('MusicID')) {
                             errorMsg += ' - MusicID参数错误';
+                        } else if (responseText.includes('Count')) {
+                            errorMsg += ' - Count参数错误';
                         } else if (responseText.includes('onecode')) {
                             errorMsg += ' - onecode参数错误';
                         }
@@ -2041,7 +2175,7 @@
             }
 
             // 显示结果
-            displayResult(resultData, expireTypeText, onecode === 'True');
+            displayResult(resultData, expireTypeText, onecode, codeCount);
 
             // 生成成功后，刷新剩余次数
             setTimeout(() => {
@@ -2063,7 +2197,8 @@
     // 显示错误信息
     function displayError(errorMessage) {
         const requestBody = buildRequestBody();
-        const onecode = onecodeCheckbox.checked ? 'True' : 'False';
+        const onecode = onecodeCheckbox.checked;
+        const codeCount = parseInt(codeCountInput.value) || 1;
 
         let errorHtml = `
             <div class="result-success-header">
@@ -2090,8 +2225,12 @@
                         <div class="result-info-value">POST</div>
                     </div>
                     <div class="result-info-item">
-                        <div class="result-info-label">onecode参数</div>
-                        <div class="result-info-value highlight">${onecode}</div>
+                        <div class="result-info-label">生成模式</div>
+                        <div class="result-info-value highlight">${onecode ? '一个码兑换全部' : '单独生成'}</div>
+                    </div>
+                    <div class="result-info-item">
+                        <div class="result-info-label">生成数量</div>
+                        <div class="result-info-value highlight">${onecode ? '1 (固定)' : codeCount + ' 个'}</div>
                     </div>
                     <div class="result-info-item">
                         <div class="result-info-label">选择谱面数</div>
@@ -2115,9 +2254,10 @@ ${JSON.stringify(requestBody, null, 2)}
                     <li>检查 ExpireDuration 是否大于等于1（永久为0）</li>
                     <li>检查 ExpireUnitType 是否正确映射</li>
                     <li>检查 MusicID 是否有效</li>
-                    <li>检查 onecode 参数是否正确（True/False）</li>
+                    <li>检查 Count 参数是否有效（大于0）</li>
                     <li>检查剩余发码次数是否足够</li>
                     <li>检查网络连接是否正常</li>
+                    <li>检查 Token 是否有效</li>
                 </ul>
             </div>
         `;
@@ -2126,9 +2266,63 @@ ${JSON.stringify(requestBody, null, 2)}
     }
 
     // 显示生成结果
-    function displayResult(data, expireTypeText, isOneCode) {
+    function displayResult(data, expireTypeText, isOneCode, codeCount = 1) {
         // 查找兑换码
         const codes = findAllCodesInResponse(data);
+
+        if (codes.length === 0) {
+            // 没有找到兑换码，显示原始数据
+            let html = `
+                <div class="result-success-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <div class="result-success-title">接口调用成功</div>
+                        <div class="result-success-subtitle">但未找到标准兑换码字段</div>
+                    </div>
+                </div>
+                <div class="debug-container">
+                    <div class="debug-title">
+                        <i class="fas fa-info-circle"></i> 接口返回数据
+                    </div>
+                    <div class="debug-content">
+${JSON.stringify(data, null, 2)}
+                    </div>
+                </div>
+            `;
+            resultContent.innerHTML = html;
+            return;
+        }
+
+        let allCodes = [];
+        let codeTitles = [];
+
+        if (isOneCode) {
+            // 一个码兑换全部模式
+            // 取第一个码作为通用码
+            const uniqueCodes = [...new Set(codes)]; // 去重
+            const singleCode = uniqueCodes[0] || codes[0]; // 取第一个码
+
+            allCodes.push(singleCode);
+            codeTitles.push(`通用兑换码`);
+        } else {
+            // 单独生成模式
+            // 每个歌曲生成指定数量的兑换码
+            let codeIndex = 0;
+            selectedMusicIds.forEach((musicId, songIndex) => {
+                const music = musicList.find(m => extractMusicId(m) === musicId);
+                const musicName = music ? extractMusicName(music) : '未知谱面';
+
+                for (let i = 0; i < codeCount; i++) {
+                    if (codes[codeIndex]) {
+                        allCodes.push(codes[codeIndex]);
+                        codeTitles.push(`${musicName} - 第 ${i + 1} 个`);
+                        codeIndex++;
+                    }
+                }
+            });
+        }
 
         let html = `
             <div class="result-success-header">
@@ -2137,13 +2331,17 @@ ${JSON.stringify(requestBody, null, 2)}
                 </div>
                 <div>
                     <div class="result-success-title">兑换码生成成功</div>
-                    <div class="result-success-subtitle">兑换码已成功生成，请妥善保存</div>
+                    <div class="result-success-subtitle">${allCodes.length} 个兑换码已成功生成，请妥善保存</div>
                 </div>
             </div>
             <div class="result-info-grid">
                 <div class="result-info-item">
                     <div class="result-info-label">生成模式</div>
                     <div class="result-info-value highlight">${isOneCode ? '一个码兑换全部' : '每个谱面单独生成'}</div>
+                </div>
+                <div class="result-info-item">
+                    <div class="result-info-label">生成数量</div>
+                    <div class="result-info-value highlight">${isOneCode ? '1 (固定)' : codeCount + ' 个/每谱面'}</div>
                 </div>
                 <div class="result-info-item">
                     <div class="result-info-label">有效期</div>
@@ -2154,98 +2352,80 @@ ${JSON.stringify(requestBody, null, 2)}
                     <div class="result-info-value">${new Date().toLocaleString()}</div>
                 </div>
                 <div class="result-info-item">
-                    <div class="result-info-label">生成数量</div>
-                    <div class="result-info-value highlight">${selectedMusicIds.size} 个谱面</div>
+                    <div class="result-info-label">总码数</div>
+                    <div class="result-info-value highlight">${allCodes.length} 个</div>
                 </div>
             </div>
         `;
 
-        if (codes.length > 0) {
-            if (isOneCode && codes.length === 1) {
-                // 一个码兑换全部
-                html += `
-                    <div class="single-code-container">
-                        <div class="single-code-label">
-                            <i class="fas fa-gift"></i> 兑换码（可兑换 ${selectedMusicIds.size} 个谱面）:
-                        </div>
-                        <div class="single-code-value">${codes[0]}</div>
-                        <div style="color: #888; font-size: 0.9rem; margin-top: 10px;">
-                            该兑换码可以兑换所有选中的谱面
-                        </div>
-                    </div>
-                `;
-            } else {
-                // 多个兑换码
-                html += `
-                    <div style="margin: 25px 0;">
-                        <div style="color: #4cc9f0; font-weight: 600; margin-bottom: 20px; font-size: 1.1rem;">
-                            <i class="fas fa-key"></i> 生成的兑换码:
-                        </div>
-                `;
-
-                codes.forEach((code, index) => {
-                    // 尝试找到对应的谱面信息
-                    const musicId = Array.from(selectedMusicIds)[index] || '未知ID';
-                    const music = musicList.find(m => extractMusicId(m) === musicId);
-                    const musicName = music ? extractMusicName(music) : '未知谱面';
-
-                    html += `
-                        <div class="code-card">
-                            <div class="code-card-header">
-                                <div class="code-title">
-                                    <i class="fas fa-music"></i> ${index + 1}. ${musicName}
-                                </div>
-                                <div class="code-id">ID: ${musicId}</div>
-                            </div>
-                            <div class="code-value">${code}</div>
-                        </div>
-                    `;
-                });
-
-                html += `</div>`;
-            }
-
-            // 添加操作按钮
-            const codesToCopy = codes.join('\n');
+        if (isOneCode && selectedMusicIds.size > 0) {
+            // 一个码兑换全部
             html += `
-                <div class="action-buttons">
-                    <button id="copy-codes-btn" class="action-btn copy-btn">
-                        <i class="fas fa-copy"></i> 复制兑换码
-                    </button>
-                    <button id="export-codes-btn" class="action-btn export-btn">
-                        <i class="fas fa-download"></i> 导出为文本文件
-                    </button>
+                <div class="single-code-container">
+                    <div class="single-code-label">
+                        <i class="fas fa-gift"></i> 通用兑换码（可兑换 ${selectedMusicIds.size} 个谱面）:
+                    </div>
+                    <div class="single-code-value">${allCodes[0]}</div>
+                    <div style="color: #888; font-size: 0.9rem; margin-top: 10px;">
+                        该兑换码可以兑换所有选中的谱面
+                    </div>
                 </div>
             `;
-
-            resultContent.innerHTML = html;
-
-            // 添加复制按钮事件监听
-            document.getElementById('copy-codes-btn').addEventListener('click', () => {
-                copyCodeToClipboard(codesToCopy, isOneCode && codes.length === 1);
-            });
-
-            // 添加导出按钮事件监听
-            document.getElementById('export-codes-btn').addEventListener('click', () => {
-                exportCodesToFile(codesToCopy, isOneCode && codes.length === 1);
-            });
         } else {
-            // 没有找到兑换码，显示原始数据
+            // 多个兑换码
             html += `
-                <div class="debug-container">
-                    <div class="debug-title">
-                        <i class="fas fa-info-circle"></i> 接口返回数据（未找到标准兑换码字段）
+                <div style="margin: 25px 0;">
+                    <div style="color: #4cc9f0; font-weight: 600; margin-bottom: 20px; font-size: 1.1rem;">
+                        <i class="fas fa-key"></i> 生成的兑换码 (${allCodes.length} 个):
                     </div>
-                    <div class="debug-content">
-${JSON.stringify(data, null, 2)}
-                    </div>
-                    <div style="color: #888; font-size: 0.9rem; margin-top: 15px;">
-                        提示：如果接口返回成功但未显示兑换码，可能是字段名称不匹配。请检查返回数据结构。
-                    </div>
-                </div>
             `;
 
-            resultContent.innerHTML = html;
+            allCodes.forEach((code, index) => {
+                html += `
+                    <div class="code-card">
+                        <div class="code-card-header">
+                            <div class="code-title">
+                                <i class="fas fa-music"></i> ${index + 1}. ${codeTitles[index] || `兑换码 ${index + 1}`}
+                            </div>
+                            <div class="code-id">序号: ${index + 1}</div>
+                        </div>
+                        <div class="code-value">${code}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+        }
+
+        // 添加操作按钮
+        const codesToCopy = allCodes.join('\n');
+        html += `
+            <div class="action-buttons">
+                <button id="copy-codes-btn" class="action-btn copy-btn">
+                    <i class="fas fa-copy"></i> 复制全部兑换码
+                </button>
+                <button id="export-codes-btn" class="action-btn export-btn">
+                    <i class="fas fa-download"></i> 导出为文本文件
+                </button>
+            </div>
+        `;
+
+        resultContent.innerHTML = html;
+
+        // 添加复制按钮事件监听
+        const copyBtn = document.getElementById('copy-codes-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                copyCodeToClipboard(codesToCopy, isOneCode, codeCount);
+            });
+        }
+
+        // 添加导出按钮事件监听
+        const exportBtn = document.getElementById('export-codes-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                exportCodesToFile(codesToCopy, isOneCode, codeCount);
+            });
         }
     }
 
@@ -2280,16 +2460,17 @@ ${JSON.stringify(data, null, 2)}
     }
 
     // 复制兑换码到剪贴板
-    function copyCodeToClipboard(code, isOneCode) {
+    function copyCodeToClipboard(code, isOneCode, codeCount = 1) {
         let text = '谱面兑换码\n';
         text += '生成时间: ' + new Date().toLocaleString() + '\n';
-        text += '有效期: ' + getExpireTypeText() + '\n';
-        text += '生成模式: ' + (isOneCode ? '一个码兑换全部' : '每个谱面单独生成') + '\n\n';
+        text += '歌曲时长: ' + getExpireTypeText() + '\n';
+        text += '生成数量: ' + (isOneCode ? '1' : codeCount + ' 个') + '\n';
+        text += '谱面数量: ' + selectedMusicIds.size + ' 个\n\n';
 
         if (isOneCode) {
-            text += '【通用兑换码】\n';
-            text += `${code}\n\n`;
-            text += `可兑换 ${selectedMusicIds.size} 个谱面：\n\n`;
+            text += '【兑换码】\n';
+            const uniqueCodes = [...new Set(code.split('\n'))];
+            text += `兑换码: ${uniqueCodes[0] || code.split('\n')[0]}\n\n`;
 
             selectedMusicIds.forEach((musicId, index) => {
                 const music = musicList.find(m => extractMusicId(m) === musicId);
@@ -2299,12 +2480,17 @@ ${JSON.stringify(data, null, 2)}
         } else {
             text += '【兑换码列表】\n\n';
             const codes = code.split('\n');
-            codes.forEach((singleCode, index) => {
-                const musicId = Array.from(selectedMusicIds)[index] || '未知ID';
+            let codeIndex = 0;
+            selectedMusicIds.forEach((musicId, songIndex) => {
                 const music = musicList.find(m => extractMusicId(m) === musicId);
                 const musicName = music ? extractMusicName(music) : '未知谱面';
-                text += `${index + 1}. ${musicName} (ID: ${musicId})\n`;
-                text += `   兑换码: ${singleCode}\n\n`;
+
+                text += `--- ${musicName} (ID: ${musicId}) ---\n`;
+                for (let i = 0; i < codeCount && codes[codeIndex]; i++) {
+                    text += `   ${i + 1}. ${codes[codeIndex]}\n`;
+                    codeIndex++;
+                }
+                text += '\n';
             });
         }
 
@@ -2313,14 +2499,16 @@ ${JSON.stringify(data, null, 2)}
 
             // 显示成功提示
             const btn = document.getElementById('copy-codes-btn');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> 复制成功！';
-            btn.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)';
+            if (btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> 复制成功！';
+                btn.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)';
 
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.style.background = 'linear-gradient(90deg, #4cc9f0, #4361ee)';
-            }, 2000);
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = 'linear-gradient(90deg, #4cc9f0, #4361ee)';
+                }, 2000);
+            }
         }).catch(err => {
             addLog('复制到剪贴板失败: ' + err.message, 'error');
             alert('复制失败，请手动复制');
@@ -2328,21 +2516,19 @@ ${JSON.stringify(data, null, 2)}
     }
 
     // 导出兑换码为文本文件
-    function exportCodesToFile(code, isOneCode) {
+    function exportCodesToFile(code, isOneCode, codeCount = 1) {
         let text = '谱面兑换码导出文件\n';
         text += '='.repeat(40) + '\n\n';
         text += '生成时间: ' + new Date().toLocaleString() + '\n';
-        text += '有效期: ' + getExpireTypeText() + '\n';
-        text += '生成模式: ' + (isOneCode ? '一个码兑换全部' : '每个谱面单独生成') + '\n';
-        text += '谱面数量: ' + selectedMusicIds.size + ' 个\n\n';
+        text += '歌曲时长: ' + getExpireTypeText() + '\n';
+        text += '生成数量: ' + (isOneCode ? '1' : codeCount + ' 个') + '\n';
         text += '='.repeat(40) + '\n\n';
 
         if (isOneCode) {
-            text += '【通用兑换码】\n';
+            text += '【兑换码】\n';
             text += '='.repeat(20) + '\n';
-            text += `${code}\n\n`;
-            text += '可兑换谱面列表:\n';
-            text += '-'.repeat(20) + '\n';
+            const uniqueCodes = [...new Set(code.split('\n'))];
+            text += `兑换码: ${uniqueCodes[0] || code.split('\n')[0]}\n\n`;
 
             selectedMusicIds.forEach((musicId, index) => {
                 const music = musicList.find(m => extractMusicId(m) === musicId);
@@ -2353,14 +2539,18 @@ ${JSON.stringify(data, null, 2)}
             text += '【兑换码列表】\n';
             text += '='.repeat(20) + '\n\n';
             const codes = code.split('\n');
-            codes.forEach((singleCode, index) => {
-                const musicId = Array.from(selectedMusicIds)[index] || '未知ID';
+            let codeIndex = 0;
+            selectedMusicIds.forEach((musicId, songIndex) => {
                 const music = musicList.find(m => extractMusicId(m) === musicId);
                 const musicName = music ? extractMusicName(music) : '未知谱面';
-                text += `谱面 ${index + 1}:\n`;
-                text += `名称: ${musicName}\n`;
+
+                text += `谱面: ${musicName}\n`;
                 text += `ID: ${musicId}\n`;
-                text += `兑换码: ${singleCode}\n`;
+                text += '兑换码:\n';
+                for (let i = 0; i < codeCount && codes[codeIndex]; i++) {
+                    text += `  ${i + 1}. ${codes[codeIndex]}\n`;
+                    codeIndex++;
+                }
                 text += '-'.repeat(30) + '\n\n';
             });
         }
@@ -2385,14 +2575,16 @@ ${JSON.stringify(data, null, 2)}
 
         // 显示成功提示
         const btn = document.getElementById('export-codes-btn');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> 导出成功！';
-        btn.style.background = 'rgba(76, 201, 240, 0.2)';
+        if (btn) {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> 导出成功！';
+            btn.style.background = 'rgba(76, 201, 240, 0.2)';
 
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.style.background = 'rgba(76, 201, 240, 0.1)';
-        }, 2000);
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = 'rgba(76, 201, 240, 0.1)';
+            }, 2000);
+        }
     }
 
     // 更新Token显示
@@ -2449,6 +2641,17 @@ ${JSON.stringify(data, null, 2)}
                 `;
             updateSelectedCount();
 
+            // 重置生成数量
+            codeCountInput.value = 1;
+            codeCountInput.disabled = false;
+            maxCodesSpan.textContent = '--';
+            codeCountInfo.innerHTML = '<i class="fas fa-info-circle"></i> <span>请先登录并查询剩余次数</span>';
+
+            // 重置一个码兑换全部选项
+            onecodeCheckbox.checked = false;
+            document.querySelector('.onecode-description').textContent =
+                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
+
             // 重置登录状态
             loginStatus.textContent = '未登录';
             loginStatus.className = 'status-value';
@@ -2490,46 +2693,6 @@ ${JSON.stringify(data, null, 2)}
             addLog('日志已清空', 'info');
         }
     }
-
-    // 禁用右键
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用文本选择
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用图片拖拽
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // 禁用开发者工具快捷键
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            return false;
-        }
-    });
 </script>
 </body>
 </html>

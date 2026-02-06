@@ -100,6 +100,13 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-details {
@@ -125,6 +132,7 @@
             cursor: pointer;
             font-size: 0.8rem;
             transition: all 0.3s ease;
+            margin-top: 5px;
         }
 
         .logout-btn:hover {
@@ -283,7 +291,7 @@
 
         .search-box {
             flex: 1;
-            position: relative;
+            position:relative;
             max-width: 500px;
         }
 
@@ -1056,20 +1064,50 @@
 
     // 显示用户信息
     function showUserInfo(user) {
-        userName.textContent = user.nickname || '微信用户';
-        userId.textContent = `ID: ${user.userId || '未知'}`;
+        // 设置用户名
+        const displayName = user.UserName || user.username || '微信用户';
+        userName.textContent = displayName;
+
+        // 设置用户ID
+        const displayId = user.UserID || user.userId || '未知';
+        userId.textContent = `ID: ${displayId}`;
+
         userDetails.style.display = 'block';
         userAvatar.style.display = 'flex';
         loginBtn.style.display = 'none';
 
+        // 如果有头像URL，显示头像图片
+        if (user.HeadimgURL && user.HeadimgURL.trim() !== '') {
+            const avatarImg = document.createElement('img');
+            avatarImg.src = user.HeadimgURL;
+            avatarImg.alt = displayName;
+            avatarImg.onerror = function() {
+                // 如果图片加载失败，显示默认头像
+                this.remove();
+                showDefaultAvatar(displayName, displayId);
+            };
+
+            // 清空原有内容并添加图片
+            userAvatar.innerHTML = '';
+            userAvatar.appendChild(avatarImg);
+        } else {
+            // 显示默认头像
+            showDefaultAvatar(displayName, displayId);
+        }
+    }
+
+    // 显示默认头像
+    function showDefaultAvatar(displayName, displayId) {
         // 设置头像背景色
         const avatarColors = ['#6a11cb', '#2575fc', '#4ade80', '#f59e0b', '#ef4444'];
-        const colorIndex = (user.userId || '').toString().split('').reduce((sum, char) => sum + char.charCodeAt(0), 0) % avatarColors.length;
+        const userIdStr = displayId.toString();
+        const colorIndex = userIdStr.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0) % avatarColors.length;
         userAvatar.style.background = `linear-gradient(135deg, ${avatarColors[colorIndex]}99, ${avatarColors[colorIndex]})`;
 
-        // 显示头像首字母
-        const firstChar = userName.textContent.charAt(0).toUpperCase();
-        userAvatar.innerHTML = firstChar;
+        // 清空并显示首字母
+        userAvatar.innerHTML = '';
+        const firstChar = displayName.charAt(0).toUpperCase();
+        userAvatar.textContent = firstChar;
     }
 
     // 清除用户数据
@@ -1080,6 +1118,10 @@
         userDetails.style.display = 'none';
         userAvatar.style.display = 'none';
         loginBtn.style.display = 'flex';
+
+        // 重置头像
+        userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+        userAvatar.style.background = 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)';
     }
 
     // 生成登录二维码
@@ -1199,30 +1241,40 @@
                     loginStatus.textContent = '登录成功！';
                     loginStatus.className = 'login-status success';
 
-                    // 获取用户信息（这里需要根据实际API调整）
-                    // 假设token中包含用户信息，或者需要调用其他接口获取
-                    const userInfo = await getUserInfo(token);
+                    // 从token接口返回的数据中获取用户ID
+                    const userIdFromToken = data.user_id || data.userId || data.sub;
 
-                    if (userInfo) {
-                        // 保存用户数据
-                        userData = userInfo;
-                        localStorage.setItem('dance_user_data', JSON.stringify(userInfo));
+                    if (userIdFromToken) {
+                        // 使用用户ID和token获取用户详细信息
+                        const userInfo = await getUserInfo(userIdFromToken, token);
 
-                        // 计算token过期时间（假设token有效期为7天）
-                        const expireTime = new Date();
-                        expireTime.setDate(expireTime.getDate() + 7);
-                        localStorage.setItem('dance_user_token', JSON.stringify({
-                            token: token,
-                            expireTime: expireTime.toISOString()
-                        }));
+                        if (userInfo) {
+                            // 保存用户数据
+                            userData = userInfo;
+                            localStorage.setItem('dance_user_data', JSON.stringify(userInfo));
 
-                        // 显示用户信息
-                        showUserInfo(userInfo);
+                            // 计算token过期时间
+                            const expireTime = new Date();
+                            expireTime.setDate(expireTime.getDate() + 7);
+                            localStorage.setItem('dance_user_token', JSON.stringify({
+                                token: token,
+                                expireTime: expireTime.toISOString()
+                            }));
 
-                        // 3秒后关闭登录框
-                        setTimeout(() => {
-                            closeLoginModal();
-                        }, 3000);
+                            // 显示用户信息
+                            showUserInfo(userInfo);
+
+                            // 3秒后关闭登录框
+                            setTimeout(() => {
+                                closeLoginModal();
+                            }, 3000);
+                        } else {
+                            loginStatus.textContent = '获取用户信息失败';
+                            loginStatus.className = 'login-status error';
+                        }
+                    } else {
+                        loginStatus.textContent = '未获取到用户ID';
+                        loginStatus.className = 'login-status error';
                     }
 
                 } else {
@@ -1238,19 +1290,47 @@
         }, 3000);
     }
 
-    // 获取用户信息（需要根据实际API调整）
-    async function getUserInfo(token) {
+    // 获取用户详细信息 - 调用指定接口
+    async function getUserInfo(userId, token) {
         try {
-            // 这里需要调用实际的用户信息接口
-            // 由于不知道具体的API，这里返回模拟数据
+            // 构建请求URL，将userId作为查询参数
+            const url = `${API_BASE}/api/User/GetNickname?userId=${encodeURIComponent(userId)}`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `bearer ${token}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`获取用户信息失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // 根据接口返回的数据结构
             return {
-                userId: Math.floor(Math.random() * 1000000),
-                nickname: '微信用户',
-                avatar: null
+                UserID: data.UserID || userId,
+                UserName: data.UserName || '微信用户',
+                HeadimgURL: data.HeadimgURL || null,
+                // 添加兼容字段
+                userId: data.UserID || userId,
+                username: data.UserName || '微信用户'
             };
+
         } catch (error) {
             console.error('获取用户信息失败:', error);
-            return null;
+
+            // 如果接口调用失败，返回一个基本的用户信息
+            return {
+                UserID: userId,
+                UserName: '微信用户',
+                HeadimgURL: null,
+                userId: userId,
+                username: '微信用户'
+            };
         }
     }
 

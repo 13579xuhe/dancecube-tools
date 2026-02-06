@@ -1369,93 +1369,90 @@
     const codeCountInfo = document.getElementById('code-count-info');
     const maxCodesSpan = document.getElementById('max-codes');
 
-    // Token有效性检查函数
-    function checkTokenValid() {
+    // 检查网站登录状态（使用dance_user_data和dance_user_token）
+    function checkWebsiteLogin() {
         const savedUserData = localStorage.getItem('dance_user_data');
-        const savedToken = localStorage.getItem('dance_user_token');
+        const savedUserToken = localStorage.getItem('dance_user_token');
 
-        if (savedUserData && savedToken) {
-            try {
-                const tokenData = JSON.parse(savedToken);
-                // 检查token是否过期
-                if (tokenData.expireTime && new Date(tokenData.expireTime) > new Date()) {
-                    return true;
-                } else {
-                    // Token过期，清除本地存储
-                    localStorage.removeItem('dance_user_data');
-                    localStorage.removeItem('dance_user_token');
-                    addLog('登录已过期，请重新登录', 'warning');
-                    return false;
-                }
-            } catch (e) {
-                console.error('解析token失败:', e);
-                return false;
-            }
-        }
-        return false;
-    }
-
-    // 检查用户登录状态（新函数）
-    function checkUserLoginStatus() {
-        if (!checkTokenValid()) {
-            // 显示登录提示
-            musicListContainer.innerHTML = `
-                <div class="empty-message" style="text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 20px;"></i>
-                    <h3 style="color: #f59e0b; margin-bottom: 15px;">请先登录</h3>
-                    <p style="color: #a0a0c0; margin-bottom: 25px; line-height: 1.6;">
-                        需要有效的用户登录才能使用兑换码生成功能<br>
-                        请返回首页使用微信扫码登录
-                    </p>
-                    <button onclick="window.location.href='../index.html'"
-                            style="padding: 12px 24px; background: linear-gradient(90deg, #4cc9f0, #4361ee);
-                                   color: white; border: none; border-radius: 8px; font-weight: 600;
-                                   cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-home"></i> 返回首页登录
-                    </button>
-                </div>
-            `;
-
-            // 禁用所有功能按钮
-            checkRemainBtn.disabled = true;
-            generateCodeBtn.disabled = true;
-            refreshMusicBtn.disabled = true;
-            selectAllBtn.disabled = true;
-            clearSelectionBtn.disabled = true;
-            codeCountInput.disabled = true;
-            onecodeCheckbox.disabled = true;
-            expireTypeSelect.disabled = true;
-            expireValueInput.disabled = true;
-
-            // 清空状态显示
-            remainTimes.textContent = '--';
-            remainTimes.className = 'status-value';
-            musicCount.textContent = '--';
-            selectedCount.textContent = '已选择: 0 个谱面';
-
+        if (!savedUserData || !savedUserToken) {
             return false;
         }
+
+        try {
+            // 检查token是否过期
+            const tokenData = JSON.parse(savedUserToken);
+            if (tokenData.expireTime) {
+                const now = new Date();
+                const expireTime = new Date(tokenData.expireTime);
+                return now <= expireTime;
+            }
+            return true; // 如果没有过期时间，假设有效
+        } catch (e) {
+            console.error('解析用户token失败:', e);
+            return false;
+        }
+    }
+
+    // 检查谱师Token是否有效
+    function checkComposerToken() {
+        const savedToken = localStorage.getItem('dance_token');
+
+        if (!savedToken || savedToken.trim() === '') {
+            return false;
+        }
+
+        // 基本验证：Token长度至少为10个字符
+        if (savedToken.length < 10) {
+            return false;
+        }
+
         return true;
     }
 
     // 初始化
-    document.addEventListener('DOMContentLoaded', function() {
-        // 检查用户登录状态
-        if (!checkUserLoginStatus()) {
-            // 如果未登录，只初始化基本功能
+    document.addEventListener('DOMContentLoaded', async function() {
+        // 检查网站登录状态
+        const isWebsiteLoggedIn = checkWebsiteLogin();
+
+        if (!isWebsiteLoggedIn) {
+            // 网站未登录，显示提示
+            showWebsiteLoginRequired();
             setupBasicEventListeners();
-            addLog('检测到未登录状态，请先返回首页登录', 'warning');
+            addLog('检测到未登录网站，请返回首页登录', 'warning');
             return;
         }
 
-        // 如果已登录，继续原有初始化流程
-        updateTokenDisplay();
+        addLog('网站登录状态: 已登录', 'success');
 
-        // 如果有token，启用相关功能并加载谱面
-        if (userToken) {
+        // 检查谱师Token
+        const hasComposerToken = checkComposerToken();
+
+        if (hasComposerToken) {
+            // 有有效的谱师Token，直接使用
+            userToken = localStorage.getItem('dance_token');
+
+            // 更新UI显示谱师Token状态
+            updateTokenDisplay();
             enableTokenFeatures();
-            addLog('检测到已保存的谱师Token', 'info');
-            loadMusicList();
+
+            addLog('检测到已保存的谱师Token，自动登录成功', 'success');
+
+            // 自动加载谱面列表和查询剩余次数
+            try {
+                await loadMusicList();
+                await checkRemainTimes();
+            } catch (error) {
+                console.error('自动加载失败:', error);
+                addLog(`自动加载失败: ${error.message}`, 'warning');
+            }
+        } else {
+            // 没有谱师Token，显示提示但可以生成二维码
+            addLog('网站已登录，但未检测到谱师Token，请生成二维码登录获取', 'info');
+            updateTokenDisplay();
+
+            // 启用基本功能
+            checkRemainBtn.disabled = false;
+            refreshMusicBtn.disabled = false;
         }
 
         // 事件监听
@@ -1492,12 +1489,57 @@
         addLog('系统初始化完成', 'success');
     });
 
-    // 基本事件监听器设置（未登录时使用）
+    // 显示网站登录要求
+    function showWebsiteLoginRequired() {
+        musicListContainer.innerHTML = `
+            <div class="empty-message" style="text-align: center; padding: 40px 20px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h3 style="color: #f59e0b; margin-bottom: 15px;">请先登录网站</h3>
+                <p style="color: #a0a0c0; margin-bottom: 25px; line-height: 1.6;">
+                    需要有效的用户登录才能使用兑换码生成功能<br>
+                    请返回首页使用微信扫码登录
+                </p>
+                <button onclick="window.location.href='../index.html'"
+                        style="padding: 12px 24px; background: linear-gradient(90deg, #4cc9f0, #4361ee);
+                               color: white; border: none; border-radius: 8px; font-weight: 600;
+                               cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-home"></i> 返回首页登录
+                </button>
+            </div>
+        `;
+
+        // 禁用所有功能按钮
+        checkRemainBtn.disabled = true;
+        generateCodeBtn.disabled = true;
+        refreshMusicBtn.disabled = true;
+        selectAllBtn.disabled = true;
+        clearSelectionBtn.disabled = true;
+        codeCountInput.disabled = true;
+        onecodeCheckbox.disabled = true;
+        expireTypeSelect.disabled = true;
+        expireValueInput.disabled = true;
+
+        // 清空状态显示
+        remainTimes.textContent = '--';
+        remainTimes.className = 'status-value';
+        musicCount.textContent = '--';
+        selectedCount.textContent = '已选择: 0 个谱面';
+
+        // 清空谱师Token相关显示
+        userToken = '';
+        tokenDisplay.value = '';
+        tokenStatus.textContent = '未获取';
+        tokenStatus.className = 'status-value';
+        loginStatus.textContent = '未登录';
+        loginStatus.className = 'status-value';
+    }
+
+    // 基本事件监听器设置
     function setupBasicEventListeners() {
         // 只有返回首页按钮和日志相关功能可用
         clearLogsBtn.addEventListener('click', clearLogs);
 
-        // 二维码登录区域功能（如果用户想在这里登录）
+        // 二维码登录区域功能
         qrPlaceholder.addEventListener('click', generateQRCode);
         qrcodeImg.addEventListener('click', generateQRCode);
         checkLoginBtn.addEventListener('click', checkLoginStatus);
@@ -1542,6 +1584,13 @@
 
     // 生成二维码
     async function generateQRCode() {
+        // 首先检查网站登录状态
+        if (!checkWebsiteLogin()) {
+            addLog('请先登录网站', 'warning');
+            showWebsiteLoginRequired();
+            return;
+        }
+
         try {
             addLog('正在生成登录二维码...', 'info');
             qrStatus.textContent = '生成中';
@@ -1688,6 +1737,13 @@
                 userToken = token;
                 localStorage.setItem('dance_token', token);
 
+                // 保存Token过期时间（如果有）
+                if (data.expires_in) {
+                    const expireTime = new Date();
+                    expireTime.setSeconds(expireTime.getSeconds() + data.expires_in);
+                    localStorage.setItem('dance_token_expire', expireTime.toISOString());
+                }
+
                 loginStatus.textContent = '已登录';
                 loginStatus.className = 'status-value success';
                 tokenStatus.textContent = '已获取';
@@ -1708,12 +1764,10 @@
                 addLog('登录成功，谱师Token已获取并保存', 'success');
 
                 // 加载谱面列表
-                loadMusicList();
+                await loadMusicList();
 
                 // 查询剩余次数
-                setTimeout(() => {
-                    checkRemainTimes();
-                }, 1000);
+                await checkRemainTimes();
 
             } else {
                 loginStatus.textContent = '等待扫码';
@@ -2881,7 +2935,14 @@ ${JSON.stringify(data, null, 2)}
     // 启用Token相关功能
     function enableTokenFeatures() {
         checkRemainBtn.disabled = false;
+        generateCodeBtn.disabled = selectedMusicIds.size === 0;
         refreshMusicBtn.disabled = false;
+        selectAllBtn.disabled = false;
+        clearSelectionBtn.disabled = false;
+        codeCountInput.disabled = false;
+        onecodeCheckbox.disabled = false;
+        expireTypeSelect.disabled = false;
+        expireValueInput.disabled = false;
         updateTokenDisplay();
     }
 
@@ -2890,12 +2951,19 @@ ${JSON.stringify(data, null, 2)}
         if (confirm('确定要退出登录吗？退出登录后需要重新扫码登录。')) {
             userToken = '';
             localStorage.removeItem('dance_token');
+            localStorage.removeItem('dance_token_expire');
             updateTokenDisplay();
 
             // 禁用相关功能
             checkRemainBtn.disabled = true;
             generateCodeBtn.disabled = true;
             refreshMusicBtn.disabled = true;
+            selectAllBtn.disabled = true;
+            clearSelectionBtn.disabled = true;
+            codeCountInput.disabled = true;
+            onecodeCheckbox.disabled = true;
+            expireTypeSelect.disabled = true;
+            expireValueInput.disabled = true;
             remainTimes.textContent = '--';
             remainTimes.className = 'status-value';
             musicCount.textContent = '--';
@@ -2913,7 +2981,7 @@ ${JSON.stringify(data, null, 2)}
 
             // 重置生成数量
             codeCountInput.value = 1;
-            codeCountInput.disabled = false;
+            codeCountInput.disabled = true;
             maxCodesSpan.textContent = '--';
             codeCountInfo.innerHTML = '<i class="fas fa-info-circle"></i> <span>请先登录并查询剩余次数</span>';
 

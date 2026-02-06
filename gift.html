@@ -1584,11 +1584,9 @@
 
     // 生成二维码
     async function generateQRCode() {
-        // 首先检查网站登录状态
+        // 检查网站登录状态 - 只给警告但不阻止
         if (!checkWebsiteLogin()) {
-            addLog('请先登录网站', 'warning');
-            showWebsiteLoginRequired();
-            return;
+            addLog('警告：网站登录可能已过期，建议返回首页重新登录', 'warning');
         }
 
         try {
@@ -1596,16 +1594,26 @@
             qrStatus.textContent = '生成中';
             qrStatus.className = 'status-value';
 
+            // 清空之前的二维码数据
+            qrCodeData = null;
+            if (loginCheckInterval) {
+                clearInterval(loginCheckInterval);
+                loginCheckInterval = null;
+            }
+
             // 调用二维码接口 - 使用完整URL
             const response = await fetch(`${API_BASE}/api/Common/GetQrCode`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json'
-                }
+                },
+                mode: 'cors', // 明确指定CORS模式
+                credentials: 'omit' // 不发送凭据
             });
 
             if (!response.ok) {
-                throw new Error(`二维码接口错误: ${response.status} ${response.statusText}`);
+                const errorText = await response.text();
+                throw new Error(`二维码接口错误: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
             const data = await response.json();
@@ -1626,6 +1634,7 @@
             if (data.ExpireTime) {
                 expireTimeDiv.textContent = `二维码有效期至: ${data.ExpireTime}`;
                 expireTimeDiv.style.display = 'block';
+                expireTimeDiv.style.color = '#4cc9f0';
             }
 
             if (data.ID) {
@@ -1649,18 +1658,22 @@
 
             // 设置二维码过期检查（如果提供了过期时间）
             if (data.ExpireTime) {
-                const expireTime = new Date(data.ExpireTime);
-                const now = new Date();
-                const timeDiff = expireTime - now;
+                try {
+                    const expireTime = new Date(data.ExpireTime);
+                    const now = new Date();
+                    const timeDiff = expireTime - now;
 
-                if (timeDiff > 0) {
-                    setTimeout(() => {
-                        qrStatus.textContent = '已过期';
-                        qrStatus.className = 'status-value error';
-                        expireTimeDiv.textContent = '二维码已过期，点击刷新';
-                        expireTimeDiv.style.color = '#f87171';
-                        addLog('二维码已过期', 'warning');
-                    }, timeDiff);
+                    if (timeDiff > 0) {
+                        setTimeout(() => {
+                            qrStatus.textContent = '已过期';
+                            qrStatus.className = 'status-value error';
+                            expireTimeDiv.textContent = '二维码已过期，点击刷新';
+                            expireTimeDiv.style.color = '#f87171';
+                            addLog('二维码已过期', 'warning');
+                        }, timeDiff);
+                    }
+                } catch (dateError) {
+                    console.warn('解析过期时间失败:', dateError);
                 }
             }
 
@@ -1674,6 +1687,11 @@
             qrPlaceholder.style.display = 'flex';
             qrcodeImg.style.display = 'none';
             expireTimeDiv.style.display = 'none';
+
+            // 显示具体的错误信息
+            if (error.message.includes('CORS') || error.message.includes('NetworkError')) {
+                addLog('可能遇到跨域问题，请检查网络连接或API配置', 'error');
+            }
         }
     }
 
@@ -1702,7 +1720,9 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Accept': 'application/json'
                 },
-                body: params.toString()
+                body: params.toString(),
+                mode: 'cors',
+                credentials: 'omit'
             });
 
             addLog(`请求Token接口: client_id=${qrCodeData.ID}`, 'info');
@@ -1759,6 +1779,10 @@
 
                 qrcodeImg.style.display = 'none';
                 qrPlaceholder.style.display = 'flex';
+                qrPlaceholder.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: #4ade80;"></i>
+                    <p>登录成功！点击可重新生成二维码</p>
+                `;
                 expireTimeDiv.style.display = 'none';
 
                 addLog('登录成功，谱师Token已获取并保存', 'success');
@@ -2993,6 +3017,17 @@ ${JSON.stringify(data, null, 2)}
             // 重置登录状态
             loginStatus.textContent = '未登录';
             loginStatus.className = 'status-value';
+
+            // 重置二维码区域
+            qrPlaceholder.style.display = 'flex';
+            qrPlaceholder.innerHTML = `
+                <i class="fas fa-qrcode"></i>
+                <p>点击此处生成登录二维码</p>
+            `;
+            qrcodeImg.style.display = 'none';
+            expireTimeDiv.style.display = 'none';
+            qrStatus.textContent = '未生成';
+            qrStatus.className = 'status-value';
 
             addLog('谱师Token已清除', 'warning');
         }

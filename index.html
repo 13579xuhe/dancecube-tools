@@ -64,6 +64,214 @@
             font-size: 0.95rem;
         }
 
+        /* 用户登录区域 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .user-id {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        .logout-btn {
+            padding: 5px 10px;
+            background: #f87171;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* 登录模态框 */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .login-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+        }
+
+        .login-modal.active .login-content {
+            transform: translateY(0);
+        }
+
+        .login-header {
+            padding: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .login-body {
+            padding: 30px;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            border: 2px dashed #ddd;
+            cursor: pointer;
+        }
+
+        .qr-placeholder:hover {
+            background: #f0f0f0;
+        }
+
+        .qr-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+
+        #login-qrcode-img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+        }
+
+        .login-status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .login-status.waiting {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .login-status.scanned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .login-status.success {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .login-status.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .login-expire-time {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+
+        .login-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
         /* 搜索和筛选区域 */
         .search-filter {
             display: flex;
@@ -472,6 +680,11 @@
                 gap: 20px;
             }
 
+            .user-info {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
             .search-filter {
                 flex-direction: column;
                 align-items: flex-start;
@@ -518,6 +731,10 @@
             .modal-body {
                 padding: 20px;
             }
+
+            .user-details {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -535,6 +752,21 @@
             </div>
         </div>
 
+        <!-- 用户登录信息 -->
+        <div class="user-info" id="userInfo">
+            <button class="login-btn" id="loginBtn">
+                <i class="fab fa-weixin"></i> 微信登录
+            </button>
+            <!-- 登录后显示用户信息 -->
+            <div class="user-details" id="userDetails" style="display: none;">
+                <div class="user-name" id="userName"></div>
+                <div class="user-id" id="userId"></div>
+                <button class="logout-btn" id="logoutBtn">退出</button>
+            </div>
+            <div class="user-avatar" id="userAvatar" style="display: none;">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
     </header>
 
     <!-- 搜索区域 -->
@@ -566,6 +798,34 @@
     <footer class="footer">
         <p>2025 舞立方自制谱师工具 | 本页面由 Mouseke 进行开发 | 源码公开免费给大家使用 </p>
     </footer>
+</div>
+
+<!-- 微信登录模态框 -->
+<div class="login-modal" id="loginModal">
+    <div class="login-content">
+        <button class="login-close" id="loginClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="login-header">
+            <h2>微信扫码登录</h2>
+            <p>使用微信扫描二维码登录系统</p>
+        </div>
+        <div class="login-body">
+            <div class="qr-container">
+                <div class="qr-placeholder" id="loginQrPlaceholder">
+                    <i class="fas fa-qrcode"></i>
+                    <p>点击生成二维码</p>
+                </div>
+                <img id="login-qrcode-img" alt="微信登录二维码" style="display:none;">
+            </div>
+            <div class="login-status" id="loginStatus">
+                请点击上方二维码区域生成二维码
+            </div>
+            <div class="login-expire-time" id="loginExpireTime" style="display:none;">
+                二维码有效期：15分钟
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- 工具详情模态框 -->
@@ -729,9 +989,26 @@
     const toolModal = document.getElementById('toolModal');
     const modalClose = document.getElementById('modalClose');
     const openToolBtn = document.getElementById('openToolBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const loginClose = document.getElementById('loginClose');
+    const loginQrPlaceholder = document.getElementById('loginQrPlaceholder');
+    const loginQrcodeImg = document.getElementById('login-qrcode-img');
+    const loginStatus = document.getElementById('loginStatus');
+    const loginExpireTime = document.getElementById('loginExpireTime');
+    const userInfo = document.getElementById('userInfo');
+    const userDetails = document.getElementById('userDetails');
+    const userName = document.getElementById('userName');
+    const userId = document.getElementById('userId');
+    const userAvatar = document.getElementById('userAvatar');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    // 当前选中的工具
+    // 全局变量
+    const API_BASE = 'https://dancedemo.shenghuayule.com/Dance';
     let currentToolId = null;
+    let loginQrCodeData = null;
+    let loginCheckInterval = null;
+    let userData = null;
 
     // 初始化页面
     function initPage() {
@@ -741,8 +1018,270 @@
         // 渲染所有工具
         renderTools(toolsData);
 
+        // 检查用户登录状态
+        checkLoginStatus();
+
         // 设置事件监听器
         setupEventListeners();
+    }
+
+    // 检查登录状态
+    function checkLoginStatus() {
+        const savedUserData = localStorage.getItem('dance_user_data');
+        const savedToken = localStorage.getItem('dance_user_token');
+
+        if (savedUserData && savedToken) {
+            try {
+                userData = JSON.parse(savedUserData);
+                const tokenData = JSON.parse(savedToken);
+
+                // 检查token是否过期
+                if (tokenData.expireTime && new Date(tokenData.expireTime) > new Date()) {
+                    // token有效，显示用户信息
+                    showUserInfo(userData);
+                    return true;
+                } else {
+                    // token过期，清除数据
+                    clearUserData();
+                    return false;
+                }
+            } catch (e) {
+                console.error('解析用户数据失败:', e);
+                clearUserData();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // 显示用户信息
+    function showUserInfo(user) {
+        userName.textContent = user.nickname || '微信用户';
+        userId.textContent = `ID: ${user.userId || '未知'}`;
+        userDetails.style.display = 'block';
+        userAvatar.style.display = 'flex';
+        loginBtn.style.display = 'none';
+
+        // 设置头像背景色
+        const avatarColors = ['#6a11cb', '#2575fc', '#4ade80', '#f59e0b', '#ef4444'];
+        const colorIndex = (user.userId || '').toString().split('').reduce((sum, char) => sum + char.charCodeAt(0), 0) % avatarColors.length;
+        userAvatar.style.background = `linear-gradient(135deg, ${avatarColors[colorIndex]}99, ${avatarColors[colorIndex]})`;
+
+        // 显示头像首字母
+        const firstChar = userName.textContent.charAt(0).toUpperCase();
+        userAvatar.innerHTML = firstChar;
+    }
+
+    // 清除用户数据
+    function clearUserData() {
+        localStorage.removeItem('dance_user_data');
+        localStorage.removeItem('dance_user_token');
+        userData = null;
+        userDetails.style.display = 'none';
+        userAvatar.style.display = 'none';
+        loginBtn.style.display = 'flex';
+    }
+
+    // 生成登录二维码
+    async function generateLoginQRCode() {
+        try {
+            loginStatus.textContent = '正在生成二维码...';
+            loginStatus.className = 'login-status waiting';
+            loginQrcodeImg.style.display = 'none';
+            loginQrPlaceholder.style.display = 'flex';
+
+            const response = await fetch(`${API_BASE}/api/Common/GetQrCode`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`二维码接口错误: ${response.status}`);
+            }
+
+            const data = await response.json();
+            loginQrCodeData = data;
+
+            // 显示二维码
+            loginQrPlaceholder.style.display = 'none';
+            loginQrcodeImg.src = data.QrcodeUrl;
+            loginQrcodeImg.style.display = 'block';
+            loginStatus.textContent = '请使用微信扫描二维码';
+            loginStatus.className = 'login-status waiting';
+
+            // 显示过期时间
+            if (data.ExpireTime) {
+                const expireTime = new Date(data.ExpireTime);
+                const timeStr = expireTime.toLocaleTimeString('zh-CN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                loginExpireTime.textContent = `二维码有效期至: ${timeStr}`;
+                loginExpireTime.style.display = 'block';
+            }
+
+            // 开始轮询登录状态
+            startLoginPolling();
+
+            // 设置二维码过期检查
+            if (data.ExpireTime) {
+                const expireTime = new Date(data.ExpireTime);
+                const now = new Date();
+                const timeDiff = expireTime - now;
+
+                if (timeDiff > 0) {
+                    setTimeout(() => {
+                        loginStatus.textContent = '二维码已过期，请刷新';
+                        loginStatus.className = 'login-status error';
+                        loginExpireTime.textContent = '二维码已过期';
+
+                        if (loginCheckInterval) {
+                            clearInterval(loginCheckInterval);
+                            loginCheckInterval = null;
+                        }
+                    }, timeDiff);
+                }
+            }
+
+        } catch (error) {
+            console.error('生成二维码失败:', error);
+            loginStatus.textContent = '生成失败，请重试';
+            loginStatus.className = 'login-status error';
+            loginQrPlaceholder.style.display = 'flex';
+            loginQrcodeImg.style.display = 'none';
+        }
+    }
+
+    // 开始轮询登录状态
+    function startLoginPolling() {
+        if (loginCheckInterval) {
+            clearInterval(loginCheckInterval);
+        }
+
+        loginCheckInterval = setInterval(async () => {
+            if (!loginQrCodeData?.ID) return;
+
+            try {
+                const params = new URLSearchParams({
+                    client_type: 'qrcode',
+                    grant_type: 'client_credentials',
+                    client_id: loginQrCodeData.ID
+                });
+
+                const response = await fetch(`${API_BASE}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
+                    },
+                    body: params.toString()
+                });
+
+                if (response.status === 401) {
+                    // 等待扫码
+                    loginStatus.textContent = '等待扫码...';
+                    loginStatus.className = 'login-status waiting';
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Token接口错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const token = data.access_token || data.accessToken;
+
+                if (token) {
+                    // 登录成功
+                    clearInterval(loginCheckInterval);
+                    loginCheckInterval = null;
+
+                    loginStatus.textContent = '登录成功！';
+                    loginStatus.className = 'login-status success';
+
+                    // 获取用户信息（这里需要根据实际API调整）
+                    // 假设token中包含用户信息，或者需要调用其他接口获取
+                    const userInfo = await getUserInfo(token);
+
+                    if (userInfo) {
+                        // 保存用户数据
+                        userData = userInfo;
+                        localStorage.setItem('dance_user_data', JSON.stringify(userInfo));
+
+                        // 计算token过期时间（假设token有效期为7天）
+                        const expireTime = new Date();
+                        expireTime.setDate(expireTime.getDate() + 7);
+                        localStorage.setItem('dance_user_token', JSON.stringify({
+                            token: token,
+                            expireTime: expireTime.toISOString()
+                        }));
+
+                        // 显示用户信息
+                        showUserInfo(userInfo);
+
+                        // 3秒后关闭登录框
+                        setTimeout(() => {
+                            closeLoginModal();
+                        }, 3000);
+                    }
+
+                } else {
+                    loginStatus.textContent = '等待确认...';
+                    loginStatus.className = 'login-status scanned';
+                }
+
+            } catch (error) {
+                console.error('检查登录状态失败:', error);
+                loginStatus.textContent = '登录检查失败';
+                loginStatus.className = 'login-status error';
+            }
+        }, 3000);
+    }
+
+    // 获取用户信息（需要根据实际API调整）
+    async function getUserInfo(token) {
+        try {
+            // 这里需要调用实际的用户信息接口
+            // 由于不知道具体的API，这里返回模拟数据
+            return {
+                userId: Math.floor(Math.random() * 1000000),
+                nickname: '微信用户',
+                avatar: null
+            };
+        } catch (error) {
+            console.error('获取用户信息失败:', error);
+            return null;
+        }
+    }
+
+    // 打开登录模态框
+    function openLoginModal() {
+        loginModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // 重置状态
+        loginStatus.textContent = '请点击二维码区域生成二维码';
+        loginStatus.className = 'login-status';
+        loginExpireTime.style.display = 'none';
+        loginQrcodeImg.style.display = 'none';
+        loginQrPlaceholder.style.display = 'flex';
+
+        // 如果之前有轮询，清除
+        if (loginCheckInterval) {
+            clearInterval(loginCheckInterval);
+            loginCheckInterval = null;
+        }
+    }
+
+    // 关闭登录模态框
+    function closeLoginModal() {
+        loginModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+
+        if (loginCheckInterval) {
+            clearInterval(loginCheckInterval);
+            loginCheckInterval = null;
+        }
     }
 
     // 渲染工具卡片
@@ -848,18 +1387,6 @@
         document.body.style.overflow = 'auto';
     }
 
-    // 直接打开工具（从模态框）
-    function openToolDirectly() {
-        if (!currentToolId) return;
-
-        const tool = toolsData.find(t => t.id === currentToolId);
-        if (!tool) return;
-
-        // 在新标签页中打开工具链接
-        window.open(tool.url, '_blank');
-        closeToolModal();
-    }
-
     // 设置事件监听器
     function setupEventListeners() {
         // 搜索功能
@@ -886,15 +1413,39 @@
             }
         });
 
-        // 打开工具按钮（模态框中）- 更新为直接跳转
-        openToolBtn.addEventListener('click', function(e) {
-            // 让a标签自然跳转，不需要额外处理
+        // 登录按钮
+        loginBtn.addEventListener('click', openLoginModal);
+
+        // 登录模态框关闭按钮
+        loginClose.addEventListener('click', closeLoginModal);
+
+        // 点击登录模态框背景关闭
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        // 二维码区域点击事件
+        loginQrPlaceholder.addEventListener('click', generateLoginQRCode);
+        loginQrcodeImg.addEventListener('click', generateLoginQRCode);
+
+        // 退出登录按钮
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('确定要退出登录吗？')) {
+                clearUserData();
+            }
         });
 
         // 添加ESC键关闭模态框
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && toolModal.classList.contains('active')) {
-                closeToolModal();
+            if (e.key === 'Escape') {
+                if (toolModal.classList.contains('active')) {
+                    closeToolModal();
+                }
+                if (loginModal.classList.contains('active')) {
+                    closeLoginModal();
+                }
             }
         });
     }
@@ -905,6 +1456,9 @@
             'exchange': '转换工具',
             'cut': '剪裁工具',
             'make': '绘制工具',
+            'upload': '上传工具',
+            'download': '下载工具',
+            'token': 'Token工具'
         };
         return categoryNames[category] || '其他工具';
     }
@@ -912,54 +1466,55 @@
     // 初始化页面
     document.addEventListener('DOMContentLoaded', initPage);
 
-    //禁止右键
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        console.log('右键已被禁用');
-        return false;
-    });
+    // 安全检查函数
+    function setupSecurity() {
+        // 禁用右键
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
 
-    // 禁止选择文本（可选，防止用户复制内容）
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
+        // 禁用选择文本
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
 
-    // 禁止拖拽图片（可选，防止用户拖拽保存图片）
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            return false;
-        }
-    });
+        // 禁用拖拽图片
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
 
-    // 禁止F12开发者工具（简单版本，但容易被绕过）
-    document.addEventListener('keydown', function(e) {
-        // 禁用F12
-        if (e.key === 'F12') {
-            e.preventDefault();
-            console.log('F12已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+Shift+I (Chrome开发者工具)
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            console.log('Ctrl+Shift+I已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+Shift+J (Chrome控制台)
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            console.log('Ctrl+Shift+J已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+U (查看源代码)
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            console.log('Ctrl+U已被禁用');
-            return false;
-        }
-    });
+        // 禁用开发者工具快捷键
+        document.addEventListener('keydown', function(e) {
+            // 禁用F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用Ctrl+U
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+
+    // 设置安全措施
+    setupSecurity();
 </script>
 </body>
 </html>

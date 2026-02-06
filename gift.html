@@ -1369,8 +1369,86 @@
     const codeCountInfo = document.getElementById('code-count-info');
     const maxCodesSpan = document.getElementById('max-codes');
 
+    // Token有效性检查函数
+    function checkTokenValid() {
+        const savedUserData = localStorage.getItem('dance_user_data');
+        const savedToken = localStorage.getItem('dance_user_token');
+
+        if (savedUserData && savedToken) {
+            try {
+                const tokenData = JSON.parse(savedToken);
+                // 检查token是否过期
+                if (tokenData.expireTime && new Date(tokenData.expireTime) > new Date()) {
+                    return true;
+                } else {
+                    // Token过期，清除本地存储
+                    localStorage.removeItem('dance_user_data');
+                    localStorage.removeItem('dance_user_token');
+                    addLog('登录已过期，请重新登录', 'warning');
+                    return false;
+                }
+            } catch (e) {
+                console.error('解析token失败:', e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // 检查用户登录状态（新函数）
+    function checkUserLoginStatus() {
+        if (!checkTokenValid()) {
+            // 显示登录提示
+            musicListContainer.innerHTML = `
+                <div class="empty-message" style="text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 20px;"></i>
+                    <h3 style="color: #f59e0b; margin-bottom: 15px;">请先登录</h3>
+                    <p style="color: #a0a0c0; margin-bottom: 25px; line-height: 1.6;">
+                        需要有效的用户登录才能使用兑换码生成功能<br>
+                        请返回首页使用微信扫码登录
+                    </p>
+                    <button onclick="window.location.href='../index.html'"
+                            style="padding: 12px 24px; background: linear-gradient(90deg, #4cc9f0, #4361ee);
+                                   color: white; border: none; border-radius: 8px; font-weight: 600;
+                                   cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-home"></i> 返回首页登录
+                    </button>
+                </div>
+            `;
+
+            // 禁用所有功能按钮
+            checkRemainBtn.disabled = true;
+            generateCodeBtn.disabled = true;
+            refreshMusicBtn.disabled = true;
+            selectAllBtn.disabled = true;
+            clearSelectionBtn.disabled = true;
+            codeCountInput.disabled = true;
+            onecodeCheckbox.disabled = true;
+            expireTypeSelect.disabled = true;
+            expireValueInput.disabled = true;
+
+            // 清空状态显示
+            remainTimes.textContent = '--';
+            remainTimes.className = 'status-value';
+            musicCount.textContent = '--';
+            selectedCount.textContent = '已选择: 0 个谱面';
+
+            return false;
+        }
+        return true;
+    }
+
     // 初始化
     document.addEventListener('DOMContentLoaded', function() {
+        // 检查用户登录状态
+        if (!checkUserLoginStatus()) {
+            // 如果未登录，只初始化基本功能
+            setupBasicEventListeners();
+            addLog('检测到未登录状态，请先返回首页登录', 'warning');
+            return;
+        }
+
+        // 如果已登录，继续原有初始化流程
         updateTokenDisplay();
 
         // 如果有token，启用相关功能并加载谱面
@@ -1413,6 +1491,18 @@
 
         addLog('系统初始化完成', 'success');
     });
+
+    // 基本事件监听器设置（未登录时使用）
+    function setupBasicEventListeners() {
+        // 只有返回首页按钮和日志相关功能可用
+        clearLogsBtn.addEventListener('click', clearLogs);
+
+        // 二维码登录区域功能（如果用户想在这里登录）
+        qrPlaceholder.addEventListener('click', generateQRCode);
+        qrcodeImg.addEventListener('click', generateQRCode);
+        checkLoginBtn.addEventListener('click', checkLoginStatus);
+        clearTokenBtn.addEventListener('click', clearToken);
+    }
 
     // 处理一个码兑换全部选项变化
     function handleOnecodeChange() {

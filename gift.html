@@ -1101,12 +1101,12 @@
     </header>
 
     <div class="main-content">
-       <!-- &lt;!&ndash; 扫码登录区 &ndash;&gt;
+        <!-- 扫码登录区 -->
         <div class="card">
             <h2 class="card-title"><i class="fas fa-qrcode"></i> 微信扫码登录</h2>
             <p>点击二维码区域生成或刷新登录二维码</p>
 
-            &lt;!&ndash; 隐藏登录步骤 &ndash;&gt;
+            <!-- 隐藏登录步骤 -->
             <div class="login-instruction" style="display: none;">
                 <strong>登录步骤：</strong>
                 <ol>
@@ -1118,21 +1118,21 @@
                 </ol>
             </div>
 
-            <div class="qr-container">
+            <!--<div class="qr-container">
                 <div class="qr-placeholder" id="qr-placeholder">
                     <i class="fas fa-qrcode"></i>
                     <p>点击此处生成登录二维码</p>
                 </div>
                 <img id="qrcode-img" style="display:none;" alt="微信登录二维码" title="点击刷新二维码">
-            </div>
+            </div>-->
 
             <div id="expire-time" class="expire-time" style="display:none;"></div>
 
             <div class="status-info">
-                <div class="status-item">
+                <!--<div class="status-item">
                     <div class="status-label">二维码状态</div>
                     <div class="status-value" id="qr-status">未生成</div>
-                </div>
+                </div>-->
                 <div class="status-item">
                     <div class="status-label">登录状态</div>
                     <div class="status-value" id="login-status">未登录</div>
@@ -1149,7 +1149,7 @@
                 </button>
             </div>
 
-            &lt;!&ndash; 隐藏Token接口参数说明 &ndash;&gt;
+            <!-- 隐藏Token接口参数说明 -->
             <div class="token-info" style="display: none;">
                 <strong>Token接口参数说明：</strong>
                 <table>
@@ -1176,13 +1176,13 @@
                 </table>
             </div>
 
-            &lt;!&ndash; 隐藏Token接口返回格式 &ndash;&gt;
+            <!-- 隐藏Token接口返回格式 -->
             <div class="api-format" style="display: none;">
                 <strong>Token接口返回格式：</strong><br>
                 <code>{"access_token": "谱师token值"}</code>
             </div>
 
-            &lt;!&ndash; 隐藏谱师Token显示 &ndash;&gt;
+            <!-- 隐藏谱师Token显示 -->
             <div class="form-group token-display-group" style="display: none;">
                 <label for="token-display">当前谱师Token</label>
                 <input type="text" id="token-display" readonly placeholder="登录后谱师Token将显示在这里">
@@ -1191,7 +1191,7 @@
             <button class="btn btn-out" id="clear-token-btn">
                 <i class="fa-solid fa-right-from-bracket"></i> 退出登录
             </button>
-        </div>-->
+        </div>
 
         <!-- 兑换码生成区 -->
         <div class="card">

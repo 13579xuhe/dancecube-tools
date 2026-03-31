@@ -44,14 +44,6 @@
             color: transparent;
         }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: #a0a0c0;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
         .main-content {
             display: flex;
             flex-wrap: wrap;
@@ -87,53 +79,6 @@
 
         .card-title i {
             font-size: 1.3rem;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .qr-placeholder {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .qr-placeholder:hover {
-            background: rgba(76, 201, 240, 0.1);
-            border-color: #4cc9f0;
-            transform: scale(1.02);
-        }
-
-        .qr-placeholder i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #4cc9f0;
-        }
-
-        #qrcode-img {
-            max-width: 250px;
-            max-height: 250px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        #qrcode-img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         .status-info {
@@ -253,6 +198,8 @@
         .btn-small {
             padding: 6px 12px;
             font-size: 0.85rem;
+            width: auto;
+            margin-top: 0;
         }
 
         .result-container {
@@ -376,14 +323,6 @@
             gap: 6px;
         }
 
-        .code-id {
-            font-size: 0.8rem;
-            color: #888;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
         .code-value {
             font-family: 'Consolas', 'Monaco', monospace;
             font-size: 1.2rem;
@@ -423,7 +362,6 @@
             word-break: break-all;
             letter-spacing: 1px;
             border: 2px dashed rgba(76, 201, 240, 0.4);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .action-buttons {
@@ -469,118 +407,17 @@
             transform: translateY(-2px);
         }
 
-        .debug-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .debug-title {
-            color: #fbbf24;
-            font-weight: 600;
-            margin-bottom: 12px;
+        .expire-info {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-
-        .debug-content {
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.8rem;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 0.9rem;
             color: #a0a0c0;
-            max-height: 250px;
-            overflow-y: auto;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 6px;
-            white-space: pre-wrap;
-            word-break: break-all;
-            line-height: 1.3;
         }
 
-        .logs-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logs-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        .expire-info i {
             color: #4cc9f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .log-entry {
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            border-left: 4px solid #4cc9f0;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .log-time {
-            color: #888;
-            font-size: 0.8rem;
-            min-width: 70px;
-        }
-
-        .log-info {
-            color: #4cc9f0;
-        }
-
-        .log-success {
-            border-left-color: #4ade80;
-        }
-
-        .log-success .log-info {
-            color: #4ade80;
-        }
-
-        .log-error {
-            border-left-color: #f87171;
-        }
-
-        .log-error .log-info {
-            color: #f87171;
-        }
-
-        .log-warning {
-            border-left-color: #fbbf24;
-        }
-
-        .log-warning .log-info {
-            color: #fbbf24;
-        }
-
-        .expire-time {
-            font-size: 0.9rem;
-            color: #fbbf24;
-            text-align: center;
-            margin-top: 10px;
-            padding: 8px;
-            background: rgba(251, 191, 36, 0.1);
-            border-radius: 6px;
-        }
-
-        /* 隐藏以下部分 */
-        .login-instruction,
-        .token-info,
-        .api-format,
-        .token-display-group {
-            display: none !important;
         }
 
         .music-select-container {
@@ -669,6 +506,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .music-list-actions {
@@ -676,7 +515,6 @@
             gap: 10px;
         }
 
-        /* 有效期类型选择器 */
         .expire-type-container {
             display: flex;
             gap: 10px;
@@ -693,11 +531,6 @@
             flex: 1;
         }
 
-        .expire-type-wrapper:focus-within {
-            border-color: #4cc9f0;
-            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
-        }
-
         .expire-value-input {
             width: 80px;
             padding: 12px 15px;
@@ -706,12 +539,11 @@
             color: #e6e6e6;
             font-size: 1rem;
             text-align: center;
-            border-radius: 8px 0 0 8px;
+            transition: all 0.3s ease;
         }
 
-        .expire-value-input:focus {
-            outline: none;
-            background: rgba(76, 201, 240, 0.1);
+        .expire-value-input.hidden {
+            display: none;
         }
 
         .expire-type-select {
@@ -721,66 +553,9 @@
             border: none;
             color: #e6e6e6;
             font-size: 1rem;
-            border-radius: 0 8px 8px 0;
             cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234cc9f0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            padding-right: 40px;
         }
 
-        .expire-type-select:focus {
-            outline: none;
-            background-color: rgba(76, 201, 240, 0.1);
-        }
-
-        .expire-type-select option {
-            background: #1a1a2e;
-            color: #e6e6e6;
-            padding: 10px;
-        }
-
-        .forever-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, rgba(76, 201, 240, 0.2), rgba(67, 97, 238, 0.2));
-            border: 1px solid rgba(76, 201, 240, 0.3);
-            border-radius: 10px;
-            color: #4cc9f0;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .forever-badge:hover {
-            background: linear-gradient(135deg, rgba(76, 201, 240, 0.3), rgba(67, 97, 238, 0.3));
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.2);
-        }
-
-        .forever-badge i {
-            font-size: 1.2rem;
-        }
-
-        .expire-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-            font-size: 0.9rem;
-            color: #a0a0c0;
-        }
-
-        .expire-info i {
-            color: #4cc9f0;
-        }
-
-        /* 一个码兑换全部选项 */
         .onecode-option {
             margin: 15px 0;
             padding: 15px;
@@ -809,17 +584,8 @@
             color: #a0a0c0;
             margin-top: 8px;
             margin-left: 30px;
-            line-height: 1.5;
         }
 
-        /* 生成数量设置 */
-        .code-count-info {
-            font-size: 0.9rem;
-            color: #4cc9f0;
-            margin-top: 8px;
-        }
-
-        /* 简化版的生成数量输入框 */
         .code-count-input {
             width: 100%;
             padding: 12px 15px;
@@ -828,30 +594,11 @@
             border-radius: 8px;
             color: #e6e6e6;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
         }
 
-        .code-count-input:focus {
-            outline: none;
-            border-color: #4cc9f0;
-            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
-        }
-
-        .code-count-input:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            color: #888;
-            cursor: not-allowed;
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .count-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .count-input-wrapper input {
-            flex: 1;
+        /* 日志区域隐藏 */
+        .logs-container {
+            display: none;
         }
 
         footer {
@@ -863,376 +610,148 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-
-            .card {
-                min-width: 100%;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .music-list-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .music-list-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .expire-type-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .expire-type-wrapper {
-                flex-direction: column;
-            }
-
-            .expire-value-input {
-                width: 100%;
-                border-radius: 8px 8px 0 0;
-            }
-
-            .expire-type-select {
-                width: 100%;
-                border-radius: 0 0 8px 8px;
-            }
-
-            .single-code-value {
-                font-size: 1.2rem;
-                padding: 12px;
-                margin: 10px auto;
-            }
-
-            .result-info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .action-btn {
-                width: 100%;
-                justify-content: center;
-                padding: 10px;
-            }
-
-            .count-input-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        /* 蓝色置顶返回按钮 */
         .back-home-btn {
             position: fixed;
-            top: 20px; /* 置顶 */
+            top: 20px;
             right: 30px;
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            background: linear-gradient(135deg, #1e90ff, #0066cc);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 10000;
-            box-shadow:
-                    0 6px 20px rgba(30, 144, 255, 0.4),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+            transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            animation: slideInFromTop 0.5s ease forwards;
-            animation-delay: 0.3s;
-        }
-
-        /* 从上向下滑入动画 */
-        @keyframes slideInFromTop {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .back-home-btn:hover {
-            transform: translateY(-2px) scale(1.08);
-            box-shadow:
-                    0 10px 30px rgba(30, 144, 255, 0.5),
-                    0 0 0 4px rgba(30, 144, 255, 0.1),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
-        }
-
-        .back-home-btn:active {
-            transform: translateY(1px) scale(0.98);
-            box-shadow:
-                    0 3px 10px rgba(30, 144, 255, 0.3),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .back-home-btn .material-icons {
             color: white;
             font-size: 26px;
             font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
         }
 
-        .back-home-btn:hover .material-icons {
-            transform: translateX(-2px);
+        .back-home-btn:hover {
+            transform: translateY(-2px) scale(1.08);
         }
 
-        /* 添加发光效果 */
-        .back-home-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        .user-info-card {
+            background: rgba(76, 201, 240, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar-icon {
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 100%);
-            pointer-events: none;
-        }
-
-        /* 添加返回文字提示（悬停时显示） */
-        .back-home-btn::after {
-            content: '返回首页';
-            position: absolute;
-            top: 65px;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .back-home-btn:hover::after {
-            opacity: 1;
-            transform: translateY(0);
+        .user-avatar-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        /* 响应式调整 */
+        .user-info-details {
+            flex: 1;
+        }
+
+        .user-info-details h4 {
+            font-size: 1.1rem;
+            color: #e6e6e6;
+            margin-bottom: 5px;
+        }
+
+        .user-info-details p {
+            font-size: 0.85rem;
+            color: #a0a0c0;
+        }
+
+        .login-required {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .login-required i {
+            font-size: 3rem;
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 768px) {
-            .back-home-btn {
-                top: 15px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 22px;
-            }
-
-            .back-home-btn::after {
-                font-size: 11px;
-                padding: 5px 10px;
-            }
-        }
-
-        /* 手机横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .back-home-btn {
-                top: 10px;
-                right: 15px;
-                width: 44px;
-                height: 44px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
-        }
-
-        /* 超小屏幕 */
-        @media (max-width: 480px) {
-            .back-home-btn {
-                width: 44px;
-                height: 44px;
-                top: 12px;
-                right: 15px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
+            .main-content { flex-direction: column; }
+            .music-list-header { flex-direction: column; align-items: flex-start; }
+            .music-list-actions { width: 100%; justify-content: space-between; }
+            .expire-type-container { flex-direction: column; }
+            .expire-type-wrapper { flex-direction: column; }
+            .expire-value-input { width: 100%; border-radius: 8px 8px 0 0; }
+            .expire-type-select { border-radius: 0 0 8px 8px; }
+            .back-home-btn { top: 15px; right: 20px; width: 48px; height: 48px; }
+            .back-home-btn .material-icons { font-size: 22px; }
+            .user-info-header { gap: 12px; }
+            .user-avatar-icon { width: 45px; height: 45px; font-size: 1.2rem; }
         }
     </style>
 </head>
 
+<body>
 <div class="back-home-btn" onclick="window.location.href='../index.html'">
     <span class="material-icons">←</span>
 </div>
 
-
-<body>
 <div class="container">
     <header>
         <h1>舞立方自制谱兑换码生成系统</h1>
     </header>
 
     <div class="main-content">
-        <!-- 扫码登录区 -->
         <div class="card">
-            <h2 class="card-title"><i class="fas fa-qrcode"></i> 微信扫码登录</h2>
-            <p>点击二维码区域生成或刷新登录二维码</p>
+            <h2 class="card-title"><i class="fas fa-user-circle"></i> 登录用户信息</h2>
+            <div id="user-status-area"></div>
 
-            <!-- 隐藏登录步骤 -->
-            <div class="login-instruction" style="display: none;">
-                <strong>登录步骤：</strong>
-                <ol>
-                    <li>点击下方二维码区域生成二维码</li>
-                    <li>使用手机微信扫描二维码</li>
-                    <li>在手机上确认登录</li>
-                    <li>系统会自动获取谱师Token并保存</li>
-                    <li>点击已生成的二维码可以刷新</li>
-                </ol>
-            </div>
-
-            <div class="qr-container">
-                <div class="qr-placeholder" id="qr-placeholder">
-                    <i class="fas fa-qrcode"></i>
-                    <p>点击此处生成登录二维码</p>
-                </div>
-                <img id="qrcode-img" style="display:none;" alt="微信登录二维码" title="点击刷新二维码">
-            </div>
-
-            <div id="expire-time" class="expire-time" style="display:none;"></div>
-
-            <div class="status-info">
-                <div class="status-item">
-                    <div class="status-label">二维码状态</div>
-                    <div class="status-value" id="qr-status">未生成</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-label">登录状态</div>
-                    <div class="status-value" id="login-status">未登录</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-label">Token状态</div>
-                    <div class="status-value" id="token-status">未获取</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <button class="btn btn-secondary" id="check-login-btn" disabled>
-                    <i class="fas fa-check-circle"></i> 检查登录状态
-                </button>
-            </div>
-
-            <!-- 隐藏Token接口参数说明 -->
-            <div class="token-info" style="display: none;">
-                <strong>Token接口参数说明：</strong>
-                <table>
-                    <tr>
-                        <th>参数名</th>
-                        <th>参数值</th>
-                        <th>说明</th>
-                    </tr>
-                    <tr>
-                        <td>client_type</td>
-                        <td>qrcode</td>
-                        <td>客户端类型</td>
-                    </tr>
-                    <tr>
-                        <td>grant_type</td>
-                        <td>client_credentials</td>
-                        <td>授权类型</td>
-                    </tr>
-                    <tr>
-                        <td>client_id</td>
-                        <td id="current-client-id">未生成</td>
-                        <td>二维码ID</td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- 隐藏Token接口返回格式 -->
-            <div class="api-format" style="display: none;">
-                <strong>Token接口返回格式：</strong><br>
-                <code>{"access_token": "谱师token值"}</code>
-            </div>
-
-            <!-- 隐藏谱师Token显示 -->
-            <div class="form-group token-display-group" style="display: none;">
-                <label for="token-display">当前谱师Token</label>
-                <input type="text" id="token-display" readonly placeholder="登录后谱师Token将显示在这里">
-            </div>
-
-            <button class="btn btn-out" id="clear-token-btn">
-                <i class="fa-solid fa-right-from-bracket"></i> 退出登录
-            </button>
-        </div>
-
-        <!-- 兑换码生成区 -->
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-code"></i> 兑换码生成</h2>
-            <p>选择谱面并设置兑换后歌曲有效期，生成自制谱兑换码</p>
+            <h2 class="card-title" style="margin-top: 20px;"><i class="fas fa-code"></i> 兑换码生成</h2>
+            <p>选择谱面并设置有效期，生成自制谱兑换码</p>
 
             <div class="music-select-container">
                 <div class="music-list-header">
                     <label><i class="fas fa-music"></i> 选择谱师谱面（可多选）</label>
                     <div class="music-list-actions">
-                        <button class="btn btn-small btn-secondary" id="refresh-music-btn">
-                            <i class="fas fa-sync-alt"></i> 刷新列表
-                        </button>
-                        <button class="btn btn-small btn-secondary" id="select-all-btn">
-                            <i class="fas fa-check-square"></i> 全选
-                        </button>
-                        <button class="btn btn-small btn-secondary" id="clear-selection-btn">
-                            <i class="fas fa-times"></i> 清空
-                        </button>
+                        <button class="btn btn-small btn-secondary" id="refresh-music-btn" disabled><i class="fas fa-sync-alt"></i> 刷新</button>
+                        <button class="btn btn-small btn-secondary" id="select-all-btn" disabled><i class="fas fa-check-square"></i> 全选</button>
+                        <button class="btn btn-small btn-secondary" id="clear-selection-btn" disabled><i class="fas fa-times"></i> 清空</button>
                     </div>
                 </div>
-
                 <div class="music-list" id="music-list">
-                    <div class="empty-message">
-                        <i class="fas fa-music"></i><br>
-                        请先登录并加载谱面列表
-                    </div>
+                    <div class="empty-message"><i class="fas fa-music"></i><br>请先登录并加载谱面列表</div>
                 </div>
-
-                <div class="selected-count" id="selected-count">
-                    已选择: 0 个谱面
-                </div>
+                <div class="selected-count" id="selected-count">已选择: 0 个谱面</div>
             </div>
 
             <div class="form-group">
                 <label><i class="fas fa-calendar-alt"></i> 有效期设置</label>
-
-                <!-- 非永久有效期选择器 -->
-                <div class="expire-type-container" id="temporary-expire-container">
+                <div class="expire-type-container">
                     <div class="expire-type-wrapper">
-                        <input type="number" id="expire-value" class="expire-value-input" min="1" max="99" value="1" placeholder="数值">
+                        <input type="number" id="expire-value" class="expire-value-input" min="1" max="99" value="1">
                         <select id="expire-type" class="expire-type-select">
                             <option value="times">次</option>
                             <option value="minutes">分钟</option>
@@ -1245,40 +764,20 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="expire-info">
-                    <i class="fas fa-info-circle"></i>
-                    <span>除永久外，其他类型可设置1-99的数值</span>
-                </div>
             </div>
 
-            <!-- 生成数量设置 -->
             <div class="form-group">
-                <label><i class="fas fa-hashtag"></i> 生成兑换码数量</label>
-                <div class="count-input-wrapper">
-                    <input type="number" id="code-count" class="code-count-input" min="1" value="1" placeholder="输入生成数量">
-                </div>
-                <div class="expire-info">
-                    <i class="fas fa-info-circle"></i>
-                    <span id="code-count-info">最多可生成 <span id="max-codes">--</span> 个</span>
-                </div>
+                <label><i class="fas fa-hashtag"></i> 生成数量</label>
+                <input type="number" id="code-count" class="code-count-input" min="1" value="1" disabled>
+                <div class="expire-info"><i class="fas fa-info-circle"></i> <span id="code-count-info">最多可生成 -- 个</span></div>
             </div>
 
-            <!-- 一个码兑换全部选项 -->
             <div class="onecode-option">
                 <label class="onecode-label">
-                    <input type="checkbox" id="onecode-checkbox" class="onecode-checkbox">
+                    <input type="checkbox" id="onecode-checkbox" class="onecode-checkbox" disabled>
                     <span>一个兑换码兑换全部选中的歌曲</span>
                 </label>
-            </div>
-
-            <!-- 隐藏API接口格式 -->
-            <div class="api-format" style="display: none;">
-                <strong>API接口格式：</strong><br>
-                剩余次数: <code>Authorization: bearer 谱师token</code><br>
-                谱面列表: <code>Authorization: bearer 谱师token</code><br>
-                兑换码生成: <code>Authorization: bearer 谱师token</code><br>
-                Query参数: <code>onecode=True/False</code>
+                <div class="onecode-description">开启后，所有选中歌曲使用同一个兑换码，生成数量固定为1</div>
             </div>
 
             <div class="status-info">
@@ -1293,60 +792,32 @@
             </div>
 
             <div class="form-group">
-                <button class="btn btn-primary" id="check-remain-btn">
-                    <i class="fas fa-sync-alt"></i> 查询剩余次数
-                </button>
-                <button class="btn btn-primary" id="generate-code-btn">
-                    <i class="fas fa-key"></i> 批量生成兑换码
-                </button>
+                <button class="btn btn-primary" id="check-remain-btn" disabled><i class="fas fa-sync-alt"></i> 查询剩余次数</button>
+                <button class="btn btn-primary" id="generate-code-btn" disabled><i class="fas fa-key"></i> 生成兑换码</button>
             </div>
 
             <div class="result-container">
-                <div class="result-title"><i class="fas fa-gift"></i> 生成的兑换码结果</div>
+                <div class="result-title"><i class="fas fa-gift"></i> 生成结果</div>
                 <div id="result-content">暂无兑换码生成</div>
             </div>
         </div>
     </div>
 
-    <!-- 操作日志区 -->
-    <div class="api-format">
-        <h2 class="logs-title"><i class="fas fa-history"></i> 操作日志</h2>
-        <div id="logs-content">
-            <div class="log-entry">
-                <span class="log-time">系统启动</span>
-                <span class="log-info">兑换码生成系统已就绪</span>
-            </div>
-        </div>
-        <button class="btn btn-secondary" id="clear-logs-btn" style="margin-top: 15px;">
-            <i class="fas fa-trash-alt"></i> 清空日志
-        </button>
-    </div>
-
     <footer>
-        <p>自制谱兑换码生成工具 - 由妙妙-Mouseke开发 | 数据仅保存在当前浏览器中</p>
+        <p>自制谱兑换码生成工具 - 由妙妙-Mouseke开发 | 数据仅保存在浏览器中</p>
     </footer>
 </div>
 
 <script>
     // 全局变量
-    let userToken = localStorage.getItem('dance_token') || '';
-    let qrCodeData = null;
-    let loginCheckInterval = null;
+    let userToken = '';
+    let userInfo = null;
     let musicList = [];
     let selectedMusicIds = new Set();
     const API_BASE = 'https://dancedemo.shenghuayule.com/Dance';
 
-    // DOM元素
-    const qrPlaceholder = document.getElementById('qr-placeholder');
-    const qrcodeImg = document.getElementById('qrcode-img');
-    const expireTimeDiv = document.getElementById('expire-time');
-    const currentClientId = document.getElementById('current-client-id');
-    const checkLoginBtn = document.getElementById('check-login-btn');
-    const clearTokenBtn = document.getElementById('clear-token-btn');
-    const tokenDisplay = document.getElementById('token-display');
-    const qrStatus = document.getElementById('qr-status');
-    const loginStatus = document.getElementById('login-status');
-    const tokenStatus = document.getElementById('token-status');
+    // DOM 元素
+    const userStatusArea = document.getElementById('user-status-area');
     const checkRemainBtn = document.getElementById('check-remain-btn');
     const generateCodeBtn = document.getElementById('generate-code-btn');
     const refreshMusicBtn = document.getElementById('refresh-music-btn');
@@ -1355,1756 +826,490 @@
     const remainTimes = document.getElementById('remain-times');
     const musicCount = document.getElementById('music-count');
     const musicListContainer = document.getElementById('music-list');
-    const selectedCount = document.getElementById('selected-count');
+    const selectedCountSpan = document.getElementById('selected-count');
     const expireTypeSelect = document.getElementById('expire-type');
     const expireValueInput = document.getElementById('expire-value');
-    const temporaryExpireContainer = document.getElementById('temporary-expire-container');
     const onecodeCheckbox = document.getElementById('onecode-checkbox');
     const resultContent = document.getElementById('result-content');
-    const logsContent = document.getElementById('logs-content');
-    const clearLogsBtn = document.getElementById('clear-logs-btn');
-
-    // 新增DOM元素
     const codeCountInput = document.getElementById('code-count');
     const codeCountInfo = document.getElementById('code-count-info');
-    const maxCodesSpan = document.getElementById('max-codes');
 
-    // 检查网站登录状态（使用dance_user_data和dance_user_token）
-    function checkWebsiteLogin() {
-        const savedUserData = localStorage.getItem('dance_user_data');
-        const savedUserToken = localStorage.getItem('dance_user_token');
-
-        if (!savedUserData || !savedUserToken) {
-            return false;
-        }
-
-        try {
-            // 检查token是否过期
-            const tokenData = JSON.parse(savedUserToken);
-            if (tokenData.expireTime) {
-                const now = new Date();
-                const expireTime = new Date(tokenData.expireTime);
-                return now <= expireTime;
-            }
-            return true; // 如果没有过期时间，假设有效
-        } catch (e) {
-            console.error('解析用户token失败:', e);
-            return false;
-        }
-    }
-
-    // 检查谱师Token是否有效
-    function checkComposerToken() {
-        const savedToken = localStorage.getItem('dance_token');
-
-        if (!savedToken || savedToken.trim() === '') {
-            return false;
-        }
-
-        // 基本验证：Token长度至少为10个字符
-        if (savedToken.length < 10) {
-            return false;
-        }
-
-        return true;
-    }
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', async function() {
-        // 检查网站登录状态
-        const isWebsiteLoggedIn = checkWebsiteLogin();
-
-        if (!isWebsiteLoggedIn) {
-            // 网站未登录，显示提示
-            showWebsiteLoginRequired();
-            setupBasicEventListeners();
-            addLog('检测到未登录网站，请返回首页登录', 'warning');
-            return;
-        }
-
-        addLog('网站登录状态: 已登录', 'success');
-
-        // 检查谱师Token
-        const hasComposerToken = checkComposerToken();
-
-        if (hasComposerToken) {
-            // 有有效的谱师Token，直接使用
-            userToken = localStorage.getItem('dance_token');
-
-            // 更新UI显示谱师Token状态
-            updateTokenDisplay();
-            enableTokenFeatures();
-
-            addLog('检测到已保存的谱师Token，自动登录成功', 'success');
-
-            // 自动加载谱面列表和查询剩余次数
-            try {
-                await loadMusicList();
-                await checkRemainTimes();
-            } catch (error) {
-                console.error('自动加载失败:', error);
-                addLog(`自动加载失败: ${error.message}`, 'warning');
-            }
-        } else {
-            // 没有谱师Token，显示提示但可以生成二维码
-            addLog('网站已登录，但未检测到谱师Token，请生成二维码登录获取', 'info');
-            updateTokenDisplay();
-
-            // 启用基本功能
-            checkRemainBtn.disabled = false;
-            refreshMusicBtn.disabled = false;
-        }
-
-        // 事件监听
-        qrPlaceholder.addEventListener('click', generateQRCode);
-        qrcodeImg.addEventListener('click', generateQRCode);
-        checkLoginBtn.addEventListener('click', checkLoginStatus);
-        clearTokenBtn.addEventListener('click', clearToken);
-        checkRemainBtn.addEventListener('click', checkRemainTimes);
-        generateCodeBtn.addEventListener('click', generateCodes);
-        refreshMusicBtn.addEventListener('click', loadMusicList);
-        selectAllBtn.addEventListener('click', selectAllMusic);
-        clearSelectionBtn.addEventListener('click', clearMusicSelection);
-        clearLogsBtn.addEventListener('click', clearLogs);
-
-        // 有效期类型变化事件
-        expireTypeSelect.addEventListener('change', updateExpireTypeUI);
-
-        // 有效期数值输入事件
-        expireValueInput.addEventListener('input', validateExpireValue);
-
-        // 生成数量相关事件
-        codeCountInput.addEventListener('input', updateCodeCount);
-        onecodeCheckbox.addEventListener('change', handleOnecodeChange);
-        selectedCount.addEventListener('DOMSubtreeModified', () => {
-            setTimeout(updateCodeCount, 100);
-        });
-
-        // 初始化有效期UI
-        updateExpireTypeUI();
-
-        // 初始化生成数量限制
-        updateCodeCount();
-
-        addLog('系统初始化完成', 'success');
-    });
-
-    // 显示网站登录要求
-    function showWebsiteLoginRequired() {
-        musicListContainer.innerHTML = `
-            <div class="empty-message" style="text-align: center; padding: 40px 20px;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 20px;"></i>
-                <h3 style="color: #f59e0b; margin-bottom: 15px;">请先登录网站</h3>
-                <p style="color: #a0a0c0; margin-bottom: 25px; line-height: 1.6;">
-                    需要有效的用户登录才能使用兑换码生成功能<br>
-                    请返回首页使用微信扫码登录
-                </p>
-                <button onclick="window.location.href='../index.html'"
-                        style="padding: 12px 24px; background: linear-gradient(90deg, #4cc9f0, #4361ee);
-                               color: white; border: none; border-radius: 8px; font-weight: 600;
-                               cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-home"></i> 返回首页登录
-                </button>
-            </div>
-        `;
-
-        // 禁用所有功能按钮
-        checkRemainBtn.disabled = true;
-        generateCodeBtn.disabled = true;
-        refreshMusicBtn.disabled = true;
-        selectAllBtn.disabled = true;
-        clearSelectionBtn.disabled = true;
-        codeCountInput.disabled = true;
-        onecodeCheckbox.disabled = true;
-        expireTypeSelect.disabled = true;
-        expireValueInput.disabled = true;
-
-        // 清空状态显示
-        remainTimes.textContent = '--';
-        remainTimes.className = 'status-value';
-        musicCount.textContent = '--';
-        selectedCount.textContent = '已选择: 0 个谱面';
-
-        // 清空谱师Token相关显示
-        userToken = '';
-        tokenDisplay.value = '';
-        tokenStatus.textContent = '未获取';
-        tokenStatus.className = 'status-value';
-        loginStatus.textContent = '未登录';
-        loginStatus.className = 'status-value';
-    }
-
-    // 基本事件监听器设置
-    function setupBasicEventListeners() {
-        // 只有返回首页按钮和日志相关功能可用
-        clearLogsBtn.addEventListener('click', clearLogs);
-
-        // 二维码登录区域功能
-        qrPlaceholder.addEventListener('click', generateQRCode);
-        qrcodeImg.addEventListener('click', generateQRCode);
-        checkLoginBtn.addEventListener('click', checkLoginStatus);
-        clearTokenBtn.addEventListener('click', clearToken);
-    }
-
-    // 处理一个码兑换全部选项变化
-    function handleOnecodeChange() {
-        const onecode = onecodeCheckbox.checked;
-
-        if (onecode) {
-            // 当选择"一个码兑换全部"时，强制生成数量为1且不可更改
-            codeCountInput.value = 1;
-            codeCountInput.disabled = true;
-            codeCountInput.style.cursor = 'not-allowed';
-            codeCountInput.title = '一个码兑换全部模式固定生成1个兑换码';
-
-            // 更新描述
-            document.querySelector('.onecode-description').textContent =
-                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
-
-            // 更新生成按钮文本
-            if (selectedMusicIds.size > 0) {
-                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成通用兑换码`;
-            }
-        } else {
-            // 恢复生成数量输入框
-            codeCountInput.disabled = false;
-            codeCountInput.style.cursor = 'text';
-            codeCountInput.title = '';
-
-            // 恢复描述
-            document.querySelector('.onecode-description').textContent =
-                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
-        }
-
-        // 更新生成数量限制
-        updateCodeCount();
-
-        addLog(`一个码兑换全部模式: ${onecode ? '开启' : '关闭'}`, 'info');
-    }
-
-    // 生成二维码
-    async function generateQRCode() {
-        // 检查网站登录状态 - 只给警告但不阻止
-        if (!checkWebsiteLogin()) {
-            addLog('警告：网站登录可能已过期，建议返回首页重新登录', 'warning');
-        }
-
-        try {
-            addLog('正在生成登录二维码...', 'info');
-            qrStatus.textContent = '生成中';
-            qrStatus.className = 'status-value';
-
-            // 清空之前的二维码数据
-            qrCodeData = null;
-            if (loginCheckInterval) {
-                clearInterval(loginCheckInterval);
-                loginCheckInterval = null;
-            }
-
-            // 调用二维码接口 - 使用完整URL
-            const response = await fetch(`${API_BASE}/api/Common/GetQrCode`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                },
-                mode: 'cors', // 明确指定CORS模式
-                credentials: 'omit' // 不发送凭据
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`二维码接口错误: ${response.status} ${response.statusText} - ${errorText}`);
-            }
-
-            const data = await response.json();
-
-            // 检查响应数据格式
-            if (!data || !data.QrcodeUrl) {
-                throw new Error('二维码接口返回数据格式错误');
-            }
-
-            qrCodeData = data;
-
-            // 显示二维码
-            qrPlaceholder.style.display = 'none';
-            qrcodeImg.src = data.QrcodeUrl;
-            qrcodeImg.style.display = 'block';
-
-            // 显示过期时间和client_id
-            if (data.ExpireTime) {
-                expireTimeDiv.textContent = `二维码有效期至: ${data.ExpireTime}`;
-                expireTimeDiv.style.display = 'block';
-                expireTimeDiv.style.color = '#4cc9f0';
-            }
-
-            if (data.ID) {
-                currentClientId.textContent = data.ID;
-            }
-
-            // 更新状态
-            qrStatus.textContent = '已生成';
-            qrStatus.className = 'status-value success';
-            checkLoginBtn.disabled = false;
-
-            addLog(`二维码生成成功`, 'success');
-            addLog(`client_id: ${data.ID || '未知'}`, 'info');
-
-            // 开始轮询检查登录状态
-            if (loginCheckInterval) {
-                clearInterval(loginCheckInterval);
-            }
-
-            loginCheckInterval = setInterval(checkLoginStatus, 3000);
-
-            // 设置二维码过期检查（如果提供了过期时间）
-            if (data.ExpireTime) {
-                try {
-                    const expireTime = new Date(data.ExpireTime);
-                    const now = new Date();
-                    const timeDiff = expireTime - now;
-
-                    if (timeDiff > 0) {
-                        setTimeout(() => {
-                            qrStatus.textContent = '已过期';
-                            qrStatus.className = 'status-value error';
-                            expireTimeDiv.textContent = '二维码已过期，点击刷新';
-                            expireTimeDiv.style.color = '#f87171';
-                            addLog('二维码已过期', 'warning');
-                        }, timeDiff);
-                    }
-                } catch (dateError) {
-                    console.warn('解析过期时间失败:', dateError);
-                }
-            }
-
-        } catch (error) {
-            console.error('生成二维码失败:', error);
-            qrStatus.textContent = '生成失败';
-            qrStatus.className = 'status-value error';
-            addLog(`二维码生成失败: ${error.message}`, 'error');
-
-            // 显示二维码生成失败提示
-            qrPlaceholder.style.display = 'flex';
-            qrcodeImg.style.display = 'none';
-            expireTimeDiv.style.display = 'none';
-
-            // 显示具体的错误信息
-            if (error.message.includes('CORS') || error.message.includes('NetworkError')) {
-                addLog('可能遇到跨域问题，请检查网络连接或API配置', 'error');
-            }
-        }
-    }
-
-    // 检查登录状态并获取Token
-    async function checkLoginStatus() {
-        if (!qrCodeData || !qrCodeData.ID) {
-            addLog('请先生成二维码', 'warning');
-            return;
-        }
-
-        try {
-            addLog('检查登录状态...', 'info');
-            loginStatus.textContent = '检查中';
-            loginStatus.className = 'status-value';
-
-            // 构建请求参数
-            const params = new URLSearchParams();
-            params.append('client_type', 'qrcode');
-            params.append('grant_type', 'client_credentials');
-            params.append('client_id', qrCodeData.ID);
-
-            // 调用Token获取接口 - 使用完整URL
-            const response = await fetch(`${API_BASE}/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json'
-                },
-                body: params.toString(),
-                mode: 'cors',
-                credentials: 'omit'
-            });
-
-            addLog(`请求Token接口: client_id=${qrCodeData.ID}`, 'info');
-
-            if (response.status === 401) {
-                loginStatus.textContent = '等待扫码';
-                loginStatus.className = 'status-value warning';
-                addLog('等待用户扫码确认...', 'info');
-                return;
-            }
-
-            if (response.status === 400) {
-                const errorData = await response.json();
-                addLog(`Token接口返回400错误: ${JSON.stringify(errorData)}`, 'error');
-                loginStatus.textContent = '参数错误';
-                loginStatus.className = 'status-value error';
-                return;
-            }
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Token接口错误: ${response.status} ${response.statusText} - ${errorText}`);
-            }
-
-            const data = await response.json();
-            addLog(`Token接口响应: ${JSON.stringify(data)}`, 'info');
-
-            // 获取access_token
-            const token = data.access_token || data.accessToken;
-
-            if (token) {
-                userToken = token;
-                localStorage.setItem('dance_token', token);
-
-                // 保存Token过期时间（如果有）
-                if (data.expires_in) {
-                    const expireTime = new Date();
-                    expireTime.setSeconds(expireTime.getSeconds() + data.expires_in);
-                    localStorage.setItem('dance_token_expire', expireTime.toISOString());
-                }
-
-                loginStatus.textContent = '已登录';
-                loginStatus.className = 'status-value success';
-                tokenStatus.textContent = '已获取';
-                tokenStatus.className = 'status-value success';
-                updateTokenDisplay();
-
-                enableTokenFeatures();
-
-                if (loginCheckInterval) {
-                    clearInterval(loginCheckInterval);
-                    loginCheckInterval = null;
-                }
-
-                qrcodeImg.style.display = 'none';
-                qrPlaceholder.style.display = 'flex';
-                qrPlaceholder.innerHTML = `
-                    <i class="fas fa-check-circle" style="color: #4ade80;"></i>
-                    <p>登录成功！点击可重新生成二维码</p>
-                `;
-                expireTimeDiv.style.display = 'none';
-
-                addLog('登录成功，谱师Token已获取并保存', 'success');
-
-                // 加载谱面列表
-                await loadMusicList();
-
-                // 查询剩余次数
-                await checkRemainTimes();
-
-            } else {
-                loginStatus.textContent = '等待扫码';
-                loginStatus.className = 'status-value warning';
-                addLog('Token未返回，等待用户扫码确认...', 'info');
-            }
-
-        } catch (error) {
-            console.error('检查登录状态失败:', error);
-            loginStatus.textContent = '检查失败';
-            loginStatus.className = 'status-value error';
-            addLog(`登录状态检查失败: ${error.message}`, 'error');
-        }
-    }
-
-    // 加载谱师谱面列表
-    async function loadMusicList() {
-        if (!userToken) {
-            addLog('请先登录获取谱师Token', 'warning');
-            return;
-        }
-
-        try {
-            addLog('正在加载谱师谱面列表...', 'info');
-            refreshMusicBtn.disabled = true;
-            refreshMusicBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 加载中...';
-
-            musicListContainer.innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i><br>
-                        正在加载谱面列表...
-                    </div>
-                `;
-
-            // 调用谱面列表接口，page=1, pagesize=9999 获取所有谱面
-            const url = `${API_BASE}/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`;
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${userToken}`,
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (response.status === 401) {
-                throw new Error('Token无效或已过期，请重新登录');
-            }
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                addLog(`谱面列表接口错误: ${response.status} - ${errorText}`, 'error');
-                throw new Error(`谱面列表接口错误: ${response.status}`);
-            }
-
-            const responseData = await response.json();
-
-            // 分析响应数据结构，提取谱面列表
-            let extractedMusicList = [];
-
-            // 尝试多种可能的响应格式
-            if (Array.isArray(responseData)) {
-                // 情况1: 直接返回数组
-                extractedMusicList = responseData;
-                addLog('检测到响应为数组格式', 'info');
-            } else if (responseData.data && Array.isArray(responseData.data)) {
-                // 情况2: 返回 {data: [...]} 格式
-                extractedMusicList = responseData.data;
-                addLog('检测到响应为data数组格式', 'info');
-            } else if (responseData.list && Array.isArray(responseData.list)) {
-                // 情况3: 返回 {list: [...]} 格式
-                extractedMusicList = responseData.list;
-                addLog('检测到响应为list数组格式', 'info');
-            } else if (responseData.records && Array.isArray(responseData.records)) {
-                // 情况4: 返回 {records: [...]} 格式
-                extractedMusicList = responseData.records;
-                addLog('检测到响应为records数组格式', 'info');
-            } else if (responseData.items && Array.isArray(responseData.items)) {
-                // 情况5: 返回 {items: [...]} 格式
-                extractedMusicList = responseData.items;
-                addLog('检测到响应为items数组格式', 'info');
-            } else {
-                // 情况6: 尝试从响应对象中提取所有数组类型的属性
-                for (const key in responseData) {
-                    if (Array.isArray(responseData[key])) {
-                        extractedMusicList = responseData[key];
-                        addLog(`检测到响应中的数组属性: ${key}`, 'info');
-                        break;
-                    }
-                }
-            }
-
-            // 处理谱面数据
-            musicList = extractedMusicList;
-            musicCount.textContent = musicList.length;
-
-            addLog(`谱面列表加载成功，共 ${musicList.length} 个谱面`, 'success');
-
-            // 渲染谱面列表
-            renderMusicList();
-
-        } catch (error) {
-            console.error('加载谱面列表失败:', error);
-            musicListContainer.innerHTML = `
-                    <div class="empty-message">
-                        <i class="fas fa-exclamation-triangle"></i><br>
-                        加载失败: ${error.message}
-                    </div>
-                `;
-            musicCount.textContent = '--';
-
-            if (error.message.includes('Token无效')) {
-                clearToken();
-            }
-
-            addLog(`加载谱面列表失败: ${error.message}`, 'error');
-        } finally {
-            refreshMusicBtn.disabled = false;
-            refreshMusicBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新列表';
-
-            // 更新生成数量限制
-            setTimeout(updateCodeCount, 100);
-        }
-    }
-
-    // 渲染谱面列表
-    function renderMusicList() {
-        if (musicList.length === 0) {
-            musicListContainer.innerHTML = `
-                    <div class="empty-message">
-                        <i class="fas fa-music"></i><br>
-                        暂无发布的谱面
-                    </div>
-                `;
-            return;
-        }
-
-        musicListContainer.innerHTML = '';
-
-        musicList.forEach((music, index) => {
-            // 提取谱面ID和名称
-            const musicId = extractMusicId(music);
-            const musicName = extractMusicName(music);
-
-            if (!musicId) {
-                addLog(`第 ${index + 1} 个谱面数据缺少ID字段`, 'warning');
-                return; // 跳过没有ID的谱面
-            }
-
-            const isSelected = selectedMusicIds.has(musicId);
-
-            const musicItem = document.createElement('div');
-            musicItem.className = `music-item ${isSelected ? 'selected' : ''}`;
-            musicItem.dataset.id = musicId;
-            musicItem.dataset.index = index;
-
-            musicItem.innerHTML = `
-                    <input type="checkbox" class="music-checkbox" ${isSelected ? 'checked' : ''}>
-                    <div class="music-info">
-                        <div class="music-id">谱面ID: ${musicId}</div>
-                        <div class="music-name">${musicName}</div>
-                    </div>
-                `;
-
-            // 添加点击事件
-            const checkbox = musicItem.querySelector('.music-checkbox');
-            checkbox.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleMusicSelection(musicId, checkbox.checked);
-            });
-
-            // 整行点击也可以选择
-            musicItem.addEventListener('click', (e) => {
-                if (e.target !== checkbox) {
-                    const newCheckedState = !isSelected;
-                    checkbox.checked = newCheckedState;
-                    toggleMusicSelection(musicId, newCheckedState);
-                }
-            });
-
-            musicListContainer.appendChild(musicItem);
-        });
-
-        updateSelectedCount();
-
-        // 如果渲染后列表为空（可能是因为所有谱面都缺少ID）
-        if (musicListContainer.children.length === 0 && musicList.length > 0) {
-            musicListContainer.innerHTML = `
-                    <div class="empty-message">
-                        <i class="fas fa-exclamation-triangle"></i><br>
-                        谱面数据格式异常，无法解析<br>
-                        请查看日志了解详情
-                    </div>
-                `;
-        }
-    }
-
-    // 提取谱面ID
-    function extractMusicId(music) {
-        // 尝试多种可能的ID字段名
-        const idFields = ['MusicID', 'musicId', 'GoodsID', 'ID', 'id', 'Id', 'songId', 'SongID'];
-
-        for (const field of idFields) {
-            if (music[field] !== undefined && music[field] !== null && music[field] !== '') {
-                return String(music[field]);
-            }
-        }
-
-        return null;
-    }
-
-    // 提取谱面名称
-    function extractMusicName(music) {
-        // 优先使用Name字段
-        if (music.Name !== undefined && music.Name !== null && music.Name !== '') {
-            return String(music.Name);
-        }
-
-        // 其次尝试其他名称字段
-        const nameFields = ['name', 'Title', 'title', 'songName', 'SongName', 'musicName', 'MusicName'];
-
-        for (const field of nameFields) {
-            if (music[field] !== undefined && music[field] !== null && music[field] !== '') {
-                return String(music[field]);
-            }
-        }
-
-        // 最后才使用GoodsIntro
-        if (music.GoodsIntro !== undefined && music.GoodsIntro !== null && music.GoodsIntro !== '') {
-            return String(music.GoodsIntro);
-        }
-
-        return '未知谱面';
-    }
-
-    // 更新有效期类型UI
-    function updateExpireTypeUI() {
-        const expireType = expireTypeSelect.value;
-
-        if (expireType === 'forever') {
-            // 永久有效期时隐藏数值输入框
+    // 控制有效期数值输入框显示/隐藏
+    function updateExpireValueVisibility() {
+        const isForever = expireTypeSelect.value === 'forever';
+        if (isForever) {
+            expireValueInput.classList.add('hidden');
             expireValueInput.style.display = 'none';
         } else {
-            // 非永久有效期时显示数值输入框
+            expireValueInput.classList.remove('hidden');
             expireValueInput.style.display = 'block';
         }
     }
 
-    // 验证有效期数值
-    function validateExpireValue() {
-        let value = parseInt(expireValueInput.value);
-        if (isNaN(value) || value < 1) {
-            expireValueInput.value = 1;
-        } else if (value > 99) {
-            expireValueInput.value = 99;
+    // 从 localStorage 读取登录信息
+    function loadUserFromStorage() {
+        try {
+            const savedUserData = localStorage.getItem('dance_user_data');
+            const savedTokenData = localStorage.getItem('dance_user_token');
+
+            if (!savedUserData || !savedTokenData) {
+                return false;
+            }
+
+            const userData = JSON.parse(savedUserData);
+            const tokenData = JSON.parse(savedTokenData);
+
+            if (tokenData.expireTime) {
+                const now = new Date();
+                const expireTime = new Date(tokenData.expireTime);
+                if (now > expireTime) {
+                    return false;
+                }
+            }
+
+            userInfo = userData;
+            userToken = tokenData.token || '';
+            return true;
+        } catch (e) {
+            console.error('解析登录数据失败:', e);
+            return false;
         }
     }
 
-    // 更新生成数量限制
-    function updateCodeCount() {
-        const onecode = onecodeCheckbox.checked;
-        const selectedCount = selectedMusicIds.size;
-        const currentRemain = parseInt(remainTimes.textContent);
+    // 显示用户信息（带头像）
+    function displayUserInfo() {
+        if (userInfo && userToken) {
+            const displayName = userInfo.UserName || userInfo.username || userInfo.nickname || '微信用户';
+            const displayId = userInfo.UserID || userInfo.userId || userInfo.id || '未知';
+            const avatarUrl = userInfo.HeadimgURL || userInfo.headimgurl || userInfo.avatar || null;
 
-        if (isNaN(currentRemain) || currentRemain <= 0) {
-            // 如果没有剩余次数信息，限制为1
-            codeCountInput.max = 1;
-
-            // 一个码兑换全部模式强制为1
-            if (onecode) {
-                codeCountInput.value = 1;
-                codeCountInput.disabled = true;
+            // 生成头像HTML
+            let avatarHtml = '';
+            if (avatarUrl && avatarUrl.trim() !== '') {
+                avatarHtml = `<img src="${escapeHtml(avatarUrl)}" alt="头像" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-user-circle\'></i>';">`;
             } else {
-                codeCountInput.value = 1;
-                codeCountInput.disabled = false;
+                avatarHtml = `<i class="fas fa-user-circle"></i>`;
             }
 
-            maxCodesSpan.textContent = '1';
-            codeCountInfo.innerHTML = ` <span>请先查询剩余次数</span>`;
+            userStatusArea.innerHTML = `
+                <div class="user-info-card">
+                    <div class="user-info-header">
+                        <div class="user-avatar-icon">
+                            ${avatarHtml}
+                        </div>
+                        <div class="user-info-details">
+                            <h4>${escapeHtml(displayName)}</h4>
+                            <p>用户ID: ${escapeHtml(displayId)}</p>
+                            <p style="font-size:0.75rem; margin-top:5px;"><i class="fas fa-check-circle" style="color:#4ade80;"></i> 已登录，可使用兑换码功能</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return true;
+        } else {
+            userStatusArea.innerHTML = `
+                <div class="login-required">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>请先返回首页使用微信登录</p>
+                    <button onclick="window.location.href='../index.html'" class="btn btn-primary" style="margin-top:15px; display:inline-block; width:auto;">
+                        <i class="fas fa-home"></i> 返回首页登录
+                    </button>
+                </div>
+            `;
+            return false;
+        }
+    }
+
+    // 启用功能按钮
+    function enableFeatures() {
+        checkRemainBtn.disabled = false;
+        refreshMusicBtn.disabled = false;
+        selectAllBtn.disabled = false;
+        clearSelectionBtn.disabled = false;
+        onecodeCheckbox.disabled = false;
+        expireTypeSelect.disabled = false;
+        expireValueInput.disabled = false;
+        codeCountInput.disabled = false;
+    }
+
+    // 禁用功能按钮
+    function disableFeatures() {
+        checkRemainBtn.disabled = true;
+        refreshMusicBtn.disabled = true;
+        selectAllBtn.disabled = true;
+        clearSelectionBtn.disabled = true;
+        onecodeCheckbox.disabled = true;
+        expireTypeSelect.disabled = true;
+        expireValueInput.disabled = true;
+        codeCountInput.disabled = true;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // 日志功能保留但不在页面显示（控制台输出）
+    function addLog(message, type = 'info') {
+        const now = new Date();
+        const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        console.log(`[${time}] [${type.toUpperCase()}] ${message}`);
+    }
+
+    function extractMusicId(music) {
+        const fields = ['MusicID', 'musicId', 'GoodsID', 'ID', 'id', 'Id', 'songId', 'SongID'];
+        for (const f of fields) {
+            if (music[f] !== undefined && music[f] !== null && music[f] !== '') return String(music[f]);
+        }
+        return null;
+    }
+
+    function extractMusicName(music) {
+        if (music.Name) return String(music.Name);
+        const fields = ['name', 'Title', 'title', 'songName', 'SongName', 'musicName', 'MusicName'];
+        for (const f of fields) {
+            if (music[f]) return String(music[f]);
+        }
+        if (music.GoodsIntro) return String(music.GoodsIntro);
+        return '未知谱面';
+    }
+
+    function renderMusicList() {
+        if (!musicList.length) {
+            musicListContainer.innerHTML = `<div class="empty-message"><i class="fas fa-music"></i><br>暂无发布的谱面</div>`;
             return;
         }
-
-        // 计算最大生成数量
-        let maxCodes = 0;
-
-        if (onecode) {
-            // 一个码兑换全部模式 - 固定为1
-            if (selectedCount === 0) {
-                // 没有选择任何歌曲时，不能生成
-                maxCodes = 0;
-            } else {
-                // 一个码兑换全部，固定生成1个码
-                maxCodes = 1;
-                codeCountInput.value = 1;
-                codeCountInput.disabled = true;
-            }
-        } else {
-            // 单独生成模式
-            if (selectedCount === 0) {
-                // 没有选择任何歌曲时，不能生成
-                maxCodes = 0;
-            } else if (selectedCount === 1) {
-                // 只选择了一个歌曲时，可以生成多个该歌曲的兑换码
-                maxCodes = currentRemain;
-                codeCountInput.disabled = false;
-            } else {
-                // 选择了多个歌曲时，每个码消耗的剩余次数等于选择的歌曲数量
-                maxCodes = Math.floor(currentRemain / selectedCount);
-                codeCountInput.disabled = false;
-            }
-        }
-
-        // 设置输入框最大值
-        codeCountInput.max = maxCodes;
-
-        // 验证当前值
-        let currentValue = parseInt(codeCountInput.value);
-        if (isNaN(currentValue) || currentValue < 1) {
-            currentValue = 1;
-        }
-
-        if (currentValue > maxCodes) {
-            currentValue = maxCodes;
-        }
-
-        codeCountInput.value = currentValue;
-
-        // 更新显示信息
-        maxCodesSpan.textContent = maxCodes;
-
-        // 计算总共需要消耗的次数
-        let totalRequired = 0;
-        if (onecode) {
-            totalRequired = 1; // 固定消耗1次
-        } else {
-            if (selectedCount === 0) {
-                totalRequired = 0;
-            } else if (selectedCount === 1) {
-                totalRequired = currentValue; // 每个码消耗1次
-            } else {
-                totalRequired = currentValue * selectedCount; // 每个码消耗selectedCount次
-            }
-        }
-
-        // 更新提示信息
-        let infoText = '';
-        if (maxCodes === 0) {
-            if (selectedCount === 0) {
-                infoText = '请至少选择一个谱面';
-            } else {
-                infoText = `剩余次数不足，需要 ${onecode ? 1 : selectedCount} 次，剩余 ${currentRemain} 次`;
-            }
-        } else {
-            if (onecode) {
-                infoText = `一个码兑换全部模式固定生成1个通用兑换码，将消耗1次剩余次数`;
-            } else {
-                infoText = `最多可生成 ${maxCodes} 个，将消耗 ${totalRequired} 次剩余次数`;
-            }
-        }
-
-        codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> <span>${infoText}</span>`;
-
-        // 更新生成按钮文本
-        if (onecode) {
-            if (selectedCount > 0) {
-                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成通用兑换码`;
-            } else {
-                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码`;
-            }
-        } else {
-            if (selectedCount > 0) {
-                if (selectedCount === 1) {
-                    generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成 ${currentValue} 个兑换码`;
-                } else {
-                    generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 生成 ${currentValue} 组兑换码（每组 ${selectedCount} 个）`;
-                }
-            } else {
-                generateCodeBtn.innerHTML = `<i class="fas fa-key"></i> 批量生成兑换码`;
-            }
-        }
+        musicListContainer.innerHTML = '';
+        musicList.forEach(music => {
+            const musicId = extractMusicId(music);
+            const musicName = extractMusicName(music);
+            if (!musicId) return;
+            const isSelected = selectedMusicIds.has(musicId);
+            const item = document.createElement('div');
+            item.className = `music-item ${isSelected ? 'selected' : ''}`;
+            item.dataset.id = musicId;
+            item.innerHTML = `
+                <input type="checkbox" class="music-checkbox" ${isSelected ? 'checked' : ''}>
+                <div class="music-info">
+                    <div class="music-id">ID: ${musicId}</div>
+                    <div class="music-name">${escapeHtml(musicName)}</div>
+                </div>
+            `;
+            const cb = item.querySelector('.music-checkbox');
+            cb.addEventListener('click', (e) => { e.stopPropagation(); toggleMusic(musicId, cb.checked); });
+            item.addEventListener('click', (e) => { if (e.target !== cb) { cb.checked = !isSelected; toggleMusic(musicId, cb.checked); } });
+            musicListContainer.appendChild(item);
+        });
+        updateSelectedCount();
     }
 
-    // 获取有效期类型文本
-    function getExpireTypeText() {
-        const expireType = expireTypeSelect.value;
-        const expireValue = expireValueInput.value;
-
-        const typeMap = {
-            'times': '次',
-            'minutes': '分钟',
-            'hours': '小时',
-            'day': '天',
-            'week': '周',
-            'season': '季',
-            'year': '年',
-            'forever': '永久'
-        };
-
-        if (expireType === 'forever') {
-            return '永久';
-        } else {
-            return `${expireValue}${typeMap[expireType]}`;
-        }
-    }
-
-    // 转换前端显示类型为接口要求的数值
-    function getExpireUnitType(expireType) {
-        const unitMap = {
-            'forever': 0,    // 永久
-            'times': 1,      // 次数
-            'day': 2,        // 天
-            'week': 3,       // 周
-            'month': 4,      // 月
-            'season': 5,     // 季
-            'year': 6,       // 年
-            'minutes': 7,    // 分钟
-            'hours': 8       // 小时
-        };
-
-        return unitMap[expireType] || 2; // 默认返回天
-    }
-
-    // 构建请求体数据 - 按照新的API格式
-    function buildRequestBody() {
-        const expireType = expireTypeSelect.value;
-        const expireValue = expireValueInput.value;
-        const codeCount = parseInt(codeCountInput.value) || 1;
-        const onecode = onecodeCheckbox.checked;
-
-        // 构建请求体数组
-        const requestBody = [];
-
-        if (onecode) {
-            // 一个码兑换全部模式
-            selectedMusicIds.forEach(musicId => {
-                // 永久兑换码：ExpireDuration = 1，ExpireUnitType = 0
-                // 非永久：使用用户输入的值和对应的UnitType
-                const expireDuration = expireType === 'forever' ? 1 : Math.max(1, parseInt(expireValue));
-                const expireUnitType = expireType === 'forever' ? 0 : getExpireUnitType(expireType);
-
-                console.log(`永久兑换码参数 - MusicID: ${musicId}, ExpireDuration: ${expireDuration}, ExpireUnitType: ${expireUnitType}`);
-
-                requestBody.push({
-                    "MusicID": parseInt(musicId),
-                    "ExpireDuration": expireDuration,
-                    "ExpireUnitType": expireUnitType
-                });
-            });
-        } else {
-            // 单独生成模式
-            selectedMusicIds.forEach(musicId => {
-                // 永久兑换码：ExpireDuration = 1，ExpireUnitType = 0
-                // 非永久：使用用户输入的值和对应的UnitType
-                const expireDuration = expireType === 'forever' ? 1 : Math.max(1, parseInt(expireValue));
-                const expireUnitType = expireType === 'forever' ? 0 : getExpireUnitType(expireType);
-
-                console.log(`永久兑换码参数 - MusicID: ${musicId}, ExpireDuration: ${expireDuration}, ExpireUnitType: ${expireUnitType}`);
-
-                requestBody.push({
-                    "MusicID": parseInt(musicId),
-                    "Count": codeCount,
-                    "ExpireDuration": expireDuration,
-                    "ExpireUnitType": expireUnitType
-                });
-            });
-        }
-
-        // 调试输出完整的请求体
-        console.log('完整请求体:', JSON.stringify(requestBody, null, 2));
-        return requestBody;
-    }
-
-    // 切换谱面选择状态
-    function toggleMusicSelection(musicId, isSelected) {
-        if (isSelected) {
-            selectedMusicIds.add(musicId);
-        } else {
-            selectedMusicIds.delete(musicId);
-        }
-
-        // 更新UI
-        const musicItem = document.querySelector(`.music-item[data-id="${musicId}"]`);
-        if (musicItem) {
-            musicItem.classList.toggle('selected', isSelected);
-        }
-
+    function toggleMusic(musicId, isSelected) {
+        if (isSelected) selectedMusicIds.add(musicId);
+        else selectedMusicIds.delete(musicId);
+        const item = document.querySelector(`.music-item[data-id="${musicId}"]`);
+        if (item) item.classList.toggle('selected', isSelected);
         updateSelectedCount();
         updateCodeCount();
     }
 
-    // 全选谱面
     function selectAllMusic() {
         selectedMusicIds.clear();
-        musicList.forEach(music => {
-            const musicId = extractMusicId(music);
-            if (musicId) {
-                selectedMusicIds.add(musicId);
-            }
-        });
-
+        musicList.forEach(m => { const id = extractMusicId(m); if (id) selectedMusicIds.add(id); });
         renderMusicList();
         addLog(`已全选 ${selectedMusicIds.size} 个谱面`, 'info');
     }
 
-    // 清空选择
     function clearMusicSelection() {
         selectedMusicIds.clear();
         renderMusicList();
         addLog('已清空谱面选择', 'info');
     }
 
-    // 更新选择计数
     function updateSelectedCount() {
-        selectedCount.textContent = `已选择: ${selectedMusicIds.size} 个谱面`;
-
-        // 根据选择数量更新生成按钮状态
+        selectedCountSpan.textContent = `已选择: ${selectedMusicIds.size} 个谱面`;
         generateCodeBtn.disabled = selectedMusicIds.size === 0;
-
         updateCodeCount();
     }
 
-    // 查询剩余发码次数
-    async function checkRemainTimes() {
+    function updateCodeCount() {
+        const onecode = onecodeCheckbox.checked;
+        const selectedCnt = selectedMusicIds.size;
+        const remain = parseInt(remainTimes.textContent);
+        let maxCodes = 0;
+
+        if (onecode) {
+            maxCodes = selectedCnt > 0 ? 1 : 0;
+            codeCountInput.value = 1;
+            codeCountInput.disabled = true;
+        } else {
+            if (selectedCnt === 0) maxCodes = 0;
+            else if (selectedCnt === 1) maxCodes = isNaN(remain) ? 1 : remain;
+            else maxCodes = isNaN(remain) ? 0 : Math.floor(remain / selectedCnt);
+            codeCountInput.disabled = false;
+            let cur = parseInt(codeCountInput.value);
+            if (isNaN(cur) || cur < 1) cur = 1;
+            if (cur > maxCodes && maxCodes > 0) cur = maxCodes;
+            if (maxCodes === 0) cur = 0;
+            codeCountInput.value = cur;
+        }
+        codeCountInput.max = maxCodes;
+        const infoText = maxCodes === 0 ? '请先选择谱面并查询剩余次数' : `最多可生成 ${maxCodes} 个`;
+        codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> ${infoText}`;
+    }
+
+    async function loadMusicList() {
         if (!userToken) {
-            addLog('请先登录获取谱师Token', 'warning');
+            addLog('未获取到Token，请重新登录', 'warning');
             return;
         }
-
         try {
-            addLog('正在查询剩余发码次数...', 'info');
-            checkRemainBtn.disabled = true;
-            checkRemainBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 查询中...';
-            remainTimes.textContent = '查询中';
-            remainTimes.className = 'status-value';
+            addLog('正在加载谱面列表...', 'info');
+            refreshMusicBtn.disabled = true;
+            refreshMusicBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 加载中';
+            musicListContainer.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i><br>加载中...</div>`;
 
-            const response = await fetch(`${API_BASE}/api/MusicData/GetCodeRemainTimes`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${userToken}`,
-                    'Accept': 'application/json'
-                }
+            const res = await fetch(`${API_BASE}/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, {
+                headers: { 'Authorization': `Bearer ${userToken}`, 'Accept': 'application/json' }
             });
 
-            if (response.status === 401) {
-                throw new Error('Token无效或已过期，请重新登录');
+            if (res.status === 401) throw new Error('Token无效，请重新登录');
+            if (!res.ok) throw new Error(`请求失败: ${res.status}`);
+
+            const data = await res.json();
+            let extracted = [];
+            if (Array.isArray(data)) extracted = data;
+            else if (data.data && Array.isArray(data.data)) extracted = data.data;
+            else if (data.list && Array.isArray(data.list)) extracted = data.list;
+            else if (data.records && Array.isArray(data.records)) extracted = data.records;
+            else {
+                for (let k in data) {
+                    if (Array.isArray(data[k])) { extracted = data[k]; break; }
+                }
             }
+            musicList = extracted;
+            musicCount.textContent = musicList.length;
+            addLog(`加载成功，共 ${musicList.length} 个谱面`, 'success');
+            renderMusicList();
+        } catch (err) {
+            addLog(`加载失败: ${err.message}`, 'error');
+            musicListContainer.innerHTML = `<div class="empty-message"><i class="fas fa-exclamation-triangle"></i><br>${escapeHtml(err.message)}</div>`;
+        } finally {
+            refreshMusicBtn.disabled = false;
+            refreshMusicBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新';
+        }
+    }
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                addLog(`接口响应: ${errorText}`, 'error');
-                throw new Error(`接口错误: ${response.status} - ${errorText}`);
-            }
+    async function checkRemainTimes() {
+        if (!userToken) {
+            addLog('请先登录', 'warning');
+            return;
+        }
+        try {
+            addLog('查询剩余次数...', 'info');
+            checkRemainBtn.disabled = true;
+            checkRemainBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 查询中';
+            remainTimes.textContent = '查询中';
 
-            const data = await response.json();
-            addLog(`接口返回数据: ${JSON.stringify(data)}`, 'info');
+            const res = await fetch(`${API_BASE}/api/MusicData/GetCodeRemainTimes`, {
+                headers: { 'Authorization': `Bearer ${userToken}`, 'Accept': 'application/json' }
+            });
+            if (res.status === 401) throw new Error('Token无效');
+            if (!res.ok) throw new Error(`查询失败: ${res.status}`);
 
-            // 尝试多种可能的字段名
-            const remainCount = data.Remain || data.remain || data.count || data.times;
-
-            if (remainCount !== undefined) {
-                remainTimes.textContent = remainCount;
+            const data = await res.json();
+            const remain = data.Remain || data.remain || data.count || data.times;
+            if (remain !== undefined) {
+                remainTimes.textContent = remain;
                 remainTimes.className = 'status-value success';
-                addLog(`剩余发码次数: ${remainCount}`, 'success');
+                addLog(`剩余次数: ${remain}`, 'success');
             } else {
                 remainTimes.textContent = '未知';
-                remainTimes.className = 'status-value warning';
-                addLog(`接口返回数据格式异常: ${JSON.stringify(data)}`, 'warning');
+                addLog('返回数据格式异常', 'warning');
             }
-
-        } catch (error) {
-            console.error('查询剩余次数失败:', error);
-            remainTimes.textContent = '查询失败';
+        } catch (err) {
+            remainTimes.textContent = '失败';
             remainTimes.className = 'status-value error';
-
-            if (error.message.includes('Token无效')) {
-                clearToken();
-            }
-
-            addLog(`查询剩余次数失败: ${error.message}`, 'error');
+            addLog(`查询失败: ${err.message}`, 'error');
         } finally {
             checkRemainBtn.disabled = false;
             checkRemainBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 查询剩余次数';
-
-            // 更新生成数量限制
-            setTimeout(updateCodeCount, 100);
+            updateCodeCount();
         }
     }
 
-    // 批量生成兑换码 - POST请求
-    async function generateCodes() {
-        if (!userToken) {
-            addLog('请先登录获取谱师Token', 'warning');
-            return;
-        }
+    function getExpireUnitType(type) {
+        const map = { 'forever': 0, 'times': 1, 'day': 2, 'week': 3, 'month': 4, 'season': 5, 'year': 6, 'minutes': 7, 'hours': 8 };
+        return map[type] || 2;
+    }
 
-        if (selectedMusicIds.size === 0) {
-            addLog('请至少选择一个谱面', 'warning');
-            return;
-        }
+    function getExpireText() {
+        const type = expireTypeSelect.value;
+        if (type === 'forever') return '永久';
+        const val = expireValueInput.value;
+        const names = { 'times':'次', 'minutes':'分钟', 'hours':'小时', 'day':'天', 'week':'周', 'season':'季', 'year':'年' };
+        return `${val}${names[type] || '天'}`;
+    }
 
-        const expireTypeText = getExpireTypeText();
-        const selectedCount = selectedMusicIds.size;
+    function buildRequestBody() {
+        const isForever = expireTypeSelect.value === 'forever';
+        const duration = isForever ? 1 : Math.max(1, parseInt(expireValueInput.value) || 1);
+        const unit = isForever ? 0 : getExpireUnitType(expireTypeSelect.value);
         const onecode = onecodeCheckbox.checked;
-        const codeCount = parseInt(codeCountInput.value) || 1;
-
-        try {
-            addLog(`开始生成兑换码，模式: ${onecode ? '一个码兑换全部' : '单独生成'}，数量: ${codeCount}`, 'info');
-            generateCodeBtn.disabled = true;
-            generateCodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
-
-            // 首先检查剩余次数
-            await checkRemainTimes();
-
-            const currentRemain = parseInt(remainTimes.textContent);
-
-            // 计算所需剩余次数
-            let requiredRemain = 0;
+        const count = parseInt(codeCountInput.value) || 1;
+        const body = [];
+        for (let id of selectedMusicIds) {
             if (onecode) {
-                // 一个码兑换全部模式 - 固定需要1次
-                requiredRemain = 1;
+                body.push({ "MusicID": parseInt(id), "ExpireDuration": duration, "ExpireUnitType": unit });
             } else {
-                // 单独生成模式
-                requiredRemain = codeCount * selectedCount; // 每个码消耗selectedCount次
+                body.push({ "MusicID": parseInt(id), "Count": count, "ExpireDuration": duration, "ExpireUnitType": unit });
             }
-
-            if (isNaN(currentRemain) || currentRemain < requiredRemain) {
-                throw new Error(`剩余发码次数不足。需要: ${requiredRemain}，剩余: ${currentRemain}`);
-            }
-
-            // 构建请求体
-            const requestBody = buildRequestBody();
-
-            // 调试信息
-            addLog(`请求参数: onecode=${onecode}, count=${codeCount}`, 'info');
-            addLog(`选中的谱面ID: ${Array.from(selectedMusicIds).join(', ')}`, 'info');
-            addLog(`有效期类型: ${expireTypeSelect.value}, 有效期文本: ${expireTypeText}`, 'info');
-            console.log('请求体:', JSON.stringify(requestBody, null, 2));
-
-            // 构建请求URL
-            const url = `${API_BASE}/api/MusicData/GetAllMusicCodes`;
-
-            // 添加onecode参数到URL（如果需要）
-            const requestUrl = onecode ? `${url}?onecode=true` : url;
-
-            // 发送POST请求
-            addLog(`调用接口: ${requestUrl}`, 'info');
-
-            const response = await fetch(requestUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${userToken}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            // 获取响应文本
-            const responseText = await response.text();
-            addLog(`接口响应状态: ${response.status}`, 'info');
-            addLog(`接口响应内容: ${responseText}`, 'info');
-
-            // 解析响应
-            let resultData;
-            try {
-                if (responseText && responseText.trim().length > 0) {
-                    resultData = JSON.parse(responseText);
-                    addLog(`接口响应解析成功`, 'info');
-                } else {
-                    resultData = {};
-                    addLog('响应为空', 'warning');
-                }
-            } catch (parseError) {
-                addLog(`响应解析失败: ${parseError.message}`, 'warning');
-                resultData = {
-                    error: '响应格式异常',
-                    rawResponse: responseText.substring(0, 500)
-                };
-            }
-
-            // 处理HTTP状态码
-            if (!response.ok) {
-                let errorMsg = `接口错误: ${response.status}`;
-
-                // 根据状态码提供更具体的错误信息
-                switch (response.status) {
-                    case 400:
-                        errorMsg = '请求参数错误 (400)';
-                        if (responseText.includes('ExpireDuration')) {
-                            errorMsg += ' - ExpireDuration参数错误';
-                        } else if (responseText.includes('ExpireUnitType')) {
-                            errorMsg += ' - ExpireUnitType参数错误';
-                        } else if (responseText.includes('MusicID')) {
-                            errorMsg += ' - MusicID参数错误';
-                        } else if (responseText.includes('Count')) {
-                            errorMsg += ' - Count参数错误';
-                        } else if (responseText.includes('onecode')) {
-                            errorMsg += ' - onecode参数错误';
-                        }
-                        break;
-                    case 401:
-                        errorMsg = 'Token无效或已过期';
-                        break;
-                    case 403:
-                        errorMsg = '权限不足，无法生成兑换码';
-                        break;
-                    case 404:
-                        errorMsg = '接口不存在';
-                        break;
-                    case 500:
-                        errorMsg = '服务器内部错误';
-                        break;
-                }
-
-                // 添加响应文本到错误信息
-                if (responseText && responseText.length > 0) {
-                    errorMsg += ` - 响应: ${responseText.substring(0, 200)}`;
-                }
-
-                throw new Error(errorMsg);
-            }
-
-            // 显示结果
-            displayResult(resultData, expireTypeText, onecode, codeCount);
-
-            // 生成成功后，刷新剩余次数
-            setTimeout(() => {
-                checkRemainTimes();
-            }, 1000);
-
-        } catch (error) {
-            console.error('批量生成兑换码失败:', error);
-            addLog(`批量生成兑换码失败: ${error.message}`, 'error');
-
-            // 显示详细错误信息
-            displayError(error.message);
-        } finally {
-            generateCodeBtn.disabled = selectedMusicIds.size === 0;
-            updateSelectedCount();
         }
+        return body;
     }
 
-    // 显示错误信息
-    function displayError(errorMessage) {
-        const requestBody = buildRequestBody();
-        const onecode = onecodeCheckbox.checked;
-        const codeCount = parseInt(codeCountInput.value) || 1;
-
-        let errorHtml = `
-            <div class="result-success-header">
-                <div class="success-icon" style="background: linear-gradient(135deg, #f87171, #dc2626);">
-                    <i class="fas fa-times"></i>
-                </div>
-                <div>
-                    <div class="result-success-title">批量生成失败</div>
-                    <div class="result-success-subtitle">${errorMessage}</div>
-                </div>
-            </div>
-
-            <div class="debug-container">
-                <div class="debug-title">
-                    <i class="fas fa-bug"></i> 调试信息
-                </div>
-                <div class="result-info-grid">
-                    <div class="result-info-item">
-                        <div class="result-info-label">接口地址</div>
-                        <div class="result-info-value">${API_BASE}/api/MusicData/GetAllMusicCodes</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">请求方法</div>
-                        <div class="result-info-value">POST</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">生成模式</div>
-                        <div class="result-info-value highlight">${onecode ? '一个码兑换全部' : '单独生成'}</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">生成数量</div>
-                        <div class="result-info-value highlight">${onecode ? '1 (固定)' : codeCount + ' 个'}</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">选择谱面数</div>
-                        <div class="result-info-value highlight">${selectedMusicIds.size} 个</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">有效期类型</div>
-                        <div class="result-info-value highlight">${expireTypeSelect.value}</div>
-                    </div>
-                    <div class="result-info-item">
-                        <div class="result-info-label">ExpireUnitType</div>
-                        <div class="result-info-value highlight">${getExpireUnitType(expireTypeSelect.value)}</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <div class="result-info-label" style="margin-bottom: 10px;">请求体数据</div>
-                    <div class="debug-content">
-${JSON.stringify(requestBody, null, 2)}
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 25px; padding: 15px; background: rgba(76, 201, 240, 0.1); border-radius: 10px; border: 1px solid rgba(76, 201, 240, 0.3);">
-                <div style="color: #4cc9f0; font-weight: 600; margin-bottom: 10px;">
-                    <i class="fas fa-lightbulb"></i> 常见问题排查
-                </div>
-                <ul style="color: #a0a0c0; margin-left: 20px; line-height: 1.6;">
-                    <li>永久兑换码: ExpireDuration = 1, ExpireUnitType = 0</li>
-                    <li>检查 ExpireDuration 是否大于等于1</li>
-                    <li>检查 ExpireUnitType 是否正确映射（永久为0）</li>
-                    <li>检查 MusicID 是否有效</li>
-                    <li>检查 Count 参数是否有效（大于0）</li>
-                    <li>检查剩余发码次数是否足够</li>
-                    <li>检查网络连接是否正常</li>
-                    <li>检查 Token 是否有效</li>
-                </ul>
-            </div>
-        `;
-
-        resultContent.innerHTML = errorHtml;
-    }
-
-    // 显示生成结果
-    function displayResult(data, expireTypeText, isOneCode, codeCount = 1) {
-        // 查找兑换码
-        const codes = findAllCodesInResponse(data);
-
-        if (codes.length === 0) {
-            // 没有找到兑换码，显示原始数据
-            let html = `
-                <div class="result-success-header">
-                    <div class="success-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div>
-                        <div class="result-success-title">接口调用成功</div>
-                        <div class="result-success-subtitle">但未找到标准兑换码字段</div>
-                    </div>
-                </div>
-                <div class="debug-container">
-                    <div class="debug-title">
-                        <i class="fas fa-info-circle"></i> 接口返回数据
-                    </div>
-                    <div class="debug-content">
-${JSON.stringify(data, null, 2)}
-                    </div>
-                </div>
-            `;
-            resultContent.innerHTML = html;
-            return;
+    function findAllCodes(obj, result = []) {
+        if (!obj || typeof obj !== 'object') return result;
+        const fields = ['code', 'Code', 'redeemCode', 'RedeemCode', 'CDKey', 'cdkey', 'key', 'Key'];
+        for (let f of fields) {
+            if (obj[f] && typeof obj[f] === 'string' && !result.includes(obj[f])) result.push(obj[f]);
         }
-
-        let allCodes = [];
-        let codeTitles = [];
-
-        if (isOneCode) {
-            // 一个码兑换全部模式
-            // 取第一个码作为通用码
-            const uniqueCodes = [...new Set(codes)]; // 去重
-            const singleCode = uniqueCodes[0] || codes[0]; // 取第一个码
-
-            allCodes.push(singleCode);
-            codeTitles.push(`通用兑换码`);
-        } else {
-            // 单独生成模式
-            // 每个歌曲生成指定数量的兑换码
-            let codeIndex = 0;
-            selectedMusicIds.forEach((musicId, songIndex) => {
-                const music = musicList.find(m => extractMusicId(m) === musicId);
-                const musicName = music ? extractMusicName(music) : '未知谱面';
-
-                for (let i = 0; i < codeCount; i++) {
-                    if (codes[codeIndex]) {
-                        allCodes.push(codes[codeIndex]);
-                        codeTitles.push(`${musicName} - 第 ${i + 1} 个`);
-                        codeIndex++;
-                    }
-                }
-            });
-        }
-
-        let html = `
-            <div class="result-success-header">
-                <div class="success-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div>
-                    <div class="result-success-title">兑换码生成成功</div>
-                    <div class="result-success-subtitle">${allCodes.length} 个兑换码已成功生成，请妥善保存</div>
-                </div>
-            </div>
-            <div class="result-info-grid">
-                <div class="result-info-item">
-                    <div class="result-info-label">生成模式</div>
-                    <div class="result-info-value highlight">${isOneCode ? '一个码兑换全部' : '每个谱面单独生成'}</div>
-                </div>
-                <div class="result-info-item">
-                    <div class="result-info-label">生成数量</div>
-                    <div class="result-info-value highlight">${isOneCode ? '1 (固定)' : codeCount + ' 个/每谱面'}</div>
-                </div>
-                <div class="result-info-item">
-                    <div class="result-info-label">有效期</div>
-                    <div class="result-info-value highlight">${expireTypeText}</div>
-                </div>
-                <div class="result-info-item">
-                    <div class="result-info-label">生成时间</div>
-                    <div class="result-info-value">${new Date().toLocaleString()}</div>
-                </div>
-                <div class="result-info-item">
-                    <div class="result-info-label">总码数</div>
-                    <div class="result-info-value highlight">${allCodes.length} 个</div>
-                </div>
-            </div>
-        `;
-
-        if (isOneCode && selectedMusicIds.size > 0) {
-            // 一个码兑换全部
-            html += `
-                <div class="single-code-container">
-                    <div class="single-code-label">
-                        <i class="fas fa-gift"></i> 通用兑换码（可兑换 ${selectedMusicIds.size} 个谱面）:
-                    </div>
-                    <div class="single-code-value">${allCodes[0]}</div>
-                    <div style="color: #888; font-size: 0.9rem; margin-top: 10px;">
-                        该兑换码可以兑换所有选中的谱面
-                    </div>
-                </div>
-            `;
-        } else {
-            // 多个兑换码
-            html += `
-                <div style="margin: 25px 0;">
-                    <div style="color: #4cc9f0; font-weight: 600; margin-bottom: 20px; font-size: 1.1rem;">
-                        <i class="fas fa-key"></i> 生成的兑换码 (${allCodes.length} 个):
-                    </div>
-            `;
-
-            allCodes.forEach((code, index) => {
-                html += `
-                    <div class="code-card">
-                        <div class="code-card-header">
-                            <div class="code-title">
-                                <i class="fas fa-music"></i> ${index + 1}. ${codeTitles[index] || `兑换码 ${index + 1}`}
-                            </div>
-                            <div class="code-id">序号: ${index + 1}</div>
-                        </div>
-                        <div class="code-value">${code}</div>
-                    </div>
-                `;
-            });
-
-            html += `</div>`;
-        }
-
-        // 添加操作按钮
-        const codesToCopy = allCodes.join('\n');
-        html += `
-            <div class="action-buttons">
-                <button id="copy-codes-btn" class="action-btn copy-btn">
-                    <i class="fas fa-copy"></i> 复制全部兑换码
-                </button>
-                <button id="export-codes-btn" class="action-btn export-btn">
-                    <i class="fas fa-download"></i> 导出为文本文件
-                </button>
-            </div>
-        `;
-
-        resultContent.innerHTML = html;
-
-        // 添加复制按钮事件监听
-        const copyBtn = document.getElementById('copy-codes-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                copyCodeToClipboard(codesToCopy, isOneCode, codeCount);
-            });
-        }
-
-        // 添加导出按钮事件监听
-        const exportBtn = document.getElementById('export-codes-btn');
-        if (exportBtn) {
-            exportBtn.addEventListener('click', () => {
-                exportCodesToFile(codesToCopy, isOneCode, codeCount);
-            });
-        }
-    }
-
-    // 辅助函数：查找所有兑换码
-    function findAllCodesInResponse(data, result = []) {
-        if (!data || typeof data !== 'object') return result;
-
-        const codeFields = ['code', 'Code', 'redeemCode', 'RedeemCode', '兑换码', '兑换码值', 'CDKey', 'cdkey', '激活码', 'key', 'Key'];
-
-        // 检查当前对象
-        for (const field of codeFields) {
-            if (data[field] && typeof data[field] === 'string') {
-                if (!result.includes(data[field])) {
-                    result.push(data[field]);
-                }
-            }
-        }
-
-        // 如果是数组，遍历每个元素
-        if (Array.isArray(data)) {
-            data.forEach(item => findAllCodesInResponse(item, result));
-        } else {
-            // 递归检查嵌套对象
-            for (const key in data) {
-                if (data[key] && typeof data[key] === 'object') {
-                    findAllCodesInResponse(data[key], result);
-                }
-            }
-        }
-
+        if (Array.isArray(obj)) obj.forEach(v => findAllCodes(v, result));
+        else for (let k in obj) if (obj[k] && typeof obj[k] === 'object') findAllCodes(obj[k], result);
         return result;
     }
 
-    // 复制兑换码到剪贴板
-    function copyCodeToClipboard(code, isOneCode, codeCount = 1) {
-        let text = '谱面兑换码\n';
-        text += '生成时间: ' + new Date().toLocaleString() + '\n';
-        text += '歌曲时长: ' + getExpireTypeText() + '\n';
-        text += '生成数量: ' + (isOneCode ? '1' : codeCount + ' 个') + '\n';
-        text += '谱面数量: ' + selectedMusicIds.size + ' 个\n\n';
+    async function generateCodes() {
+        if (!userToken) { addLog('请先登录', 'warning'); return; }
+        if (selectedMusicIds.size === 0) { addLog('请至少选择一个谱面', 'warning'); return; }
 
-        if (isOneCode) {
-            text += '【兑换码】\n';
-            const uniqueCodes = [...new Set(code.split('\n'))];
-            text += `兑换码: ${uniqueCodes[0] || code.split('\n')[0]}\n\n`;
+        const onecode = onecodeCheckbox.checked;
+        const count = parseInt(codeCountInput.value) || 1;
+        const expireText = getExpireText();
 
-            selectedMusicIds.forEach((musicId, index) => {
-                const music = musicList.find(m => extractMusicId(m) === musicId);
-                const musicName = music ? extractMusicName(music) : '未知谱面';
-                text += `${index + 1}. ${musicName} (ID: ${musicId})\n`;
+        try {
+            addLog(`开始生成 - 模式:${onecode ? '通用码' : '单独'}, 数量:${count}`, 'info');
+            generateCodeBtn.disabled = true;
+            generateCodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中';
+
+            await checkRemainTimes();
+            const remain = parseInt(remainTimes.textContent);
+            let need = onecode ? 1 : (count * selectedMusicIds.size);
+            if (isNaN(remain) || remain < need) throw new Error(`次数不足，需要${need}次，剩余${remain || 0}次`);
+
+            const body = buildRequestBody();
+            const url = onecode ? `${API_BASE}/api/MusicData/GetAllMusicCodes?onecode=true` : `${API_BASE}/api/MusicData/GetAllMusicCodes`;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${userToken}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(body)
             });
-        } else {
-            text += '【兑换码列表】\n\n';
-            const codes = code.split('\n');
-            let codeIndex = 0;
-            selectedMusicIds.forEach((musicId, songIndex) => {
-                const music = musicList.find(m => extractMusicId(m) === musicId);
-                const musicName = music ? extractMusicName(music) : '未知谱面';
+            const text = await res.text();
+            let data;
+            try { data = text ? JSON.parse(text) : {}; } catch(e) { data = { raw: text }; }
+            if (!res.ok) throw new Error(`接口错误 ${res.status}: ${text.substring(0,200)}`);
 
-                text += `--- ${musicName} (ID: ${musicId}) ---\n`;
-                for (let i = 0; i < codeCount && codes[codeIndex]; i++) {
-                    text += `   ${i + 1}. ${codes[codeIndex]}\n`;
-                    codeIndex++;
-                }
-                text += '\n';
-            });
+            const codes = findAllCodes(data);
+            if (!codes.length) throw new Error('未获取到兑换码');
+
+            let displayCodes = onecode ? [codes[0]] : codes.slice(0, count * selectedMusicIds.size);
+            showResult(displayCodes, expireText, onecode, count);
+            addLog(`生成成功，共${displayCodes.length}个兑换码`, 'success');
+            setTimeout(() => checkRemainTimes(), 1000);
+        } catch (err) {
+            addLog(`生成失败: ${err.message}`, 'error');
+            resultContent.innerHTML = `<div class="empty-message"><i class="fas fa-exclamation-triangle"></i><br>${escapeHtml(err.message)}</div>`;
+        } finally {
+            generateCodeBtn.disabled = selectedMusicIds.size === 0;
+            generateCodeBtn.innerHTML = '<i class="fas fa-key"></i> 生成兑换码';
         }
+    }
 
-        navigator.clipboard.writeText(text).then(() => {
-            addLog('兑换码已复制到剪贴板', 'success');
-
-            // 显示成功提示
-            const btn = document.getElementById('copy-codes-btn');
-            if (btn) {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> 复制成功！';
-                btn.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)';
-
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.style.background = 'linear-gradient(90deg, #4cc9f0, #4361ee)';
-                }, 2000);
-            }
-        }).catch(err => {
-            addLog('复制到剪贴板失败: ' + err.message, 'error');
-            alert('复制失败，请手动复制');
+    function showResult(codes, expireText, onecode, count) {
+        let html = `
+            <div class="result-success-header">
+                <div class="success-icon"><i class="fas fa-check"></i></div>
+                <div><div class="result-success-title">生成成功</div><div class="result-success-subtitle">${codes.length} 个兑换码</div></div>
+            </div>
+            <div class="result-info-grid">
+                <div class="result-info-item"><div class="result-info-label">模式</div><div class="result-info-value highlight">${onecode ? '通用码' : '单独生成'}</div></div>
+                <div class="result-info-item"><div class="result-info-label">有效期</div><div class="result-info-value highlight">${expireText}</div></div>
+                <div class="result-info-item"><div class="result-info-label">时间</div><div class="result-info-value">${new Date().toLocaleString()}</div></div>
+            </div>
+        `;
+        if (onecode && selectedMusicIds.size > 0) {
+            html += `<div class="single-code-container"><div class="single-code-label">通用兑换码</div><div class="single-code-value">${codes[0]}</div></div>`;
+        } else {
+            html += `<div style="margin:20px 0;"><div style="color:#4cc9f0;margin-bottom:15px;">兑换码列表:</div>`;
+            codes.forEach((c, i) => {
+                html += `<div class="code-card"><div class="code-card-header"><div class="code-title">兑换码 ${i+1}</div></div><div class="code-value">${c}</div></div>`;
+            });
+            html += `</div>`;
+        }
+        const allCodes = codes.join('\n');
+        html += `<div class="action-buttons">
+            <button id="copyBtn" class="action-btn copy-btn"><i class="fas fa-copy"></i> 复制全部</button>
+            <button id="exportBtn" class="action-btn export-btn"><i class="fas fa-download"></i> 导出文件</button>
+        </div>`;
+        resultContent.innerHTML = html;
+        document.getElementById('copyBtn')?.addEventListener('click', () => {
+            navigator.clipboard.writeText(allCodes).then(() => addLog('已复制', 'success')).catch(() => addLog('复制失败', 'error'));
+        });
+        document.getElementById('exportBtn')?.addEventListener('click', () => {
+            const blob = new Blob([allCodes], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `兑换码_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+            addLog('已导出文件', 'success');
         });
     }
 
-    // 导出兑换码为文本文件
-    function exportCodesToFile(code, isOneCode, codeCount = 1) {
-        let text = '谱面兑换码导出文件\n';
-        text += '='.repeat(40) + '\n\n';
-        text += '生成时间: ' + new Date().toLocaleString() + '\n';
-        text += '歌曲时长: ' + getExpireTypeText() + '\n';
-        text += '生成数量: ' + (isOneCode ? '1' : codeCount + ' 个') + '\n';
-        text += '='.repeat(40) + '\n\n';
+    // 初始化
+    function init() {
+        const loggedIn = loadUserFromStorage();
+        displayUserInfo();
 
-        if (isOneCode) {
-            text += '【兑换码】\n';
-            text += '='.repeat(20) + '\n';
-            const uniqueCodes = [...new Set(code.split('\n'))];
-            text += `兑换码: ${uniqueCodes[0] || code.split('\n')[0]}\n\n`;
+        // 初始化有效期输入框显示状态
+        updateExpireValueVisibility();
 
-            selectedMusicIds.forEach((musicId, index) => {
-                const music = musicList.find(m => extractMusicId(m) === musicId);
-                const musicName = music ? extractMusicName(music) : '未知谱面';
-                text += `${index + 1}. ${musicName} (ID: ${musicId})\n`;
-            });
+        if (loggedIn && userToken) {
+            enableFeatures();
+            addLog(`用户已登录: ${userInfo?.UserName || userInfo?.username || '用户'}`, 'success');
+            loadMusicList();
+            checkRemainTimes();
         } else {
-            text += '【兑换码列表】\n';
-            text += '='.repeat(20) + '\n\n';
-            const codes = code.split('\n');
-            let codeIndex = 0;
-            selectedMusicIds.forEach((musicId, songIndex) => {
-                const music = musicList.find(m => extractMusicId(m) === musicId);
-                const musicName = music ? extractMusicName(music) : '未知谱面';
-
-                text += `谱面: ${musicName}\n`;
-                text += `ID: ${musicId}\n`;
-                text += '兑换码:\n';
-                for (let i = 0; i < codeCount && codes[codeIndex]; i++) {
-                    text += `  ${i + 1}. ${codes[codeIndex]}\n`;
-                    codeIndex++;
-                }
-                text += '-'.repeat(30) + '\n\n';
-            });
+            disableFeatures();
+            addLog('未检测到登录信息，请返回首页登录', 'warning');
         }
 
-        text += '\n' + '='.repeat(40) + '\n';
-        text += '文件导出完成\n';
-        text += '请妥善保管兑换码，避免泄露';
-
-        // 创建Blob对象并下载
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        a.download = `谱面兑换码_${timestamp}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        addLog('兑换码已导出为文本文件', 'success');
-
-        // 显示成功提示
-        const btn = document.getElementById('export-codes-btn');
-        if (btn) {
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> 导出成功！';
-            btn.style.background = 'rgba(76, 201, 240, 0.2)';
-
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.style.background = 'rgba(76, 201, 240, 0.1)';
-            }, 2000);
-        }
+        // 绑定事件
+        checkRemainBtn.addEventListener('click', checkRemainTimes);
+        generateCodeBtn.addEventListener('click', generateCodes);
+        refreshMusicBtn.addEventListener('click', loadMusicList);
+        selectAllBtn.addEventListener('click', selectAllMusic);
+        clearSelectionBtn.addEventListener('click', clearMusicSelection);
+        expireTypeSelect.addEventListener('change', () => {
+            updateExpireValueVisibility();
+            updateCodeCount();
+        });
+        expireValueInput.addEventListener('input', () => updateCodeCount());
+        onecodeCheckbox.addEventListener('change', () => updateCodeCount());
+        codeCountInput.addEventListener('input', () => updateCodeCount());
     }
 
-    // 更新Token显示
-    function updateTokenDisplay() {
-        if (userToken) {
-            const displayToken = userToken.length > 30 ?
-                `${userToken.substring(0, 20)}...${userToken.substring(userToken.length - 10)}` :
-                userToken;
+    init();
 
-            tokenDisplay.value = displayToken;
-            tokenStatus.textContent = '已获取';
-            tokenStatus.className = 'status-value success';
-            loginStatus.textContent = '已登录';
-            loginStatus.className = 'status-value success';
-        } else {
-            tokenDisplay.value = '';
-            tokenStatus.textContent = '未获取';
-            tokenStatus.className = 'status-value';
-            loginStatus.textContent = '未登录';
-            loginStatus.className = 'status-value';
-        }
-    }
-
-    // 启用Token相关功能
-    function enableTokenFeatures() {
-        checkRemainBtn.disabled = false;
-        generateCodeBtn.disabled = selectedMusicIds.size === 0;
-        refreshMusicBtn.disabled = false;
-        selectAllBtn.disabled = false;
-        clearSelectionBtn.disabled = false;
-        codeCountInput.disabled = false;
-        onecodeCheckbox.disabled = false;
-        expireTypeSelect.disabled = false;
-        expireValueInput.disabled = false;
-        updateTokenDisplay();
-    }
-
-    // 清除Token
-    function clearToken() {
-        if (confirm('确定要退出登录吗？退出登录后需要重新扫码登录。')) {
-            userToken = '';
-            localStorage.removeItem('dance_token');
-            localStorage.removeItem('dance_token_expire');
-            updateTokenDisplay();
-
-            // 禁用相关功能
-            checkRemainBtn.disabled = true;
-            generateCodeBtn.disabled = true;
-            refreshMusicBtn.disabled = true;
-            selectAllBtn.disabled = true;
-            clearSelectionBtn.disabled = true;
-            codeCountInput.disabled = true;
-            onecodeCheckbox.disabled = true;
-            expireTypeSelect.disabled = true;
-            expireValueInput.disabled = true;
-            remainTimes.textContent = '--';
-            remainTimes.className = 'status-value';
-            musicCount.textContent = '--';
-
-            // 清空谱面列表
-            musicList = [];
-            selectedMusicIds.clear();
-            musicListContainer.innerHTML = `
-                    <div class="empty-message">
-                        <i class="fas fa-music"></i><br>
-                        请先登录并加载谱面列表
-                    </div>
-                `;
-            updateSelectedCount();
-
-            // 重置生成数量
-            codeCountInput.value = 1;
-            codeCountInput.disabled = true;
-            maxCodesSpan.textContent = '--';
-            codeCountInfo.innerHTML = '<i class="fas fa-info-circle"></i> <span>请先登录并查询剩余次数</span>';
-
-            // 重置一个码兑换全部选项
-            onecodeCheckbox.checked = false;
-            document.querySelector('.onecode-description').textContent =
-                '开启此选项后，所有选中的歌曲使用同一个兑换码，生成数量固定为1。';
-
-            // 重置登录状态
-            loginStatus.textContent = '未登录';
-            loginStatus.className = 'status-value';
-
-            // 重置二维码区域
-            qrPlaceholder.style.display = 'flex';
-            qrPlaceholder.innerHTML = `
-                <i class="fas fa-qrcode"></i>
-                <p>点击此处生成登录二维码</p>
-            `;
-            qrcodeImg.style.display = 'none';
-            expireTimeDiv.style.display = 'none';
-            qrStatus.textContent = '未生成';
-            qrStatus.className = 'status-value';
-
-            addLog('谱师Token已清除', 'warning');
-        }
-    }
-
-    // 添加日志
-    function addLog(message, type = 'info') {
-        const now = new Date();
-        const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
-        const logEntry = document.createElement('div');
-        logEntry.className = `log-entry log-${type}`;
-        logEntry.innerHTML = `
-                <span class="log-time">${timeString}</span>
-                <span class="log-info">${message}</span>
-            `;
-
-        logsContent.prepend(logEntry);
-
-        // 限制日志数量
-        const logEntries = logsContent.querySelectorAll('.log-entry');
-        if (logEntries.length > 50) {
-            logsContent.removeChild(logEntries[logEntries.length - 1]);
-        }
-    }
-
-    // 清空日志
-    function clearLogs() {
-        if (confirm('确定要清空所有日志吗？')) {
-            logsContent.innerHTML = `
-                    <div class="log-entry">
-                        <span class="log-time">系统启动</span>
-                        <span class="log-info">日志已清空</span>
-                    </div>
-                `;
-            addLog('日志已清空', 'info');
-        }
-    }
-
-    // 禁用右键
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用文本选择
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用图片拖拽
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // 禁用开发者工具快捷键
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            return false;
-        }
+    // 安全措施
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault();
     });
 </script>
 </body>

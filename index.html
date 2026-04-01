@@ -11,12 +11,57 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.2s ease;
+        }
+
+        /* 浅色主题 (默认) */
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-primary: #333;
+            --text-secondary: #555;
+            --text-muted: #7f8c8d;
+            --card-bg: white;
+            --header-border: rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --input-bg: white;
+            --input-text: #333;
+            --border-light: #eee;
+            --modal-bg: white;
+            --feature-bg: #f8f9fa;
+            --announcement-bg: linear-gradient(135deg, #fff9e8 0%, #fff4e0 100%);
+            --announcement-border: rgba(255, 152, 0, 0.2);
+            --footer-border: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 暗色主题 */
+        body.dark {
+            --bg-gradient-start: #0f0f1a;
+            --bg-gradient-end: #1a1a2e;
+            --text-primary: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --text-muted: #8b8e94;
+            --card-bg: #1e1e2f;
+            --header-border: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.5);
+            --input-bg: #2a2a3a;
+            --input-text: #e4e6eb;
+            --border-light: #2a2a3a;
+            --modal-bg: #1e1e2f;
+            --feature-bg: #2a2a3a;
+            --announcement-bg: linear-gradient(135deg, #2a2a1a 0%, #2a2a1a 100%);
+            --announcement-border: rgba(255, 152, 0, 0.3);
+            --footer-border: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
-            color: #333;
+            color: var(--text-primary);
             padding: 20px;
         }
 
@@ -32,7 +77,9 @@
             align-items: center;
             margin-bottom: 40px;
             padding: 20px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--header-border);
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .logo-area {
@@ -55,20 +102,40 @@
 
         .logo-text h1 {
             font-size: 2rem;
-            color: #2c3e50;
+            color: var(--text-primary);
             margin-bottom: 5px;
         }
 
         .logo-text p {
-            color: #7f8c8d;
+            color: var(--text-muted);
             font-size: 0.95rem;
         }
 
-        /* 用户登录区域 */
+        /* 用户信息区域 */
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .login-btn {
@@ -115,12 +182,12 @@
 
         .user-name {
             font-weight: 600;
-            color: #2c3e50;
+            color: var(--text-primary);
         }
 
         .user-id {
             font-size: 0.8rem;
-            color: #7f8c8d;
+            color: var(--text-muted);
         }
 
         .logout-btn {
@@ -163,7 +230,7 @@
         }
 
         .login-content {
-            background-color: white;
+            background-color: var(--modal-bg);
             border-radius: 20px;
             width: 100%;
             max-width: 400px;
@@ -207,19 +274,19 @@
             width: 200px;
             height: 200px;
             margin: 0 auto;
-            background: #f5f5f5;
+            background: var(--feature-bg);
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #888;
-            border: 2px dashed #ddd;
+            color: var(--text-muted);
+            border: 2px dashed var(--border-light);
             cursor: pointer;
         }
 
         .qr-placeholder:hover {
-            background: #f0f0f0;
+            background: var(--border-light);
         }
 
         .qr-placeholder i {
@@ -247,9 +314,19 @@
             color: #d97706;
         }
 
+        body.dark .login-status.waiting {
+            background: #422c1a;
+            color: #f59e0b;
+        }
+
         .login-status.scanned {
             background: #dbeafe;
             color: #1d4ed8;
+        }
+
+        body.dark .login-status.scanned {
+            background: #1e3a5f;
+            color: #60a5fa;
         }
 
         .login-status.success {
@@ -257,15 +334,25 @@
             color: #059669;
         }
 
+        body.dark .login-status.success {
+            background: #14532d;
+            color: #34d399;
+        }
+
         .login-status.error {
             background: #fee2e2;
             color: #dc2626;
         }
 
+        body.dark .login-status.error {
+            background: #7f1a1a;
+            color: #f87171;
+        }
+
         .login-expire-time {
             text-align: center;
             font-size: 0.8rem;
-            color: #7f8c8d;
+            color: var(--text-muted);
             margin-top: 10px;
         }
 
@@ -280,12 +367,13 @@
             cursor: pointer;
         }
 
-        /* ========= 新增公告栏样式 ========= */
+        /* 公告栏样式 */
         .announcement-wrapper {
             margin-bottom: 30px;
         }
+
         .announcement-bar {
-            background: linear-gradient(135deg, #fff9e8 0%, #fff4e0 100%);
+            background: var(--announcement-bg);
             border-radius: 16px;
             padding: 12px 20px;
             display: flex;
@@ -293,14 +381,16 @@
             gap: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 152, 0, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--announcement-border);
+            box-shadow: var(--shadow-sm);
         }
+
         .announcement-bar:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             border-color: #ff9800;
         }
+
         .announcement-icon {
             background: #ff9800;
             color: white;
@@ -313,12 +403,14 @@
             flex-shrink: 0;
             font-size: 1rem;
         }
+
         .marquee-container {
             flex: 1;
             overflow: hidden;
             white-space: nowrap;
             position: relative;
         }
+
         .marquee-text {
             display: inline-block;
             white-space: nowrap;
@@ -327,13 +419,16 @@
             color: #e67e22;
             font-size: 0.95rem;
         }
+
         .marquee-text span {
             padding-right: 60px;
         }
+
         @keyframes scrollText {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
         }
+
         .announcement-hint {
             flex-shrink: 0;
             background: rgba(255, 152, 0, 0.15);
@@ -346,6 +441,7 @@
             align-items: center;
             gap: 5px;
         }
+
         /* 公告详情模态框 */
         .announce-modal {
             position: fixed;
@@ -363,12 +459,14 @@
             transition: all 0.3s ease;
             padding: 20px;
         }
+
         .announce-modal.active {
             opacity: 1;
             visibility: visible;
         }
+
         .announce-modal-content {
-            background: white;
+            background: var(--modal-bg);
             border-radius: 24px;
             max-width: 550px;
             width: 100%;
@@ -378,35 +476,43 @@
             transform: translateY(30px);
             transition: transform 0.4s ease;
         }
+
         .announce-modal.active .announce-modal-content {
             transform: translateY(0);
         }
+
         .announce-modal-header {
             background: linear-gradient(135deg, #ff9800, #f97316);
             padding: 24px 28px;
             border-radius: 24px 24px 0 0;
             color: white;
         }
+
         .announce-modal-header h3 {
             font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .announce-modal-body {
             padding: 28px;
             line-height: 1.6;
-            color: #2c3e50;
+            color: var(--text-primary);
         }
+
         .announce-modal-body p {
             margin-bottom: 15px;
         }
+
         .announce-modal-body ul {
             margin: 10px 0 15px 20px;
         }
+
         .announce-modal-body li {
             margin: 8px 0;
         }
+
         .announce-close {
             position: absolute;
             top: 18px;
@@ -424,34 +530,41 @@
             justify-content: center;
             transition: all 0.2s;
         }
+
         .announce-close:hover {
             background: rgba(0, 0, 0, 0.2);
         }
 
-        /* 搜索和筛选区域 */
+        /* 搜索区域 */
         .search-filter {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .search-box {
             flex: 1;
-            position:relative;
+            position: relative;
             max-width: 500px;
         }
 
         .search-box input {
             width: 100%;
             padding: 16px 20px 16px 50px;
-            border: none;
+            border: 1px solid var(--border-light);
             border-radius: 15px;
-            background-color: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background-color: var(--input-bg);
+            box-shadow: var(--shadow-sm);
             font-size: 1rem;
-            color: #333;
+            color: var(--input-text);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #6a11cb;
         }
 
         .search-box i {
@@ -459,30 +572,7 @@
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #7f8c8d;
-        }
-
-        .filter-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .filter-tab {
-            padding: 12px 25px;
-            background-color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #555;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .filter-tab.active, .filter-tab:hover {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
+            color: var(--text-muted);
         }
 
         /* 工具区域 */
@@ -495,15 +585,17 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .section-header h2 {
             font-size: 1.8rem;
-            color: #2c3e50;
+            color: var(--text-primary);
         }
 
         .section-header p {
-            color: #7f8c8d;
+            color: var(--text-muted);
         }
 
         .tools-grid {
@@ -513,10 +605,10 @@
         }
 
         .tool-card {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -524,7 +616,7 @@
 
         .tool-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
         }
 
         .tool-card.featured {
@@ -565,11 +657,11 @@
         .tool-info h3 {
             font-size: 1.4rem;
             margin-bottom: 5px;
-            color: #2c3e50;
+            color: var(--text-primary);
         }
 
         .tool-info p {
-            color: #7f8c8d;
+            color: var(--text-muted);
             font-size: 0.95rem;
         }
 
@@ -602,14 +694,14 @@
 
         .tool-description {
             padding: 0 25px 20px;
-            color: #666;
+            color: var(--text-secondary);
             line-height: 1.5;
             font-size: 0.95rem;
         }
 
         .tool-footer {
             padding: 20px 25px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -623,7 +715,7 @@
         .tool-stat {
             display: flex;
             align-items: center;
-            color: #7f8c8d;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
@@ -653,8 +745,8 @@
         .footer {
             text-align: center;
             padding: 30px 0;
-            color: #7f8c8d;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--text-muted);
+            border-top: 1px solid var(--footer-border);
             font-size: 0.9rem;
         }
 
@@ -682,7 +774,7 @@
         }
 
         .modal-content {
-            background-color: white;
+            background-color: var(--modal-bg);
             border-radius: 25px;
             width: 100%;
             max-width: 900px;
@@ -704,7 +796,7 @@
             background: none;
             border: none;
             font-size: 1.8rem;
-            color: #7f8c8d;
+            color: var(--text-muted);
             cursor: pointer;
             z-index: 10;
             transition: all 0.3s ease;
@@ -718,7 +810,7 @@
             padding: 40px 40px 20px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .modal-icon {
@@ -736,12 +828,12 @@
 
         .modal-title h2 {
             font-size: 2rem;
-            color: #2c3e50;
+            color: var(--text-primary);
             margin-bottom: 10px;
         }
 
         .modal-title p {
-            color: #7f8c8d;
+            color: var(--text-muted);
             font-size: 1.1rem;
         }
 
@@ -755,13 +847,13 @@
 
         .modal-section h3 {
             font-size: 1.4rem;
-            color: #2c3e50;
+            color: var(--text-primary);
             margin-bottom: 15px;
         }
 
         .modal-section p {
             line-height: 1.6;
-            color: #555;
+            color: var(--text-secondary);
             margin-bottom: 15px;
         }
 
@@ -776,7 +868,7 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            background-color: #f8f9fa;
+            background-color: var(--feature-bg);
             border-radius: 10px;
         }
 
@@ -786,10 +878,15 @@
             margin-right: 12px;
         }
 
+        .modal-feature span {
+            color: var(--text-primary);
+        }
+
         .modal-actions {
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .modal-btn {
@@ -812,14 +909,14 @@
         }
 
         .modal-btn.secondary {
-            background-color: #f8f9fa;
-            color: #555;
-            border: 1px solid #ddd;
+            background-color: var(--feature-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
         }
 
         .modal-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         /* 响应式设计 */
@@ -833,7 +930,6 @@
             .header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 20px;
             }
 
             .user-info {
@@ -848,12 +944,6 @@
 
             .search-box {
                 max-width: 100%;
-            }
-
-            .filter-tabs {
-                width: 100%;
-                overflow-x: auto;
-                padding-bottom: 10px;
             }
 
             .modal-header {
@@ -872,6 +962,7 @@
             .announcement-bar {
                 padding: 10px 15px;
             }
+
             .marquee-text {
                 font-size: 0.85rem;
             }
@@ -899,6 +990,26 @@
                 display: none;
             }
         }
+
+        /* 滚动条暗色模式适配 */
+        body.dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        body.dark ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 4px;
+        }
+
+        body.dark ::-webkit-scrollbar-thumb {
+            background: #3a3a4e;
+            border-radius: 4px;
+        }
+
+        body.dark ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a62;
+        }
     </style>
 </head>
 <body>
@@ -917,6 +1028,9 @@
 
         <!-- 用户登录信息 -->
         <div class="user-info" id="userInfo">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> 暗色模式
+            </button>
             <button class="login-btn" id="loginBtn">
                 <i class="fab fa-weixin"></i> 微信登录
             </button>
@@ -931,7 +1045,7 @@
         </div>
     </header>
 
-    <!-- ========= 新增：滚动公告栏 ========= -->
+    <!-- 滚动公告栏 -->
     <div class="announcement-wrapper">
         <div class="announcement-bar" id="announcementBar">
             <div class="announcement-icon">
@@ -939,10 +1053,9 @@
             </div>
             <div class="marquee-container">
                 <div class="marquee-text" id="marqueeText">
+                    <span>✨ 暗色模式已上线！点击右上角月亮按钮切换主题 ✨</span>
                     <span>更新微信登录，同时同步至自制谱生成</span>
-                    <span>更新微信登录，同时同步至自制谱生成</span>
-                    <span>更新微信登录，同时同步至自制谱生成</span>
-                    <span>更新微信登录，同时同步至自制谱生成</span>
+                    <span>✨ 暗色模式已上线！点击右上角月亮按钮切换主题 ✨</span>
                     <span>更新微信登录，同时同步至自制谱生成</span>
                 </div>
             </div>
@@ -979,7 +1092,7 @@
 
     <!-- 底部区域 -->
     <footer class="footer">
-        <p>2025 舞立方自制谱师工具 | 本页面由 Mouseke 进行开发 | 源码公开免费给大家使用 </p>
+        <p>2025 舞立方自制谱谱师工具 | 本页面由 Mouseke 进行开发 | 源码公开免费给大家使用 </p>
     </footer>
 </div>
 
@@ -1050,7 +1163,7 @@
     </div>
 </div>
 
-<!-- ========= 新增：公告详情模态框 ========= -->
+<!-- 公告详情模态框 -->
 <div class="announce-modal" id="announceModal">
     <div class="announce-modal-content">
         <button class="announce-close" id="announceModalClose">
@@ -1060,8 +1173,11 @@
             <h3><i class="fas fa-newspaper"></i> 最新公告 & 使用指南</h3>
         </div>
         <div class="announce-modal-body">
-            <p style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #eee;">更新微信登录，同时同步至自制谱生成</p>
-            <p style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #eee;">💡 提示：右上角微信即可登录</p>
+            <p>🎉 <strong>暗色模式已上线！</strong></p>
+            <p>点击右上角的月亮/太阳按钮，即可在浅色和暗色模式之间切换，保护眼睛，夜间使用更舒适！</p>
+            <p style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #eee;">📢 更新微信登录，同时同步至自制谱生成</p>
+            <p>💡 提示：点击右上角微信按钮即可扫码登录</p>
+            <p>📌 所有工具均已测试，如有问题请通过邮箱反馈</p>
         </div>
     </div>
 </div>
@@ -1201,6 +1317,7 @@
     const userId = document.getElementById('userId');
     const userAvatar = document.getElementById('userAvatar');
     const logoutBtn = document.getElementById('logoutBtn');
+    const themeToggle = document.getElementById('themeToggle');
 
     // 公告相关DOM
     const announcementBar = document.getElementById('announcementBar');
@@ -1214,12 +1331,37 @@
     let loginCheckInterval = null;
     let userData = null;
 
+    // 主题切换功能
+    function initTheme() {
+        const savedTheme = localStorage.getItem('dance_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> 浅色模式';
+        } else {
+            document.body.classList.remove('dark');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i> 暗色模式';
+        }
+    }
+
+    function toggleTheme() {
+        if (document.body.classList.contains('dark')) {
+            document.body.classList.remove('dark');
+            localStorage.setItem('dance_theme', 'light');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i> 暗色模式';
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem('dance_theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> 浅色模式';
+        }
+    }
+
     // 初始化页面
     function initPage() {
         toolCount.textContent = toolsData.length;
         renderTools(toolsData);
         checkLoginStatus();
         setupEventListeners();
+        initTheme();
     }
 
     // 检查登录状态
@@ -1565,6 +1707,9 @@
             if (confirm('确定要退出登录吗？')) clearUserData();
         });
 
+        // 主题切换事件
+        themeToggle.addEventListener('click', toggleTheme);
+
         // 公告栏事件
         announcementBar.addEventListener('click', openAnnounceModal);
         announceModalClose.addEventListener('click', closeAnnounceModal);
@@ -1593,21 +1738,7 @@
         return categoryNames[category] || '其他工具';
     }
 
-    // 安全检查函数
-    function setupSecurity() {
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
-        document.addEventListener('dragstart', function(e) { if (e.target.tagName === 'IMG') { e.preventDefault(); return false; } });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
-        });
-    }
-
     document.addEventListener('DOMContentLoaded', initPage);
-    setupSecurity();
 </script>
 </body>
 </html>

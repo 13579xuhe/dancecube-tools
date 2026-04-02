@@ -76,6 +76,16 @@
             display: block;
         }
 
+        /* 关闭提示 */
+        .close-hint {
+            text-align: center;
+            margin-top: 12px;
+            color: #ffde9e;
+            font-size: 14px;
+            font-family: monospace;
+            opacity: 0.8;
+        }
+
         @keyframes floatIn {
             0% { transform: scale(0.92) translateY(20px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
@@ -359,6 +369,9 @@
                 font-size: 9px;
                 margin-top: 12px;
             }
+            .close-hint {
+                font-size: 10px;
+            }
         }
 
         /* 超小折叠屏/窄屏加强适配 */
@@ -402,7 +415,6 @@
             opacity: 0.8;
         }
 
-        /* 点击按钮辅助 */
         button {
             touch-action: manipulation;
         }
@@ -424,6 +436,7 @@
 <div class="victory-overlay" id="victoryOverlay">
     <div class="victory-card" id="victoryCard">
         <img id="victoryImage" src="https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.png" alt="解锁成功">
+        <div class="close-hint">✨ 恭喜解锁成功！点击任意位置关闭 ✨</div>
         <audio id="victoryMusic" loop preload="auto">
             <source src="https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.mp3" type="audio/mpeg">
         </audio>
@@ -432,14 +445,12 @@
 
 <script>
     // ======================= 配置 =======================
-    const TARGET_PASSWORD = "JOKER";   // 目标密码: J O K E R
+    const TARGET_PASSWORD = "JOKER";
     const REEL_COUNT = 5;
-    const SCROLL_STEP_MS = 500;        // 500ms一步，弹幕式滚动节奏
+    const SCROLL_STEP_MS = 500;
 
-    // 六个字母池: J O K E R D (包含所有目标字母 + D)
     const LETTER_POOL = ['J', 'O', 'K', 'E', 'R', 'D'];
 
-    // 生成每个轮盘的独立乱序序列 (六个字母全排列)
     function shuffleArray(arr, seedOffset) {
         const array = [...arr];
         for (let i = array.length - 1; i > 0; i--) {
@@ -455,17 +466,14 @@
         reelSequences.push(shuffleArray(LETTER_POOL, i * 811 + 577 + i * 7));
     }
 
-    // DOM 元素及全局状态
-    let reelStates = [];          // { currentIndex, isLocked, isCorrect }
+    let reelStates = [];
     let reelDomElements = [];
-    let rollingIntervals = [];    // setInterval 句柄
+    let rollingIntervals = [];
     let currentLockStep = 0;
     let isGameComplete = false;
     let unlockBtn, resetBtn, msgDiv;
     let victoryOverlay, victoryImage, victoryAudio, victoryCard;
-    let globalAnimationFrame = null;  // 预留但未使用，保留性能
 
-    // 获取三个字母 (上中下)
     function getTripletLetters(seq, idx) {
         const len = seq.length;
         return {
@@ -475,7 +483,6 @@
         };
     }
 
-    // 核心：更新轮盘视觉，并高亮所有正确的目标字母（无论是否在中间选定位置）
     function updateReelVisual(reelIndex) {
         const state = reelStates[reelIndex];
         if (!state) return;
@@ -494,7 +501,6 @@
         if (midSpan) midSpan.textContent = triplet.middle;
         if (bottomSpan) bottomSpan.textContent = triplet.bottom;
 
-        // 清除所有旧的高亮class
         if (topSpan) {
             topSpan.classList.remove('letter-correct-highlight');
             topSpan.classList.remove('letter-middle-locked');
@@ -508,7 +514,6 @@
             bottomSpan.classList.remove('letter-middle-locked');
         }
 
-        // 为所有等于目标字母的字母添加绿色高亮 (任何位置)
         if (topSpan && triplet.top === targetLetter) {
             topSpan.classList.add('letter-correct-highlight');
         }
@@ -519,7 +524,6 @@
             bottomSpan.classList.add('letter-correct-highlight');
         }
 
-        // 锁定状态强化效果 (中间字母)
         const isLockedCorrect = state.isLocked && state.isCorrect;
         const statusDiv = reelDiv.querySelector('.reel-status');
 
@@ -540,7 +544,6 @@
         }
     }
 
-    // 丝滑滚动效果 (弹幕式滑动)
     function performSmoothRoll(reelIndex) {
         const state = reelStates[reelIndex];
         if (!state || state.isLocked) return false;
@@ -552,17 +555,13 @@
         const strip = reelDiv?.querySelector('.rolling-strip');
         if (!strip) return false;
 
-        // 采用更柔和弹幕过渡
         strip.style.transition = "transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1)";
         strip.style.transform = "translateY(-12px)";
 
         setTimeout(() => {
             if (strip) {
-                // 更新索引
                 state.currentIndex = newIndex;
-                // 刷新字母及高亮
                 updateReelVisual(reelIndex);
-                // 归位
                 strip.style.transform = "translateY(0px)";
                 setTimeout(() => {
                     if (strip) strip.style.transition = "";
@@ -572,7 +571,6 @@
         return true;
     }
 
-    // 启动轮盘自动滚动
     function startRollingForReel(reelIndex) {
         if (rollingIntervals[reelIndex]) clearInterval(rollingIntervals[reelIndex]);
         const timer = setInterval(() => {
@@ -596,7 +594,6 @@
         }
     }
 
-    // 闪红效果（错误时加强反馈）
     function flashRed(reelIndex) {
         const reelDiv = reelDomElements[reelIndex];
         if (!reelDiv) return;
@@ -623,7 +620,6 @@
         }
     }
 
-    // 锁定尝试
     function attemptLockCurrent() {
         if (isGameComplete || currentLockStep >= REEL_COUNT) {
             if (currentLockStep >= REEL_COUNT && !isGameComplete) {
@@ -662,26 +658,26 @@
         }
     }
 
-    // 胜利：展示图片 + 播放音乐 (增强交互：点击浮层可关闭)
+    // 胜利：展示图片 + 播放音乐
     function triggerVictory() {
         if (isGameComplete) return;
         isGameComplete = true;
         for (let i = 0; i < REEL_COUNT; i++) stopRollingForReel(i);
         if (unlockBtn) unlockBtn.disabled = true;
-        msgDiv.innerHTML = "🎉✨ 解锁成功！ 完美匹配 JOKER ✨🎉  点击画面可关闭音乐并重新挑战";
+        msgDiv.innerHTML = "🎉✨ 解锁成功！ 完美匹配 JOKER ✨🎉  点击画面关闭浮层";
 
         if (victoryOverlay) {
             victoryOverlay.classList.add('active');
             if (victoryAudio) {
                 victoryAudio.currentTime = 0;
                 victoryAudio.loop = true;
-                victoryAudio.play().catch(e => console.log("音频自动播放受限，但交互后可能生效", e));
+                victoryAudio.play().catch(e => console.log("音频自动播放受限", e));
             }
         }
     }
 
-    // 关闭胜利浮层并重置状态（可选点击浮层重置）
-    function closeVictoryAndReset() {
+    // 仅关闭胜利浮层，不重置游戏状态
+    function closeVictoryOnly() {
         if (victoryOverlay && victoryOverlay.classList.contains('active')) {
             victoryOverlay.classList.remove('active');
             if (victoryAudio) {
@@ -689,20 +685,26 @@
                 victoryAudio.currentTime = 0;
             }
         }
-        // 重置所有游戏状态
-        fullReset();
     }
 
-    // 完全重置所有状态
+    // 重置所有游戏状态（保留UI重建逻辑）
     function fullReset() {
-        // 清除所有滚动定时器
+        // 先关闭浮层
+        if (victoryOverlay && victoryOverlay.classList.contains('active')) {
+            victoryOverlay.classList.remove('active');
+            if (victoryAudio) {
+                victoryAudio.pause();
+                victoryAudio.currentTime = 0;
+            }
+        }
+
         for (let i = 0; i < REEL_COUNT; i++) {
             if (rollingIntervals[i]) {
                 clearInterval(rollingIntervals[i]);
                 rollingIntervals[i] = null;
             }
         }
-        // 重置状态 + 随机起始索引
+
         for (let i = 0; i < REEL_COUNT; i++) {
             const seqLen = reelSequences[i].length;
             const randomStart = Math.floor(Math.random() * seqLen);
@@ -719,15 +721,6 @@
         if (unlockBtn) unlockBtn.disabled = false;
         msgDiv.innerHTML = "🔄 重置完成 | 正确字母永久绿色高亮 (任何位置可见) 点击开锁依次锁定 J O K E R";
 
-        // 强制清除胜利浮层
-        if (victoryOverlay && victoryOverlay.classList.contains('active')) {
-            victoryOverlay.classList.remove('active');
-            if (victoryAudio) {
-                victoryAudio.pause();
-                victoryAudio.currentTime = 0;
-            }
-        }
-        // 重置所有轮盘边框样式
         for (let i = 0; i < REEL_COUNT; i++) {
             const reelDiv = reelDomElements[i];
             if (reelDiv) {
@@ -735,7 +728,6 @@
                 if (windowDiv) windowDiv.style.boxShadow = "inset 0 0 0 2px #e6bc6b, inset 0 0 0 5px #2c2419";
                 const statusDiv = reelDiv.querySelector('.reel-status');
                 if (statusDiv) statusDiv.classList.remove('status-correct');
-                // 清除可能残留在非中间字母上的locked样式
                 const midSpan = reelDiv.querySelector('.letter-middle');
                 if (midSpan) midSpan.classList.remove('letter-middle-locked');
                 updateReelVisual(i);
@@ -751,7 +743,6 @@
         attemptLockCurrent();
     }
 
-    // 构建UI
     function buildUI() {
         const panel = document.getElementById('reelsPanel');
         panel.innerHTML = '';
@@ -763,9 +754,9 @@
                 <div class="reel-frame">
                     <div class="reel-window">
                         <div class="rolling-strip" style="display: flex; flex-direction: column; align-items: center;">
-                            <div class="letter-item letter-top" style="height:45px;">J</div>
-                            <div class="letter-item letter-middle" style="height:45px; font-size:2.4rem;">O</div>
-                            <div class="letter-item letter-bottom" style="height:45px;">K</div>
+                            <div class="letter-item letter-top">J</div>
+                            <div class="letter-item letter-middle">O</div>
+                            <div class="letter-item letter-bottom">K</div>
                         </div>
                     </div>
                 </div>
@@ -776,7 +767,6 @@
         }
     }
 
-    // 初始化
     function init() {
         buildUI();
         for (let i = 0; i < REEL_COUNT; i++) {
@@ -810,17 +800,22 @@
 
         unlockBtn.addEventListener('click', onUnlockClick);
         resetBtn.addEventListener('click', fullReset);
-        // 点击胜利浮层背景或者卡片区域关闭并重置（提升用户体验）
+
+        // 点击浮层任意位置仅关闭浮层，不自动重置游戏
+        // 这样用户关闭浮层后仍然可以看到胜利状态，按重置按钮才重置
         if (victoryOverlay) {
             victoryOverlay.addEventListener('click', (e) => {
-                // 防止点到卡片内部冒泡特殊，但整体关闭重置
-                closeVictoryAndReset();
+                // 只关闭浮层，不重置游戏进度
+                closeVictoryOnly();
+                e.stopPropagation();
             });
+            // 防止卡片内点击冒泡导致重复关闭
             if (victoryCard) {
                 victoryCard.addEventListener('click', (e) => e.stopPropagation());
             }
         }
-        // 额外处理移动端touch
+
+        // 移动端触摸优化
         if (resetBtn) resetBtn.addEventListener('touchstart', (e) => { e.preventDefault(); fullReset(); });
         if (unlockBtn) unlockBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onUnlockClick(); });
     }

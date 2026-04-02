@@ -2,10 +2,10 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>MC/MCZ 转 TXT 工具</title>
     <style>
-        /* 全局样式 - 海蓝色主题（优化版） */
+        /* 全局样式 - 海蓝色主题（优化版 + 手机适配） */
         :root {
             --ocean-deep: #0d2b4e;
             --ocean-medium: #1c4a7a;
@@ -21,18 +21,18 @@
             --text-primary: #ffffff;
             --text-secondary: #c2e0ff;
             --text-tertiary: #8ac6ff;
-            --level-a: #4CAF50; /* 基础 */
-            --level-b: #2196F3; /* 进阶 */
-            --level-c: #FF9800; /* 专家 */
-            --level-d: #F44336; /* 大师 */
-            --level-e: #9C27B0; /* 传奇 */
+            --level-a: #4CAF50;
+            --level-b: #2196F3;
+            --level-c: #FF9800;
+            --level-d: #F44336;
+            --level-e: #9C27B0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -50,9 +50,7 @@
             margin: 0 auto;
             background: rgba(13, 43, 78, 0.92);
             border-radius: 20px;
-            box-shadow:
-                    0 15px 35px rgba(0, 30, 60, 0.5),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 30, 60, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             overflow: hidden;
             border: 1px solid rgba(76, 166, 255, 0.3);
             position: relative;
@@ -78,6 +76,7 @@
             align-items: center;
             gap: 20px;
             letter-spacing: 0.5px;
+            flex-wrap: wrap;
         }
 
         .header .icon {
@@ -116,21 +115,13 @@
             position: relative;
         }
 
-        @media (max-width: 992px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* 左侧控制面板 */
         .control-panel {
             background: rgba(28, 74, 122, 0.85);
             padding: 30px;
             border-radius: 18px;
             border: 1px solid rgba(76, 166, 255, 0.3);
-            box-shadow:
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1),
-                    0 8px 25px rgba(0, 30, 60, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 25px rgba(0, 30, 60, 0.3);
         }
 
         .control-section {
@@ -330,6 +321,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .level-number-input label {
@@ -350,6 +342,7 @@
             font-weight: 600;
             outline: none;
             transition: all 0.3s;
+            min-width: 100px;
         }
 
         .level-number-input input:focus {
@@ -362,7 +355,7 @@
             opacity: 0.7;
         }
 
-        /* 文件选择器（MCZ内部文件） */
+        /* 文件选择器 */
         .file-selector {
             margin-top: 15px;
             display: none;
@@ -406,6 +399,7 @@
             border: 1px solid rgba(76, 166, 255, 0.3);
             transition: all 0.3s;
             margin-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .checkbox-group:hover {
@@ -418,6 +412,7 @@
             height: 20px;
             accent-color: var(--wave-blue);
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .checkbox-group label {
@@ -551,18 +546,6 @@
             gap: 18px;
         }
 
-        @media (max-width: 1200px) {
-            .info-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .info-cards {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .info-card {
             background: linear-gradient(135deg, rgba(28, 74, 122, 0.8) 0%, rgba(58, 122, 181, 0.8) 100%);
             padding: 22px;
@@ -630,6 +613,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(76, 166, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .bpm-table-header h3 {
@@ -672,7 +657,7 @@
         .bpm-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            min-width: 500px;
         }
 
         .bpm-table th {
@@ -720,6 +705,7 @@
             display: flex;
             background: linear-gradient(90deg, var(--ocean-medium), var(--ocean-light));
             border-bottom: 1px solid rgba(76, 166, 255, 0.3);
+            overflow-x: auto;
         }
 
         .tab-btn {
@@ -735,6 +721,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            white-space: nowrap;
         }
 
         .tab-btn.active {
@@ -863,38 +850,20 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 脉冲动画 */
         .pulse {
             animation: pulse-glow 2s infinite;
         }
 
         @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 6px 20px rgba(76, 166, 255, 0.4);
-            }
-            50% {
-                box-shadow: 0 6px 30px rgba(76, 166, 255, 0.7);
-            }
+            0%, 100% { box-shadow: 0 6px 20px rgba(76, 166, 255, 0.4); }
+            50% { box-shadow: 0 6px 30px rgba(76, 166, 255, 0.7); }
         }
 
-        /* 文本增强 */
-        .text-bold {
-            font-weight: 700;
-        }
+        .text-bold { font-weight: 700; }
+        .text-bolder { font-weight: 800; }
+        .text-highlight { color: var(--wave-blue) !important; }
+        .text-white { color: var(--text-primary) !important; }
 
-        .text-bolder {
-            font-weight: 800;
-        }
-
-        .text-highlight {
-            color: var(--wave-blue) !important;
-        }
-
-        .text-white {
-            color: var(--text-primary) !important;
-        }
-
-        /* 文件名预览 */
         .filename-preview {
             margin-top: 15px;
             padding: 12px;
@@ -912,7 +881,6 @@
             word-break: break-all;
         }
 
-        /* 等级徽章 */
         .level-badge {
             display: inline-flex;
             align-items: center;
@@ -931,7 +899,6 @@
         .level-badge.level-d { background: var(--level-d); }
         .level-badge.level-e { background: var(--level-e); }
 
-        /* 解压进度条 */
         .extract-progress {
             width: 100%;
             height: 4px;
@@ -942,9 +909,7 @@
             display: none;
         }
 
-        .extract-progress.active {
-            display: block;
-        }
+        .extract-progress.active { display: block; }
 
         .extract-progress-bar {
             height: 100%;
@@ -954,7 +919,6 @@
             border-radius: 2px;
         }
 
-        /* 文件预览列表 */
         .file-preview-list {
             margin-top: 10px;
             max-height: 150px;
@@ -973,11 +937,11 @@
             border-radius: 6px;
             margin-bottom: 5px;
             font-size: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .file-preview-item:last-child {
-            margin-bottom: 0;
-        }
+        .file-preview-item:last-child { margin-bottom: 0; }
 
         .file-preview-name {
             flex: 1;
@@ -1005,27 +969,23 @@
             justify-content: center;
         }
 
-        .file-preview-remove:hover {
-            background: rgba(244, 67, 54, 0.5);
-        }
+        .file-preview-remove:hover { background: rgba(244, 67, 54, 0.5); }
 
         /* 蓝色置顶返回按钮 */
         .back-home-btn {
             position: fixed;
-            top: 20px; /* 置顶 */
+            top: 20px;
             right: 30px;
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            background: linear-gradient(135deg, #1e90ff, #0066cc);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 10000;
-            box-shadow:
-                    0 6px 20px rgba(30, 144, 255, 0.4),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
@@ -1034,33 +994,18 @@
             animation-delay: 0.3s;
         }
 
-        /* 从上向下滑入动画 */
         @keyframes slideInFromTop {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(-30px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .back-home-btn:hover {
             transform: translateY(-2px) scale(1.08);
-            box-shadow:
-                    0 10px 30px rgba(30, 144, 255, 0.5),
-                    0 0 0 4px rgba(30, 144, 255, 0.1),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
+            box-shadow: 0 10px 30px rgba(30, 144, 255, 0.5), 0 0 0 4px rgba(30, 144, 255, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00bfff, #0059b3);
         }
 
-        .back-home-btn:active {
-            transform: translateY(1px) scale(0.98);
-            box-shadow:
-                    0 3px 10px rgba(30, 144, 255, 0.3),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+        .back-home-btn:active { transform: translateY(1px) scale(0.98); }
 
         .back-home-btn .material-icons {
             color: white;
@@ -1070,11 +1015,8 @@
             transition: transform 0.3s ease;
         }
 
-        .back-home-btn:hover .material-icons {
-            transform: translateX(-2px);
-        }
+        .back-home-btn:hover .material-icons { transform: translateX(-2px); }
 
-        /* 添加发光效果 */
         .back-home-btn::before {
             content: '';
             position: absolute;
@@ -1083,14 +1025,10 @@
             right: 0;
             bottom: 0;
             border-radius: 50%;
-            background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 100%);
             pointer-events: none;
         }
 
-        /* 添加返回文字提示（悬停时显示） */
         .back-home-btn::after {
             content: '返回首页';
             position: absolute;
@@ -1116,53 +1054,289 @@
             transform: translateY(0);
         }
 
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .back-home-btn {
-                top: 15px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            border-top: 1px solid rgba(76, 166, 255, 0.2);
+        }
+
+        /* ========= 手机端适配样式 ========= */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
             }
 
-            .back-home-btn .material-icons {
+            .info-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 20px 25px 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                gap: 10px;
+            }
+
+            .header .subtitle {
+                font-size: 13px;
+            }
+
+            .version {
+                position: static;
+                display: inline-block;
+                margin-top: 10px;
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+
+            .control-panel {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .level-selection {
+                gap: 8px;
+            }
+
+            .level-btn {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+
+            .level-btn .level-letter {
+                font-size: 14px;
+            }
+
+            .level-btn .level-name {
+                font-size: 10px;
+            }
+
+            .level-number-input {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .level-number-input label {
+                font-size: 14px;
+            }
+
+            .level-number-input input {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .btn .icon {
+                font-size: 16px;
+            }
+
+            .info-cards {
+                gap: 12px;
+            }
+
+            .info-card {
+                padding: 15px;
+            }
+
+            .info-card h3 {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+
+            .info-card .value {
+                font-size: 24px;
+            }
+
+            .info-card .unit {
+                font-size: 12px;
+            }
+
+            .bpm-table-header {
+                padding: 12px 16px;
+            }
+
+            .bpm-table-header h3 {
+                font-size: 16px;
+            }
+
+            .bpm-table-header span {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+
+            .bpm-table th, .bpm-table td {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .tab-btn {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .output-textarea {
+                padding: 15px;
+                font-size: 13px;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat-item {
+                padding: 12px;
+            }
+
+            .stat-item .value {
                 font-size: 22px;
             }
 
-            .back-home-btn::after {
+            .checkbox-group {
+                padding: 12px;
+            }
+
+            .checkbox-group label {
+                font-size: 14px;
+            }
+
+            .file-upload {
+                padding: 25px 15px;
+            }
+
+            .upload-icon {
+                font-size: 32px;
+            }
+
+            .file-upload p {
+                font-size: 14px;
+            }
+
+            .file-upload .hint {
                 font-size: 11px;
-                padding: 5px 10px;
             }
-        }
 
-        /* 手机横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
             .back-home-btn {
-                top: 10px;
-                right: 15px;
-                width: 44px;
-                height: 44px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
-        }
-
-        /* 超小屏幕 */
-        @media (max-width: 480px) {
-            .back-home-btn {
-                width: 44px;
-                height: 44px;
                 top: 12px;
-                right: 15px;
+                right: 12px;
+                width: 44px;
+                height: 44px;
             }
 
             .back-home-btn .material-icons {
                 font-size: 20px;
             }
+
+            .back-home-btn::after {
+                display: none;
+            }
+
+            .status-message {
+                top: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: none;
+                padding: 12px 18px;
+            }
+
+            .status-message .message {
+                font-size: 13px;
+            }
         }
 
+        @media (max-width: 480px) {
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .level-selection {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+
+            .level-btn {
+                padding: 6px 2px;
+            }
+
+            .level-btn .level-letter {
+                font-size: 12px;
+            }
+
+            .level-btn .level-name {
+                font-size: 9px;
+            }
+
+            .bpm-table th, .bpm-table td {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 11px;
+            }
+
+            .tab-btn .icon {
+                font-size: 14px;
+            }
+
+            .output-textarea {
+                padding: 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* 横屏手机优化 */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .main-content {
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .control-panel {
+                padding: 15px;
+            }
+
+            .level-selection {
+                gap: 5px;
+            }
+
+            .level-btn {
+                padding: 6px 4px;
+            }
+
+            .info-cards {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .output-tabs {
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                padding: 10px 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1431,12 +1605,9 @@
     </div>
 
     <footer class="footer">
-        <p>&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288&#12288  本采用 江祈言的txt-mc文件 进行开发 | 由 Mouseke 进行增加功能 </p>
+        <p>本工具采用 江祈言的txt-mc文件 进行开发 | 由 Mouseke 进行增加功能</p>
     </footer>
-
 </div>
-
-
 
 <!-- 状态提示 -->
 <div class="status-message" id="statusMessage">
@@ -1444,8 +1615,7 @@
     <div class="message">状态提示</div>
 </div>
 
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
     // 全局变量
     let globalNormalLines = null;
@@ -1522,21 +1692,16 @@
     // 强制重置解压器
     function forceResetExtractor() {
         cleanupZipInstance();
-
-        // 清除所有与 MCZ 相关的状态
         mczFiles = [];
         currentZipInstance = null;
         isExtracting = false;
         mczAudioFile = null;
         mczImageFile = null;
-
-        // 重置 UI
         fileSelector.classList.remove('active');
         internalFileSelect.innerHTML = '<option value="">请选择要转换的 MC 文件...</option>';
         mczFilesList.innerHTML = '';
         extractProgress.classList.remove('active');
         extractProgressBar.style.width = '0%';
-
         showStatus('解压器已强制重置，请重新上传文件', 'info');
     }
 
@@ -1551,7 +1716,6 @@
                 updateFilenamePreview();
             });
         });
-
         document.querySelector('.level-btn.level-a').click();
     }
 
@@ -1560,40 +1724,27 @@
         const levelNum = levelNumberInput.value || "1";
         const paddedNum = levelNum.padStart(3, '0');
         const filename = `${selectedLevel}${paddedNum}.txt`;
-
         filenamePreview.innerHTML = '';
-
         const badge = document.createElement('span');
         badge.className = `level-badge level-${selectedLevel.toLowerCase()}`;
         badge.textContent = `${selectedLevelName} ${levelNum}`;
-
         const filenameSpan = document.createElement('span');
         filenameSpan.textContent = ` → ${filename}`;
         filenameSpan.style.marginLeft = '10px';
         filenameSpan.style.fontWeight = '700';
         filenameSpan.style.color = 'var(--wave-blue)';
-
         filenamePreview.appendChild(badge);
         filenamePreview.appendChild(filenameSpan);
     }
 
     // 显示状态提示
     function showStatus(message, type = 'info') {
-        const icons = {
-            success: '✅',
-            error: '❌',
-            info: 'ℹ️',
-            warning: '⚠️'
-        };
-
+        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
         statusMessage.querySelector('.icon').textContent = icons[type];
         statusMessage.querySelector('.message').textContent = message;
         statusMessage.className = `status-message ${type}`;
         statusMessage.classList.add('show');
-
-        setTimeout(() => {
-            statusMessage.classList.remove('show');
-        }, 3500);
+        setTimeout(() => { statusMessage.classList.remove('show'); }, 3500);
     }
 
     // 更新解压进度
@@ -1615,120 +1766,62 @@
             showStatus('正在解压中，请稍候...', 'warning');
             return null;
         }
-
         try {
             isExtracting = true;
             updateExtractProgress(10);
-
             cleanupZipInstance();
-
             if (!window.JSZip) {
                 updateExtractProgress(20);
                 await loadJSZip();
             }
-
             updateExtractProgress(30);
             const zip = new JSZip();
             currentZipInstance = zip;
-
             showStatus('正在读取 MCZ 文件...', 'info');
-
             const arrayBuffer = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
                 reader.onerror = (e) => reject(new Error('读取文件失败'));
                 reader.readAsArrayBuffer(file);
             });
-
             updateExtractProgress(50);
             showStatus('正在解析 ZIP 文件...', 'info');
-
             let zipData;
             try {
-                zipData = await zip.loadAsync(arrayBuffer, {
-                    checkCRC32: true,
-                    optimizedBinaryString: true,
-                    createFolders: false
-                });
+                zipData = await zip.loadAsync(arrayBuffer, { checkCRC32: true, optimizedBinaryString: true, createFolders: false });
             } catch (zipError) {
                 throw new Error(`ZIP 文件损坏或格式不支持: ${zipError.message}`);
             }
-
             updateExtractProgress(70);
             showStatus('正在查找文件...', 'info');
-
-            // 获取所有文件
             const allFiles = [];
             let fileCount = 0;
             let processedCount = 0;
-
-            // 先计算总文件数
             zipData.forEach((relativePath, zipEntry) => {
-                if (!zipEntry.dir) {
-                    fileCount++;
-                }
+                if (!zipEntry.dir) fileCount++;
             });
-
-            // 遍历所有文件
             for (const relativePath in zipData.files) {
                 const zipEntry = zipData.files[relativePath];
                 if (zipEntry.dir) continue;
-
                 processedCount++;
                 updateExtractProgress(70 + Math.floor((processedCount / fileCount) * 20));
-
                 const fileName = relativePath.split('/').pop().toLowerCase();
-
-                // 分类文件
                 if (fileName.endsWith('.mc')) {
-                    allFiles.push({
-                        name: relativePath.split('/').pop(),
-                        path: relativePath,
-                        zipEntry: zipEntry,
-                        size: zipEntry._data.uncompressedSize || 0,
-                        type: 'mc'
-                    });
+                    allFiles.push({ name: relativePath.split('/').pop(), path: relativePath, zipEntry: zipEntry, size: zipEntry._data.uncompressedSize || 0, type: 'mc' });
                 } else if (fileName.match(/\.(mp3|wav|ogg|flac|m4a|aac)$/)) {
-                    allFiles.push({
-                        name: relativePath.split('/').pop(),
-                        path: relativePath,
-                        zipEntry: zipEntry,
-                        size: zipEntry._data.uncompressedSize || 0,
-                        type: 'audio'
-                    });
+                    allFiles.push({ name: relativePath.split('/').pop(), path: relativePath, zipEntry: zipEntry, size: zipEntry._data.uncompressedSize || 0, type: 'audio' });
                 } else if (fileName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/)) {
-                    allFiles.push({
-                        name: relativePath.split('/').pop(),
-                        path: relativePath,
-                        zipEntry: zipEntry,
-                        size: zipEntry._data.uncompressedSize || 0,
-                        type: 'image'
-                    });
+                    allFiles.push({ name: relativePath.split('/').pop(), path: relativePath, zipEntry: zipEntry, size: zipEntry._data.uncompressedSize || 0, type: 'image' });
                 }
             }
-
             updateExtractProgress(95);
-
-            // 分离不同类型的文件
             const mcFiles = allFiles.filter(f => f.type === 'mc');
             const audioFiles = allFiles.filter(f => f.type === 'audio');
             const imageFiles = allFiles.filter(f => f.type === 'image');
-
-            if (mcFiles.length === 0) {
-                throw new Error('MCZ 文件中未找到 .mc 文件');
-            }
-
+            if (mcFiles.length === 0) throw new Error('MCZ 文件中未找到 .mc 文件');
             mczFiles = mcFiles;
-
-            // 保存音频和图片文件（取第一个找到的）
-            if (audioFiles.length > 0) {
-                mczAudioFile = audioFiles[0];
-            }
-            if (imageFiles.length > 0) {
-                mczImageFile = imageFiles[0];
-            }
-
-            // 更新文件选择器
+            if (audioFiles.length > 0) mczAudioFile = audioFiles[0];
+            if (imageFiles.length > 0) mczImageFile = imageFiles[0];
             internalFileSelect.innerHTML = '<option value="">请选择要转换的 MC 文件...</option>';
             mcFiles.forEach((file, index) => {
                 const option = document.createElement('option');
@@ -1736,29 +1829,21 @@
                 option.textContent = `${file.name} (${(file.size / 1024).toFixed(1)}KB)`;
                 internalFileSelect.appendChild(option);
             });
-
-            // 显示文件选择器
             fileSelector.classList.add('active');
-
-            // 显示找到的所有文件
             updateMCZFilesList(allFiles);
-
             updateExtractProgress(100);
             showStatus(`MCZ 文件解压完成，找到 ${mcFiles.length} 个 MC 文件`, 'success');
             isExtracting = false;
             return mcFiles;
-
         } catch (error) {
             console.error('解压 MCZ 文件失败:', error);
             showStatus(`解压 MCZ 文件失败: ${error.message}`, 'error');
             isExtracting = false;
             updateExtractProgress(0);
-
             cleanupZipInstance();
             fileSelector.classList.remove('active');
             internalFileSelect.innerHTML = '<option value="">请选择要转换的 MC 文件...</option>';
             mczFilesList.innerHTML = '';
-
             return null;
         }
     }
@@ -1766,7 +1851,6 @@
     // 更新MCZ文件列表显示
     function updateMCZFilesList(files) {
         mczFilesList.innerHTML = '';
-
         if (files.length === 0) {
             const emptyMsg = document.createElement('div');
             emptyMsg.className = 'file-preview-item';
@@ -1774,65 +1858,45 @@
             mczFilesList.appendChild(emptyMsg);
             return;
         }
-
-        // 按类型分组
         const mcFiles = files.filter(f => f.type === 'mc');
         const audioFiles = files.filter(f => f.type === 'audio');
         const imageFiles = files.filter(f => f.type === 'image');
-
-        // 显示MC文件
         if (mcFiles.length > 0) {
             const header = document.createElement('div');
             header.className = 'file-preview-item';
             header.style.background = 'rgba(76, 175, 80, 0.2)';
             header.innerHTML = `<div class="file-preview-name">📄 MC文件 (${mcFiles.length})</div>`;
             mczFilesList.appendChild(header);
-
             mcFiles.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-preview-item';
-                item.innerHTML = `
-                    <div class="file-preview-name">${file.name}</div>
-                    <div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>
-                `;
+                item.innerHTML = `<div class="file-preview-name">${file.name}</div><div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>`;
                 mczFilesList.appendChild(item);
             });
         }
-
-        // 显示音频文件
         if (audioFiles.length > 0) {
             const header = document.createElement('div');
             header.className = 'file-preview-item';
             header.style.background = 'rgba(33, 150, 243, 0.2)';
             header.innerHTML = `<div class="file-preview-name">🎵 音频文件 (${audioFiles.length})</div>`;
             mczFilesList.appendChild(header);
-
             audioFiles.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-preview-item';
-                item.innerHTML = `
-                    <div class="file-preview-name">${file.name}</div>
-                    <div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>
-                `;
+                item.innerHTML = `<div class="file-preview-name">${file.name}</div><div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>`;
                 mczFilesList.appendChild(item);
             });
         }
-
-        // 显示图片文件
         if (imageFiles.length > 0) {
             const header = document.createElement('div');
             header.className = 'file-preview-item';
             header.style.background = 'rgba(255, 152, 0, 0.2)';
             header.innerHTML = `<div class="file-preview-name">🖼️ 图片文件 (${imageFiles.length})</div>`;
             mczFilesList.appendChild(header);
-
             imageFiles.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-preview-item';
-                item.innerHTML = `
-                    <div class="file-preview-name">${file.name}</div>
-                    <div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>
-                `;
+                item.innerHTML = `<div class="file-preview-name">${file.name}</div><div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>`;
                 mczFilesList.appendChild(item);
             });
         }
@@ -1841,23 +1905,14 @@
     // 动态加载 JSZip 库
     function loadJSZip() {
         return new Promise((resolve, reject) => {
-            if (window.JSZip) {
-                resolve();
-                return;
-            }
-
+            if (window.JSZip) { resolve(); return; }
             showStatus('正在加载解压库...', 'info');
-
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-            script.integrity = 'sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==';
-            script.crossOrigin = 'anonymous';
-
             let timeoutId = setTimeout(() => {
                 showStatus('解压库加载超时，请检查网络连接', 'error');
                 reject(new Error('JSZip 加载超时'));
             }, 10000);
-
             script.onload = () => {
                 clearTimeout(timeoutId);
                 if (window.JSZip) {
@@ -1868,13 +1923,11 @@
                     reject(new Error('JSZip 加载失败'));
                 }
             };
-
             script.onerror = () => {
                 clearTimeout(timeoutId);
                 showStatus('加载解压库失败，请确保网络连接正常', 'error');
                 reject(new Error('JSZip 加载失败'));
             };
-
             document.head.appendChild(script);
         });
     }
@@ -1883,18 +1936,11 @@
     async function readMCZFile(fileIndex) {
         try {
             const selectedFile = mczFiles[fileIndex];
-            if (!selectedFile) {
-                throw new Error('选择的文件不存在');
-            }
-
+            if (!selectedFile) throw new Error('选择的文件不存在');
             showStatus(`正在读取: ${selectedFile.name}...`, 'info');
             const content = await selectedFile.zipEntry.async('string');
             showStatus(`已读取: ${selectedFile.name}`, 'success');
-
-            return {
-                name: selectedFile.name,
-                content: content
-            };
+            return { name: selectedFile.name, content: content };
         } catch (error) {
             console.error('读取 MCZ 内部文件失败:', error);
             throw error;
@@ -1904,10 +1950,7 @@
     // 从 MCZ 文件中提取音频或图片文件
     async function extractMediaFileFromMCZ(file) {
         try {
-            if (!file || !file.zipEntry) {
-                return null;
-            }
-
+            if (!file || !file.zipEntry) return null;
             const blob = await file.zipEntry.async('blob');
             return new File([blob], file.name, { type: blob.type });
         } catch (error) {
@@ -1918,25 +1961,11 @@
 
     // 文件拖放功能
     fileDropArea.addEventListener('click', () => fileInput.click());
-    fileDropArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        fileDropArea.classList.add('dragover');
-    });
-    fileDropArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        fileDropArea.classList.remove('dragover');
-    });
+    fileDropArea.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); fileDropArea.classList.add('dragover'); });
+    fileDropArea.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); fileDropArea.classList.remove('dragover'); });
     fileDropArea.addEventListener('drop', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        fileDropArea.classList.remove('dragover');
-
-        if (e.dataTransfer.files.length) {
-            fileInput.files = e.dataTransfer.files;
-            await updateFileInfo();
-        }
+        e.preventDefault(); e.stopPropagation(); fileDropArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; await updateFileInfo(); }
     });
 
     // 音频文件上传
@@ -1959,41 +1988,15 @@
         }
     });
 
-    // 点击音频上传区域
-    document.getElementById('audioUpload').addEventListener('click', function(e) {
-        if (e.target !== audioInput) {
-            audioInput.click();
-        }
-    });
-
-    // 点击图片上传区域
-    document.getElementById('imageUpload').addEventListener('click', function(e) {
-        if (e.target !== imageInput) {
-            imageInput.click();
-        }
-    });
+    document.getElementById('audioUpload').addEventListener('click', function(e) { if (e.target !== audioInput) audioInput.click(); });
+    document.getElementById('imageUpload').addEventListener('click', function(e) { if (e.target !== imageInput) imageInput.click(); });
 
     // 更新额外文件列表显示
     function updateExtraFilesList() {
         extraFilesList.innerHTML = '';
         const files = [];
-
-        if (extraAudioFile) {
-            files.push({
-                name: extraAudioFile.name,
-                size: extraAudioFile.size,
-                type: 'audio'
-            });
-        }
-
-        if (extraImageFile) {
-            files.push({
-                name: extraImageFile.name,
-                size: extraImageFile.size,
-                type: 'image'
-            });
-        }
-
+        if (extraAudioFile) files.push({ name: extraAudioFile.name, size: extraAudioFile.size, type: 'audio' });
+        if (extraImageFile) files.push({ name: extraImageFile.name, size: extraImageFile.size, type: 'image' });
         if (files.length === 0) {
             const emptyMsg = document.createElement('div');
             emptyMsg.className = 'file-preview-item';
@@ -2001,31 +2004,17 @@
             extraFilesList.appendChild(emptyMsg);
             return;
         }
-
         files.forEach((file, index) => {
             const item = document.createElement('div');
             item.className = 'file-preview-item';
-            item.innerHTML = `
-                <div class="file-preview-name">${file.type === 'audio' ? '🎵' : '🖼️'} ${file.name}</div>
-                <div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div>
-                <button class="file-preview-remove" data-index="${index}" data-type="${file.type}">×</button>
-            `;
+            item.innerHTML = `<div class="file-preview-name">${file.type === 'audio' ? '🎵' : '🖼️'} ${file.name}</div><div class="file-preview-size">${(file.size / 1024).toFixed(1)}KB</div><button class="file-preview-remove" data-index="${index}" data-type="${file.type}">×</button>`;
             extraFilesList.appendChild(item);
         });
-
-        // 添加删除事件
         extraFilesList.querySelectorAll('.file-preview-remove').forEach(btn => {
             btn.addEventListener('click', function() {
                 const type = this.dataset.type;
-                if (type === 'audio') {
-                    extraAudioFile = null;
-                    audioInput.value = '';
-                    audioPreview.textContent = '';
-                } else if (type === 'image') {
-                    extraImageFile = null;
-                    imageInput.value = '';
-                    imagePreview.textContent = '';
-                }
+                if (type === 'audio') { extraAudioFile = null; audioInput.value = ''; audioPreview.textContent = ''; }
+                else if (type === 'image') { extraImageFile = null; imageInput.value = ''; imagePreview.textContent = ''; }
                 updateExtraFilesList();
                 showStatus(`已移除${type === 'audio' ? '音频' : '图片'}文件`, 'info');
             });
@@ -2055,70 +2044,40 @@
             const file = fileInput.files[0];
             globalFileName = file.name;
             isMCZFile = file.name.toLowerCase().endsWith('.mcz');
-
-            // 更新文件大小显示
             const fileSizeKB = (file.size / 1024).toFixed(2);
             document.getElementById('fileSize').textContent = fileSizeKB;
-
             if (isMCZFile) {
-                // 处理 MCZ 文件
                 fileInfo.textContent = `已上传 MCZ 文件: ${file.name} (${fileSizeKB}KB)`;
                 fileInfo.classList.add('highlight');
-
-                // 隐藏额外文件上传区域
                 extraFilesArea.classList.remove('active');
-                extraAudioFile = null;
-                extraImageFile = null;
+                extraAudioFile = null; extraImageFile = null;
                 updateExtraFilesList();
-
-                // 解压并显示内部文件列表
                 showStatus('正在解压 MCZ 文件...', 'info');
-                convertBtn.disabled = true;
-                downloadBtn.disabled = true;
-                zipBtn.disabled = true;
-
+                convertBtn.disabled = true; downloadBtn.disabled = true; zipBtn.disabled = true;
                 const result = await extractMCZFile(file);
-                if (result) {
-                    showStatus(`MCZ 文件解压完成，找到 ${result.length} 个 MC 文件`, 'success');
-                } else {
-                    showStatus('MCZ 文件解压失败，请尝试重置解压器或使用其他文件', 'error');
-                }
-
+                if (result) showStatus(`MCZ 文件解压完成，找到 ${result.length} 个 MC 文件`, 'success');
+                else showStatus('MCZ 文件解压失败，请尝试重置解压器或使用其他文件', 'error');
             } else {
-                // 处理普通 MC 文件
                 fileInfo.textContent = `已上传 MC 文件: ${file.name} (${fileSizeKB}KB)`;
                 fileInfo.classList.remove('highlight');
                 fileSelector.classList.remove('active');
                 mczFilesList.innerHTML = '';
-
-                // 显示额外文件上传区域
                 extraFilesArea.classList.add('active');
-
                 convertBtn.disabled = false;
                 showStatus(`已选择 MC 文件: ${file.name} (${fileSizeKB}KB)`, 'success');
-
-                // 清空之前的额外文件
-                extraAudioFile = null;
-                extraImageFile = null;
-                audioInput.value = '';
-                imageInput.value = '';
-                audioPreview.textContent = '';
-                imagePreview.textContent = '';
+                extraAudioFile = null; extraImageFile = null;
+                audioInput.value = ''; imageInput.value = '';
+                audioPreview.textContent = ''; imagePreview.textContent = '';
                 updateExtraFilesList();
             }
         }
     }
 
     fileInput.addEventListener('change', updateFileInfo);
-
-    // 等级数字输入事件
     levelNumberInput.addEventListener('input', updateFilenamePreview);
 
     // 工具函数
-    function beatArrayToFloat(arr) {
-        return arr[0] + arr[1] / arr[2];
-    }
-
+    function beatArrayToFloat(arr) { return arr[0] + arr[1] / arr[2]; }
     function convertBeat(beatVal, timeList, baseBPM) {
         let converted = 0;
         for (let i = 0; i < timeList.length; i++) {
@@ -2142,14 +2101,9 @@
         lines.forEach(line => {
             let parts = line.split("-");
             let key;
-            if (parts.length === 2) {
-                key = parts[1];
-            } else if (parts.length === 3) {
-                key = parts[1] + "-" + parts[2];
-            }
-            if (!groups[key]) {
-                groups[key] = [];
-            }
+            if (parts.length === 2) key = parts[1];
+            else if (parts.length === 3) key = parts[1] + "-" + parts[2];
+            if (!groups[key]) groups[key] = [];
             groups[key].push(parseInt(parts[0]));
         });
         const merged = [];
@@ -2162,278 +2116,86 @@
         return merged;
     }
 
-    // 从 MC 文件中提取元数据 - 修复版本
+    // 从 MC 文件中提取元数据
     function extractMetadataFromMC(jsonData) {
-        const metadata = {
-            title: "",
-            artist: "",
-            bpm: 0,
-            offset: 0,
-            startTime: 0
-        };
-
-        console.log("=== MC文件数据结构分析 ===");
-        console.log("完整的MC文件JSON:", jsonData);
-
-        // 方法1: 直接从顶级获取
-        if (jsonData.title) {
-            metadata.title = jsonData.title;
-            console.log("方法1 - 从顶级获取title:", metadata.title);
-        }
-
-        if (jsonData.artist) {
-            metadata.artist = jsonData.artist;
-            console.log("方法1 - 从顶级获取artist:", metadata.artist);
-        }
-
-        // 方法2: 从metadata对象获取
+        const metadata = { title: "", artist: "", bpm: 0, offset: 0, startTime: 0 };
+        if (jsonData.title) metadata.title = jsonData.title;
+        if (jsonData.artist) metadata.artist = jsonData.artist;
         if (!metadata.title && jsonData.metadata) {
-            console.log("metadata对象:", jsonData.metadata);
-
-            if (jsonData.metadata.title) {
-                metadata.title = jsonData.metadata.title;
-                console.log("方法2 - 从metadata获取title:", metadata.title);
-            }
-
-            if (!metadata.artist && jsonData.metadata.artist) {
-                metadata.artist = jsonData.metadata.artist;
-                console.log("方法2 - 从metadata获取artist:", metadata.artist);
-            }
-
-            if (!metadata.artist && jsonData.metadata.author) {
-                metadata.artist = jsonData.metadata.author;
-                console.log("方法2 - 从metadata获取author:", metadata.artist);
-            }
+            if (jsonData.metadata.title) metadata.title = jsonData.metadata.title;
+            if (!metadata.artist && jsonData.metadata.artist) metadata.artist = jsonData.metadata.artist;
+            if (!metadata.artist && jsonData.metadata.author) metadata.artist = jsonData.metadata.author;
         }
-
-        // 方法3: 搜索整个对象树
-        if (!metadata.title || !metadata.artist) {
-            const found = deepSearchForMetadata(jsonData);
-            if (!metadata.title && found.title) {
-                metadata.title = found.title;
-                console.log("方法3 - 深度搜索找到title:", metadata.title);
-            }
-            if (!metadata.artist && found.artist) {
-                metadata.artist = found.artist;
-                console.log("方法3 - 深度搜索找到artist:", metadata.artist);
-            }
-        }
-
-        // 如果还是没有，尝试从文件名提取
-        if (!metadata.title && globalFileName) {
-            const nameWithoutExt = globalFileName.replace(/\.mc$/i, '');
-            metadata.title = nameWithoutExt;
-            console.log("方法4 - 从文件名提取title:", metadata.title);
-        }
-
-        // 最后使用默认值
-        if (!metadata.title) {
-            metadata.title = "未知歌曲";
-            console.log("使用默认title:", metadata.title);
-        }
-        if (!metadata.artist) {
-            metadata.artist = "未知作者";
-            console.log("使用默认artist:", metadata.artist);
-        }
-
-        // 提取 BPM
-        if (globalTimeList && globalTimeList.length > 0) {
-            metadata.bpm = globalTimeList[0].bpm;
-            console.log("提取BPM:", metadata.bpm);
-        }
-
-        // 查找 offset
+        if (!metadata.title) metadata.title = globalFileName ? globalFileName.replace(/\.mc$/i, '') : "未知歌曲";
+        if (!metadata.artist) metadata.artist = "未知作者";
+        if (globalTimeList && globalTimeList.length > 0) metadata.bpm = globalTimeList[0].bpm;
         function searchOffset(obj) {
             if (typeof obj === "object" && obj !== null) {
                 for (let key in obj) {
-                    if (key === "offset" && typeof obj[key] === "number") {
-                        metadata.offset = obj[key];
-                        console.log("找到offset:", metadata.offset);
-                        return;
-                    } else {
-                        searchOffset(obj[key]);
-                        if (metadata.offset !== 0) return;
-                    }
+                    if (key === "offset" && typeof obj[key] === "number") { metadata.offset = obj[key]; return; }
+                    else searchOffset(obj[key]);
+                    if (metadata.offset !== 0) return;
                 }
             }
         }
         searchOffset(jsonData);
-
-        console.log("=== 最终提取的元数据 ===");
-        console.log("title:", metadata.title);
-        console.log("artist:", metadata.artist);
-        console.log("bpm:", metadata.bpm);
-        console.log("offset:", metadata.offset);
-
         return metadata;
     }
 
-    // 深度搜索元数据
-    function deepSearchForMetadata(obj, path = '') {
-        const result = { title: null, artist: null };
-
-        if (typeof obj !== 'object' || obj === null) {
-            return result;
-        }
-
-        // 检查当前层级
-        if (obj.title && typeof obj.title === 'string') {
-            result.title = obj.title;
-        }
-        if (obj.artist && typeof obj.artist === 'string') {
-            result.artist = obj.artist;
-        }
-        if (obj.author && typeof obj.author === 'string' && !result.artist) {
-            result.artist = obj.author;
-        }
-
-        // 如果已经找到两个值，直接返回
-        if (result.title && result.artist) {
-            return result;
-        }
-
-        // 递归搜索子对象
-        for (const key in obj) {
-            if (typeof obj[key] === 'object' && obj[key] !== null) {
-                const subResult = deepSearchForMetadata(obj[key], path + '.' + key);
-                if (!result.title && subResult.title) {
-                    result.title = subResult.title;
-                }
-                if (!result.artist && subResult.artist) {
-                    result.artist = subResult.artist;
-                }
-
-                // 如果已经找到两个值，提前退出
-                if (result.title && result.artist) {
-                    return result;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    // 生成上传信息.txt内容
     function generateUploadInfoTxt(metadata, levelNum, startTime) {
-        return `歌曲名：${metadata.title}
-曲师：${metadata.artist}
-BPM：${metadata.bpm.toFixed(1)}
-起始时间：${startTime.toFixed(4)}
-等级：${levelNum}`;
+        return `歌曲名：${metadata.title}\n曲师：${metadata.artist}\nBPM：${metadata.bpm.toFixed(1)}\n起始时间：${startTime.toFixed(4)}\n等级：${levelNum}`;
     }
 
-    // 生成musicInfo.json内容
     function generateMusicInfoJson(metadata, levelNum, startTime) {
         const now = new Date();
-        const formattedDate = now.toLocaleString('zh-CN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        }).replace(/\//g, '/');
-
-        return {
-            uuid: "",
-            name: metadata.title,  // 使用从MC文件提取的title
-            autor: metadata.artist, // 使用从MC文件提取的artist
-            bpm: metadata.bpm,
-            firstTime: startTime,
-            bpmList: {},
-            c_time: formattedDate,
-            e_time: formattedDate
-        };
+        const formattedDate = now.toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\//g, '/');
+        return { uuid: "", name: metadata.title, autor: metadata.artist, bpm: metadata.bpm, firstTime: startTime, bpmList: {}, c_time: formattedDate, e_time: formattedDate };
     }
 
-    // 更新统计信息
     function updateStats(jsonData, filteredNotes, offset, startTime) {
-        // 提取元数据
         mcMetadata = extractMetadataFromMC(jsonData);
         mcMetadata.startTime = startTime;
-
         document.getElementById('baseBPM').textContent = globalTimeList[0].bpm.toFixed(2);
         document.getElementById('offsetValue').textContent = offset;
         document.getElementById('startTime').textContent = startTime.toFixed(4);
         document.getElementById('noteCount').textContent = filteredNotes.length;
-
         document.getElementById('bpmCount').textContent = `${globalTimeList.length} 个区间`;
-
         const tableBody = document.getElementById('bpmTableBody');
         tableBody.innerHTML = '';
-
         globalTimeList.forEach((time, i) => {
             const beatVal = beatArrayToFloat(time.beat);
-            const duration = i < globalTimeList.length - 1
-                ? (beatArrayToFloat(globalTimeList[i+1].beat) - beatVal).toFixed(2)
-                : '∞';
-
+            const duration = i < globalTimeList.length - 1 ? (beatArrayToFloat(globalTimeList[i+1].beat) - beatVal).toFixed(2) : '∞';
             const row = document.createElement('tr');
-            row.innerHTML = `
-          <td class="text-bold">${i}</td>
-          <td class="text-bold">${beatVal.toFixed(2)}</td>
-          <td class="text-bold">${time.bpm}</td>
-          <td class="text-bold">${duration}</td>
-        `;
+            row.innerHTML = `<td class="text-bold">${i}</td><td class="text-bold">${beatVal.toFixed(2)}</td><td class="text-bold">${time.bpm}</td><td class="text-bold">${duration}</td>`;
             tableBody.appendChild(row);
         });
-
         const convertTime = Date.now() - conversionStartTime;
         document.getElementById('convertTime').textContent = convertTime;
-
-        // 生成并显示信息文件内容
         const levelNum = levelNumberInput.value || "1";
         const uploadInfoTxt = generateUploadInfoTxt(mcMetadata, levelNum, startTime);
         const musicInfoJson = generateMusicInfoJson(mcMetadata, levelNum, startTime);
-
-        // 显示在信息选项卡中
-        document.getElementById('outputInfo').value =
-            `=== 上传信息.txt ===\n${uploadInfoTxt}\n\n=== musicInfo.json ===\n${JSON.stringify(musicInfoJson, null, 2)}`;
-
-        // 在状态栏显示提取的元数据
+        document.getElementById('outputInfo').value = `=== 上传信息.txt ===\n${uploadInfoTxt}\n\n=== musicInfo.json ===\n${JSON.stringify(musicInfoJson, null, 2)}`;
         showStatus(`已提取: ${mcMetadata.title} - ${mcMetadata.artist}`, 'success');
     }
 
     // 转换按钮点击事件
     convertBtn.addEventListener('click', async function() {
-        if (!fileInput.files.length) {
-            showStatus('请先选择一个文件', 'error');
-            return;
-        }
-
-        if (isMCZFile && internalFileSelect.value === "") {
-            showStatus('请从 MCZ 文件中选择一个 MC 文件', 'error');
-            return;
-        }
-
+        if (!fileInput.files.length) { showStatus('请先选择一个文件', 'error'); return; }
+        if (isMCZFile && internalFileSelect.value === "") { showStatus('请从 MCZ 文件中选择一个 MC 文件', 'error'); return; }
         conversionStartTime = Date.now();
-
-        // 显示加载状态
         const originalText = convertBtn.innerHTML;
         convertBtn.innerHTML = '<span class="loading"></span> 转换中...';
         convertBtn.disabled = true;
-
         try {
-            let jsonContent;
-            let fileName;
-
+            let jsonContent, fileName;
             if (isMCZFile) {
                 const fileIndex = parseInt(internalFileSelect.value);
                 const mcFile = await readMCZFile(fileIndex);
                 jsonContent = mcFile.content;
                 fileName = mcFile.name;
-
-                // 提取MCZ中的音频和图片文件
-                if (mczAudioFile) {
-                    showStatus('正在提取音频文件...', 'info');
-                    extraAudioFile = await extractMediaFileFromMCZ(mczAudioFile);
-                }
-                if (mczImageFile) {
-                    showStatus('正在提取图片文件...', 'info');
-                    extraImageFile = await extractMediaFileFromMCZ(mczImageFile);
-                }
+                if (mczAudioFile) { showStatus('正在提取音频文件...', 'info'); extraAudioFile = await extractMediaFileFromMCZ(mczAudioFile); }
+                if (mczImageFile) { showStatus('正在提取图片文件...', 'info'); extraImageFile = await extractMediaFileFromMCZ(mczImageFile); }
                 updateExtraFilesList();
-
             } else {
                 const file = fileInput.files[0];
                 fileName = file.name;
@@ -2444,49 +2206,29 @@ BPM：${metadata.bpm.toFixed(1)}
                     reader.readAsText(file);
                 });
             }
-
             globalJsonData = JSON.parse(jsonContent);
             globalTimeList = globalJsonData.time;
-
-            if (!globalTimeList || globalTimeList.length === 0) {
-                throw new Error('未找到 time 列表');
-            }
-
+            if (!globalTimeList || globalTimeList.length === 0) throw new Error('未找到 time 列表');
             let offset = null;
             function searchOffset(obj) {
                 if (typeof obj === "object" && obj !== null) {
                     for (let key in obj) {
-                        if (key === "offset" && typeof obj[key] === "number") {
-                            offset = obj[key];
-                            return;
-                        } else {
-                            searchOffset(obj[key]);
-                            if (offset !== null) return;
-                        }
+                        if (key === "offset" && typeof obj[key] === "number") { offset = obj[key]; return; }
+                        else searchOffset(obj[key]);
+                        if (offset !== null) return;
                     }
                 }
             }
             searchOffset(globalJsonData);
-
-            if (offset === null) {
-                throw new Error('未找到 offset');
-            }
-
+            if (offset === null) throw new Error('未找到 offset');
             const noteList = globalJsonData.note;
-            if (!noteList || noteList.length === 0) {
-                throw new Error('未找到 note 列表');
-            }
-
+            if (!noteList || noteList.length === 0) throw new Error('未找到 note 列表');
             const filteredNotes = noteList.filter(note => !("sound" in note));
             const baseBPM = globalTimeList[0].bpm;
             const firstNoteBeat = beatArrayToFloat(filteredNotes[0].beat);
             const firstConverted = convertBeat(firstNoteBeat, globalTimeList, baseBPM);
             const startTime = 60 / baseBPM * firstNoteBeat - offset / 1000;
-
-            // 更新统计信息
             updateStats(globalJsonData, filteredNotes, offset, startTime);
-
-            // 生成普通 note 的 TXT 行
             let txtLines = [];
             filteredNotes.forEach(note => {
                 const col = note.column;
@@ -2504,11 +2246,7 @@ BPM：${metadata.bpm.toFixed(1)}
                 txtLines.push(line);
             });
             globalNormalLines = txtLines;
-
-            // 更新输出显示
             updateOutputDisplay();
-
-            // 生成 SV TXT 行
             let effectLines = [];
             if (globalJsonData.effect && Array.isArray(globalJsonData.effect) && globalJsonData.effect.length > 0) {
                 globalJsonData.effect.forEach(eff => {
@@ -2521,24 +2259,15 @@ BPM：${metadata.bpm.toFixed(1)}
             }
             globalEffectLines = effectLines;
             document.getElementById('outputSV').value = effectLines.join("\n");
-
-            // 显示原始数据
             document.getElementById('outputRaw').value = JSON.stringify(globalJsonData, null, 2);
-
-            // 启用下载按钮
             downloadBtn.disabled = false;
             zipBtn.disabled = false;
             downloadBtn.classList.add('pulse');
             zipBtn.classList.add('pulse');
-
             showStatus('转换完成！可以下载文件了', 'success');
-
             if (document.getElementById('autoDownload').checked) {
-                setTimeout(() => {
-                    downloadBtn.click();
-                }, 500);
+                setTimeout(() => { downloadBtn.click(); }, 500);
             }
-
         } catch (err) {
             showStatus('转换出错：' + err.message, 'error');
             console.error('转换错误:', err);
@@ -2548,16 +2277,10 @@ BPM：${metadata.bpm.toFixed(1)}
         }
     });
 
-    // 更新输出显示
     function updateOutputDisplay() {
         if (!globalNormalLines) return;
         const mergeChecked = mergeCheckbox.checked;
-        let displayLines = [];
-        if (mergeChecked) {
-            displayLines = mergeLines(globalNormalLines);
-        } else {
-            displayLines = globalNormalLines;
-        }
+        let displayLines = mergeChecked ? mergeLines(globalNormalLines) : globalNormalLines;
         document.getElementById('outputNormal').value = displayLines.join("\n");
     }
 
@@ -2565,25 +2288,13 @@ BPM：${metadata.bpm.toFixed(1)}
 
     // 下载TXT文件按钮事件
     downloadBtn.addEventListener('click', function() {
-        if (!globalNormalLines) {
-            showStatus('请先进行转换！', 'error');
-            return;
-        }
-
+        if (!globalNormalLines) { showStatus('请先进行转换！', 'error'); return; }
         const mergeChecked = mergeCheckbox.checked;
-        let normalLinesToDownload = [];
-        if (mergeChecked) {
-            normalLinesToDownload = mergeLines(globalNormalLines);
-        } else {
-            normalLinesToDownload = globalNormalLines;
-        }
+        let normalLinesToDownload = mergeChecked ? mergeLines(globalNormalLines) : globalNormalLines;
         const normalOutput = normalLinesToDownload.join("\n");
-
         const levelNum = levelNumberInput.value || "1";
         const paddedNum = levelNum.padStart(3, '0');
         const downloadNameNormal = `${selectedLevel}${paddedNum}.txt`;
-
-        // 下载普通 TXT 文件
         try {
             const blobNormal = new Blob([normalOutput], { type: "text/plain;charset=utf-8" });
             const urlNormal = URL.createObjectURL(blobNormal);
@@ -2595,12 +2306,7 @@ BPM：${metadata.bpm.toFixed(1)}
             aNormal.click();
             document.body.removeChild(aNormal);
             URL.revokeObjectURL(urlNormal);
-        } catch (err) {
-            showStatus('下载普通文件失败: ' + err.message, 'error');
-            return;
-        }
-
-        // 如果 effect 有数据，则下载 SV TXT 文件
+        } catch (err) { showStatus('下载普通文件失败: ' + err.message, 'error'); return; }
         if (globalEffectLines && globalEffectLines.length > 0) {
             try {
                 const effectOutput = globalEffectLines.join("\n");
@@ -2615,90 +2321,53 @@ BPM：${metadata.bpm.toFixed(1)}
                 aSV.click();
                 document.body.removeChild(aSV);
                 URL.revokeObjectURL(urlSV);
-            } catch (err) {
-                showStatus('下载SV文件失败: ' + err.message, 'error');
-            }
+            } catch (err) { showStatus('下载SV文件失败: ' + err.message, 'error'); }
         }
-
         showStatus(`TXT文件下载完成！文件名: ${downloadNameNormal}`, 'success');
     });
 
     // 打包下载ZIP按钮事件
     zipBtn.addEventListener('click', async function() {
-        if (!globalNormalLines) {
-            showStatus('请先进行转换！', 'error');
-            return;
-        }
-
+        if (!globalNormalLines) { showStatus('请先进行转换！', 'error'); return; }
         const originalText = zipBtn.innerHTML;
         zipBtn.innerHTML = '<span class="loading"></span> 打包中...';
         zipBtn.disabled = true;
-
         try {
-            // 确保JSZip可用
-            if (!window.JSZip) {
-                await loadJSZip();
-            }
-
+            if (!window.JSZip) await loadJSZip();
             const zip = new JSZip();
-
-            // 1. 添加普通TXT文件
             const mergeChecked = mergeCheckbox.checked;
-            let normalLinesToDownload = [];
-            if (mergeChecked) {
-                normalLinesToDownload = mergeLines(globalNormalLines);
-            } else {
-                normalLinesToDownload = globalNormalLines;
-            }
+            let normalLinesToDownload = mergeChecked ? mergeLines(globalNormalLines) : globalNormalLines;
             const normalOutput = normalLinesToDownload.join("\n");
-
             const levelNum = levelNumberInput.value || "1";
             const paddedNum = levelNum.padStart(3, '0');
             const txtFilename = `${selectedLevel}${paddedNum}.txt`;
-
             zip.file(txtFilename, normalOutput);
-
-            // 2. 添加SV TXT文件（如果有）
             if (globalEffectLines && globalEffectLines.length > 0) {
                 const effectOutput = globalEffectLines.join("\n");
                 const svFilename = `${selectedLevel}${paddedNum}_SV.txt`;
                 zip.file(svFilename, effectOutput);
             }
-
-            // 3. 添加上传信息.txt
             const uploadInfoTxt = generateUploadInfoTxt(mcMetadata, levelNum, mcMetadata.startTime);
             zip.file("上传信息.txt", uploadInfoTxt);
-
-            // 4. 添加musicInfo.json
             const musicInfoJson = generateMusicInfoJson(mcMetadata, levelNum, mcMetadata.startTime);
             zip.file("musicInfo.json", JSON.stringify(musicInfoJson, null, 2));
-
-            // 5. 添加音频文件（重命名为audio）
             if (extraAudioFile) {
                 const audioExt = extraAudioFile.name.split('.').pop().toLowerCase();
                 zip.file(`audio.${audioExt}`, extraAudioFile);
             } else if (mczAudioFile) {
-                // 从MCZ中提取音频
                 const audioBlob = await mczAudioFile.zipEntry.async('blob');
                 const audioExt = mczAudioFile.name.split('.').pop().toLowerCase();
                 zip.file(`audio.${audioExt}`, audioBlob);
             }
-
-            // 6. 添加图片文件（重命名为bg）
             if (extraImageFile) {
                 const imageExt = extraImageFile.name.split('.').pop().toLowerCase();
                 zip.file(`bg.${imageExt}`, extraImageFile);
             } else if (mczImageFile) {
-                // 从MCZ中提取图片
                 const imageBlob = await mczImageFile.zipEntry.async('blob');
                 const imageExt = mczImageFile.name.split('.').pop().toLowerCase();
                 zip.file(`bg.${imageExt}`, imageBlob);
             }
-
-            // 生成ZIP文件
             const zipBlob = await zip.generateAsync({ type: "blob" });
-
-            // 下载ZIP文件
             const zipUrl = URL.createObjectURL(zipBlob);
             const a = document.createElement("a");
             a.href = zipUrl;
@@ -2707,9 +2376,7 @@ BPM：${metadata.bpm.toFixed(1)}
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(zipUrl);
-
             showStatus(`ZIP包下载完成！包含所有必需文件`, 'success');
-
         } catch (err) {
             console.error('打包ZIP失败:', err);
             showStatus(`打包ZIP失败: ${err.message}`, 'error');
@@ -2727,72 +2394,42 @@ BPM：${metadata.bpm.toFixed(1)}
         fileSelector.classList.remove('active');
         internalFileSelect.innerHTML = '<option value="">请选择要转换的 MC 文件...</option>';
         mczFilesList.innerHTML = '';
-
         extraFilesArea.classList.remove('active');
-        audioInput.value = '';
-        imageInput.value = '';
-        audioPreview.textContent = '';
-        imagePreview.textContent = '';
+        audioInput.value = ''; imageInput.value = '';
+        audioPreview.textContent = ''; imagePreview.textContent = '';
         extraFilesList.innerHTML = '';
-
         cleanupZipInstance();
-        globalNormalLines = null;
-        globalEffectLines = null;
-        globalJsonData = null;
-        globalTimeList = null;
-        isMCZFile = false;
-        extraAudioFile = null;
-        extraImageFile = null;
-        mczAudioFile = null;
-        mczImageFile = null;
+        globalNormalLines = null; globalEffectLines = null; globalJsonData = null; globalTimeList = null;
+        isMCZFile = false; extraAudioFile = null; extraImageFile = null; mczAudioFile = null; mczImageFile = null;
         mcMetadata = { title: "", artist: "", bpm: 0, offset: 0, startTime: 0 };
-
         document.getElementById('outputNormal').value = '';
         document.getElementById('outputSV').value = '';
         document.getElementById('outputRaw').value = '';
         document.getElementById('outputInfo').value = '';
-
         document.getElementById('baseBPM').textContent = '--';
         document.getElementById('offsetValue').textContent = '--';
         document.getElementById('startTime').textContent = '--';
         document.getElementById('noteCount').textContent = '--';
         document.getElementById('fileSize').textContent = '--';
         document.getElementById('convertTime').textContent = '--';
-
         document.getElementById('bpmCount').textContent = '0 个区间';
-        document.getElementById('bpmTableBody').innerHTML = `
-        <tr>
-          <td colspan="4" style="text-align: center; padding: 50px; color: var(--text-tertiary);">
-            <div style="font-size: 40px; margin-bottom: 20px;">📊</div>
-            <div class="text-bold">选择文件并开始转换后，BPM 数据将显示在这里</div>
-          </td>
-        </tr>
-      `;
-
-        downloadBtn.disabled = true;
-        zipBtn.disabled = true;
-        downloadBtn.classList.remove('pulse');
-        zipBtn.classList.remove('pulse');
+        document.getElementById('bpmTableBody').innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 50px; color: var(--text-tertiary);"><div style="font-size: 40px; margin-bottom: 20px;">📊</div><div class="text-bold">选择文件并开始转换后，BPM 数据将显示在这里</div></td></tr>`;
+        downloadBtn.disabled = true; zipBtn.disabled = true;
+        downloadBtn.classList.remove('pulse'); zipBtn.classList.remove('pulse');
         convertBtn.disabled = true;
-
         showStatus('已重置所有数据', 'info');
     });
 
-    // 强制重置按钮
     forceResetBtn.addEventListener('click', function() {
-        if (confirm('确定要强制重置解压器吗？这将清除所有解压状态，可能需要重新上传文件。')) {
-            forceResetExtractor();
-        }
+        if (confirm('确定要强制重置解压器吗？这将清除所有解压状态，可能需要重新上传文件。')) forceResetExtractor();
     });
 
     // 选项卡切换
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const tabId = this.dataset.tab;
-
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
             this.classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
         });
@@ -2802,112 +2439,22 @@ BPM：${metadata.bpm.toFixed(1)}
     document.addEventListener('DOMContentLoaded', function() {
         initLevelSelection();
         updateFilenamePreview();
-
         fileInfo.textContent = '等待文件选择...';
         downloadBtn.disabled = true;
         zipBtn.disabled = true;
         convertBtn.disabled = true;
-
-        // 添加键盘快捷键支持
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key.toLowerCase()) {
-                    case 'o':
-                        e.preventDefault();
-                        fileInput.click();
-                        break;
-                    case 'c':
-                        if (!convertBtn.disabled) {
-                            e.preventDefault();
-                            convertBtn.click();
-                        }
-                        break;
-                    case 'd':
-                        if (!downloadBtn.disabled) {
-                            e.preventDefault();
-                            downloadBtn.click();
-                        }
-                        break;
-                    case 'z':
-                        if (!zipBtn.disabled) {
-                            e.preventDefault();
-                            zipBtn.click();
-                        }
-                        break;
-                    case 'r':
-                        e.preventDefault();
-                        resetBtn.click();
-                        break;
-                    case 'f':
-                        if (e.ctrlKey && e.shiftKey) {
-                            e.preventDefault();
-                            forceResetBtn.click();
-                        }
-                        break;
-                    case '1': case '2': case '3': case '4': case '5':
-                        if (e.ctrlKey && !e.shiftKey) {
-                            e.preventDefault();
-                            const levelIndex = parseInt(e.key) - 1;
-                            if (levelIndex >= 0 && levelIndex < levelButtons.length) {
-                                levelButtons[levelIndex].click();
-                            }
-                        }
-                        break;
-                }
-            }
-        });
     });
 
-    //禁止右键
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        console.log('右键已被禁用');
-        return false;
-    });
-
-    // 禁止选择文本（可选，防止用户复制内容）
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁止拖拽图片（可选，防止用户拖拽保存图片）
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // 禁止F12开发者工具（简单版本，但容易被绕过）
+    // 禁用右键
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+    document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
+    document.addEventListener('dragstart', function(e) { if (e.target.tagName === 'IMG') { e.preventDefault(); return false; } });
     document.addEventListener('keydown', function(e) {
-        // 禁用F12
-        if (e.key === 'F12') {
-            e.preventDefault();
-            console.log('F12已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+Shift+I (Chrome开发者工具)
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            console.log('Ctrl+Shift+I已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+Shift+J (Chrome控制台)
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            console.log('Ctrl+Shift+J已被禁用');
-            return false;
-        }
-        // 禁用Ctrl+U (查看源代码)
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            console.log('Ctrl+U已被禁用');
-            return false;
-        }
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
     });
 </script>
-
-
 </body>
 </html>

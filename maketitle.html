@@ -2,14 +2,15 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>标题图生成器</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>标题图生成器 | 舞立方自制谱工具</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -18,6 +19,7 @@
             color: #fff;
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
@@ -37,13 +39,13 @@
             position: fixed;
             top: -200px;
             left: 0;
-            width: 100%;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
+            right: 0;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(16px);
             z-index: 1000;
-            padding: 15px 0;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            padding: 10px 0;
+            border-bottom: 2px solid rgba(255, 154, 158, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             transition: top 0.3s ease;
         }
 
@@ -65,62 +67,49 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .preview-title {
-            font-size: 1.2rem;
+            font-size: 0.85rem;
             color: #fad0c4;
             font-weight: bold;
         }
 
         .preview-badges {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .dimension-badge {
+        .dimension-badge, .effects-badge, .sticker-badge {
             display: inline-block;
             background: rgba(255, 154, 158, 0.2);
             color: #ff9a9e;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             border: 1px solid rgba(255, 154, 158, 0.3);
+            white-space: nowrap;
         }
-
-        .effects-badge {
-            display: inline-block;
-            background: rgba(74, 144, 226, 0.2);
-            color: #4a90e2;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(74, 144, 226, 0.3);
-        }
-
-        .sticker-badge {
-            display: inline-block;
-            background: rgba(154, 255, 158, 0.2);
-            color: #9aff9e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(154, 255, 158, 0.3);
-        }
+        .effects-badge { background: rgba(74, 144, 226, 0.2); color: #4a90e2; border-color: rgba(74, 144, 226, 0.3); }
+        .sticker-badge { background: rgba(154, 255, 158, 0.2); color: #9aff9e; border-color: rgba(154, 255, 158, 0.3); }
 
         .image-container {
             width: 384px;
             height: 128px;
             background:
-                    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05)),
-                    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05));
+                    linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.08) 75%, rgba(255,255,255,0.08)),
+                    linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.08) 75%, rgba(255,255,255,0.08));
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             position: relative;
+            margin: 0 auto;
         }
 
         .preview-image {
@@ -128,18 +117,6 @@
             height: 100%;
             display: block;
             object-fit: contain;
-        }
-
-        .preview-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            font-size: 1rem;
-            text-align: center;
-            padding: 20px;
         }
 
         header {
@@ -156,28 +133,20 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #a0a0c0;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
         .editor-panel {
             background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 24px 22px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
         }
 
         .panel-title {
@@ -189,7 +158,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         label {
@@ -208,11 +177,11 @@
 
         .value-display {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             color: #fad0c4;
-            min-width: 60px;
+            min-width: 55px;
             text-align: center;
         }
 
@@ -221,81 +190,60 @@
             padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
             font-size: 1rem;
             font-family: 'Noto Sans SC', sans-serif;
         }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: #ff9a9e;
-            box-shadow: 0 0 0 2px rgba(255, 154, 158, 0.2);
-        }
-
         input[type="range"] {
-            padding: 10px 0;
-            height: 30px;
+            padding: 0;
+            height: 36px;
+            accent-color: #ff9a9e;
         }
 
         input[type="file"] {
             padding: 10px;
-            cursor: pointer;
         }
 
         input[type="file"]::file-selector-button {
             background: rgba(255, 154, 158, 0.2);
             border: 1px solid rgba(255, 154, 158, 0.3);
             color: #ff9a9e;
-            padding: 8px 15px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
             cursor: pointer;
-            margin-right: 10px;
             font-family: 'Noto Sans SC', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        input[type="file"]::file-selector-button:hover {
-            background: rgba(255, 154, 158, 0.3);
-        }
-
-        .position-controls {
-            margin-top: 10px;
+            transition: all 0.2s;
         }
 
         .position-group {
             background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
         }
 
         .position-title {
             font-size: 1rem;
             font-weight: bold;
             color: #fad0c4;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             text-align: center;
-        }
-
-        .position-slider {
-            margin-bottom: 15px;
         }
 
         .slider-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .slider-container label {
-            width: 30px;
+            width: 32px;
             margin-bottom: 0;
-            font-size: 0.9rem;
-        }
-
-        .slider-container input[type="range"] {
-            flex: 1;
+            font-size: 0.8rem;
+            color: #aaa;
         }
 
         .button-group {
@@ -306,121 +254,89 @@
 
         button {
             flex: 1;
-            padding: 15px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
-            font-family: 'Noto Sans SC', sans-serif;
-            font-size: 1.1rem;
+            border-radius: 60px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            font-size: 1rem;
         }
 
         .generate-btn {
             background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
             color: #1a1a2e;
         }
-
-        .generate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(255, 154, 158, 0.4);
-        }
-
         .download-btn {
             background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
             color: #1a1a2e;
         }
 
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        /* 贴纸控制区域样式 */
+        /* 贴纸区域 */
         .sticker-controls {
             background: rgba(154, 255, 158, 0.05);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 24px;
             border: 2px dashed rgba(154, 255, 158, 0.3);
         }
 
-        .sticker-controls-title {
-            font-size: 1.2rem;
-            color: #9aff9e;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-
         .sticker-list {
-            margin-bottom: 20px;
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
+            margin: 15px 0;
         }
 
         .sticker-item {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-
-        .sticker-item:hover {
-            background: rgba(154, 255, 158, 0.1);
-        }
-
         .sticker-item.active {
             background: rgba(154, 255, 158, 0.2);
             border-color: #9aff9e;
         }
-
         .sticker-item-header {
+            flex: 2;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
-
         .sticker-item-name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #9aff9e;
             font-weight: bold;
+            max-width: 130px;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 70%;
         }
-
         .sticker-item-remove {
-            background: rgba(255, 100, 100, 0.2);
-            color: #ff6464;
+            background: rgba(255, 100, 100, 0.25);
             border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 0.8rem;
+            color: #ff8a8a;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-
-        .sticker-item-remove:hover {
-            background: rgba(255, 100, 100, 0.3);
-        }
-
         .sticker-preview-small {
-            width: 100%;
-            height: 60px;
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
         }
-
         .sticker-preview-small img {
             max-width: 100%;
             max-height: 100%;
@@ -428,75 +344,51 @@
         }
 
         .sticker-control-panel {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
-        .no-sticker-selected {
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 18px;
+            padding: 16px;
+            margin-top: 12px;
         }
 
         .sticker-control-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
         }
-
         .sticker-control-action-btn {
             flex: 1;
             padding: 10px;
             background: rgba(154, 255, 158, 0.1);
             color: #9aff9e;
             border: 1px solid rgba(154, 255, 158, 0.3);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            border-radius: 40px;
+            font-size: 0.85rem;
         }
 
-        .sticker-control-action-btn:hover {
-            background: rgba(154, 255, 158, 0.2);
+        .font-select {
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.2) 0%, rgba(250, 208, 196, 0.2) 100%);
+            border: 2px solid rgba(255, 154, 158, 0.4);
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fad0c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
         }
 
-        .sticker-control-action-btn.remove-all {
-            background: rgba(255, 100, 100, 0.1);
-            color: #ff6464;
-            border-color: rgba(255, 100, 100, 0.3);
+        .custom-font-input {
+            margin-top: 12px;
+            padding: 14px;
+            background: rgba(74, 144, 226, 0.12);
+            border-radius: 14px;
+            display: none;
         }
+        .custom-font-input.active { display: block; }
 
-        .sticker-control-action-btn.remove-all:hover {
-            background: rgba(255, 100, 100, 0.2);
-        }
-
-        .text-sizes {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .text-size-group {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .text-size-label {
-            font-size: 0.9rem;
-            color: #b0b0d0;
-            margin-bottom: 8px;
-        }
-
-        .text-size-value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fad0c4;
+        .font-info {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: 8px;
         }
 
         .instructions {
@@ -519,255 +411,89 @@
             margin-bottom: 8px;
         }
 
-        .effects-details {
-            background: rgba(74, 144, 226, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            border-left: 4px solid #4a90e2;
-        }
-
-        .effects-details h4 {
-            color: #4a90e2;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        .effects-details ul {
-            padding-left: 20px;
-            font-size: 0.9rem;
-        }
-
-        /* 字体选择框样式 */
-        .font-select-container {
-            position: relative;
-        }
-
-        .font-select {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            background: linear-gradient(135deg, rgba(255, 154, 158, 0.15) 0%, rgba(250, 208, 196, 0.15) 100%);
-            border: 2px solid rgba(255, 154, 158, 0.3);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1rem;
-            font-family: 'Noto Sans SC', sans-serif;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fad0c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.1);
-        }
-
-        .font-select:hover {
-            background: linear-gradient(135deg, rgba(255, 154, 158, 0.25) 0%, rgba(250, 208, 196, 0.25) 100%);
-            border-color: rgba(255, 154, 158, 0.5);
-            box-shadow: 0 6px 15px rgba(255, 154, 158, 0.2);
-        }
-
-        .font-select:focus {
-            outline: none;
-            border-color: #ff9a9e;
-            background: linear-gradient(135deg, rgba(255, 154, 158, 0.3) 0%, rgba(250, 208, 196, 0.3) 100%);
-            box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.3);
-        }
-
-        .font-select option {
-            background: #1a1a2e;
-            color: #fff;
-            padding: 10px;
-            font-family: 'Noto Sans SC', sans-serif;
-        }
-
-        .font-select optgroup {
-            background: #2b2d42;
-            color: #fad0c4;
-            font-weight: bold;
-            font-family: 'Noto Sans SC', sans-serif;
-        }
-
-        .custom-font-input {
-            margin-top: 15px;
-            display: none;
-            padding: 15px;
-            background: rgba(74, 144, 226, 0.1);
-            border-radius: 8px;
-            border-left: 3px solid #4a90e2;
-        }
-
-        .custom-font-input.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .custom-font-input label {
-            color: #4a90e2;
-            font-weight: bold;
-        }
-
-        .font-info {
-            font-size: 0.85rem;
-            color: #a0a0c0;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
-
-        .font-preview-label {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 4px 10px;
-            background: rgba(255, 154, 158, 0.1);
-            color: #ff9a9e;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(255, 154, 158, 0.2);
-        }
-
-        @media (max-width: 900px) {
+        /* 手机端基础样式 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .subtitle {
+                font-size: 0.75rem;
+            }
+            .editor-panel {
+                padding: 16px 14px;
+            }
+            .panel-title {
+                font-size: 1.2rem;
+            }
             .image-container {
                 width: 100%;
                 max-width: 384px;
-                height: 128px;
+                height: auto;
+                aspect-ratio: 384 / 128;
             }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .text-sizes {
-                grid-template-columns: 1fr;
-            }
-
-            .preview-header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-            }
-
-            .preview-badges {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .sticker-list {
-                max-height: 150px;
-            }
-        }
-
-        @media (max-width: 480px) {
             .button-group {
                 flex-direction: column;
+                gap: 12px;
             }
-
-            .slider-container {
+            button {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            .sticker-item {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
             }
-
-            .slider-container label {
-                width: auto;
+            .sticker-item-header {
+                width: 100%;
             }
-
-            .font-select {
-                padding: 10px 40px 10px 12px;
-                font-size: 0.95rem;
-            }
-
             .sticker-control-actions {
                 flex-direction: column;
             }
+            .sticker-control-action-btn {
+                width: 100%;
+            }
+            .back-home-btn {
+                top: 10px !important;
+                right: 12px !important;
+                width: 40px !important;
+                height: 40px !important;
+            }
+            .back-home-btn .material-icons {
+                font-size: 18px !important;
+            }
         }
 
-        /* 蓝色置顶返回按钮 */
+        /* 蓝色返回按钮 */
         .back-home-btn {
             position: fixed;
-            top: 20px; /* 置顶 */
+            top: 20px;
             right: 30px;
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            background: linear-gradient(135deg, #1e90ff, #0066cc);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 10000;
-            box-shadow:
-                    0 6px 20px rgba(30, 144, 255, 0.4),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+            transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            animation: slideInFromTop 0.5s ease forwards;
-            animation-delay: 0.3s;
+            backdrop-filter: blur(8px);
         }
-
-        /* 从上向下滑入动画 */
-        @keyframes slideInFromTop {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
         .back-home-btn:hover {
-            transform: translateY(-2px) scale(1.08);
-            box-shadow:
-                    0 10px 30px rgba(30, 144, 255, 0.5),
-                    0 0 0 4px rgba(30, 144, 255, 0.1),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
+            transform: scale(1.08);
+            background: linear-gradient(135deg, #00bfff, #0059b3);
         }
-
-        .back-home-btn:active {
-            transform: translateY(1px) scale(0.98);
-            box-shadow:
-                    0 3px 10px rgba(30, 144, 255, 0.3),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
         .back-home-btn .material-icons {
             color: white;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
         }
-
-        .back-home-btn:hover .material-icons {
-            transform: translateX(-2px);
-        }
-
-        /* 添加发光效果 */
-        .back-home-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 100%);
-            pointer-events: none;
-        }
-
-        /* 添加返回文字提示（悬停时显示） */
         .back-home-btn::after {
             content: '返回首页';
             position: absolute;
@@ -775,68 +501,21 @@
             right: 0;
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 11px;
             white-space: nowrap;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
             pointer-events: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.2s;
         }
-
         .back-home-btn:hover::after {
             opacity: 1;
-            transform: translateY(0);
         }
 
-        /* 响应式调整 */
         @media (max-width: 768px) {
-            .back-home-btn {
-                top: 15px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 22px;
-            }
-
             .back-home-btn::after {
-                font-size: 11px;
-                padding: 5px 10px;
-            }
-        }
-
-        /* 手机横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .back-home-btn {
-                top: 10px;
-                right: 15px;
-                width: 44px;
-                height: 44px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
-        }
-
-        /* 超小屏幕 */
-        @media (max-width: 480px) {
-            .back-home-btn {
-                width: 44px;
-                height: 44px;
-                top: 12px;
-                right: 15px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
+                display: none;
             }
         }
     </style>
@@ -847,41 +526,34 @@
     <span class="material-icons">←</span>
 </div>
 
-<!-- 初始预览区域 -->
 <div id="initialPreview">
     <div class="container">
-        <div style="text-align: center; margin-bottom: 15px;">
-            <div style="font-size: 1.2rem; color: #fad0c4; font-weight: bold; margin-bottom: 10px;">标题图预览</div>
-            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
+        <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 1rem; color: #fad0c4; font-weight: bold;">标题图预览</div>
+            <div style="display: flex; justify-content: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
                 <div class="dimension-badge">384 × 128 px</div>
-                <div class="sticker-badge" id="stickerBadge" style="display: none;">贴纸功能 (0)</div>
+                <div class="sticker-badge" id="stickerBadge" style="display: none;">贴纸 (0)</div>
             </div>
         </div>
         <div class="image-container">
-            <div id="previewPlaceholder" class="preview-placeholder">
-                编辑下方内容实时预览效果<br>
-                <small>网格表示透明区域</small>
-            </div>
+            <div id="previewPlaceholder" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #888;">编辑内容实时预览</div>
             <canvas id="resultCanvas" style="display: none;"></canvas>
         </div>
     </div>
 </div>
 
-<!-- 吸附的预览区域 -->
 <div class="sticky-preview" id="stickyPreview">
     <div class="sticky-preview-container">
         <div class="preview-header">
-            <div class="preview-title">标题图预览</div>
+            <div class="preview-title">📌 标题图预览</div>
             <div class="preview-badges">
-                <div class="dimension-badge">384 × 128 像素</div>
-                <div class="effects-badge">描边 + 投影效果</div>
-                <div class="sticker-badge" id="stickyStickerBadge" style="display: none;">贴纸功能 (0)</div>
+                <div class="dimension-badge">384×128</div>
+                <div class="effects-badge">描边+投影</div>
+                <div class="sticker-badge" id="stickyStickerBadge" style="display: none;">贴纸 (0)</div>
             </div>
         </div>
-        <div class="image-container">
-            <div id="stickyPreviewPlaceholder" class="preview-placeholder">
-                预览加载中...
-            </div>
+        <div class="image-container" id="stickyImageContainer">
+            <div id="stickyPreviewPlaceholder" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #888;">预览中...</div>
             <canvas id="stickyResultCanvas" style="display: none;"></canvas>
         </div>
     </div>
@@ -890,971 +562,325 @@
 <div class="container">
     <header>
         <h1>自制谱标题图生成器</h1>
-        <p class="subtitle">生成舞立方自制谱官方规定大小和格式图片，尺寸为384×128px</p>
+        <p class="subtitle">舞立方官方规格 384×128px | 实时预览 | 多贴纸 | 自定义字体</p>
     </header>
-
     <div class="main-content">
-        <!-- 编辑区域 -->
         <div class="editor-panel">
-            <h2 class="panel-title">编辑内容</h2>
+            <h2 class="panel-title">🎨 编辑内容</h2>
+            <div class="form-group"><label>谱师</label><input type="text" id="mainTitle" value="谱面设计：输入谱师名称"></div>
+            <div class="form-group"><label>歌名</label><input type="text" id="subTitle" value="歌曲名称"></div>
+            <div class="form-group"><label>曲师</label><input type="text" id="author" value="曲师名称"></div>
 
             <div class="form-group">
-                <label for="mainTitle">谱师</label>
-                <input type="text" id="mainTitle" value="谱面设计：输入谱师名称">
+                <label>选择字体</label>
+                <select id="fontSelect" class="font-select">
+                    <optgroup label="默认字体"><option value="'Noto Sans SC', sans-serif">思源黑体 (默认)</option></optgroup>
+                    <optgroup label="中文字体">
+                        <option value="'Microsoft YaHei', '微软雅黑', sans-serif">微软雅黑</option>
+                        <option value="'SimHei', '黑体', sans-serif">黑体</option>
+                        <option value="'SimSun', '宋体', serif">宋体</option>
+                        <option value="'KaiTi', '楷体', serif">楷体</option>
+                        <option value="'YouYuan', '幼圆', sans-serif">幼圆</option>
+                    </optgroup>
+                    <optgroup label="英文字体"><option value="Arial, sans-serif">Arial</option><option value="'Times New Roman', serif">Times</option></optgroup>
+                    <option value="custom">自定义字体...</option>
+                </select>
+                <div id="customFontInput" class="custom-font-input"><input type="text" id="customFontName" placeholder="例如: '华文行楷', 'PingFang SC'"></div>
             </div>
 
-            <div class="form-group">
-                <label for="subTitle">歌名</label>
-                <input type="text" id="subTitle" value="歌曲名称">
-            </div>
-
-            <div class="form-group">
-                <label for="author">曲师</label>
-                <input type="text" id="author" value="曲师名称">
-            </div>
-
-            <!-- 字体选择功能 -->
-            <div class="form-group">
-                <label for="fontSelect">选择字体 <span class="font-preview-label">预览效果</span></label>
-                <div class="font-select-container">
-                    <select id="fontSelect" class="font-select">
-                        <optgroup label="默认字体">
-                            <option value="'Noto Sans SC', sans-serif">思源黑体 (默认)</option>
-                        </optgroup>
-                        <optgroup label="中文字体">
-                            <option value="'Microsoft YaHei', '微软雅黑', sans-serif">微软雅黑</option>
-                            <option value="'SimHei', '黑体', sans-serif">黑体</option>
-                            <option value="'SimSun', '宋体', serif">宋体</option>
-                            <option value="'FangSong', '仿宋', serif">仿宋</option>
-                            <option value="'KaiTi', '楷体', serif">楷体</option>
-                            <option value="'NSimSun', '新宋体', serif">新宋体</option>
-                            <option value="'YouYuan', '幼圆', sans-serif">幼圆</option>
-                            <option value="'LiSu', '隶书', serif">隶书</option>
-                            <option value="'STXihei', '华文细黑', sans-serif">华文细黑</option>
-                            <option value="'STHeiti', '华文黑体', sans-serif">华文黑体</option>
-                            <option value="'STSong', '华文宋体', serif">华文宋体</option>
-                            <option value="'STKaiti', '华文楷体', serif">华文楷体</option>
-                            <option value="'STFangsong', '华文仿宋', serif">华文仿宋</option>
-                        </optgroup>
-                        <optgroup label="英文字体">
-                            <option value="Arial, sans-serif">Arial</option>
-                            <option value="Helvetica, sans-serif">Helvetica</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Georgia, serif">Georgia</option>
-                            <option value="'Courier New', monospace">Courier New</option>
-                            <option value="Verdana, sans-serif">Verdana</option>
-                            <option value="Tahoma, sans-serif">Tahoma</option>
-                            <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
-                            <option value="Impact, sans-serif">Impact</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
-                        </optgroup>
-                        <option value="custom">自定义字体...</option>
-                    </select>
-                </div>
-                <div class="font-info">选择您系统中已安装的字体，默认为思源黑体。选择后会实时预览效果。</div>
-
-                <div id="customFontInput" class="custom-font-input">
-                    <label for="customFontName">自定义字体名称</label>
-                    <input type="text" id="customFontName" placeholder="输入字体名称，如: '华文行楷', '方正舒体'">
-                    <div class="font-info">请输入您系统中已安装的字体名称，确保拼写正确。输入后会实时预览效果。</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="label-with-value">
-                    谱师大小
-                    <span class="value-display" id="mainTitleSizeValue">16px</span>
-                </label>
-                <input type="range" id="mainTitleSize" min="10" max="32" step="1" value="16">
-            </div>
-
-            <div class="form-group">
-                <label class="label-with-value">
-                    歌名大小
-                    <span class="value-display" id="subTitleSizeValue">25px</span>
-                </label>
-                <input type="range" id="subTitleSize" min="12" max="40" step="1" value="25">
-            </div>
-
-            <div class="form-group">
-                <label class="label-with-value">
-                    曲师大小
-                    <span class="value-display" id="authorSizeValue">12px</span>
-                </label>
-                <input type="range" id="authorSize" min="8" max="24" step="1" value="12">
-            </div>
+            <div class="form-group"><label class="label-with-value">谱师大小<span id="mainTitleSizeValue">16px</span></label><input type="range" id="mainTitleSize" min="10" max="32" value="16"></div>
+            <div class="form-group"><label class="label-with-value">歌名大小<span id="subTitleSizeValue">25px</span></label><input type="range" id="subTitleSize" min="12" max="40" value="25"></div>
+            <div class="form-group"><label class="label-with-value">曲师大小<span id="authorSizeValue">12px</span></label><input type="range" id="authorSize" min="8" max="24" value="12"></div>
 
             <div class="form-group">
                 <label>文字位置调整</label>
-                <div class="position-controls">
-                    <div class="position-group">
-                        <div class="position-title">谱师位置</div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>水平位置 (X轴)</span>
-                                <span class="value-display" id="mainTitleXValue">192</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="mainTitleX" min="0" max="384" step="1" value="192">
-                                <label>384</label>
-                            </div>
-                        </div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>垂直位置 (Y轴)</span>
-                                <span class="value-display" id="mainTitleYValue">40</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="mainTitleY" min="0" max="128" step="1" value="40">
-                                <label>128</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="position-group">
-                        <div class="position-title">歌名位置</div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>水平位置 (X轴)</span>
-                                <span class="value-display" id="subTitleXValue">192</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="subTitleX" min="0" max="384" step="1" value="192">
-                                <label>384</label>
-                            </div>
-                        </div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>垂直位置 (Y轴)</span>
-                                <span class="value-display" id="subTitleYValue">75</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="subTitleY" min="0" max="128" step="1" value="75">
-                                <label>128</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="position-group">
-                        <div class="position-title">曲师位置</div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>水平位置 (X轴)</span>
-                                <span class="value-display" id="authorXValue">192</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="authorX" min="0" max="384" step="1" value="192">
-                                <label>384</label>
-                            </div>
-                        </div>
-                        <div class="position-slider">
-                            <div class="label-with-value">
-                                <span>垂直位置 (Y轴)</span>
-                                <span class="value-display" id="authorYValue">105</span>
-                            </div>
-                            <div class="slider-container">
-                                <label>0</label>
-                                <input type="range" id="authorY" min="0" max="128" step="1" value="105">
-                                <label>128</label>
-                            </div>
-                        </div>
-                    </div>
+                <div class="position-group"><div class="position-title">谱师位置</div>
+                    <div class="slider-container"><label>X</label><input type="range" id="mainTitleX" min="0" max="384" value="192"><span class="value-display" id="mainTitleXValue">192</span></div>
+                    <div class="slider-container"><label>Y</label><input type="range" id="mainTitleY" min="0" max="128" value="40"><span class="value-display" id="mainTitleYValue">40</span></div>
+                </div>
+                <div class="position-group"><div class="position-title">歌名位置</div>
+                    <div class="slider-container"><label>X</label><input type="range" id="subTitleX" min="0" max="384" value="192"><span id="subTitleXValue" class="value-display">192</span></div>
+                    <div class="slider-container"><label>Y</label><input type="range" id="subTitleY" min="0" max="128" value="75"><span id="subTitleYValue" class="value-display">75</span></div>
+                </div>
+                <div class="position-group"><div class="position-title">曲师位置</div>
+                    <div class="slider-container"><label>X</label><input type="range" id="authorX" min="0" max="384" value="192"><span id="authorXValue" class="value-display">192</span></div>
+                    <div class="slider-container"><label>Y</label><input type="range" id="authorY" min="0" max="128" value="105"><span id="authorYValue" class="value-display">105</span></div>
                 </div>
             </div>
 
-            <!-- 多贴纸功能 -->
+            <!-- 贴纸模块 -->
             <div class="sticker-controls">
-                <div class="sticker-controls-title">贴纸功能</div>
-
-                <div class="form-group">
-                    <label for="stickerUpload">上传贴纸图片</label>
-                    <input type="file" id="stickerUpload" accept="image/*" multiple>
-                    <div class="font-info">支持PNG、JPG、GIF等格式，可多选上传，建议使用透明背景的PNG图片</div>
-                </div>
-
-                <div class="sticker-list" id="stickerList">
-                    <div class="no-sticker-selected" id="noStickersMessage">
-                        暂无贴纸，请上传图片
-                    </div>
-                </div>
-
+                <div class="sticker-controls-title">✨ 贴纸功能 (可多图层)</div>
+                <input type="file" id="stickerUpload" accept="image/*" multiple>
+                <div class="sticker-list" id="stickerList"><div class="no-sticker-selected" id="noStickersMessage">暂无贴纸，上传图片</div></div>
                 <div class="sticker-control-panel" id="stickerControlPanel">
-                    <div class="no-sticker-selected" id="noStickerSelectedMessage">
-                        请选择一个贴纸进行编辑
-                    </div>
-
+                    <div id="noStickerSelectedMessage" class="no-sticker-selected">⚡ 点击贴纸进行编辑</div>
                     <div id="stickerControls" style="display: none;">
-                        <div class="form-group">
-                            <label class="label-with-value">
-                                贴纸大小
-                                <span class="value-display" id="currentStickerSizeValue">100%</span>
-                            </label>
-                            <input type="range" id="currentStickerSize" min="1" max="200" step="1" value="100">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="label-with-value">
-                                贴纸旋转
-                                <span class="value-display" id="currentStickerRotationValue">0°</span>
-                            </label>
-                            <input type="range" id="currentStickerRotation" min="0" max="360" step="1" value="0">
-                        </div>
-
-                        <div class="position-controls">
-                            <div class="position-group">
-                                <div class="position-title">贴纸位置</div>
-                                <div class="position-slider">
-                                    <div class="label-with-value">
-                                        <span>水平位置 (X轴)</span>
-                                        <span class="value-display" id="currentStickerXValue">192</span>
-                                    </div>
-                                    <div class="slider-container">
-                                        <label>0</label>
-                                        <input type="range" id="currentStickerX" min="0" max="384" step="1" value="192">
-                                        <label>384</label>
-                                    </div>
-                                </div>
-                                <div class="position-slider">
-                                    <div class="label-with-value">
-                                        <span>垂直位置 (Y轴)</span>
-                                        <span class="value-display" id="currentStickerYValue">64</span>
-                                    </div>
-                                    <div class="slider-container">
-                                        <label>0</label>
-                                        <input type="range" id="currentStickerY" min="0" max="128" step="1" value="64">
-                                        <label>128</label>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group"><label>大小 <span id="currentStickerSizeValue">100%</span></label><input type="range" id="currentStickerSize" min="10" max="200" value="100"></div>
+                        <div class="form-group"><label>旋转 <span id="currentStickerRotationValue">0°</span></label><input type="range" id="currentStickerRotation" min="0" max="360" value="0"></div>
+                        <div class="position-group"><div class="position-title">贴纸位置</div>
+                            <div class="slider-container"><label>X</label><input type="range" id="currentStickerX" min="0" max="384" value="192"><span id="currentStickerXValue">192</span></div>
+                            <div class="slider-container"><label>Y</label><input type="range" id="currentStickerY" min="0" max="128" value="64"><span id="currentStickerYValue">64</span></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="sticker-control-actions">
-                    <button type="button" id="moveStickerUpBtn" class="sticker-control-action-btn">上移图层</button>
-                    <button type="button" id="moveStickerDownBtn" class="sticker-control-action-btn">下移图层</button>
-                    <button type="button" id="removeAllStickersBtn" class="sticker-control-action-btn remove-all">清除所有贴纸</button>
+                    <button type="button" id="moveStickerUpBtn" class="sticker-control-action-btn">⬆ 上移图层</button>
+                    <button type="button" id="moveStickerDownBtn" class="sticker-control-action-btn">⬇ 下移图层</button>
+                    <button type="button" id="removeAllStickersBtn" class="sticker-control-action-btn remove-all">🗑 清除所有贴纸</button>
                 </div>
             </div>
 
             <div class="button-group">
-                <button class="generate-btn" id="generateBtn">显示预览</button>
-                <button class="download-btn" id="downloadBtn">下载图片</button>
+                <button class="generate-btn" id="generateBtn">🔄 刷新预览</button>
+                <button class="download-btn" id="downloadBtn">💾 下载图片 (PNG)</button>
             </div>
         </div>
     </div>
-
-    <div class="instructions">
-        <h3>使用说明</h3>
-        <ul>
-            <li>修改标题、副标题和作者名称（现在无字数限制）</li>
-            <li>如果您的字体不在列表中，可以选择"自定义字体..."并输入字体名称</li>
-            <li>可以上传多个贴纸图片，每个贴纸都可以独立调整位置、大小（1%-200%）和旋转角度</li>
-            <li>点击贴纸列表中的项目选择要编辑的贴纸</li>
-            <li>使用"上移图层"/"下移图层"调整贴纸的显示顺序</li>
-            <li>使用滑块调整不同文本的大小（主标题默认16px，副标题25px，作者12px）</li>
-            <li>使用滑块调整X/Y坐标值来改变文字位置（0-384为X轴，0-128为Y轴）</li>
-            <li>点击"下载图片"保存PNG格式到本地</li>
-        </ul>
-    </div>
+    <div class="instructions"><h3>📖 使用说明</h3><ul><li>文字实时预览，支持描边+投影效果，字体加粗更清晰</li><li>上传多贴纸独立调整位置/大小/旋转，点击贴纸激活编辑</li><li>支持自定义字体 (需系统已安装)</li><li>滚动页面时顶部会吸附小预览窗</li></ul></div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 元素引用
-        const mainTitleInput = document.getElementById('mainTitle');
-        const subTitleInput = document.getElementById('subTitle');
-        const authorInput = document.getElementById('author');
+    (function(){
+        const ge = id => document.getElementById(id);
+        const mainTitle=ge('mainTitle'), subTitle=ge('subTitle'), author=ge('author');
+        const ms=ge('mainTitleSize'), ss=ge('subTitleSize'), as=ge('authorSize');
+        const msv=ge('mainTitleSizeValue'), ssv=ge('subTitleSizeValue'), asv=ge('authorSizeValue');
+        const mX=ge('mainTitleX'), mY=ge('mainTitleY'), sX=ge('subTitleX'), sY=ge('subTitleY'), aX=ge('authorX'), aY=ge('authorY');
+        const mXv=ge('mainTitleXValue'),mYv=ge('mainTitleYValue'),sXv=ge('subTitleXValue'),sYv=ge('subTitleYValue'),aXv=ge('authorXValue'),aYv=ge('authorYValue');
+        const fontSelect=ge('fontSelect'),customDiv=ge('customFontInput'),customName=ge('customFontName');
+        const stickerUpload=ge('stickerUpload'),stickerListDiv=ge('stickerList'),noMsg=ge('noStickersMessage');
+        const stickerControlsDiv=ge('stickerControls'),noSelectedMsg=ge('noStickerSelectedMessage');
+        const curSize=ge('currentStickerSize'),curRot=ge('currentStickerRotation'),curX=ge('currentStickerX'),curY=ge('currentStickerY');
+        const curSizeV=ge('currentStickerSizeValue'),curRotV=ge('currentStickerRotationValue'),curXV=ge('currentStickerXValue'),curYV=ge('currentStickerYValue');
+        const moveUp=ge('moveStickerUpBtn'),moveDown=ge('moveStickerDownBtn'),removeAll=ge('removeAllStickersBtn');
+        const generateBtn=ge('generateBtn'),downloadBtn=ge('downloadBtn');
+        const canvas=ge('resultCanvas'),stickyCanvas=ge('stickyResultCanvas');
+        const ctx=canvas.getContext('2d'), stickyCtx=stickyCanvas.getContext('2d');
+        canvas.width=384; canvas.height=128; stickyCanvas.width=384; stickyCanvas.height=128;
 
-        const mainTitleSize = document.getElementById('mainTitleSize');
-        const subTitleSize = document.getElementById('subTitleSize');
-        const authorSize = document.getElementById('authorSize');
+        let stickers=[], activeIdx=-1, selectedFont="'Noto Sans SC', sans-serif";
+        const strokeWidth=2, strokeOpacity=0.54, shadowColor='rgba(0,0,0,0.88)', shadowAngle=130*Math.PI/180, shadowDistance=5, shadowBlur=5;
+        const shadowOffX=Math.cos(shadowAngle)*shadowDistance, shadowOffY=Math.sin(shadowAngle)*shadowDistance;
 
-        const mainTitleSizeValue = document.getElementById('mainTitleSizeValue');
-        const subTitleSizeValue = document.getElementById('subTitleSizeValue');
-        const authorSizeValue = document.getElementById('authorSizeValue');
+        // 检测是否为移动端
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
-        // 位置滑块元素
-        const mainTitleX = document.getElementById('mainTitleX');
-        const mainTitleY = document.getElementById('mainTitleY');
-        const subTitleX = document.getElementById('subTitleX');
-        const subTitleY = document.getElementById('subTitleY');
-        const authorX = document.getElementById('authorX');
-        const authorY = document.getElementById('authorY');
+        // 动态调整手机端悬浮预览尺寸
+        function adjustMobileStickySize() {
+            if (!isMobile) return;
 
-        // 位置值显示元素
-        const mainTitleXValue = document.getElementById('mainTitleXValue');
-        const mainTitleYValue = document.getElementById('mainTitleYValue');
-        const subTitleXValue = document.getElementById('subTitleXValue');
-        const subTitleYValue = document.getElementById('subTitleYValue');
-        const authorXValue = document.getElementById('authorXValue');
-        const authorYValue = document.getElementById('authorYValue');
+            const stickyContainer = ge('stickyImageContainer');
+            if (!stickyContainer) return;
 
-        // 字体选择元素
-        const fontSelect = document.getElementById('fontSelect');
-        const customFontInput = document.getElementById('customFontInput');
-        const customFontName = document.getElementById('customFontName');
+            // 获取屏幕宽度，预留左右边距
+            const screenWidth = window.innerWidth;
+            let containerWidth = screenWidth - 40;
+            if (containerWidth > 280) containerWidth = 280;
+            if (containerWidth < 200) containerWidth = 200;
 
-        // 贴纸相关元素
-        const stickerUpload = document.getElementById('stickerUpload');
-        const stickerList = document.getElementById('stickerList');
-        const noStickersMessage = document.getElementById('noStickersMessage');
-        const stickerControls = document.getElementById('stickerControls');
-        const noStickerSelectedMessage = document.getElementById('noStickerSelectedMessage');
+            // 按比例计算高度 (384:128 = 3:1)
+            const containerHeight = containerWidth / 3;
 
-        // 贴纸控制滑块元素
-        const currentStickerSize = document.getElementById('currentStickerSize');
-        const currentStickerRotation = document.getElementById('currentStickerRotation');
-        const currentStickerX = document.getElementById('currentStickerX');
-        const currentStickerY = document.getElementById('currentStickerY');
+            stickyContainer.style.width = containerWidth + 'px';
+            stickyContainer.style.height = containerHeight + 'px';
+            stickyContainer.style.margin = '0 auto';
 
-        const currentStickerSizeValue = document.getElementById('currentStickerSizeValue');
-        const currentStickerRotationValue = document.getElementById('currentStickerRotationValue');
-        const currentStickerXValue = document.getElementById('currentStickerXValue');
-        const currentStickerYValue = document.getElementById('currentStickerYValue');
+            const stickyCanvasElem = ge('stickyResultCanvas');
+            if (stickyCanvasElem) {
+                stickyCanvasElem.style.width = '100%';
+                stickyCanvasElem.style.height = '100%';
+            }
 
-        // 贴纸控制按钮
-        const moveStickerUpBtn = document.getElementById('moveStickerUpBtn');
-        const moveStickerDownBtn = document.getElementById('moveStickerDownBtn');
-        const removeAllStickersBtn = document.getElementById('removeAllStickersBtn');
-
-        // 徽章元素
-        const stickerBadge = document.getElementById('stickerBadge');
-        const stickyStickerBadge = document.getElementById('stickyStickerBadge');
-
-        // 预览相关元素
-        const generateBtn = document.getElementById('generateBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const previewPlaceholder = document.getElementById('previewPlaceholder');
-        const stickyPreviewPlaceholder = document.getElementById('stickyPreviewPlaceholder');
-        const resultCanvas = document.getElementById('resultCanvas');
-        const stickyResultCanvas = document.getElementById('stickyResultCanvas');
-        const initialPreview = document.getElementById('initialPreview');
-        const stickyPreview = document.getElementById('stickyPreview');
-
-        // Canvas上下文
-        const ctx = resultCanvas.getContext('2d');
-        const stickyCtx = stickyResultCanvas.getContext('2d');
-
-        // 设置画布尺寸 - 384x128像素
-        resultCanvas.width = 384;
-        resultCanvas.height = 128;
-        stickyResultCanvas.width = 384;
-        stickyResultCanvas.height = 128;
-
-        // 描边和投影参数（固定不可调整）
-        const strokeWidth = 2;
-        const strokeOpacity = 0.54;
-        const shadowColor = 'rgba(0, 0, 0, 0.88)';
-        const shadowAngle = 130 * (Math.PI / 180);
-        const shadowDistance = 5;
-        const shadowBlur = 5;
-
-        // 计算投影偏移量
-        const shadowOffsetX = Math.cos(shadowAngle) * shadowDistance;
-        const shadowOffsetY = Math.sin(shadowAngle) * shadowDistance;
-
-        // 当前选中的字体
-        let selectedFont = "'Noto Sans SC', sans-serif";
-
-        // 贴纸相关变量
-        let stickers = [];
-        let activeStickerIndex = -1;
-
-        // 滚动监听相关
-        let isStickyActive = false;
-        let initialPreviewHeight = 0;
-        let initialPreviewTop = 0;
-
-        // 更新字体大小显示
-        function updateSizeDisplays() {
-            mainTitleSizeValue.textContent = mainTitleSize.value + 'px';
-            subTitleSizeValue.textContent = subTitleSize.value + 'px';
-            authorSizeValue.textContent = authorSize.value + 'px';
-        }
-
-        // 更新位置值显示
-        function updatePositionDisplays() {
-            mainTitleXValue.textContent = mainTitleX.value;
-            mainTitleYValue.textContent = mainTitleY.value;
-            subTitleXValue.textContent = subTitleX.value;
-            subTitleYValue.textContent = subTitleY.value;
-            authorXValue.textContent = authorX.value;
-            authorYValue.textContent = authorY.value;
-        }
-
-        // 更新贴纸控制值显示
-        function updateStickerDisplays() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
-                const sticker = stickers[activeStickerIndex];
-                currentStickerSizeValue.textContent = sticker.size + '%';
-                currentStickerRotationValue.textContent = sticker.rotation + '°';
-                currentStickerXValue.textContent = sticker.x;
-                currentStickerYValue.textContent = sticker.y;
+            const stickyImg = document.querySelector('.sticky-preview .image-container #stickyResultImage');
+            if (stickyImg) {
+                stickyImg.style.width = '100%';
+                stickyImg.style.height = '100%';
+                stickyImg.style.objectFit = 'contain';
             }
         }
 
-        // 更新贴纸徽章
-        function updateStickerBadge() {
-            const count = stickers.length;
-            if (count > 0) {
-                stickerBadge.textContent = `贴纸功能 (${count})`;
-                stickyStickerBadge.textContent = `贴纸功能 (${count})`;
-                stickerBadge.style.display = 'inline-block';
-                stickyStickerBadge.style.display = 'inline-block';
+        function updateSizes(){msv.innerText=ms.value+'px'; ssv.innerText=ss.value+'px'; asv.innerText=as.value+'px';}
+        function updatePositions(){mXv.innerText=mX.value;mYv.innerText=mY.value;sXv.innerText=sX.value;sYv.innerText=sY.value;aXv.innerText=aX.value;aYv.innerText=aY.value;}
+        function updateStickerBadge(){let c=stickers.length; let show=c>0; if(ge('stickerBadge'))ge('stickerBadge').style.display=show?'inline-block':'none'; if(ge('stickyStickerBadge'))ge('stickyStickerBadge').style.display=show?'inline-block':'none'; if(show){ge('stickerBadge').innerText=`贴纸 (${c})`; ge('stickyStickerBadge').innerText=`贴纸 (${c})`;}}
+
+        class Sticker{constructor(id,name,src,size=100,rot=0,x=192,y=64){this.id=id;this.name=name;this.src=src;this.size=size;this.rotation=rot;this.x=x;this.y=y;this.loaded=false;this.image=new Image(); const self=this; this.image.onload=()=>{self.loaded=true; generateImage();}; this.image.src=src;}}
+
+        function renderStickerList(){stickerListDiv.innerHTML=''; if(stickers.length===0){noMsg.style.display='block'; return;} noMsg.style.display='none'; stickers.forEach((st,idx)=>{let div=document.createElement('div');div.className=`sticker-item ${idx===activeIdx?'active':''}`;div.innerHTML=`<div class="sticker-item-header"><span class="sticker-item-name">${st.name}</span><button class="sticker-item-remove" data-idx="${idx}">移除</button></div><div class="sticker-preview-small"><img src="${st.src}"></div>`; div.addEventListener('click',(e)=>{if(!e.target.classList.contains('sticker-item-remove')) setActive(idx);}); div.querySelector('.sticker-item-remove').addEventListener('click',(e)=>{e.stopPropagation();removeSticker(idx);}); stickerListDiv.appendChild(div);});}
+
+        function setActive(idx){if(idx>=0&&idx<stickers.length){activeIdx=idx; let s=stickers[idx]; curSize.value=s.size;curRot.value=s.rotation;curX.value=s.x;curY.value=s.y; updateStickerCtrlDisplays(); stickerControlsDiv.style.display='block'; noSelectedMsg.style.display='none'; renderStickerList(); generateImage();}else{activeIdx=-1;stickerControlsDiv.style.display='none';noSelectedMsg.style.display='block';renderStickerList();}}
+
+        function updateStickerCtrlDisplays(){if(activeIdx>=0){curSizeV.innerText=curSize.value+'%';curRotV.innerText=curRot.value+'°';curXV.innerText=curX.value;curYV.innerText=curY.value;}}
+
+        function addSticker(name,src){let id=Date.now()+'_'+Math.random(); let st=new Sticker(id,name,src); stickers.push(st); if(stickers.length===1) setActive(0); renderStickerList(); updateStickerBadge(); generateImage();}
+
+        function removeSticker(idx){stickers.splice(idx,1); if(activeIdx>=idx) activeIdx=Math.max(-1,activeIdx-1); if(stickers.length===0) activeIdx=-1; if(activeIdx>=0) setActive(activeIdx); else {stickerControlsDiv.style.display='none'; noSelectedMsg.style.display='block';} renderStickerList(); updateStickerBadge(); generateImage();}
+
+        function removeAllStickers(){stickers=[]; activeIdx=-1; renderStickerList(); updateStickerBadge(); stickerControlsDiv.style.display='none'; noSelectedMsg.style.display='block'; generateImage();}
+        function moveUpLayer(){if(activeIdx>0){[stickers[activeIdx],stickers[activeIdx-1]]=[stickers[activeIdx-1],stickers[activeIdx]]; activeIdx--; renderStickerList(); generateImage();}}
+        function moveDownLayer(){if(activeIdx>=0 && activeIdx<stickers.length-1){[stickers[activeIdx],stickers[activeIdx+1]]=[stickers[activeIdx+1],stickers[activeIdx]]; activeIdx++; renderStickerList(); generateImage();}}
+
+        function wrapText(ctx,text,maxW){let chars=text.split(''),lines=[],cur=''; for(let ch of chars){let test=cur+ch; if(ctx.measureText(test).width<maxW) cur=test; else {lines.push(cur); cur=ch;}} if(cur)lines.push(cur); return lines;}
+
+        // 字体加粗优化：谱师和曲师使用更粗的字体 (900)，歌名使用中等加粗 (600)
+        function drawText(ctx,text,x,y,fontSize,isBold=true){
+            let fontWeight = 'bold';
+            if (isBold) {
+                // 谱师和曲师使用更粗的字体
+                fontWeight = '800';
             } else {
-                stickerBadge.style.display = 'none';
-                stickyStickerBadge.style.display = 'none';
+                // 歌名使用中等加粗，比普通粗一点
+                fontWeight = '600';
+            }
+            ctx.font = `${fontWeight} ${fontSize}px ${selectedFont}`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            let maxW = 344;
+            let lines = wrapText(ctx,text,maxW);
+            for(let i=0;i<lines.length;i++){
+                let lineY=y+i*fontSize*1.2;
+                ctx.save();
+                ctx.shadowColor=shadowColor;
+                ctx.shadowBlur=shadowBlur;
+                ctx.shadowOffsetX=shadowOffX;
+                ctx.shadowOffsetY=shadowOffY;
+                ctx.fillStyle='#ffffff';
+                ctx.fillText(lines[i],x,lineY);
+                ctx.restore();
+                ctx.strokeStyle=`rgba(0,0,0,${strokeOpacity})`;
+                ctx.lineWidth=strokeWidth;
+                ctx.lineJoin='round';
+                ctx.strokeText(lines[i],x,lineY);
+                ctx.fillStyle='#ffffff';
+                ctx.fillText(lines[i],x,lineY);
             }
         }
 
-        // 贴纸对象构造函数
-        function Sticker(id, name, imageSrc, size = 100, rotation = 0, x = 192, y = 64) {
-            this.id = id;
-            this.name = name;
-            this.imageSrc = imageSrc;
-            this.image = new Image();
-            this.loaded = false;
-            this.size = size;
-            this.rotation = rotation;
-            this.x = x;
-            this.y = y;
+        function drawAllStickers(ctx){stickers.forEach(st=>{if(!st.loaded) return; let scale=st.size/100; let rad=st.rotation*Math.PI/180; let w=st.image.width*scale, h=st.image.height*scale; ctx.save(); ctx.translate(st.x,st.y); ctx.rotate(rad); ctx.drawImage(st.image,-w/2,-h/2,w,h); ctx.restore();});}
 
-            const self = this;
-            this.image.onload = function() {
-                self.loaded = true;
-                generateImage();
-            };
-            this.image.src = imageSrc;
-        }
+        function generateImage(){
+            ctx.clearRect(0,0,384,128);
+            stickyCtx.clearRect(0,0,384,128);
+            drawAllStickers(ctx);
+            drawAllStickers(stickyCtx);
+            let main=mainTitle.value||"谱面设计", sub=subTitle.value||"歌曲名称", aut=author.value||"曲师";
+            drawText(ctx,main,parseInt(mX.value),parseInt(mY.value),parseInt(ms.value),true);
+            drawText(stickyCtx,main,parseInt(mX.value),parseInt(mY.value),parseInt(ms.value),true);
+            drawText(ctx,sub,parseInt(sX.value),parseInt(sY.value),parseInt(ss.value),false);
+            drawText(stickyCtx,sub,parseInt(sX.value),parseInt(sY.value),parseInt(ss.value),false);
+            drawText(ctx,aut,parseInt(aX.value),parseInt(aY.value),parseInt(as.value),true);
+            drawText(stickyCtx,aut,parseInt(aX.value),parseInt(aY.value),parseInt(as.value),true);
 
-        // 渲染贴纸列表
-        function renderStickerList() {
-            stickerList.innerHTML = '';
+            canvas.style.display='block';
+            stickyCanvas.style.display='block';
 
-            if (stickers.length === 0) {
-                noStickersMessage.style.display = 'block';
-                return;
-            }
+            let prePlace=ge('previewPlaceholder');
+            if(prePlace)prePlace.style.display='none';
+            let stickyPlace=ge('stickyPreviewPlaceholder');
+            if(stickyPlace)stickyPlace.style.display='none';
 
-            noStickersMessage.style.display = 'none';
+            let imgUrl=canvas.toDataURL();
+            let preImg=document.querySelector('#initialPreview .image-container #resultImage');
+            if(preImg) preImg.remove();
+            let newImg=document.createElement('img');
+            newImg.src=imgUrl;
+            newImg.className='preview-image';
+            newImg.id='resultImage';
+            document.querySelector('#initialPreview .image-container').appendChild(newImg);
 
-            stickers.forEach((sticker, index) => {
-                const stickerItem = document.createElement('div');
-                stickerItem.className = `sticker-item ${index === activeStickerIndex ? 'active' : ''}`;
-                stickerItem.dataset.index = index;
+            let stickyUrl=stickyCanvas.toDataURL();
+            let sImg=document.querySelector('.sticky-preview .image-container #stickyResultImage');
+            if(sImg)sImg.remove();
+            let ns=document.createElement('img');
+            ns.src=stickyUrl;
+            ns.className='preview-image';
+            ns.id='stickyResultImage';
+            document.querySelector('.sticky-preview .image-container').appendChild(ns);
 
-                stickerItem.innerHTML = `
-                        <div class="sticker-item-header">
-                            <div class="sticker-item-name" title="${sticker.name}">${sticker.name}</div>
-                            <button class="sticker-item-remove" data-index="${index}">移除</button>
-                        </div>
-                        <div class="sticker-preview-small">
-                            <img src="${sticker.imageSrc}" alt="${sticker.name}">
-                        </div>
-                    `;
-
-                stickerItem.addEventListener('click', function(e) {
-                    if (!e.target.classList.contains('sticker-item-remove')) {
-                        setActiveSticker(index);
+            if(isMobile) {
+                setTimeout(() => {
+                    const newStickyImg = document.querySelector('.sticky-preview .image-container #stickyResultImage');
+                    if(newStickyImg) {
+                        newStickyImg.style.width = '100%';
+                        newStickyImg.style.height = '100%';
+                        newStickyImg.style.objectFit = 'contain';
                     }
-                });
-
-                const removeBtn = stickerItem.querySelector('.sticker-item-remove');
-                removeBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    removeSticker(index);
-                });
-
-                stickerList.appendChild(stickerItem);
-            });
-        }
-
-        // 设置活动贴纸
-        function setActiveSticker(index) {
-            if (index >= 0 && index < stickers.length) {
-                activeStickerIndex = index;
-                const sticker = stickers[index];
-
-                // 更新控制滑块的值
-                currentStickerSize.value = sticker.size;
-                currentStickerRotation.value = sticker.rotation;
-                currentStickerX.value = sticker.x;
-                currentStickerY.value = sticker.y;
-
-                // 更新显示值
-                updateStickerDisplays();
-
-                // 显示控制界面
-                stickerControls.style.display = 'block';
-                noStickerSelectedMessage.style.display = 'none';
-
-                // 更新列表中的活动状态
-                renderStickerList();
-            } else {
-                activeStickerIndex = -1;
-                stickerControls.style.display = 'none';
-                noStickerSelectedMessage.style.display = 'block';
-                renderStickerList();
+                }, 10);
             }
         }
 
-        // 添加贴纸
-        function addSticker(name, imageSrc) {
-            const id = 'sticker_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            const sticker = new Sticker(id, name, imageSrc);
-            stickers.push(sticker);
-
-            if (stickers.length === 1) {
-                setActiveSticker(0);
-            }
-
-            renderStickerList();
-            updateStickerBadge();
-        }
-
-        // 移除贴纸
-        function removeSticker(index) {
-            if (index >= 0 && index < stickers.length) {
-                stickers.splice(index, 1);
-
-                if (index === activeStickerIndex) {
-                    if (stickers.length > 0) {
-                        setActiveSticker(Math.min(index, stickers.length - 1));
-                    } else {
-                        setActiveSticker(-1);
-                    }
-                } else if (index < activeStickerIndex) {
-                    setActiveSticker(activeStickerIndex - 1);
-                }
-
-                renderStickerList();
-                updateStickerBadge();
-                generateImage();
-            }
-        }
-
-        // 移除所有贴纸
-        function removeAllStickers() {
-            stickers = [];
-            activeStickerIndex = -1;
-            renderStickerList();
-            updateStickerBadge();
-            setActiveSticker(-1);
-            generateImage();
-        }
-
-        // 上移贴纸图层
-        function moveStickerUp() {
-            if (activeStickerIndex > 0 && activeStickerIndex < stickers.length) {
-                [stickers[activeStickerIndex], stickers[activeStickerIndex - 1]] =
-                    [stickers[activeStickerIndex - 1], stickers[activeStickerIndex]];
-
-                activeStickerIndex--;
-                renderStickerList();
-                generateImage();
-            }
-        }
-
-        // 下移贴纸图层
-        function moveStickerDown() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length - 1) {
-                [stickers[activeStickerIndex], stickers[activeStickerIndex + 1]] =
-                    [stickers[activeStickerIndex + 1], stickers[activeStickerIndex]];
-
-                activeStickerIndex++;
-                renderStickerList();
-                generateImage();
-            }
-        }
-
-        // 字体选择处理
-        fontSelect.addEventListener('change', function() {
-            if (this.value === 'custom') {
-                customFontInput.classList.add('active');
-                if (customFontName.value.trim()) {
-                    selectedFont = `'${customFontName.value.trim()}', sans-serif`;
+        function bindEvents(){
+            ms.addEventListener('input',()=>{updateSizes();generateImage();});
+            ss.addEventListener('input',()=>{updateSizes();generateImage();});
+            as.addEventListener('input',()=>{updateSizes();generateImage();});
+            [mX,mY,sX,sY,aX,aY].forEach(s=>s.addEventListener('input',()=>{updatePositions();generateImage();}));
+            mainTitle.addEventListener('input',generateImage);
+            subTitle.addEventListener('input',generateImage);
+            author.addEventListener('input',generateImage);
+            fontSelect.addEventListener('change',function(){
+                if(this.value==='custom'){
+                    customDiv.classList.add('active');
+                    if(customName.value.trim()){selectedFont=`'${customName.value.trim()}', sans-serif`; generateImage();}
+                }else{
+                    customDiv.classList.remove('active');
+                    selectedFont=this.value;
                     generateImage();
                 }
-            } else {
-                customFontInput.classList.remove('active');
-                selectedFont = this.value;
-                generateImage();
-            }
-        });
-
-        // 自定义字体输入处理
-        customFontName.addEventListener('input', function() {
-            if (this.value.trim()) {
-                selectedFont = `'${this.value.trim()}', sans-serif`;
-                generateImage();
-            }
-        });
-
-        // 贴纸上传处理
-        stickerUpload.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (!files || files.length === 0) return;
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-
-                if (!file.type.match('image.*')) {
-                    alert(`文件 "${file.name}" 不是图片文件，已跳过`);
-                    continue;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    let fileName = file.name;
-                    if (fileName.length > 20) {
-                        fileName = fileName.substring(0, 17) + '...';
-                    }
-
-                    addSticker(fileName, e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-
-            stickerUpload.value = '';
-        });
-
-        // 贴纸控制滑块事件处理
-        currentStickerSize.addEventListener('input', function() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
-                stickers[activeStickerIndex].size = parseInt(this.value);
-                updateStickerDisplays();
-                generateImage();
-            }
-        });
-
-        currentStickerRotation.addEventListener('input', function() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
-                stickers[activeStickerIndex].rotation = parseInt(this.value);
-                updateStickerDisplays();
-                generateImage();
-            }
-        });
-
-        currentStickerX.addEventListener('input', function() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
-                stickers[activeStickerIndex].x = parseInt(this.value);
-                updateStickerDisplays();
-                generateImage();
-            }
-        });
-
-        currentStickerY.addEventListener('input', function() {
-            if (activeStickerIndex >= 0 && activeStickerIndex < stickers.length) {
-                stickers[activeStickerIndex].y = parseInt(this.value);
-                updateStickerDisplays();
-                generateImage();
-            }
-        });
-
-        // 图层控制按钮事件
-        moveStickerUpBtn.addEventListener('click', moveStickerUp);
-        moveStickerDownBtn.addEventListener('click', moveStickerDown);
-        removeAllStickersBtn.addEventListener('click', removeAllStickers);
-
-        // 绑定滑块事件
-        mainTitleSize.addEventListener('input', function() {
-            updateSizeDisplays();
-            generateImage();
-        });
-
-        subTitleSize.addEventListener('input', function() {
-            updateSizeDisplays();
-            generateImage();
-        });
-
-        authorSize.addEventListener('input', function() {
-            updateSizeDisplays();
-            generateImage();
-        });
-
-        // 绑定位置滑块事件
-        [mainTitleX, mainTitleY, subTitleX, subTitleY, authorX, authorY].forEach(slider => {
-            slider.addEventListener('input', function() {
-                updatePositionDisplays();
-                generateImage();
             });
+            customName.addEventListener('input',function(){if(this.value.trim()){selectedFont=`'${this.value.trim()}', sans-serif`; generateImage();}});
+            stickerUpload.addEventListener('change',(e)=>{Array.from(e.target.files).forEach(f=>{if(f.type.match('image.*')){let reader=new FileReader(); reader.onload=ev=>{let name=f.name.length>18?f.name.slice(0,15)+'...':f.name; addSticker(name,ev.target.result);}; reader.readAsDataURL(f);}}); stickerUpload.value='';});
+            curSize.addEventListener('input',()=>{if(activeIdx>=0){stickers[activeIdx].size=parseInt(curSize.value); updateStickerCtrlDisplays(); generateImage();}});
+            curRot.addEventListener('input',()=>{if(activeIdx>=0){stickers[activeIdx].rotation=parseInt(curRot.value); updateStickerCtrlDisplays(); generateImage();}});
+            curX.addEventListener('input',()=>{if(activeIdx>=0){stickers[activeIdx].x=parseInt(curX.value); updateStickerCtrlDisplays(); generateImage();}});
+            curY.addEventListener('input',()=>{if(activeIdx>=0){stickers[activeIdx].y=parseInt(curY.value); updateStickerCtrlDisplays(); generateImage();}});
+            moveUp.addEventListener('click',moveUpLayer);
+            moveDown.addEventListener('click',moveDownLayer);
+            removeAll.addEventListener('click',removeAllStickers);
+            generateBtn.addEventListener('click',generateImage);
+            downloadBtn.addEventListener('click',()=>{let link=document.createElement('a'); link.download=`title_${Date.now()}.png`; link.href=canvas.toDataURL(); link.click();});
+        }
+
+        let stickyDiv=ge('stickyPreview'), isActive=false, initTop=0, initHeight=0;
+        function scrollHandler(){
+            if(!initHeight || initHeight===0){
+                let rect=ge('initialPreview').getBoundingClientRect();
+                initTop=rect.top+window.scrollY;
+                initHeight=rect.height;
+            }
+            let scrollY=window.scrollY;
+            let visibleTop=Math.max(0,initTop-scrollY);
+            let visibleBottom=Math.min(window.innerHeight,initTop+initHeight-scrollY);
+            let visible=Math.max(0,visibleBottom-visibleTop);
+            let ratio=visible/initHeight;
+            if(ratio<0.5 && !isActive){
+                stickyDiv.classList.add('active');
+                isActive=true;
+                if(isMobile) adjustMobileStickySize();
+            }else if(ratio>=0.5 && isActive){
+                stickyDiv.classList.remove('active');
+                isActive=false;
+            }
+        }
+
+        window.addEventListener('scroll',scrollHandler);
+        window.addEventListener('resize',()=>{
+            initHeight=0;
+            scrollHandler();
+            if(isMobile && isActive) adjustMobileStickySize();
         });
 
-        // 绘制带描边和投影的文字（改进版，支持自动换行）
-        function drawTextWithEffects(context, text, x, y, fontSize, isBold = true, isCenter = true) {
-            const fontWeight = isBold ? 'bold' : 'normal';
-            context.font = `${fontWeight} ${fontSize}px ${selectedFont}`;
-
-            context.textAlign = isCenter ? 'center' : 'left';
-            context.textBaseline = 'middle';
-
-            const maxWidth = 384 - 40; // 左右留20px边距
-            const lines = wrapText(context, text, maxWidth, fontSize);
-
-            for (let i = 0; i < lines.length; i++) {
-                const lineY = y + (i * fontSize * 1.2); // 增加行间距
-
-                context.save();
-                context.shadowColor = shadowColor;
-                context.shadowBlur = shadowBlur;
-                context.shadowOffsetX = shadowOffsetX;
-                context.shadowOffsetY = shadowOffsetY;
-                context.fillStyle = '#ffffff';
-                context.fillText(lines[i], x, lineY);
-                context.restore();
-
-                context.save();
-                context.strokeStyle = `rgba(0, 0, 0, ${strokeOpacity})`;
-                context.lineWidth = strokeWidth;
-                context.lineJoin = 'round';
-                context.strokeText(lines[i], x, lineY);
-                context.restore();
-
-                context.fillStyle = '#ffffff';
-                context.fillText(lines[i], x, lineY);
-            }
-
-            return lines.length;
-        }
-
-        // 绘制所有贴纸
-        function drawStickers(context) {
-            stickers.forEach(sticker => {
-                if (!sticker.loaded) return;
-
-                const size = sticker.size / 100;
-                const rotation = sticker.rotation;
-                const x = sticker.x;
-                const y = sticker.y;
-
-                const originalWidth = sticker.image.width;
-                const originalHeight = sticker.image.height;
-                const scaledWidth = originalWidth * size;
-                const scaledHeight = originalHeight * size;
-
-                context.save();
-
-                context.translate(x, y);
-
-                context.rotate(rotation * Math.PI / 180);
-
-                context.drawImage(
-                    sticker.image,
-                    -scaledWidth / 2,
-                    -scaledHeight / 2,
-                    scaledWidth,
-                    scaledHeight
-                );
-
-                context.restore();
-            });
-        }
-
-        // 改进的文本换行函数，支持长文本
-        function wrapText(context, text, maxWidth, fontSize) {
-            const words = text.split('');
-            const lines = [];
-            let currentLine = words[0] || '';
-
-            for (let i = 1; i < words.length; i++) {
-                const word = words[i];
-                const width = context.measureText(currentLine + word).width;
-                if (width < maxWidth) {
-                    currentLine += word;
-                } else {
-                    lines.push(currentLine);
-                    currentLine = word;
-                }
-            }
-            if (currentLine) {
-                lines.push(currentLine);
-            }
-            return lines;
-        }
-
-        // 生成图片到两个画布
-        function generateImage() {
-            const mainTitle = mainTitleInput.value || "谱面设计：在游戏中的妙妙";
-            const subTitle = subTitleInput.value || "地球Online";
-            const author = authorInput.value || "歪歪超";
-            const mainTitleFontSize = parseInt(mainTitleSize.value);
-            const subTitleFontSize = parseInt(subTitleSize.value);
-            const authorFontSize = parseInt(authorSize.value);
-
-            // 获取位置值
-            const mainX = parseInt(mainTitleX.value) || 192;
-            const mainY = parseInt(mainTitleY.value) || 40;
-            const subX = parseInt(subTitleX.value) || 192;
-            const subY = parseInt(subTitleY.value) || 75;
-            const authX = parseInt(authorX.value) || 192;
-            const authY = parseInt(authorY.value) || 105;
-
-            // 清除画布（设置为透明）
-            ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
-            stickyCtx.clearRect(0, 0, stickyResultCanvas.width, stickyResultCanvas.height);
-
-            // 先绘制所有贴纸（在文字下方）
-            drawStickers(ctx);
-            drawStickers(stickyCtx);
-
-            // 绘制主标题（带描边和投影）到两个画布
-            const mainTitleLines = drawTextWithEffects(ctx, mainTitle, mainX, mainY, mainTitleFontSize, true);
-            drawTextWithEffects(stickyCtx, mainTitle, mainX, mainY, mainTitleFontSize, true);
-
-            // 绘制副标题（带描边和投影）到两个画布
-            const subTitleLines = drawTextWithEffects(ctx, subTitle, subX, subY, subTitleFontSize, false);
-            drawTextWithEffects(stickyCtx, subTitle, subX, subY, subTitleFontSize, false);
-
-            // 绘制作者（带描边和投影）到两个画布
-            const authorLines = drawTextWithEffects(ctx, author, authX, authY, authorFontSize, true);
-            drawTextWithEffects(stickyCtx, author, authX, authY, authorFontSize, true);
-
-            // 显示预览
-            previewPlaceholder.style.display = 'none';
-            stickyPreviewPlaceholder.style.display = 'none';
-            resultCanvas.style.display = 'block';
-            stickyResultCanvas.style.display = 'block';
-
-            // 将canvas转换为图片并显示
-            const dataUrl = resultCanvas.toDataURL('image/png');
-            const img = new Image();
-            img.src = dataUrl;
-            img.className = 'preview-image';
-            img.id = 'resultImage';
-
-            const existingImg = document.querySelector('#initialPreview .image-container #resultImage');
-            if (existingImg) {
-                existingImg.remove();
-            }
-
-            document.querySelector('#initialPreview .image-container').appendChild(img);
-
-            // 更新吸附预览
-            const stickyDataUrl = stickyResultCanvas.toDataURL('image/png');
-            const stickyImg = new Image();
-            stickyImg.src = stickyDataUrl;
-            stickyImg.className = 'preview-image';
-            stickyImg.id = 'stickyResultImage';
-
-            const existingStickyImg = document.querySelector('.sticky-preview .image-container #stickyResultImage');
-            if (existingStickyImg) {
-                existingStickyImg.remove();
-            }
-
-            document.querySelector('.sticky-preview .image-container').appendChild(stickyImg);
-        }
-
-        // 处理滚动事件，检测初始预览区域是否被遮挡50%
-        function handleScroll() {
-            if (!initialPreviewHeight) {
-                initialPreviewHeight = initialPreview.offsetHeight;
-                const rect = initialPreview.getBoundingClientRect();
-                initialPreviewTop = rect.top + window.scrollY;
-            }
-
-            const scrollTop = window.scrollY;
-            const windowHeight = window.innerHeight;
-
-            const previewBottom = initialPreviewTop + initialPreviewHeight;
-            const visibleTop = Math.max(0, initialPreviewTop - scrollTop);
-            const visibleBottom = Math.min(windowHeight, previewBottom - scrollTop);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-            const visibleRatio = visibleHeight / initialPreviewHeight;
-
-            if (visibleRatio < 0.5 && !isStickyActive) {
-                stickyPreview.classList.add('active');
-                isStickyActive = true;
-            }
-            else if (visibleRatio >= 0.5 && isStickyActive) {
-                stickyPreview.classList.remove('active');
-                isStickyActive = false;
-            }
-        }
-
-        // 绑定输入变化事件
-        mainTitleInput.addEventListener('input', generateImage);
-        subTitleInput.addEventListener('input', generateImage);
-        authorInput.addEventListener('input', generateImage);
-
-        // 绑定下载按钮事件
-        downloadBtn.addEventListener('click', function() {
-            const link = document.createElement('a');
-            const title = mainTitleInput.value.substring(0, 10) || '谱面设计';
-            link.download = `${title}-${authorInput.value || '设计'}.png`;
-            link.href = resultCanvas.toDataURL('image/png');
-            link.click();
-        });
-
-        // 绑定生成按钮事件
-        generateBtn.addEventListener('click', generateImage);
-
-        // 绑定滚动事件
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', function() {
-            initialPreviewHeight = 0;
-            handleScroll();
-        });
-
-        // 初始更新显示
-        updateSizeDisplays();
-        updatePositionDisplays();
-        updateStickerDisplays();
-
-        // 初始生成图片
+        updateSizes();
+        updatePositions();
+        bindEvents();
         generateImage();
+        setTimeout(scrollHandler,200);
 
-        // 初始计算预览区域位置
-        setTimeout(() => {
-            handleScroll();
-        }, 100);
-    });
-
-    // 禁用右键
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用文本选择
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    // 禁用图片拖拽
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-            return false;
+        if(isMobile) {
+            setTimeout(() => {
+                adjustMobileStickySize();
+            }, 100);
         }
-    });
-
-    // 禁用开发者工具快捷键
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            return false;
-        }
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            return false;
-        }
-    });
+    })();
 </script>
 </body>
 </html>

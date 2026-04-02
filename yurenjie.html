@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>JOKER密码锁 | 全字母高亮 | 丝滑弹幕滚动</title>
     <style>
         * {
@@ -10,6 +10,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -24,6 +25,9 @@
 
         .lock-main {
             transition: opacity 0.5s ease;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         /* 胜利浮层 */
@@ -59,6 +63,7 @@
             max-height: 90vh;
             box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,215,0,0.3);
             animation: floatIn 0.5s ease-out;
+            cursor: pointer;
         }
 
         .victory-card img {
@@ -100,6 +105,7 @@
             border-radius: 32px;
             padding: 10px 6px 6px 6px;
             box-shadow: inset 0 0 0 2px #6e4a28, 0 12px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
         }
 
         .reel-frame {
@@ -118,6 +124,7 @@
             overflow: hidden;
             box-shadow: inset 0 0 0 2px #e6bc6b, inset 0 0 0 5px #2c2419;
             cursor: default;
+            transition: box-shadow 0.2s ease;
         }
 
         .rolling-strip {
@@ -211,6 +218,7 @@
             justify-content: center;
             gap: 20px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .unlock-btn {
@@ -252,6 +260,7 @@
             border-radius: 60px;
             padding: 8px 15px;
             color: #ffde9e;
+            word-break: break-word;
         }
 
         .unlock-btn:disabled {
@@ -260,11 +269,129 @@
             cursor: not-allowed;
         }
 
-        @media (max-width: 680px) {
-            .reels-panel { gap: 0.6rem; }
-            .reel-window { width: 68px; height: 115px; }
-            .letter-item { height: 38px; width: 58px; font-size: 1.8rem; }
-            .unlock-btn { font-size: 1.4rem; padding: 8px 18px; }
+        /* ========== 电脑端样式优化 (默认大屏) ========== */
+        @media (min-width: 1024px) {
+            .reels-panel {
+                gap: 1.8rem;
+            }
+            .reel-window {
+                width: 100px;
+                height: 150px;
+            }
+            .letter-item {
+                height: 50px;
+                width: 84px;
+                font-size: 2.5rem;
+            }
+            .unlock-btn {
+                font-size: 2rem;
+                padding: 14px 36px;
+            }
+            .reset-btn {
+                font-size: 1.4rem;
+                padding: 10px 28px;
+            }
+            .lock-container {
+                padding: 2.5rem 2.8rem 2.8rem;
+            }
+        }
+
+        /* ========== 平板 / 手机端精细样式 ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .lock-container {
+                padding: 1.2rem 1rem 1.6rem;
+                border-radius: 2rem;
+            }
+            .reels-panel {
+                gap: 0.65rem;
+                margin-bottom: 1.5rem;
+            }
+            .reel-unit {
+                padding: 6px 4px 4px 4px;
+                border-radius: 24px;
+            }
+            .reel-frame {
+                padding: 4px 2px;
+            }
+            .reel-window {
+                width: 65px;
+                height: 110px;
+                border-radius: 22px;
+            }
+            .letter-item {
+                height: 36px;
+                width: 54px;
+                font-size: 1.6rem;
+                border-radius: 14px;
+            }
+            .reel-window::before {
+                height: 36px;
+                left: 4px;
+                right: 4px;
+            }
+            .reel-status {
+                font-size: 0.7rem;
+                margin-top: 6px;
+                padding: 3px 0;
+            }
+            .controls {
+                gap: 14px;
+                margin-top: 12px;
+            }
+            .unlock-btn {
+                font-size: 1.3rem;
+                padding: 8px 20px;
+                letter-spacing: 2px;
+            }
+            .reset-btn {
+                font-size: 1rem;
+                padding: 6px 16px;
+            }
+            .message-area {
+                font-size: 0.75rem;
+                margin-top: 14px;
+                padding: 6px 12px;
+            }
+            footer {
+                font-size: 9px;
+                margin-top: 12px;
+            }
+        }
+
+        /* 超小折叠屏/窄屏加强适配 */
+        @media (max-width: 480px) {
+            .reels-panel {
+                gap: 0.5rem;
+            }
+            .reel-window {
+                width: 58px;
+                height: 98px;
+            }
+            .letter-item {
+                height: 32px;
+                width: 48px;
+                font-size: 1.4rem;
+            }
+            .reel-window::before {
+                height: 32px;
+            }
+            .unlock-btn {
+                font-size: 1.1rem;
+                padding: 6px 16px;
+            }
+            .reset-btn {
+                font-size: 0.9rem;
+                padding: 5px 12px;
+            }
+            .lock-container {
+                padding: 1rem 0.8rem 1.2rem;
+            }
+            .reel-status {
+                font-size: 0.65rem;
+            }
         }
 
         footer {
@@ -272,6 +399,12 @@
             margin-top: 16px;
             font-size: 10px;
             color: #aa8f60;
+            opacity: 0.8;
+        }
+
+        /* 点击按钮辅助 */
+        button {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -289,7 +422,7 @@
 </div>
 
 <div class="victory-overlay" id="victoryOverlay">
-    <div class="victory-card">
+    <div class="victory-card" id="victoryCard">
         <img id="victoryImage" src="https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.png" alt="解锁成功">
         <audio id="victoryMusic" loop preload="auto">
             <source src="https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.mp3" type="audio/mpeg">
@@ -329,7 +462,8 @@
     let currentLockStep = 0;
     let isGameComplete = false;
     let unlockBtn, resetBtn, msgDiv;
-    let victoryOverlay, victoryImage, victoryAudio;
+    let victoryOverlay, victoryImage, victoryAudio, victoryCard;
+    let globalAnimationFrame = null;  // 预留但未使用，保留性能
 
     // 获取三个字母 (上中下)
     function getTripletLetters(seq, idx) {
@@ -342,14 +476,12 @@
     }
 
     // 核心：更新轮盘视觉，并高亮所有正确的目标字母（无论是否在中间选定位置）
-    // 需求: "每个轮盘需要选择正确字母不在选择位置是也是绿色" -> 即每个轮盘里，只要字母是当前轮盘对应的目标字母（J/O/K/E/R），
-    // 无论这个字母出现在上、中、下哪个位置，都应该显示为绿色。
     function updateReelVisual(reelIndex) {
         const state = reelStates[reelIndex];
         if (!state) return;
         const seq = reelSequences[reelIndex];
         const triplet = getTripletLetters(seq, state.currentIndex);
-        const targetLetter = TARGET_PASSWORD[reelIndex];  // 当前轮盘应该匹配的正确字母
+        const targetLetter = TARGET_PASSWORD[reelIndex];
 
         const reelDiv = reelDomElements[reelIndex];
         if (!reelDiv) return;
@@ -358,12 +490,11 @@
         const midSpan = reelDiv.querySelector('.letter-middle');
         const bottomSpan = reelDiv.querySelector('.letter-bottom');
 
-        // 更新文本内容
         if (topSpan) topSpan.textContent = triplet.top;
         if (midSpan) midSpan.textContent = triplet.middle;
         if (bottomSpan) bottomSpan.textContent = triplet.bottom;
 
-        // 1. 清除所有旧的高亮class (保留可能被锁定的特殊样式单独处理)
+        // 清除所有旧的高亮class
         if (topSpan) {
             topSpan.classList.remove('letter-correct-highlight');
             topSpan.classList.remove('letter-middle-locked');
@@ -377,7 +508,7 @@
             bottomSpan.classList.remove('letter-middle-locked');
         }
 
-        // 2. 为所有等于目标字母的字母添加绿色高亮 (无论位置)
+        // 为所有等于目标字母的字母添加绿色高亮 (任何位置)
         if (topSpan && triplet.top === targetLetter) {
             topSpan.classList.add('letter-correct-highlight');
         }
@@ -388,14 +519,13 @@
             bottomSpan.classList.add('letter-correct-highlight');
         }
 
-        // 3. 处理锁定状态 (中间字母正确锁定后强化效果)
+        // 锁定状态强化效果 (中间字母)
         const isLockedCorrect = state.isLocked && state.isCorrect;
         const statusDiv = reelDiv.querySelector('.reel-status');
 
         if (isLockedCorrect) {
             statusDiv.textContent = '✓ 已锁定';
             statusDiv.classList.add('status-correct');
-            // 中间字母特殊强化 (覆盖绿色高亮，变成更亮锁定绿)
             if (midSpan) {
                 midSpan.classList.remove('letter-correct-highlight');
                 midSpan.classList.add('letter-middle-locked');
@@ -406,7 +536,7 @@
             statusDiv.textContent = '◉ 滚动中';
             statusDiv.classList.remove('status-correct');
             const windowDiv = reelDiv.querySelector('.reel-window');
-            if (windowDiv) windowDiv.style.boxShadow = "inset 0 0 0 2px #e6bc6b, inset 0 0 0 5px #2c2419";
+            if (windowDiv && !state.isLocked) windowDiv.style.boxShadow = "inset 0 0 0 2px #e6bc6b, inset 0 0 0 5px #2c2419";
         }
     }
 
@@ -422,8 +552,8 @@
         const strip = reelDiv?.querySelector('.rolling-strip');
         if (!strip) return false;
 
-        // 使用CSS过渡实现顺滑滑动，类似弹幕平移效果
-        strip.style.transition = "transform 0.12s cubic-bezier(0.15, 0.85, 0.3, 1.05)";
+        // 采用更柔和弹幕过渡
+        strip.style.transition = "transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1)";
         strip.style.transform = "translateY(-12px)";
 
         setTimeout(() => {
@@ -439,11 +569,10 @@
                 }, 130);
             }
         }, 55);
-
         return true;
     }
 
-    // 启动轮盘自动滚动 (使用setInterval保证500ms一次)
+    // 启动轮盘自动滚动
     function startRollingForReel(reelIndex) {
         if (rollingIntervals[reelIndex]) clearInterval(rollingIntervals[reelIndex]);
         const timer = setInterval(() => {
@@ -467,7 +596,7 @@
         }
     }
 
-    // 闪红效果（错误时）
+    // 闪红效果（错误时加强反馈）
     function flashRed(reelIndex) {
         const reelDiv = reelDomElements[reelIndex];
         if (!reelDiv) return;
@@ -478,7 +607,7 @@
         }
         const midSpan = reelDiv.querySelector('.letter-middle');
         if (midSpan && !reelStates[reelIndex]?.isLocked) {
-            midSpan.style.transition = "0.05s";
+            midSpan.style.transition = "0.08s";
             midSpan.style.color = "#ff7777";
             midSpan.style.textShadow = "0 0 6px red";
             midSpan.style.backgroundColor = "#771111";
@@ -487,14 +616,14 @@
                     midSpan.style.color = "";
                     midSpan.style.textShadow = "";
                     midSpan.style.backgroundColor = "";
-                    updateReelVisual(reelIndex); // 恢复高亮
+                    updateReelVisual(reelIndex);
                 }
                 midSpan.style.transition = "";
             }, 220);
         }
     }
 
-    // 锁定尝试 (每次点击开锁，锁定当前步骤的轮盘)
+    // 锁定尝试
     function attemptLockCurrent() {
         if (isGameComplete || currentLockStep >= REEL_COUNT) {
             if (currentLockStep >= REEL_COUNT && !isGameComplete) {
@@ -506,7 +635,6 @@
         const idx = currentLockStep;
         const state = reelStates[idx];
         if (state.isLocked && state.isCorrect) {
-            // 已锁定则自动推进 (安全)
             currentLockStep++;
             attemptLockCurrent();
             return;
@@ -516,7 +644,6 @@
         const requiredLetter = TARGET_PASSWORD[idx];
 
         if (currentLetter === requiredLetter) {
-            // 正确锁定
             state.isLocked = true;
             state.isCorrect = true;
             stopRollingForReel(idx);
@@ -535,23 +662,35 @@
         }
     }
 
-    // 胜利：展示图片 + 播放音乐
+    // 胜利：展示图片 + 播放音乐 (增强交互：点击浮层可关闭)
     function triggerVictory() {
         if (isGameComplete) return;
         isGameComplete = true;
-        // 停止所有滚动
         for (let i = 0; i < REEL_COUNT; i++) stopRollingForReel(i);
         if (unlockBtn) unlockBtn.disabled = true;
-        msgDiv.innerHTML = "🎉✨ 解锁成功！ 完美匹配 JOKER ✨🎉";
+        msgDiv.innerHTML = "🎉✨ 解锁成功！ 完美匹配 JOKER ✨🎉  点击画面可关闭音乐并重新挑战";
 
         if (victoryOverlay) {
             victoryOverlay.classList.add('active');
             if (victoryAudio) {
-                // 尝试播放音乐 (用户已有点击开锁交互，故autoplay策略允许)
-                victoryAudio.play().catch(e => console.log("音频自动播放被浏览器限制，但可手动播放", e));
+                victoryAudio.currentTime = 0;
                 victoryAudio.loop = true;
+                victoryAudio.play().catch(e => console.log("音频自动播放受限，但交互后可能生效", e));
             }
         }
+    }
+
+    // 关闭胜利浮层并重置状态（可选点击浮层重置）
+    function closeVictoryAndReset() {
+        if (victoryOverlay && victoryOverlay.classList.contains('active')) {
+            victoryOverlay.classList.remove('active');
+            if (victoryAudio) {
+                victoryAudio.pause();
+                victoryAudio.currentTime = 0;
+            }
+        }
+        // 重置所有游戏状态
+        fullReset();
     }
 
     // 完全重置所有状态
@@ -580,7 +719,7 @@
         if (unlockBtn) unlockBtn.disabled = false;
         msgDiv.innerHTML = "🔄 重置完成 | 正确字母永久绿色高亮 (任何位置可见) 点击开锁依次锁定 J O K E R";
 
-        // 关闭胜利浮层并停止音乐
+        // 强制清除胜利浮层
         if (victoryOverlay && victoryOverlay.classList.contains('active')) {
             victoryOverlay.classList.remove('active');
             if (victoryAudio) {
@@ -596,19 +735,23 @@
                 if (windowDiv) windowDiv.style.boxShadow = "inset 0 0 0 2px #e6bc6b, inset 0 0 0 5px #2c2419";
                 const statusDiv = reelDiv.querySelector('.reel-status');
                 if (statusDiv) statusDiv.classList.remove('status-correct');
+                // 清除可能残留在非中间字母上的locked样式
+                const midSpan = reelDiv.querySelector('.letter-middle');
+                if (midSpan) midSpan.classList.remove('letter-middle-locked');
+                updateReelVisual(i);
             }
         }
     }
 
     function onUnlockClick() {
         if (isGameComplete) {
-            msgDiv.innerHTML = "🔓 已解锁成功！按「重置」可再次挑战";
+            msgDiv.innerHTML = "🔓 已解锁成功！按「重置」可再次挑战 或 点击画面关闭浮层";
             return;
         }
         attemptLockCurrent();
     }
 
-    // 构建UI：每个轮盘包含上中下三个字母容器
+    // 构建UI
     function buildUI() {
         const panel = document.getElementById('reelsPanel');
         panel.innerHTML = '';
@@ -654,23 +797,75 @@
         victoryOverlay = document.getElementById('victoryOverlay');
         victoryImage = document.getElementById('victoryImage');
         victoryAudio = document.getElementById('victoryMusic');
+        victoryCard = document.getElementById('victoryCard');
 
-        // 设置图片和音频链接（已从HTML中直接配置好）
-        // 确保图片链接正确
         if (victoryImage) {
             victoryImage.src = "https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.png";
             victoryImage.alt = "解锁成功贺图";
         }
         if (victoryAudio) {
             victoryAudio.src = "https://furrymiaomiao.oss-cn-beijing.aliyuncs.com/yurenjie/creeping.mp3";
-            victoryAudio.load(); // 预加载音频
+            victoryAudio.load();
         }
 
         unlockBtn.addEventListener('click', onUnlockClick);
         resetBtn.addEventListener('click', fullReset);
+        // 点击胜利浮层背景或者卡片区域关闭并重置（提升用户体验）
+        if (victoryOverlay) {
+            victoryOverlay.addEventListener('click', (e) => {
+                // 防止点到卡片内部冒泡特殊，但整体关闭重置
+                closeVictoryAndReset();
+            });
+            if (victoryCard) {
+                victoryCard.addEventListener('click', (e) => e.stopPropagation());
+            }
+        }
+        // 额外处理移动端touch
+        if (resetBtn) resetBtn.addEventListener('touchstart', (e) => { e.preventDefault(); fullReset(); });
+        if (unlockBtn) unlockBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onUnlockClick(); });
     }
 
     init();
+
+    // 禁止右键
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // 禁止选择文本
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // 禁止拖拽图片
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // 禁止开发者工具快捷键
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+            e.preventDefault();
+            return false;
+        }
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+    });
 </script>
 </body>
 </html>

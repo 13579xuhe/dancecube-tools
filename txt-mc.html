@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>TXT转MC转换器</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -31,6 +31,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -39,6 +40,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
@@ -86,12 +88,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-bottom: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
         }
 
         .card {
@@ -324,12 +320,14 @@
             font-weight: 600;
             font-size: 1rem;
             margin-bottom: 3px;
+            word-break: break-all;
         }
 
         .file-meta {
             display: flex;
             gap: 15px;
             font-size: 0.85rem;
+            flex-wrap: wrap;
         }
 
         .file-size {
@@ -353,6 +351,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .file-remove:hover {
@@ -386,6 +385,8 @@
             margin-bottom: 8px;
             padding-bottom: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .offset-item:last-child {
@@ -398,6 +399,7 @@
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -413,6 +415,7 @@
             justify-content: center;
             gap: 10px;
             flex: 1;
+            min-width: 140px;
         }
 
         .btn-primary {
@@ -462,11 +465,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .stats {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .stat-item {
@@ -474,7 +480,7 @@
             padding: 10px 20px;
             background: var(--card-bg);
             border-radius: 8px;
-            min-width: 120px;
+            min-width: 100px;
         }
 
         .stat-value {
@@ -505,6 +511,8 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 6px;
             border-left: 4px solid var(--primary-color);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .note-column {
@@ -515,13 +523,14 @@
             justify-content: center;
             background: var(--primary-color);
             border-radius: 8px;
-            margin-right: 15px;
             font-weight: 700;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .note-info {
             flex: 1;
+            min-width: 150px;
         }
 
         .note-beat {
@@ -572,6 +581,8 @@
             align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .file-list-item:last-child {
@@ -581,6 +592,7 @@
         .file-list-icon {
             margin-right: 10px;
             color: var(--primary-color);
+            flex-shrink: 0;
         }
 
         .progress-container {
@@ -671,20 +683,18 @@
         /* 蓝色置顶返回按钮 */
         .back-home-btn {
             position: fixed;
-            top: 20px; /* 置顶 */
+            top: 20px;
             right: 30px;
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #1e90ff, #0066cc); /* 蓝色渐变 */
+            background: linear-gradient(135deg, #1e90ff, #0066cc);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 10000;
-            box-shadow:
-                    0 6px 20px rgba(30, 144, 255, 0.4),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
@@ -693,7 +703,6 @@
             animation-delay: 0.3s;
         }
 
-        /* 从上向下滑入动画 */
         @keyframes slideInFromTop {
             from {
                 opacity: 0;
@@ -707,18 +716,12 @@
 
         .back-home-btn:hover {
             transform: translateY(-2px) scale(1.08);
-            box-shadow:
-                    0 10px 30px rgba(30, 144, 255, 0.5),
-                    0 0 0 4px rgba(30, 144, 255, 0.1),
-                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(135deg, #00bfff, #0059b3); /* 更亮的蓝色 */
+            box-shadow: 0 10px 30px rgba(30, 144, 255, 0.5), 0 0 0 4px rgba(30, 144, 255, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00bfff, #0059b3);
         }
 
         .back-home-btn:active {
             transform: translateY(1px) scale(0.98);
-            box-shadow:
-                    0 3px 10px rgba(30, 144, 255, 0.3),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .back-home-btn .material-icons {
@@ -733,7 +736,6 @@
             transform: translateX(-2px);
         }
 
-        /* 添加发光效果 */
         .back-home-btn::before {
             content: '';
             position: absolute;
@@ -742,14 +744,10 @@
             right: 0;
             bottom: 0;
             border-radius: 50%;
-            background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 100%);
             pointer-events: none;
         }
 
-        /* 添加返回文字提示（悬停时显示） */
         .back-home-btn::after {
             content: '返回首页';
             position: absolute;
@@ -775,50 +773,288 @@
             transform: translateY(0);
         }
 
-        /* 响应式调整 */
+        /* ========= 手机端适配样式 ========= */
         @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.85rem;
+            }
+
+            .header {
+                margin-bottom: 20px;
+                padding: 10px 0;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+
+            .input-field {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+
+            .upload-area {
+                height: 110px;
+            }
+
+            .upload-icon {
+                font-size: 2rem;
+            }
+
+            .upload-text {
+                font-size: 0.9rem;
+            }
+
+            .upload-subtext {
+                font-size: 0.75rem;
+            }
+
+            .file-info {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .file-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .file-name {
+                font-size: 0.85rem;
+            }
+
+            .file-meta {
+                font-size: 0.7rem;
+                gap: 8px;
+            }
+
+            .offset-value {
+                font-size: 1.5rem;
+                margin: 15px 0;
+            }
+
+            .offset-details {
+                padding: 10px;
+            }
+
+            .offset-item {
+                font-size: 0.85rem;
+            }
+
+            .button-group {
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.85rem;
+                min-width: 110px;
+            }
+
+            .btn .material-icons {
+                font-size: 1.2rem;
+            }
+
+            .preview-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-item {
+                padding: 6px 12px;
+                min-width: 70px;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+            }
+
+            .notes-preview {
+                padding: 12px;
+                max-height: 250px;
+            }
+
+            .note-item {
+                padding: 8px;
+            }
+
+            .note-column {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .note-info {
+                font-size: 0.8rem;
+                min-width: 120px;
+            }
+
+            .files-list {
+                padding: 12px;
+            }
+
+            .file-list-item {
+                font-size: 0.8rem;
+                gap: 8px;
+            }
+
+            .info-box {
+                padding: 12px;
+            }
+
+            .info-title {
+                font-size: 0.9rem;
+            }
+
+            .info-text {
+                font-size: 0.8rem;
+            }
+
             .back-home-btn {
-                top: 15px;
-                right: 20px;
-                width: 48px;
-                height: 48px;
+                top: 12px;
+                right: 12px;
+                width: 44px;
+                height: 44px;
             }
 
             .back-home-btn .material-icons {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .back-home-btn::after {
-                font-size: 11px;
-                padding: 5px 10px;
+                display: none;
             }
         }
 
-        /* 手机横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .back-home-btn {
-                top: 10px;
-                right: 15px;
-                width: 44px;
-                height: 44px;
-            }
-
-            .back-home-btn .material-icons {
-                font-size: 20px;
-            }
-        }
-
-        /* 超小屏幕 */
+        /* 小屏手机 375px */
         @media (max-width: 480px) {
-            .back-home-btn {
-                width: 44px;
-                height: 44px;
-                top: 12px;
-                right: 15px;
+            .title {
+                font-size: 1.3rem;
             }
 
-            .back-home-btn .material-icons {
-                font-size: 20px;
+            .subtitle {
+                font-size: 0.7rem;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .input-label {
+                font-size: 0.85rem;
+            }
+
+            .input-field {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+
+            .upload-area {
+                height: 90px;
+            }
+
+            .upload-icon {
+                font-size: 1.6rem;
+                margin-bottom: 6px;
+            }
+
+            .upload-text {
+                font-size: 0.75rem;
+            }
+
+            .upload-subtext {
+                font-size: 0.65rem;
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 0.75rem;
+            }
+
+            .stat-item {
+                padding: 4px 10px;
+            }
+
+            .stat-value {
+                font-size: 0.9rem;
+            }
+
+            .stat-label {
+                font-size: 0.6rem;
+            }
+
+            .note-column {
+                width: 35px;
+                height: 35px;
+                font-size: 0.85rem;
+            }
+
+            .note-info {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* 横屏手机优化 */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .upload-area {
+                height: 80px;
+            }
+
+            .upload-icon {
+                font-size: 1.4rem;
+                margin-bottom: 4px;
+            }
+
+            .upload-text {
+                font-size: 0.7rem;
+            }
+
+            .upload-subtext {
+                font-size: 0.6rem;
+            }
+
+            .offset-value {
+                font-size: 1.2rem;
+                margin: 10px 0;
             }
         }
     </style>
@@ -1730,20 +1966,19 @@
         }
     });
 
-    //禁止右键
+    // 禁止右键
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
-        console.log('右键已被禁用');
         return false;
     });
 
-    // 禁止选择文本（可选，防止用户复制内容）
+    // 禁止选择文本
     document.addEventListener('selectstart', function(e) {
         e.preventDefault();
         return false;
     });
 
-    // 禁止拖拽图片（可选，防止用户拖拽保存图片）
+    // 禁止拖拽图片
     document.addEventListener('dragstart', function(e) {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -1751,30 +1986,22 @@
         }
     });
 
-    // 禁止F12开发者工具（简单版本，但容易被绕过）
+    // 禁止开发者工具快捷键
     document.addEventListener('keydown', function(e) {
-        // 禁用F12
         if (e.key === 'F12') {
             e.preventDefault();
-            console.log('F12已被禁用');
             return false;
         }
-        // 禁用Ctrl+Shift+I (Chrome开发者工具)
         if (e.ctrlKey && e.shiftKey && e.key === 'I') {
             e.preventDefault();
-            console.log('Ctrl+Shift+I已被禁用');
             return false;
         }
-        // 禁用Ctrl+Shift+J (Chrome控制台)
         if (e.ctrlKey && e.shiftKey && e.key === 'J') {
             e.preventDefault();
-            console.log('Ctrl+Shift+J已被禁用');
             return false;
         }
-        // 禁用Ctrl+U (查看源代码)
         if (e.ctrlKey && e.key === 'u') {
             e.preventDefault();
-            console.log('Ctrl+U已被禁用');
             return false;
         }
     });

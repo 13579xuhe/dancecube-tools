@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>舞立方自制谱谱师工具</title>
+    <title>舞立方自制谱谱师工具 | 专业谱面管理</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ========== 全局变量 & 基础重置 ========== */
@@ -34,9 +34,7 @@
             --announcement-bg: linear-gradient(135deg, #fff9e8 0%, #fff4e0 100%);
             --announcement-border: rgba(255, 152, 0, 0.25);
             --footer-border: rgba(0, 0, 0, 0.05);
-            --card-radius: 20px;
             --stat-number-color: #1e293b;
-            --tool-icon-bg: linear-gradient(135deg, #6a11cb, #2575fc);
         }
 
         /* 暗色主题 */
@@ -424,7 +422,7 @@
             font-size: 0.9rem;
         }
 
-        /* 谱师数据弹窗 - 修复内容溢出，使用自适应内边距和自动换行 */
+        /* ========== 谱师数据弹窗 - 彻底修复手机端溢出 ========== */
         .profile-modal {
             position: fixed;
             top: 0;
@@ -486,28 +484,29 @@
             padding: 24px;
             overflow-y: visible;
         }
-        /* 修复数据网格在手机端不换行/溢出的问题 */
+        /* 修复手机端数字溢出：字号缩小，内边距优化，允许换行 */
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 14px;
             margin-bottom: 20px;
         }
         .profile-stat-item {
             background: var(--feature-bg);
             border-radius: 1.2rem;
-            padding: 14px 8px;
+            padding: 12px 6px;
             text-align: center;
             border: 1px solid var(--border-light);
             word-break: break-word;
         }
         .profile-stat-number {
-            font-size: 1.8rem;
+            font-size: 1.5rem;      /* 从1.8rem减小，避免手机端过大 */
             font-weight: 800;
             color: var(--stat-number-color);
             line-height: 1.2;
             word-break: break-word;
         }
+        /* 已上架/下架数字特判保持视觉区分但同样缩小 */
         .profile-stat-number.published-number {
             color: #22c55e;
         }
@@ -515,9 +514,10 @@
             color: #ef4444;
         }
         .profile-stat-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;      /* 标签略小，适配窄屏 */
             color: var(--text-muted);
             margin-top: 6px;
+            letter-spacing: 0.3px;
         }
         .profile-empty {
             text-align: center;
@@ -550,19 +550,18 @@
         .profile-close:hover {
             background: rgba(0,0,0,0.5);
         }
-        /* 底部统计区块 */
         .profile-total-info {
             background: var(--feature-bg);
             border-radius: 1rem;
             padding: 12px;
             text-align: center;
             margin-top: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             word-break: break-word;
         }
 
-        /* 手机端优化：弹窗内容更紧凑 */
+        /* ========== 手机端样式优化 & 图形验证码完全显示修复 ========== */
         @media (max-width: 768px) {
             body { padding: 12px; }
             .header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
@@ -580,62 +579,127 @@
                 font-size: 1.5rem;
                 margin-right: 14px;
             }
-            .tool-info h3 {
-                font-size: 1.1rem;
-            }
-            .tool-info p {
-                font-size: 0.75rem;
-            }
-            .tool-description {
-                font-size: 0.85rem;
-                padding: 0 20px 16px;
-            }
-            .tool-footer {
-                padding: 14px 20px 18px;
-            }
-            .tool-action {
-                padding: 8px 18px;
-                font-size: 0.85rem;
-            }
-            .profile-modal-content {
-                max-width: 94%;
-                max-height: 80vh;
-            }
-            .profile-modal-header {
-                padding: 16px 20px;
-            }
-            .profile-modal-header i {
-                font-size: 1.4rem;
-            }
-            .profile-modal-header h3 {
-                font-size: 1.2rem;
-            }
-            .profile-modal-body {
-                padding: 20px;
-            }
-            .profile-stats {
-                gap: 12px;
-            }
-            .profile-stat-number {
-                font-size: 1.5rem;
-            }
-            .profile-stat-item {
-                padding: 12px 6px;
-            }
-            .captcha-row, .sms-row { flex-wrap: wrap; }
-            .captcha-img { width: 110px; height: 48px; }
-            .btn-secondary { padding: 10px 16px; font-size: 0.85rem; }
-            .login-options { padding: 10px 20px 28px; }
-            .login-option-btn { padding: 14px 16px; font-size: 1rem; }
-            .phone-login-header h2, .login-header h2 { font-size: 1.4rem; }
-            .phone-login-body, .login-body { padding: 24px; }
+            .tool-info h3 { font-size: 1.1rem; }
+            .tool-info p { font-size: 0.75rem; }
+            .tool-description { font-size: 0.85rem; padding: 0 20px 16px; }
+            .tool-footer { padding: 14px 20px 18px; }
+            .tool-action { padding: 8px 18px; font-size: 0.85rem; }
+            /* 谱师数据手机端进一步保证安全 */
+            .profile-modal-content { max-width: 94%; max-height: 80vh; }
+            .profile-modal-header { padding: 16px 20px; }
+            .profile-modal-header i { font-size: 1.4rem; }
+            .profile-modal-header h3 { font-size: 1.2rem; }
+            .profile-modal-body { padding: 18px; }
+            .profile-stats { gap: 10px; }
+            .profile-stat-number { font-size: 1.3rem; } /* 手机端更小但仍清晰 */
+            .profile-stat-item { padding: 10px 4px; }
+            .profile-stat-label { font-size: 0.65rem; }
+
+            /* 公告栏 */
             .announcement-bar { padding: 10px 16px; gap: 10px; }
             .announcement-icon { width: 30px; height: 30px; }
             .announcement-hint { font-size: 0.65rem; padding: 4px 8px; }
             .marquee-text { font-size: 0.85rem; }
+
+            /* 手机号登录表单 - 图形验证码完全显示修复 */
+            .phone-login-content { max-width: 95%; border-radius: 28px; overflow: hidden; }
+            .phone-login-header { padding: 24px 20px; }
+            .phone-login-header i { font-size: 2rem; margin-bottom: 8px; }
+            .phone-login-header h2 { font-size: 1.5rem; margin-bottom: 6px; }
+            .phone-login-header p { font-size: 0.8rem; opacity: 0.9; }
+            .phone-login-body { padding: 24px 20px; }
+            .form-group { margin-bottom: 18px; }
+            .form-group label { font-size: 0.8rem; margin-bottom: 6px; }
+            .form-group input { padding: 12px 16px; font-size: 0.9rem; border-radius: 14px; }
+            /* 图形验证码行：确保图片完整可见 */
+            .captcha-row, .sms-row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: nowrap;
+            }
+            .captcha-row input {
+                flex: 1;
+                min-width: 0;
+            }
+            .captcha-img {
+                width: 110px;        /* 固定宽度确保图片完全显示 */
+                height: 48px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--feature-bg);
+                border: 1px solid var(--border-light);
+                overflow: hidden;
+                cursor: pointer;
+            }
+            .captcha-img img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: #fff;
+            }
+            .btn-secondary {
+                padding: 10px 14px;
+                font-size: 0.75rem;
+                border-radius: 14px;
+                white-space: nowrap;
+            }
+            .btn-block { padding: 12px; font-size: 0.95rem; border-radius: 40px; margin-top: 20px; }
+            .message { font-size: 0.8rem; padding: 10px 14px; margin-top: 16px; }
+
+            .login-content { max-width: 95%; }
+            .login-header { padding: 24px 20px; }
+            .login-header h2 { font-size: 1.5rem; }
+            .login-body { padding: 24px 20px; }
+            .qr-placeholder { width: 180px; height: 180px; }
+            .qr-placeholder i { font-size: 2rem; }
+            #login-qrcode-img { max-width: 180px; }
+            .modal-content { max-width: 95%; }
+            .modal-header { padding: 20px 20px 16px; }
+            .modal-icon { width: 56px; height: 56px; font-size: 1.6rem; margin-right: 16px; }
+            .modal-title h2 { font-size: 1.3rem; }
+            .modal-body { padding: 20px; }
+            .modal-features { grid-template-columns: 1fr; gap: 10px; }
+            .modal-feature { padding: 10px 12px; font-size: 0.85rem; }
+            .modal-btn { padding: 10px 24px; font-size: 0.9rem; }
+            .login-choice-content { max-width: 90%; }
+            .login-choice-header { padding: 28px 20px 16px; }
+            .login-choice-header h2 { font-size: 1.5rem; }
+            .login-options { padding: 8px 20px 28px; gap: 14px; }
+            .login-option-btn { padding: 14px 16px; font-size: 1rem; }
         }
 
-        /* 其他模态框样式 (复用原有) */
+        /* 确保图形验证码在任何宽度下图片不裁剪 */
+        .captcha-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        body.dark .captcha-img {
+            background: #2a2a38;
+        }
+        .captcha-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        /* 工具卡片中对号图标颜色修复 */
+        .modal-feature i {
+            color: #22c55e !important;
+            font-size: 1rem;
+        }
+        body.dark .modal-feature i {
+            color: #4ade80 !important;
+        }
+
+        /* 其他模态框通用样式 */
         .login-modal, .tool-modal, .announce-modal, .phone-login-modal, .login-choice-modal {
             position: fixed;
             top: 0;
@@ -667,48 +731,19 @@
             transform: translateY(30px);
             transition: transform 0.4s ease;
         }
-        .modal-content {
-            max-width: 900px;
-        }
-        .login-header, .phone-login-header {
-            padding: 30px;
-            text-align: center;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 25px 25px 0 0;
-        }
+        .modal-content { max-width: 900px; }
+        .login-header, .phone-login-header { padding: 30px; text-align: center; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border-radius: 25px 25px 0 0; }
         .login-header h2, .phone-login-header h2 { font-size: 1.8rem; margin-bottom: 10px; }
         .login-body, .phone-login-body { padding: 30px; }
         .qr-container { text-align: center; margin: 20px 0; }
-        .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            background: var(--feature-bg);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed var(--border-light);
-            cursor: pointer;
-        }
+        .qr-placeholder { width: 200px; height: 200px; margin: 0 auto; background: var(--feature-bg); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--border-light); cursor: pointer; }
         #login-qrcode-img { max-width: 200px; border-radius: 10px; display: none; }
-        .login-status {
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background: var(--feature-bg);
-            color: var(--text-primary);
-        }
+        .login-status { text-align: center; margin: 20px 0; padding: 10px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; background: var(--feature-bg); color: var(--text-primary); }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
         .form-group input { width: 100%; padding: 14px 18px; border: 1.5px solid var(--border-light); border-radius: 16px; font-size: 1rem; background: var(--input-bg); color: var(--input-text); outline: none; }
         .captcha-row, .sms-row { display: flex; gap: 12px; align-items: center; }
-        .captcha-img { width: 128px; height: 52px; background: var(--feature-bg); border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border-light); overflow: hidden; }
+        .captcha-img { width: 130px; height: 52px; background: var(--feature-bg); border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border-light); overflow: hidden; flex-shrink: 0; }
         .captcha-img img { width: 100%; height: 100%; object-fit: cover; }
         .btn-secondary { background: var(--feature-bg); color: var(--text-primary); border: 1.5px solid var(--border-light); padding: 12px 20px; border-radius: 16px; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .btn-block { width: 100%; margin-top: 16px; padding: 14px; border-radius: 40px; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; font-weight: 700; border: none; cursor: pointer; }
@@ -765,18 +800,26 @@
     <footer class="footer"><p>2025 舞立方自制谱谱师工具 | 电脑端/手机端自适应 | 点击头像查看谱师数据</p></footer>
 </div>
 
-<!-- 谱师数据弹窗 - 修复内容溢出 -->
+<!-- 谱师数据弹窗 -->
 <div class="profile-modal" id="profileModal"><div class="profile-modal-content"><button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button><div class="profile-modal-header"><i class="fas fa-chart-simple"></i><h3>谱师数据</h3></div><div class="profile-modal-body" id="profileModalBody"><div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div></div></div></div>
 
-<!-- 登录选择面板、微信登录、手机登录、工具模态框、公告模态框（保持原有结构和JS逻辑） -->
+<!-- 登录选择面板 -->
 <div class="login-choice-modal" id="loginChoiceModal"><div class="login-choice-content"><button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button><div class="login-choice-header"><i class="fas fa-user-circle" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 12px; display: block;"></i><h2>选择登录方式</h2><p>请选择您要使用的登录方式</p></div><div class="login-options"><button class="login-option-btn login-option-wechat" id="chooseWechatBtn"><i class="fab fa-weixin"></i> 微信扫码登录</button><button class="login-option-btn login-option-phone" id="choosePhoneBtn"><i class="fas fa-phone-alt"></i> 手机号登录</button></div></div></div>
+
+<!-- 微信登录模态框 -->
 <div class="login-modal" id="loginModal"><div class="login-content"><button class="login-close" id="loginClose"><i class="fas fa-times"></i></button><div class="login-header"><i class="fab fa-weixin fa-2x"></i><h2>微信扫码登录</h2><p>使用微信扫描二维码登录</p></div><div class="login-body"><div class="qr-container"><div class="qr-placeholder" id="loginQrPlaceholder"><i class="fas fa-qrcode"></i><p>点击生成二维码</p></div><img id="login-qrcode-img" alt="二维码"></div><div class="login-status waiting" id="loginStatus">点击上方区域生成二维码</div></div></div></div>
+
+<!-- 手机号登录模态框 - 图形验证码完全显示修复 -->
 <div class="phone-login-modal" id="phoneLoginModal"><div class="phone-login-content"><button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button><div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i><h2>手机号登录</h2><p>输入手机号获取验证码登录</p></div><div class="phone-login-body"><div class="form-group"><label>手机号码</label><input type="tel" id="phoneNumber" placeholder="请输入11位手机号"></div><div class="form-group"><label>图形验证码</label><div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码"><div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button"><i class="fas fa-sync-alt"></i></button></div></div><div class="form-group"><label>短信验证码</label><div class="sms-row"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div></div><button id="phoneDoLoginBtn" class="btn-block">立即登录</button><div id="phoneMessage" class="message"></div></div></div></div>
+
+<!-- 工具模态框 -->
 <div class="tool-modal" id="toolModal"><div class="modal-content"><button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button><div class="modal-header"><div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div><div class="modal-title"><h2 id="modalToolName">工具名称</h2><p id="modalToolCategory"></p></div></div><div class="modal-body"><div><h3>工具描述</h3><p id="modalToolDescription"></p></div><div><h3>主要功能</h3><div id="modalFeatures" class="modal-features"></div></div><div><a class="modal-btn" id="openToolBtn" target="_blank">打开工具</a></div></div></div></div>
+
+<!-- 公告模态框 -->
 <div class="announce-modal" id="announceModal"><div class="announce-modal-content"><button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button><div class="announce-modal-header"><i class="fas fa-newspaper"></i> <h3 style="display:inline-block;">最新公告</h3></div><div class="announce-modal-body"><p><strong>1.增加点击头像查看谱师数据！</strong></p><p><strong>2.修复各个工具对手机端的适配问题</strong></p><p><strong>3.登录入口合并，支持微信/手机号登录</strong></p></div></div></div>
 
 <script>
-    // 工具数据 (完整保留)
+    // 工具数据 (完整保留，未做任何更改)
     const toolsData = [
         { id: 1, name: "自制谱上传工具", category: "upload", description: "上传您的自制谱到机器上", icon: "fa-solid fa-upload", iconColor: "#0033ff", features: ["直接跳转"], url: "https://danceweb.shenghuayule.com/MusicMaker/#/" },
         { id: 2, name: "txt转mc/mcz", category: "exchange", description: "将txt文件转换为mc文件，并且支持打包为mcz文件", icon: "fas fa-music", iconColor: "#6a11cb", featured: true, features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包"], url: "../txt-mc.html" },
@@ -792,12 +835,11 @@
     const API_BASE = 'https://dancedemo.shenghuayule.com';
     let accessToken = null, loginQrCodeData = null, loginCheckInterval = null, phoneCountdownInterval = null, phoneCountdown = 0;
 
-    // 基础函数（保持原有业务逻辑，因篇幅精简但功能完整）
+    // 以下所有业务逻辑JS完全保持原样，未改动任何功能流程，仅修复样式相关渲染
     async function saveTokenAndFetchUser(token, userIdHint) { accessToken = token; localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now()+7*864e5).toISOString() })); try { let userId = userIdHint; if(!userId){ const tr=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint||'')}`,{headers:{'Authorization':`bearer ${token}`}}); const info=await tr.json(); userId=info.UserID||userIdHint; } const uir=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userId||'')}`,{headers:{'Authorization':`bearer ${token}`}}); const ui=await uir.json(); const userData={UserID:ui.UserID||userId,UserName:ui.UserName||(userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户'),HeadimgURL:ui.HeadimgURL||''}; localStorage.setItem('dance_user_data',JSON.stringify(userData)); showUserInfo(userData); } catch(e){ const fallbackName=userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户'; const userData={UserID:userIdHint||'unknown',UserName:fallbackName,HeadimgURL:''}; localStorage.setItem('dance_user_data',JSON.stringify(userData)); showUserInfo(userData); } }
     function showUserInfo(user){ document.getElementById('userName').innerText=user.UserName; document.getElementById('userId').innerText=`ID: ${user.UserID}`; document.getElementById('userDetails').style.display='flex'; document.getElementById('userAvatar').style.display='flex'; document.getElementById('loginBtn').style.display='none'; if(user.HeadimgURL) document.getElementById('userAvatar').innerHTML=`<img src="${user.HeadimgURL}">`; else document.getElementById('userAvatar').innerHTML=user.UserName?.charAt(0).toUpperCase()||'U'; }
     function clearUserData(){ localStorage.removeItem('dance_user_data');localStorage.removeItem('dance_user_token');accessToken=null;document.getElementById('userDetails').style.display='none';document.getElementById('userAvatar').style.display='none';document.getElementById('loginBtn').style.display='flex';}
     function checkLoginStatus(){ const saved=localStorage.getItem('dance_user_data'),tokenData=localStorage.getItem('dance_user_token'); if(saved&&tokenData) try{ const tok=JSON.parse(tokenData); if(new Date(tok.expireTime)>new Date()){ accessToken=tok.token; showUserInfo(JSON.parse(saved)); } else clearUserData(); }catch(e){ clearUserData(); } }
-    // 登录模态相关函数（原样保留）
     function openLoginChoice(){ document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow='hidden'; }
     function closeLoginChoice(){ document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow='auto'; }
     async function generateLoginQRCode(){ const updateStatus=(t,c)=>{ const d=document.getElementById('loginStatus'); d.innerText=t; d.className=`login-status ${c}`; }; updateStatus('生成中...','waiting'); try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`); const data=await res.json(); loginQrCodeData=data; document.getElementById('login-qrcode-img').src=data.QrcodeUrl; document.getElementById('login-qrcode-img').style.display='block'; document.getElementById('loginQrPlaceholder').style.display='none'; updateStatus('请微信扫码','waiting'); if(loginCheckInterval) clearInterval(loginCheckInterval); loginCheckInterval=setInterval(async()=>{ if(!loginQrCodeData?.ID) return; try{ const params=new URLSearchParams({client_type:'qrcode',grant_type:'client_credentials',client_id:loginQrCodeData.ID}); const res2=await fetch(`${API_BASE}/Dance/token`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params}); if(res2.status===401) return; const data2=await res2.json(); const token=data2.access_token; if(token){ clearInterval(loginCheckInterval); updateStatus('登录成功','success'); const uid=data2.user_id||data2.userId; await saveTokenAndFetchUser(token, uid); setTimeout(()=>closeLoginModal(),1200); } }catch(e){} },2000); }catch(e){ updateStatus('生成失败','error'); } }
@@ -809,7 +851,7 @@
     function showPhoneMsg(msg,type){ const div=document.getElementById('phoneMessage'); div.innerText=msg; div.className=`message ${type}`; setTimeout(()=>{ if(div.innerText===msg) div.style.display='none'; },4000); div.style.display='block'; }
     function openPhoneModal(){ closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); document.body.style.overflow='hidden'; loadGraphCodeForPhone(); }
     function closePhoneModal(){ document.getElementById('phoneLoginModal').classList.remove('active'); document.body.style.overflow='auto'; if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); }
-    async function fetchRawMusicList(){ if(!accessToken) return null; try{ const res=await fetch(`https://dancedemo.shenghuayule.com/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`,{headers:{'Authorization':`bearer ${accessToken}`}}); if(res.status===401) return null; const data=await res.json(); return Array.isArray(data)?data:(data.List||[]); }catch(e){ return null; } }
+    async function fetchRawMusicList(){ if(!accessToken) return null; try{ const res=await fetch(`https://dancedemo.shenghuayule.com/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`,{headers:{'Authorization':`bearer ${accessToken}`}}); if(res.status===401) return null; const data=await res.json(); return Array.isArray(data)?data:(data.List||[]); } catch(e){ return null; } }
     async function showProfileModal(){ const modal=document.getElementById('profileModal'), bodyDiv=document.getElementById('profileModalBody'); bodyDiv.innerHTML='<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>'; modal.classList.add('active'); document.body.style.overflow='hidden'; if(!accessToken){ bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>'; return; } try{ const list=await fetchRawMusicList(); if(!list||!list.length){ bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>'; return; } let totalDownload=0,totalPlay=0,published=0,offline=0; list.forEach(i=>{ totalDownload+=i.DownloadCount||0; totalPlay+=i.ClicksRatio||0; i.IsOnSale?published++:offline++; }); bodyDiv.innerHTML=`<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div>`; }catch(e){ bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>'; } }
     function closeProfileModal(){ document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow='auto'; }
     function openToolModal(toolId){ const t=toolsData.find(t=>t.id===toolId); if(!t) return; document.getElementById('modalToolName').innerText=t.name; document.getElementById('modalToolCategory').innerText=t.category; document.getElementById('modalToolDescription').innerText=t.description; const iconDiv=document.getElementById('modalIcon'); iconDiv.innerHTML=`<i class="${t.icon}"></i>`; iconDiv.style.background=`linear-gradient(135deg, ${t.iconColor}99, ${t.iconColor})`; document.getElementById('modalFeatures').innerHTML=t.features.map(f=>`<div class="modal-feature"><i class="fas fa-check-circle"></i><span>${f}</span></div>`).join(''); document.getElementById('openToolBtn').href=t.url; document.getElementById('toolModal').classList.add('active'); document.body.style.overflow='hidden'; }
@@ -826,3 +868,4 @@
 </script>
 </body>
 </html>
+```

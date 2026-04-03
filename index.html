@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>舞立方自制谱谱师工具 | 专业谱面管理</title>
+    <title>舞立方自制谱谱师工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ========== 全局变量 & 基础重置 ========== */
@@ -484,7 +484,6 @@
             padding: 24px;
             overflow-y: visible;
         }
-        /* 修复手机端数字溢出：字号缩小，内边距优化，允许换行 */
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -560,7 +559,7 @@
             word-break: break-word;
         }
 
-        /* ========== 手机端样式优化 & 图形验证码完全显示修复 ========== */
+        /* ========== 手机端样式优化 (缩小手机登录弹窗间距 & 字体，不影响电脑端) ========== */
         @media (max-width: 768px) {
             body { padding: 12px; }
             .header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
@@ -598,52 +597,69 @@
             .announcement-hint { font-size: 0.65rem; padding: 4px 8px; }
             .marquee-text { font-size: 0.85rem; }
 
-            .phone-login-content { max-width: 95%; border-radius: 28px; overflow: hidden; }
-            .phone-login-header { padding: 24px 20px; }
-            .phone-login-header i { font-size: 2rem; margin-bottom: 8px; }
-            .phone-login-header h2 { font-size: 1.5rem; margin-bottom: 6px; }
-            .phone-login-header p { font-size: 0.8rem; opacity: 0.9; }
-            .phone-login-body { padding: 24px 20px; }
-            .form-group { margin-bottom: 18px; }
-            .form-group label { font-size: 0.8rem; margin-bottom: 6px; }
-            .form-group input { padding: 12px 16px; font-size: 0.9rem; border-radius: 14px; }
-            .captcha-row, .sms-row {
-                display: flex;
-                gap: 10px;
-                align-items: center;
-                flex-wrap: nowrap;
+            /* ===== 手机端手机号登录弹窗专用样式：缩小间距&字体，确保完整可见 ===== */
+            .phone-login-content {
+                max-width: 94%;
+                border-radius: 28px;
+                overflow: hidden;
             }
-            .captcha-row input {
-                flex: 1;
-                min-width: 0;
+            .phone-login-header {
+                padding: 16px 20px 12px !important;
+            }
+            .phone-login-header i {
+                font-size: 1.6rem !important;
+                margin-bottom: 4px !important;
+            }
+            .phone-login-header h2 {
+                font-size: 1.25rem !important;
+                margin-bottom: 4px !important;
+            }
+            .phone-login-header p {
+                font-size: 0.7rem !important;
+                opacity: 0.9;
+            }
+            .phone-login-body {
+                padding: 16px 18px 22px !important;
+            }
+            .phone-login-body .form-group {
+                margin-bottom: 14px !important;
+            }
+            .phone-login-body .form-group label {
+                font-size: 0.7rem !important;
+                margin-bottom: 5px !important;
+            }
+            .phone-login-body .form-group input {
+                padding: 10px 14px !important;
+                font-size: 0.85rem !important;
+                border-radius: 14px !important;
+            }
+            .captcha-row, .sms-row {
+                gap: 8px !important;
             }
             .captcha-img {
-                width: 110px;
-                height: 48px;
-                border-radius: 14px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: var(--feature-bg);
-                border: 1px solid var(--border-light);
-                overflow: hidden;
-                cursor: pointer;
-            }
-            .captcha-img img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background: #fff;
+                width: 100px !important;
+                height: 44px !important;
+                border-radius: 12px !important;
             }
             .btn-secondary {
-                padding: 10px 14px;
-                font-size: 0.75rem;
-                border-radius: 14px;
+                padding: 8px 12px !important;
+                font-size: 0.7rem !important;
+                border-radius: 12px !important;
                 white-space: nowrap;
             }
-            .btn-block { padding: 12px; font-size: 0.95rem; border-radius: 40px; margin-top: 20px; }
-            .message { font-size: 0.8rem; padding: 10px 14px; margin-top: 16px; }
+            .btn-block {
+                padding: 10px !important;
+                font-size: 0.85rem !important;
+                border-radius: 40px !important;
+                margin-top: 14px !important;
+            }
+            .message {
+                font-size: 0.7rem !important;
+                padding: 8px 12px !important;
+                margin-top: 12px !important;
+            }
 
+            /* 其他模态框通用微调 */
             .login-content { max-width: 95%; }
             .login-header { padding: 24px 20px; }
             .login-header h2 { font-size: 1.5rem; }
@@ -686,8 +702,7 @@
             object-fit: contain;
         }
 
-        /* ========== 工具悬浮窗（模态框）图标颜色修复 ==========
-           除了对号图标保持绿色以外，其他所有图标强制为白色 */
+        /* 工具悬浮窗（模态框）图标颜色修复 */
         .modal-feature i {
             color: #22c55e !important;
             font-size: 1rem;
@@ -695,8 +710,6 @@
         body.dark .modal-feature i {
             color: #4ade80 !important;
         }
-
-        /* 强制模态框内除 .modal-feature i 以外的所有图标为白色 */
         .modal-icon i,
         .modal-header i:not(.modal-feature i),
         .modal-body i:not(.modal-feature i),
@@ -705,18 +718,12 @@
         .tool-modal i:not(.modal-feature i) {
             color: #ffffff !important;
         }
-
-        /* 确保关闭按钮的叉号也是白色 */
         .modal-close i {
             color: white !important;
         }
-
-        /* 针对可能嵌套的其他图标也强制白色（保留对号图标例外） */
         .modal-content i:not(.modal-feature i):not(.fa-check-circle) {
             color: #ffffff !important;
         }
-
-        /* 特别保护对号图标的绿色，任何情况下都不被覆盖 */
         .modal-feature .fa-check-circle,
         .modal-feature i.fa-check-circle {
             color: #22c55e !important;
@@ -824,7 +831,7 @@
     <div class="announcement-wrapper"><div class="announcement-bar" id="announcementBar"><div class="announcement-icon"><i class="fas fa-bullhorn"></i></div><div class="marquee-container"><div class="marquee-text" id="marqueeText"><span>✨ 增加点击头像查看谱师数据！ ✨</span><span>修复各个工具对手机端的适配问题</span><span>合并登录入口，支持微信/手机号</span></div></div><div class="announcement-hint"><i class="fas fa-hand-pointer"></i> 详情</div></div></div>
     <div class="search-filter"><div class="search-box"><input type="text" id="searchInput" placeholder="搜索工具名称或功能..."><i class="fas fa-search"></i></div></div>
     <section class="tools-section"><div class="section-header"><div><h2>舞立方工具大全</h2></div><div><p>共 <span id="toolCount">0</span> 个工具</p></div></div><div class="tools-grid" id="toolsGrid"></div></section>
-    <footer class="footer"><p>2025 舞立方自制谱谱师工具 | 电脑端/手机端自适应 | 点击头像查看谱师数据</p></footer>
+    <footer class="footer"><p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发 </p></footer>
 </div>
 
 <!-- 谱师数据弹窗 -->
@@ -836,7 +843,7 @@
 <!-- 微信登录模态框 -->
 <div class="login-modal" id="loginModal"><div class="login-content"><button class="login-close" id="loginClose"><i class="fas fa-times"></i></button><div class="login-header"><i class="fab fa-weixin fa-2x"></i><h2>微信扫码登录</h2><p>使用微信扫描二维码登录</p></div><div class="login-body"><div class="qr-container"><div class="qr-placeholder" id="loginQrPlaceholder"><i class="fas fa-qrcode"></i><p>点击生成二维码</p></div><img id="login-qrcode-img" alt="二维码"></div><div class="login-status waiting" id="loginStatus">点击上方区域生成二维码</div></div></div></div>
 
-<!-- 手机号登录模态框 -->
+<!-- 手机号登录模态框（已优化手机端间距字体） -->
 <div class="phone-login-modal" id="phoneLoginModal"><div class="phone-login-content"><button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button><div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i><h2>手机号登录</h2><p>输入手机号获取验证码登录</p></div><div class="phone-login-body"><div class="form-group"><label>手机号码</label><input type="tel" id="phoneNumber" placeholder="请输入11位手机号"></div><div class="form-group"><label>图形验证码</label><div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码"><div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button"><i class="fas fa-sync-alt"></i></button></div></div><div class="form-group"><label>短信验证码</label><div class="sms-row"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div></div><button id="phoneDoLoginBtn" class="btn-block">立即登录</button><div id="phoneMessage" class="message"></div></div></div></div>
 
 <!-- 工具模态框 -->
@@ -846,26 +853,65 @@
 <div class="announce-modal" id="announceModal"><div class="announce-modal-content"><button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button><div class="announce-modal-header"><i class="fas fa-newspaper"></i> <h3 style="display:inline-block;">最新公告</h3></div><div class="announce-modal-body"><p><strong>1.增加点击头像查看谱师数据！</strong></p><p><strong>2.修复各个工具对手机端的适配问题</strong></p><p><strong>3.登录入口合并，支持微信/手机号登录</strong></p></div></div></div>
 
 <script>
-    // 工具数据 (完整保留，未做任何更改)
+    // 工具数据 (完整保留)
     const toolsData = [
-        { id: 1, name: "自制谱上传工具", category: "upload", description: "上传您的自制谱到机器上", icon: "fa-solid fa-upload", iconColor: "#0033ff", features: ["直接跳转"], url: "https://danceweb.shenghuayule.com/MusicMaker/#/" },
-        { id: 2, name: "txt转mc/mcz", category: "exchange", description: "将txt文件转换为mc文件，并且支持打包为mcz文件", icon: "fas fa-music", iconColor: "#6a11cb", featured: true, features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包"], url: "../txt-mc.html" },
-        { id: 3, name: "歌曲封面剪裁", category: "cut", description: "将图片裁剪为可上传大小", icon: "fas fa-image", iconColor: "#117ecb", featured: true, features: ["自动裁剪", "jpg格式", "直接下载"], url: "../picturecut.html" },
-        { id: 4, name: "标题图制作", category: "make", description: "绘制标题图图片", icon: "fas fa-heading", iconColor: "#cb6511", featured: true, features: ["自动绘制", "png格式", "直接下载"], url: "../maketitle.html" },
-        { id: 5, name: "音频转换", category: "exchange", description: "转换音频格式", icon: "fas fa-compact-disc", iconColor: "#b811cb", featured: true, features: ["多格式转换", "直接下载"], url: "../exchange-radio.html" },
-        { id: 6, name: "ncm转换", category: "exchange", description: "转换ncm格式", icon: "fas fa-arrows-rotate", iconColor: "#ff0000", featured: true, features: ["自动转换ncm文件", "多文件转换"], url: "../ncmexchange.html" },
-        { id: 7, name: "mc/mcz转txt", category: "exchange", description: "将mc/mcz文件转换为txt并打包", icon: "fas fa-right-left", iconColor: "#e600ff", featured: true, features: ["自动转换", "打包zip", "支持变速"], url: "../mc-txt.html" },
-        { id: 8, name: "免费mp3下载", category: "download", description: "免费下载歌曲mp3音频", icon: "fa-solid fa-download", iconColor: "#2ba31d", featured: true, features: ["免费下载"], url: "https://www.myfreemp3.com.cn/" },
-        { id: 9, name: "兑换码生成", category: "make", description: "生成歌曲兑换码", icon: "fa-solid fa-gift", iconColor: "#520fc5", new: true, features: ["多种时长","永久/次数"], url: "../gift.html" },
-        { id: 10, name: "token获取", category: "token", description: "获取舞立方用户token", icon: "fa-solid fa-key", iconColor: "#c5a007", new: true, features: ["扫码登录","获取token"], url: "../gettoken.html" }
+        { id: 1, name: "自制谱上传工具", category: "上传工具", description: "上传您的自制谱到机器上", icon: "fa-solid fa-upload", iconColor: "#0033ff", features: ["直接跳转"], url: "https://danceweb.shenghuayule.com/MusicMaker/#/" },
+        { id: 2, name: "txt转mc/mcz", category: "转换工具", description: "将txt文件转换为mc文件，并且支持打包为mcz文件", icon: "fas fa-music", iconColor: "#6a11cb", featured: true, features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包"], url: "../txt-mc.html" },
+        { id: 3, name: "歌曲封面剪裁", category: "剪裁工具", description: "将图片裁剪为可上传大小", icon: "fas fa-image", iconColor: "#117ecb", featured: true, features: ["自动裁剪", "jpg格式", "直接下载"], url: "../picturecut.html" },
+        { id: 4, name: "标题图制作", category: "制作工具", description: "绘制标题图图片", icon: "fas fa-heading", iconColor: "#cb6511", featured: true, features: ["自动绘制", "png格式", "直接下载"], url: "../maketitle.html" },
+        { id: 5, name: "音频转换", category: "转换工具", description: "转换音频格式", icon: "fas fa-compact-disc", iconColor: "#b811cb", featured: true, features: ["多格式转换", "直接下载"], url: "../exchange-radio.html" },
+        { id: 6, name: "ncm转换", category: "转换工具", description: "转换ncm格式", icon: "fas fa-arrows-rotate", iconColor: "#ff0000", featured: true, features: ["自动转换ncm文件", "多文件转换"], url: "../ncmexchange.html" },
+        { id: 7, name: "mc/mcz转txt", category: "转换工具", description: "将mc/mcz文件转换为txt并打包", icon: "fas fa-right-left", iconColor: "#e600ff", featured: true, features: ["自动转换", "打包zip", "支持变速"], url: "../mc-txt.html" },
+        { id: 8, name: "免费mp3下载", category: "下载工具", description: "免费下载歌曲mp3音频", icon: "fa-solid fa-download", iconColor: "#2ba31d", featured: true, features: ["免费下载"], url: "https://www.myfreemp3.com.cn/" },
+        { id: 9, name: "兑换码生成", category: "兑换码生成", description: "生成歌曲兑换码", icon: "fa-solid fa-gift", iconColor: "#520fc5", new: true, features: ["多种时长","永久/次数"], url: "../gift.html" },
+        { id: 10, name: "token获取", category: "获取工具", description: "获取舞立方用户token", icon: "fa-solid fa-key", iconColor: "#c5a007", new: true, features: ["扫码登录","获取token"], url: "../gettoken.html" }
     ];
     const API_BASE = 'https://dancedemo.shenghuayule.com';
     let accessToken = null, loginQrCodeData = null, loginCheckInterval = null, phoneCountdownInterval = null, phoneCountdown = 0;
 
-    // 以下所有业务逻辑JS完全保持原样，未改动任何功能流程
-    async function saveTokenAndFetchUser(token, userIdHint) { accessToken = token; localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now()+7*864e5).toISOString() })); try { let userId = userIdHint; if(!userId){ const tr=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint||'')}`,{headers:{'Authorization':`bearer ${token}`}}); const info=await tr.json(); userId=info.UserID||userIdHint; } const uir=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userId||'')}`,{headers:{'Authorization':`bearer ${token}`}}); const ui=await uir.json(); const userData={UserID:ui.UserID||userId,UserName:ui.UserName||(userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户'),HeadimgURL:ui.HeadimgURL||''}; localStorage.setItem('dance_user_data',JSON.stringify(userData)); showUserInfo(userData); } catch(e){ const fallbackName=userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户'; const userData={UserID:userIdHint||'unknown',UserName:fallbackName,HeadimgURL:''}; localStorage.setItem('dance_user_data',JSON.stringify(userData)); showUserInfo(userData); } }
+    // 保存token & 获取用户
+    async function saveTokenAndFetchUser(token, userIdHint) {
+        accessToken = token;
+        localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now()+7*864e5).toISOString() }));
+        try {
+            let userId = userIdHint;
+            if(!userId){
+                const tr=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint||'')}`,{headers:{'Authorization':`bearer ${token}`}});
+                const info=await tr.json();
+                userId=info.UserID||userIdHint;
+            }
+            const uir=await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userId||'')}`,{headers:{'Authorization':`bearer ${token}`}});
+            const ui=await uir.json();
+            const userData={UserID:ui.UserID||userId,UserName:ui.UserName||(userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户'),HeadimgURL:ui.HeadimgURL||''};
+            localStorage.setItem('dance_user_data',JSON.stringify(userData));
+            showUserInfo(userData);
+        } catch(e){
+            const fallbackName=userIdHint?`用户${userIdHint.slice(-4)}`:'手机用户';
+            const userData={UserID:userIdHint||'unknown',UserName:fallbackName,HeadimgURL:''};
+            localStorage.setItem('dance_user_data',JSON.stringify(userData));
+            showUserInfo(userData);
+        }
+    }
     function showUserInfo(user){ document.getElementById('userName').innerText=user.UserName; document.getElementById('userId').innerText=`ID: ${user.UserID}`; document.getElementById('userDetails').style.display='flex'; document.getElementById('userAvatar').style.display='flex'; document.getElementById('loginBtn').style.display='none'; if(user.HeadimgURL) document.getElementById('userAvatar').innerHTML=`<img src="${user.HeadimgURL}">`; else document.getElementById('userAvatar').innerHTML=user.UserName?.charAt(0).toUpperCase()||'U'; }
-    function clearUserData(){ localStorage.removeItem('dance_user_data');localStorage.removeItem('dance_user_token');accessToken=null;document.getElementById('userDetails').style.display='none';document.getElementById('userAvatar').style.display='none';document.getElementById('loginBtn').style.display='flex';}
+
+    // 退出登录时清空所有表单数据（手机号弹窗里的输入）
+    function clearUserData(){
+        localStorage.removeItem('dance_user_data');
+        localStorage.removeItem('dance_user_token');
+        accessToken=null;
+        document.getElementById('userDetails').style.display='none';
+        document.getElementById('userAvatar').style.display='none';
+        document.getElementById('loginBtn').style.display='flex';
+        // 清除手机号登录弹窗中的所有填写数据
+        const phoneInput = document.getElementById('phoneNumber');
+        const graphInput = document.getElementById('graphCodeInput');
+        const smsInput = document.getElementById('smsCodeInput');
+        if(phoneInput) phoneInput.value = '';
+        if(graphInput) graphInput.value = '';
+        if(smsInput) smsInput.value = '';
+        const msgDiv = document.getElementById('phoneMessage');
+        if(msgDiv) msgDiv.style.display = 'none';
+    }
     function checkLoginStatus(){ const saved=localStorage.getItem('dance_user_data'),tokenData=localStorage.getItem('dance_user_token'); if(saved&&tokenData) try{ const tok=JSON.parse(tokenData); if(new Date(tok.expireTime)>new Date()){ accessToken=tok.token; showUserInfo(JSON.parse(saved)); } else clearUserData(); }catch(e){ clearUserData(); } }
     function openLoginChoice(){ document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow='hidden'; }
     function closeLoginChoice(){ document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow='auto'; }
@@ -873,9 +919,9 @@
     function openLoginModal(){ closeLoginChoice(); document.getElementById('loginModal').classList.add('active'); document.body.style.overflow='hidden'; document.getElementById('login-qrcode-img').style.display='none'; document.getElementById('loginQrPlaceholder').style.display='flex'; document.getElementById('loginStatus').innerText='点击上方区域生成二维码'; document.getElementById('loginStatus').className='login-status waiting'; }
     function closeLoginModal(){ document.getElementById('loginModal').classList.remove('active'); document.body.style.overflow='auto'; if(loginCheckInterval) clearInterval(loginCheckInterval); }
     async function loadGraphCodeForPhone(){ const phone=document.getElementById('phoneNumber').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)){ showPhoneMsg('请填写正确手机号','error'); return; } const captchaImg=document.getElementById('captchaImage'),captchaSpan=document.getElementById('captchaTextSpan'); captchaSpan.style.display='flex'; captchaSpan.innerText='⏳加载'; captchaImg.style.display='none'; try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`); const text=await res.text(); let base64=text.trim(); if(base64.startsWith('"')) base64=base64.slice(1,-1); captchaImg.src=`data:image/gif;base64,${base64}`; captchaImg.style.display='block'; captchaSpan.style.display='none'; showPhoneMsg('图形码已刷新','success'); }catch(e){ captchaSpan.innerText='点击重试'; showPhoneMsg('加载失败','error'); } }
-    async function requestSmsCode(){ const phone=document.getElementById('phoneNumber').value.trim(),graphCode=document.getElementById('graphCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)){ showPhoneMsg('手机号错误','error'); return; } if(!graphCode){ showPhoneMsg('请填写图形验证码','error'); return; } if(phoneCountdown>0){ showPhoneMsg(`请等待${phoneCountdown}秒后重试`,'error'); return; } const btn=document.getElementById('getSmsCodeBtn'); btn.disabled=true; phoneCountdown=60; btn.innerText=`${phoneCountdown}秒后重试`; if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); phoneCountdownInterval=setInterval(()=>{ if(phoneCountdown<=1){ clearInterval(phoneCountdownInterval); btn.disabled=false; btn.innerText='获取验证码'; phoneCountdown=0; }else{ phoneCountdown--; btn.innerText=`${phoneCountdown}秒后重试`; } },1000); try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); const text=await res.text(); let sms=text.trim(); if(sms.startsWith('"')) sms=sms.slice(1,-1); if(/^\d{4,8}$/.test(sms)){ document.getElementById('smsCodeInput').value=sms; showPhoneMsg(`验证码: ${sms}`,'success'); } else throw new Error('获取失败'); }catch(e){ showPhoneMsg('获取失败','error'); } }
+    async function requestSmsCode(){ const phone=document.getElementById('phoneNumber').value.trim(),graphCode=document.getElementById('graphCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)){ showPhoneMsg('手机号错误','error'); return; } if(!graphCode){ showPhoneMsg('请填写图形验证码','error'); return; } if(phoneCountdown>0){ showPhoneMsg(`请等待${phoneCountdown}秒后重试`,'error'); return; } const btn=document.getElementById('getSmsCodeBtn'); btn.disabled=true; phoneCountdown=60; btn.innerText=`${phoneCountdown}秒后重试`; if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); phoneCountdownInterval=setInterval(()=>{ if(phoneCountdown<=1){ clearInterval(phoneCountdownInterval); btn.disabled=false; btn.innerText='获取验证码'; phoneCountdown=0; }else{ phoneCountdown--; btn.innerText=`${phoneCountdown}秒后重试`; } },1000); try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); const text=await res.text(); let sms=text.trim(); if(sms.startsWith('"')) sms=sms.slice(1,-1); if(/^\d{4,8}$/.test(sms)){ document.getElementById('smsCodeInput').value=sms; showPhoneMsg(`验证码: ${sms}`,'success'); } else throw new Error('请稍后'); }catch(e){ showPhoneMsg('请稍后','waiting...'); } }
     async function phoneLogin(){ const phone=document.getElementById('phoneNumber').value.trim(),smsCode=document.getElementById('smsCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)){ showPhoneMsg('手机号错误','error'); return; } if(!smsCode){ showPhoneMsg('请输入验证码','error'); return; } const btn=document.getElementById('phoneDoLoginBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> 登录中...'; try{ const params=new URLSearchParams({client_type:'phone',grant_type:'client_credentials',client_id:phone,client_secret:smsCode}); const res=await fetch(`${API_BASE}/Dance/token`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params}); const data=await res.json(); if(!res.ok) throw new Error(data.error_description||'登录失败'); const token=data.access_token; if(token){ const uid=data.user_id||data.userId||phone; await saveTokenAndFetchUser(token, uid); showPhoneMsg('登录成功','success'); setTimeout(()=>closePhoneModal(),1200); } else throw new Error('无token'); }catch(e){ showPhoneMsg(e.message,'error'); } finally{ btn.disabled=false; btn.innerHTML='立即登录'; } }
-    function showPhoneMsg(msg,type){ const div=document.getElementById('phoneMessage'); div.innerText=msg; div.className=`message ${type}`; setTimeout(()=>{ if(div.innerText===msg) div.style.display='none'; },4000); div.style.display='block'; }
+    function showPhoneMsg(msg,type){ const div=document.getElementById('phoneMessage'); div.innerText=msg; div.className=`message ${type}`; div.style.display='block'; setTimeout(()=>{ if(div.innerText===msg) div.style.display='none'; },4000); }
     function openPhoneModal(){ closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); document.body.style.overflow='hidden'; loadGraphCodeForPhone(); }
     function closePhoneModal(){ document.getElementById('phoneLoginModal').classList.remove('active'); document.body.style.overflow='auto'; if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); }
     async function fetchRawMusicList(){ if(!accessToken) return null; try{ const res=await fetch(`https://dancedemo.shenghuayule.com/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`,{headers:{'Authorization':`bearer ${accessToken}`}}); if(res.status===401) return null; const data=await res.json(); return Array.isArray(data)?data:(data.List||[]); } catch(e){ return null; } }
@@ -887,7 +933,32 @@
     function toggleTheme(){ document.body.classList.toggle('dark'); const isDark=document.body.classList.contains('dark'); localStorage.setItem('dance_theme',isDark?'dark':'light'); themeToggle.innerHTML=isDark?'<i class="fas fa-sun"></i> 浅色模式':'<i class="fas fa-moon"></i> 暗色模式'; }
     function renderTools(tools){ const grid=document.getElementById('toolsGrid'); grid.innerHTML=''; tools.forEach(t=>{ const card=document.createElement('div'); card.className='tool-card'; if(t.featured) card.classList.add('featured'); if(t.new) card.classList.add('new'); card.dataset.id=t.id; card.innerHTML=`<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured?'<div class="tool-badge featured-badge">实用</div>':''}${t.new?'<div class="tool-badge new-badge">新</div>':''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`; card.addEventListener('click',(e)=>{ if(!e.target.closest('.tool-action')) openToolModal(t.id); }); grid.appendChild(card); }); document.getElementById('toolCount').innerText=tools.length; }
     function filterTools(){ const term=document.getElementById('searchInput').value.toLowerCase(); renderTools(toolsData.filter(t=>t.name.toLowerCase().includes(term)||t.description.toLowerCase().includes(term))); }
-    function bindEvents(){ document.getElementById('searchInput').addEventListener('input',filterTools); document.getElementById('modalClose').addEventListener('click',closeToolModal); document.getElementById('toolModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('toolModal')) closeToolModal(); }); document.getElementById('loginBtn').addEventListener('click',openLoginChoice); document.getElementById('choiceClose').addEventListener('click',closeLoginChoice); document.getElementById('loginChoiceModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('loginChoiceModal')) closeLoginChoice(); }); document.getElementById('chooseWechatBtn').addEventListener('click',openLoginModal); document.getElementById('choosePhoneBtn').addEventListener('click',openPhoneModal); document.getElementById('loginClose').addEventListener('click',closeLoginModal); document.getElementById('loginQrPlaceholder').addEventListener('click',generateLoginQRCode); document.getElementById('logoutBtn').addEventListener('click',()=>{ if(confirm('退出登录？')) clearUserData(); }); document.getElementById('themeToggle').addEventListener('click',toggleTheme); document.getElementById('announcementBar').addEventListener('click',()=>document.getElementById('announceModal').classList.add('active')); document.getElementById('announceModalClose').addEventListener('click',()=>document.getElementById('announceModal').classList.remove('active')); document.getElementById('phoneModalClose').addEventListener('click',closePhoneModal); document.getElementById('refreshCaptchaBtn').addEventListener('click',loadGraphCodeForPhone); document.getElementById('captchaImgBox').addEventListener('click',loadGraphCodeForPhone); document.getElementById('getSmsCodeBtn').addEventListener('click',requestSmsCode); document.getElementById('phoneDoLoginBtn').addEventListener('click',phoneLogin); document.getElementById('userAvatar').addEventListener('click',(e)=>{ e.stopPropagation(); showProfileModal(); }); document.getElementById('profileModalClose').addEventListener('click',closeProfileModal); document.getElementById('profileModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('profileModal')) closeProfileModal(); }); document.getElementById('loginModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('loginModal')) closeLoginModal(); }); document.getElementById('phoneLoginModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('phoneLoginModal')) closePhoneModal(); }); }
+    function bindEvents(){
+        document.getElementById('searchInput').addEventListener('input',filterTools);
+        document.getElementById('modalClose').addEventListener('click',closeToolModal);
+        document.getElementById('toolModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('toolModal')) closeToolModal(); });
+        document.getElementById('loginBtn').addEventListener('click',openLoginChoice);
+        document.getElementById('choiceClose').addEventListener('click',closeLoginChoice);
+        document.getElementById('loginChoiceModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('loginChoiceModal')) closeLoginChoice(); });
+        document.getElementById('chooseWechatBtn').addEventListener('click',openLoginModal);
+        document.getElementById('choosePhoneBtn').addEventListener('click',openPhoneModal);
+        document.getElementById('loginClose').addEventListener('click',closeLoginModal);
+        document.getElementById('loginQrPlaceholder').addEventListener('click',generateLoginQRCode);
+        document.getElementById('logoutBtn').addEventListener('click',()=>{ if(confirm('退出登录？')) clearUserData(); });
+        document.getElementById('themeToggle').addEventListener('click',toggleTheme);
+        document.getElementById('announcementBar').addEventListener('click',()=>document.getElementById('announceModal').classList.add('active'));
+        document.getElementById('announceModalClose').addEventListener('click',()=>document.getElementById('announceModal').classList.remove('active'));
+        document.getElementById('phoneModalClose').addEventListener('click',closePhoneModal);
+        document.getElementById('refreshCaptchaBtn').addEventListener('click',loadGraphCodeForPhone);
+        document.getElementById('captchaImgBox').addEventListener('click',loadGraphCodeForPhone);
+        document.getElementById('getSmsCodeBtn').addEventListener('click',requestSmsCode);
+        document.getElementById('phoneDoLoginBtn').addEventListener('click',phoneLogin);
+        document.getElementById('userAvatar').addEventListener('click',(e)=>{ e.stopPropagation(); showProfileModal(); });
+        document.getElementById('profileModalClose').addEventListener('click',closeProfileModal);
+        document.getElementById('profileModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('profileModal')) closeProfileModal(); });
+        document.getElementById('loginModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('loginModal')) closeLoginModal(); });
+        document.getElementById('phoneLoginModal').addEventListener('click',(e)=>{ if(e.target===document.getElementById('phoneLoginModal')) closePhoneModal(); });
+    }
     function init(){ initTheme(); checkLoginStatus(); renderTools(toolsData); bindEvents(); }
     init();
     document.addEventListener('contextmenu',e=>e.preventDefault()); document.addEventListener('selectstart',e=>e.preventDefault()); document.addEventListener('dragstart',e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });

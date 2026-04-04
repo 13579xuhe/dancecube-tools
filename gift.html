@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>舞立方自制谱兑换码生成</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>舞立方自制谱兑换码生成 - 专业版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -204,7 +204,7 @@
 
         .result-container {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 20px;
             margin-top: 20px;
             min-height: 80px;
@@ -291,77 +291,18 @@
             color: #4cc9f0;
         }
 
-        .code-card {
-            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(67, 97, 238, 0.1));
-            border-radius: 10px;
+        .codes-display-area {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
             padding: 15px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(76, 201, 240, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .code-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(76, 201, 240, 0.15);
-        }
-
-        .code-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .code-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #4cc9f0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .code-value {
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #4ade80;
-            text-align: center;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
-            margin: 8px 0;
-            word-break: break-all;
-            letter-spacing: 0.5px;
-            border: 1px dashed rgba(76, 201, 240, 0.3);
-        }
-
-        .single-code-container {
-            text-align: center;
             margin: 15px 0;
-        }
-
-        .single-code-label {
-            font-size: 0.9rem;
-            color: #a0a0c0;
-            margin-bottom: 8px;
-        }
-
-        .single-code-value {
             font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #4ade80;
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(67, 97, 238, 0.1));
-            border-radius: 10px;
-            margin: 12px auto;
-            max-width: 600px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
             word-break: break-all;
-            letter-spacing: 1px;
-            border: 2px dashed rgba(76, 201, 240, 0.4);
+            border: 1px solid rgba(76, 201, 240, 0.2);
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .action-buttons {
@@ -521,7 +462,6 @@
             align-items: center;
         }
 
-        /* 全新样式的有效期选择框 - 现代风格 */
         .expire-type-wrapper {
             display: flex;
             background: linear-gradient(135deg, rgba(76, 201, 240, 0.15), rgba(67, 97, 238, 0.15));
@@ -557,7 +497,6 @@
             display: none;
         }
 
-        /* 全新样式的下拉选择器 */
         .expire-type-select {
             flex: 1;
             padding: 12px 16px;
@@ -633,20 +572,6 @@
             border-radius: 8px;
             color: #e6e6e6;
             font-size: 1rem;
-        }
-
-        /* 日志区域隐藏 */
-        .logs-container {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #888;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .back-home-btn {
@@ -752,7 +677,6 @@
         }
     </style>
 </head>
-
 <body>
 <div class="back-home-btn" onclick="window.location.href='../index.html'">
     <span class="material-icons">←</span>
@@ -854,7 +778,6 @@
     let currentRemainTimes = 0;
     const API_BASE = 'https://dancedemo.shenghuayule.com/Dance';
 
-    // DOM 元素
     const userStatusArea = document.getElementById('user-status-area');
     const checkRemainBtn = document.getElementById('check-remain-btn');
     const generateCodeBtn = document.getElementById('generate-code-btn');
@@ -1003,13 +926,11 @@
         } else {
             codeCountInput.disabled = false;
             codeCountInput.max = maxCodes;
-
             let currentVal = codeCountInput.value;
             if (currentVal === '' || currentVal === null) {
                 codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 最多可生成 ${maxCodes} 个，请输入1~${maxCodes}之间的数字`;
                 return;
             }
-
             let numVal = parseInt(currentVal);
             if (!isNaN(numVal)) {
                 if (maxCodes > 0 && numVal > maxCodes) {
@@ -1021,15 +942,10 @@
                     codeCountInput.value = numVal;
                 }
             }
-
             if (maxCodes === 0) {
-                if (selectedCnt === 0) {
-                    codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 请先选择谱面`;
-                } else if (currentRemainTimes === 0) {
-                    codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 剩余次数为0，无法生成`;
-                } else {
-                    codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 剩余次数不足，无法生成`;
-                }
+                if (selectedCnt === 0) codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 请先选择谱面`;
+                else if (currentRemainTimes === 0) codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 剩余次数为0，无法生成`;
+                else codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 剩余次数不足，无法生成`;
             } else {
                 codeCountInfo.innerHTML = `<i class="fas fa-info-circle"></i> 最多可生成 ${maxCodes} 个，您可输入1~${maxCodes}之间的任意数量`;
             }
@@ -1048,7 +964,6 @@
         }
         let val = parseInt(rawValue);
         const maxCodes = getMaxAvailableCodes();
-
         if (!isNaN(val)) {
             if (maxCodes > 0 && val > maxCodes) {
                 val = maxCodes;
@@ -1121,27 +1036,20 @@
 
     function extractMusicId(music) {
         const fields = ['MusicID', 'musicId', 'GoodsID', 'ID', 'id', 'Id', 'songId', 'SongID'];
-        for (const f of fields) {
-            if (music[f] !== undefined && music[f] !== null && music[f] !== '') return String(music[f]);
-        }
+        for (const f of fields) if (music[f] !== undefined && music[f] !== null && music[f] !== '') return String(music[f]);
         return null;
     }
 
     function extractMusicName(music) {
         if (music.Name) return String(music.Name);
         const fields = ['name', 'Title', 'title', 'songName', 'SongName', 'musicName', 'MusicName'];
-        for (const f of fields) {
-            if (music[f]) return String(music[f]);
-        }
+        for (const f of fields) if (music[f]) return String(music[f]);
         if (music.GoodsIntro) return String(music.GoodsIntro);
         return '未知谱面';
     }
 
     async function loadMusicList() {
-        if (!userToken) {
-            addLog('未获取到Token，请重新登录', 'warning');
-            return;
-        }
+        if (!userToken) { addLog('未获取到Token，请重新登录', 'warning'); return; }
         try {
             addLog('正在加载谱面列表...', 'info');
             refreshMusicBtn.disabled = true;
@@ -1158,11 +1066,7 @@
             else if (data.data && Array.isArray(data.data)) extracted = data.data;
             else if (data.list && Array.isArray(data.list)) extracted = data.list;
             else if (data.records && Array.isArray(data.records)) extracted = data.records;
-            else {
-                for (let k in data) {
-                    if (Array.isArray(data[k])) { extracted = data[k]; break; }
-                }
-            }
+            else for (let k in data) if (Array.isArray(data[k])) { extracted = data[k]; break; }
             musicList = extracted;
             musicCountSpan.textContent = musicList.length;
             addLog(`加载成功，共 ${musicList.length} 个谱面`, 'success');
@@ -1177,10 +1081,7 @@
     }
 
     async function checkRemainTimes() {
-        if (!userToken) {
-            addLog('请先登录', 'warning');
-            return;
-        }
+        if (!userToken) { addLog('请先登录', 'warning'); return; }
         try {
             addLog('查询剩余次数...', 'info');
             checkRemainBtn.disabled = true;
@@ -1237,11 +1138,8 @@
         if (count < 1) count = 1;
         const body = [];
         for (let id of selectedMusicIds) {
-            if (onecode) {
-                body.push({ "MusicID": parseInt(id), "ExpireDuration": duration, "ExpireUnitType": unit });
-            } else {
-                body.push({ "MusicID": parseInt(id), "Count": count, "ExpireDuration": duration, "ExpireUnitType": unit });
-            }
+            if (onecode) body.push({ "MusicID": parseInt(id), "ExpireDuration": duration, "ExpireUnitType": unit });
+            else body.push({ "MusicID": parseInt(id), "Count": count, "ExpireDuration": duration, "ExpireUnitType": unit });
         }
         return body;
     }
@@ -1249,12 +1147,44 @@
     function findAllCodes(obj, result = []) {
         if (!obj || typeof obj !== 'object') return result;
         const fields = ['code', 'Code', 'redeemCode', 'RedeemCode', 'CDKey', 'cdkey', 'key', 'Key'];
-        for (let f of fields) {
-            if (obj[f] && typeof obj[f] === 'string' && !result.includes(obj[f])) result.push(obj[f]);
-        }
+        for (let f of fields) if (obj[f] && typeof obj[f] === 'string' && !result.includes(obj[f])) result.push(obj[f]);
         if (Array.isArray(obj)) obj.forEach(v => findAllCodes(v, result));
         else for (let k in obj) if (obj[k] && typeof obj[k] === 'object') findAllCodes(obj[k], result);
         return result;
+    }
+
+    function getMusicNameById(musicId) {
+        const music = musicList.find(m => extractMusicId(m) === musicId);
+        return music ? extractMusicName(music) : '未知谱面';
+    }
+
+    // 新格式：每个谱面信息只出现一次，下方跟该谱面的所有兑换码
+    function buildFormattedCodeText(codesArray, expireText, onecodeMode, selectedIdsArray, countPerMusic) {
+        const lines = [];
+        if (onecodeMode) {
+            const commonCode = codesArray[0];
+            for (let id of selectedIdsArray) {
+                const musicName = getMusicNameById(id);
+                lines.push(`[${id}] ${musicName} (${expireText})`);
+                lines.push(commonCode);
+            }
+        } else {
+            let codeIdx = 0;
+            for (let id of selectedIdsArray) {
+                const musicName = getMusicNameById(id);
+                // 添加谱面信息行
+                lines.push(`[${id}] ${musicName} (${expireText})`);
+                // 获取该谱面对应的兑换码列表
+                const musicCodes = [];
+                for (let i = 0; i < countPerMusic && codeIdx < codesArray.length; i++) {
+                    musicCodes.push(codesArray[codeIdx]);
+                    codeIdx++;
+                }
+                // 每个兑换码占一行
+                lines.push(...musicCodes);
+            }
+        }
+        return lines.join('\n');
     }
 
     async function generateCodes() {
@@ -1285,7 +1215,9 @@
             const codes = findAllCodes(data);
             if (!codes.length) throw new Error('未获取到兑换码');
             let displayCodes = onecode ? [codes[0]] : codes.slice(0, count * selectedMusicIds.size);
-            showResult(displayCodes, expireText, onecode, count);
+            const selectedIdsArray = Array.from(selectedMusicIds);
+            const formattedText = buildFormattedCodeText(displayCodes, expireText, onecode, selectedIdsArray, count);
+            showResultWithFormattedText(formattedText, displayCodes, expireText, onecode, count);
             addLog(`生成成功，共${displayCodes.length}个兑换码`, 'success');
             setTimeout(() => checkRemainTimes(), 1000);
         } catch (err) {
@@ -1297,7 +1229,7 @@
         }
     }
 
-    function showResult(codes, expireText, onecode, count) {
+    function showResultWithFormattedText(formattedText, codes, expireText, onecode, count) {
         let html = `
             <div class="result-success-header">
                 <div class="success-icon"><i class="fas fa-check"></i></div>
@@ -1309,26 +1241,17 @@
                 <div class="result-info-item"><div class="result-info-label">时间</div><div class="result-info-value">${new Date().toLocaleString()}</div></div>
             </div>
         `;
-        if (onecode && selectedMusicIds.size > 0) {
-            html += `<div class="single-code-container"><div class="single-code-label">通用兑换码</div><div class="single-code-value">${codes[0]}</div></div>`;
-        } else {
-            html += `<div style="margin:20px 0;"><div style="color:#4cc9f0;margin-bottom:15px;">兑换码列表:</div>`;
-            codes.forEach((c, i) => {
-                html += `<div class="code-card"><div class="code-card-header"><div class="code-title">兑换码 ${i+1}</div></div><div class="code-value">${c}</div></div>`;
-            });
-            html += `</div>`;
-        }
-        const allCodes = codes.join('\n');
+        html += `<div class="codes-display-area">${escapeHtml(formattedText)}</div>`;
         html += `<div class="action-buttons">
-            <button id="copyBtn" class="action-btn copy-btn"><i class="fas fa-copy"></i> 复制全部</button>
+            <button id="copyBtn" class="action-btn copy-btn"><i class="fas fa-copy"></i> 复制全部（每行谱面信息+兑换码）</button>
             <button id="exportBtn" class="action-btn export-btn"><i class="fas fa-download"></i> 导出文件</button>
         </div>`;
         resultContent.innerHTML = html;
         document.getElementById('copyBtn')?.addEventListener('click', () => {
-            navigator.clipboard.writeText(allCodes).then(() => addLog('已复制', 'success')).catch(() => addLog('复制失败', 'error'));
+            navigator.clipboard.writeText(formattedText).then(() => addLog('已复制兑换码（每行谱面信息+兑换码）', 'success')).catch(() => addLog('复制失败', 'error'));
         });
         document.getElementById('exportBtn')?.addEventListener('click', () => {
-            const blob = new Blob([allCodes], { type: 'text/plain' });
+            const blob = new Blob([formattedText], { type: 'text/plain' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `兑换码_${Date.now()}.txt`;
@@ -1356,10 +1279,7 @@
         refreshMusicBtn.addEventListener('click', loadMusicList);
         selectAllBtn.addEventListener('click', selectAllMusic);
         clearSelectionBtn.addEventListener('click', clearMusicSelection);
-        expireTypeSelect.addEventListener('change', () => {
-            updateExpireValueVisibility();
-            updateCodeCountDisplay();
-        });
+        expireTypeSelect.addEventListener('change', () => { updateExpireValueVisibility(); updateCodeCountDisplay(); });
         expireValueInput.addEventListener('input', () => updateCodeCountDisplay());
         onecodeCheckbox.addEventListener('change', () => updateCodeCountDisplay());
         codeCountInput.addEventListener('input', onCodeCountInput);
@@ -1368,7 +1288,6 @@
     }
 
     init();
-
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('selectstart', e => e.preventDefault());
     document.addEventListener('keydown', e => {

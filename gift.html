@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>舞立方自制谱兑换码生成 - 专业版</title>
+    <title>舞立方自制谱兑换码生成</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -365,6 +365,30 @@
             margin-bottom: 20px;
         }
 
+        .search-box {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4cc9f0;
+            font-size: 1rem;
+        }
+
+        .search-box input {
+            padding-left: 36px;
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(76, 201, 240, 0.3);
+        }
+
+        .search-box input:focus {
+            border-color: #4cc9f0;
+        }
+
         .music-list {
             max-height: 300px;
             overflow-y: auto;
@@ -702,6 +726,11 @@
                         <button class="btn btn-small btn-secondary" id="clear-selection-btn" disabled><i class="fas fa-times"></i> 清空</button>
                     </div>
                 </div>
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="music-search-input" placeholder="搜索谱面ID或名称..." autocomplete="off">
+                </div>
                 <div class="music-list" id="music-list">
                     <div class="empty-message"><i class="fas fa-music"></i><br>请先登录并加载谱面列表</div>
                 </div>
@@ -719,6 +748,7 @@
                             <option value="hours">小时</option>
                             <option value="day" selected>天</option>
                             <option value="week">周</option>
+                            <option value="month">月</option>
                             <option value="season">季</option>
                             <option value="year">年</option>
                             <option value="forever">永久</option>
@@ -773,9 +803,11 @@
     // 全局变量
     let userToken = '';
     let userInfo = null;
-    let musicList = [];
+    let musicList = [];          // 原始完整谱面列表
+    let filteredMusicList = [];  // 过滤后的谱面列表（用于展示）
     let selectedMusicIds = new Set();
     let currentRemainTimes = 0;
+    let currentSearchKeyword = '';  // 当前搜索关键词
     const API_BASE = 'https://dancedemo.shenghuayule.com/Dance';
 
     const userStatusArea = document.getElementById('user-status-area');
@@ -794,6 +826,7 @@
     const resultContent = document.getElementById('result-content');
     const codeCountInput = document.getElementById('code-count');
     const codeCountInfo = document.getElementById('code-count-info');
+    const musicSearchInput = document.getElementById('music-search-input');
 
     function updateExpireValueVisibility() {
         const isForever = expireTypeSelect.value === 'forever';
@@ -874,6 +907,7 @@
         expireTypeSelect.disabled = false;
         expireValueInput.disabled = false;
         codeCountInput.disabled = false;
+        musicSearchInput.disabled = false;
     }
 
     function disableFeatures() {
@@ -885,6 +919,7 @@
         expireTypeSelect.disabled = true;
         expireValueInput.disabled = true;
         codeCountInput.disabled = true;
+        musicSearchInput.disabled = true;
     }
 
     function escapeHtml(str) {
@@ -901,6 +936,26 @@
         const now = new Date();
         const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
         console.log(`[${time}] [${type.toUpperCase()}] ${message}`);
+    }
+
+    // 过滤谱面：根据关键词搜索ID或名称
+    function filterMusicList(keyword) {
+        if (!keyword.trim()) {
+            filteredMusicList = [...musicList];
+        } else {
+            const lowerKeyword = keyword.toLowerCase();
+            filteredMusicList = musicList.filter(music => {
+                const musicId = extractMusicId(music) || '';
+                const musicName = extractMusicName(music) || '';
+                return musicId.toLowerCase().includes(lowerKeyword) || musicName.toLowerCase().includes(lowerKeyword);
+            });
+        }
+        renderMusicList();
+    }
+
+    // 获取当前展示的谱面列表（过滤后的）
+    function getCurrentDisplayMusicList() {
+        return filteredMusicList;
     }
 
     function getMaxAvailableCodes() {
@@ -977,13 +1032,15 @@
         updateCodeCountDisplay();
     }
 
+    // 渲染当前过滤后的谱面列表
     function renderMusicList() {
-        if (!musicList.length) {
-            musicListContainer.innerHTML = `<div class="empty-message"><i class="fas fa-music"></i><br>暂无发布的谱面</div>`;
+        const displayList = filteredMusicList;
+        if (!displayList.length) {
+            musicListContainer.innerHTML = `<div class="empty-message"><i class="fas fa-music"></i><br>${currentSearchKeyword ? '未找到匹配的谱面' : '暂无发布的谱面'}</div>`;
             return;
         }
         musicListContainer.innerHTML = '';
-        musicList.forEach(music => {
+        displayList.forEach(music => {
             const musicId = extractMusicId(music);
             const musicName = extractMusicName(music);
             if (!musicId) return;
@@ -1009,17 +1066,17 @@
     function toggleMusic(musicId, isSelected) {
         if (isSelected) selectedMusicIds.add(musicId);
         else selectedMusicIds.delete(musicId);
-        const item = document.querySelector(`.music-item[data-id="${musicId}"]`);
-        if (item) item.classList.toggle('selected', isSelected);
-        updateSelectedCount();
+        // 重新渲染以更新选中样式
+        renderMusicList();
         updateCodeCountDisplay();
     }
 
     function selectAllMusic() {
-        selectedMusicIds.clear();
-        musicList.forEach(m => { const id = extractMusicId(m); if (id) selectedMusicIds.add(id); });
+        // 全选当前过滤列表中的谱面
+        const displayList = filteredMusicList;
+        displayList.forEach(m => { const id = extractMusicId(m); if (id) selectedMusicIds.add(id); });
         renderMusicList();
-        addLog(`已全选 ${selectedMusicIds.size} 个谱面`, 'info');
+        addLog(`已全选当前列表 ${selectedMusicIds.size} 个谱面`, 'info');
     }
 
     function clearMusicSelection() {
@@ -1070,7 +1127,10 @@
             musicList = extracted;
             musicCountSpan.textContent = musicList.length;
             addLog(`加载成功，共 ${musicList.length} 个谱面`, 'success');
-            renderMusicList();
+            // 重置搜索框和过滤列表
+            currentSearchKeyword = '';
+            musicSearchInput.value = '';
+            filterMusicList(''); // 显示全部
         } catch (err) {
             addLog(`加载失败: ${err.message}`, 'error');
             musicListContainer.innerHTML = `<div class="empty-message"><i class="fas fa-exclamation-triangle"></i><br>${escapeHtml(err.message)}</div>`;
@@ -1118,14 +1178,14 @@
 
     function getExpireUnitType(type) {
         const map = { 'forever': 0, 'times': 1, 'day': 2, 'week': 3, 'month': 4, 'season': 5, 'year': 6, 'minutes': 7, 'hours': 8 };
-        return map[type] || 2;
+        return map[type] !== undefined ? map[type] : 2;
     }
 
     function getExpireText() {
         const type = expireTypeSelect.value;
         if (type === 'forever') return '永久';
         const val = expireValueInput.value;
-        const names = { 'times':'次', 'minutes':'分钟', 'hours':'小时', 'day':'天', 'week':'周', 'season':'季', 'year':'年' };
+        const names = { 'times':'次', 'minutes':'分钟', 'hours':'小时', 'day':'天', 'week':'周', 'month':'月', 'season':'季', 'year':'年' };
         return `${val}${names[type] || '天'}`;
     }
 
@@ -1158,7 +1218,6 @@
         return music ? extractMusicName(music) : '未知谱面';
     }
 
-    // 新格式：每个谱面信息只出现一次，下方跟该谱面的所有兑换码
     function buildFormattedCodeText(codesArray, expireText, onecodeMode, selectedIdsArray, countPerMusic) {
         const lines = [];
         if (onecodeMode) {
@@ -1172,15 +1231,12 @@
             let codeIdx = 0;
             for (let id of selectedIdsArray) {
                 const musicName = getMusicNameById(id);
-                // 添加谱面信息行
                 lines.push(`[${id}] ${musicName} (${expireText})`);
-                // 获取该谱面对应的兑换码列表
                 const musicCodes = [];
                 for (let i = 0; i < countPerMusic && codeIdx < codesArray.length; i++) {
                     musicCodes.push(codesArray[codeIdx]);
                     codeIdx++;
                 }
-                // 每个兑换码占一行
                 lines.push(...musicCodes);
             }
         }
@@ -1261,6 +1317,12 @@
         });
     }
 
+    // 搜索输入事件
+    function onSearchInput() {
+        currentSearchKeyword = musicSearchInput.value;
+        filterMusicList(currentSearchKeyword);
+    }
+
     function init() {
         const loggedIn = loadUserFromStorage();
         displayUserInfo();
@@ -1283,6 +1345,7 @@
         expireValueInput.addEventListener('input', () => updateCodeCountDisplay());
         onecodeCheckbox.addEventListener('change', () => updateCodeCountDisplay());
         codeCountInput.addEventListener('input', onCodeCountInput);
+        musicSearchInput.addEventListener('input', onSearchInput);
         codeCountInput.value = '1';
         updateCodeCountDisplay();
     }

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>1GB+ 极限带宽测试 - 万兆就绪</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            padding: 20px;
+        }
+
+        .speed-card {
+            max-width: 750px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(16px);
+            border-radius: 56px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            padding: 32px 28px 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0f2fe, #7dd3fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .badge {
+            display: inline-block;
+            background: #0f212e;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #7dd3fc;
+            margin-top: 8px;
+        }
+        .gigabadge {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 8px;
+            color: white;
+        }
+
+        .meter-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 48px;
+            padding: 28px 20px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .speed-display {
+            text-align: center;
+        }
+        .speed-value {
+            font-size: 5.5rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #ffffff, #bae6fd);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+        }
+        .speed-unit {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #8ba9d4;
+        }
+        .speed-label {
+            color: #94a3b8;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .progress-area {
+            margin: 24px 0 12px;
+        }
+        .progress-bar-bg {
+            background: #1e293b;
+            border-radius: 30px;
+            height: 14px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981, #f59e0b, #ef4444);
+            border-radius: 30px;
+            transition: width 0.1s ease;
+        }
+        .status-text {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #cbd5e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #3b82f6;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .info-grid {
+            display: flex;
+            gap: 14px;
+            margin: 25px 0 20px;
+            flex-wrap: wrap;
+        }
+        .info-item {
+            flex: 1;
+            background: #0f172fcc;
+            border-radius: 32px;
+            padding: 14px 8px;
+            text-align: center;
+            border: 1px solid #2d3a5e;
+        }
+        .info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #7c94bb;
+            font-weight: 600;
+        }
+        .info-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #eef4ff;
+            font-family: monospace;
+            margin-top: 6px;
+        }
+        .info-unit {
+            font-size: 0.7rem;
+            color: #96afd9;
+        }
+        .data-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 28px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .data-stats span {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .btn {
+            flex: 1;
+            border: none;
+            padding: 14px 0;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            background: #1e2a44;
+            color: #d6e6ff;
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #2563eb, #0891b2);
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.05);}
+        .btn-secondary:hover:not(:disabled) { background: #2c3e5a; transform: translateY(-1px);}
+        .btn:active { transform: translateY(2px);}
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.7rem;
+            color: #5c739b;
+            border-top: 1px solid #253553;
+            padding-top: 18px;
+        }
+        .warning {
+            color: #fbbf24;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        @media (max-width: 500px) {
+            .speed-card { padding: 20px 16px 28px; }
+            .speed-value { font-size: 3.5rem; }
+            .info-number { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="speed-card">
+    <div class="header">
+        <h1>⚡ 带宽测试 <span class="gigabadge">就绪</span></h1>
+        <div class="badge"></div>
+    </div>
+
+    <div class="meter-panel">
+        <div class="speed-display">
+            <span class="speed-value" id="speedValue">0.00</span>
+            <span class="speed-unit" id="speedUnit">Mbps</span>
+            <div class="speed-label" id="speedLabel">点击「开始 1GB 极限测速」</div>
+        </div>
+        <div class="progress-area">
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="status-text" id="statusText"><span>⚙️ 就绪</span></div>
+        </div>
+        <div class="data-stats" id="dataStats">
+            📊 等待测速...
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-item"><div class="info-label">📡 延迟 (Ping)</div><div class="info-number" id="pingValue">--</div><div class="info-unit">毫秒 (ms)</div></div>
+        <div class="info-item"><div class="info-label">⬇️ 下载速度</div><div class="info-number" id="downloadValue">--</div><div class="info-unit">Mbps</div></div>
+        <div class="info-item"><div class="info-label">⬆️ 上传速度</div><div class="info-number" id="uploadValue">--</div><div class="info-unit">Mbps</div></div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-primary" id="startBtn">🚀 开始测速</button>
+        <button class="btn btn-secondary" id="resetBtn">⟳ 重置</button>
+    </div>
+    <div class="footer">
+        🌐 使用 Cloudflare CDN
+    </div>
+    <div class="warning" id="warningMsg"></div>
+</div>
+
+<script>
+    (function() {
+        // DOM 元素
+        const speedValueSpan = document.getElementById('speedValue');
+        const speedUnitSpan = document.getElementById('speedUnit');
+        const speedLabelDiv = document.getElementById('speedLabel');
+        const progressFill = document.getElementById('progressFill');
+        const statusTextDiv = document.getElementById('statusText');
+        const pingSpan = document.getElementById('pingValue');
+        const downloadSpan = document.getElementById('downloadValue');
+        const uploadSpan = document.getElementById('uploadValue');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const warningMsg = document.getElementById('warningMsg');
+        const dataStatsDiv = document.getElementById('dataStats');
+
+        // 全局状态
+        let isTesting = false;
+        let abortController = null;
+        let lastResult = { ping: null, download: null, upload: null };
+
+        // 1GB+ 极限测速配置
+        const CONFIG = {
+            // 目标数据量：至少 1GB
+            TARGET_DOWNLOAD_GB: 1.0,        // 目标下载 1GB
+            TARGET_UPLOAD_MB: 100,           // 目标上传 100MB（上传通常较慢）
+            PARALLEL_DOWNLOADS: 8,           // 8个并行下载线程
+            PARALLEL_UPLOADS: 4,             // 4个并行上传线程
+            CHUNK_SIZE_MB: 16,               // 每个块16MB（减少请求数）
+            UPLOAD_CHUNK_MB: 2,              // 上传块2MB
+            MAX_DOWNLOAD_TIME_MS: 20000,     // 最多20秒
+            MAX_UPLOAD_TIME_MS: 15000        // 最多15秒
+        };
+
+        const DOWNLOAD_ENDPOINT = 'https://speed.cloudflare.com/__down';
+
+        // UI 辅助函数
+        function setButtonsEnabled(enabled) {
+            startBtn.disabled = !enabled;
+            resetBtn.disabled = !enabled;
+        }
+
+        function setStatusMessage(msg, showLoader = false) {
+            if (showLoader) {
+                statusTextDiv.innerHTML = `<span class="loader"></span><span>${msg}</span>`;
+            } else {
+                statusTextDiv.innerHTML = `<span>${msg}</span>`;
+            }
+        }
+
+        function setProgress(percent) {
+            let p = Math.min(100, Math.max(0, percent));
+            progressFill.style.width = p + '%';
+        }
+
+        function updateLiveSpeed(mbps, stage, bytesTransferred, targetBytes) {
+            if (mbps !== undefined && !isNaN(mbps) && isFinite(mbps) && mbps > 0) {
+                speedValueSpan.innerText = mbps.toFixed(2);
+                speedUnitSpan.innerText = 'Mbps';
+                if (stage === 'download') speedLabelDiv.innerText = '📥 下载中 (目标 1GB+)';
+                else if (stage === 'upload') speedLabelDiv.innerText = '📤 上传中';
+            }
+            // 更新数据统计
+            if (bytesTransferred && targetBytes) {
+                let transferredMB = (bytesTransferred / (1024 * 1024)).toFixed(1);
+                let targetGB = (targetBytes / (1024 * 1024 * 1024)).toFixed(1);
+                if (stage === 'download') {
+                    dataStatsDiv.innerHTML = `📥 已下载: <span>${transferredMB} MB</span> / 目标 ${targetGB} GB | 多线程: ${CONFIG.PARALLEL_DOWNLOADS}路`;
+                } else {
+                    dataStatsDiv.innerHTML = `📤 已上传: <span>${transferredMB} MB</span> / 目标 ${(targetBytes/(1024*1024)).toFixed(0)} MB`;
+                }
+            }
+        }
+
+        function showWarning(msg) {
+            warningMsg.innerText = msg;
+            setTimeout(() => { if (warningMsg.innerText === msg) warningMsg.innerText = ''; }, 5000);
+        }
+
+        function fullResetUI() {
+            if (isTesting) return;
+            speedValueSpan.innerText = '0.00';
+            speedUnitSpan.innerText = 'Mbps';
+            speedLabelDiv.innerText = '点击「开始 1GB 极限测速」';
+            progressFill.style.width = '0%';
+            setStatusMessage('⚙️ 就绪', false);
+            pingSpan.innerText = '--';
+            downloadSpan.innerText = '--';
+            uploadSpan.innerText = '--';
+            dataStatsDiv.innerHTML = '📊 等待测速...';
+            lastResult = { ping: null, download: null, upload: null };
+            warningMsg.innerText = '';
+        }
+
+        // 延迟测试
+        async function measureLatency() {
+            const pingUrl = 'https://speed.cloudflare.com/__down?bytes=0&cacheBust=' + Date.now();
+            let best = Infinity;
+            for (let i = 0; i < 3; i++) {
+                const start = performance.now();
+                try {
+                    await fetch(pingUrl, {
+                        method: 'GET',
+                        cache: 'no-store',
+                        signal: abortController?.signal,
+                        mode: 'cors'
+                    });
+                    const duration = performance.now() - start;
+                    if (duration < best) best = duration;
+                } catch(e) {
+                    if (e.name === 'AbortError') throw e;
+                }
+                await new Promise(r => setTimeout(r, 100));
+            }
+            if (best === Infinity) throw new Error('网络连接异常');
+            return best;
+        }
+
+        // 1GB+ 极限下载测速
+        async function measureDownloadSpeed() {
+            let totalBytes = 0;
+            let startTime = performance.now();
+            let activeThreads = 0;
+            let completed = false;
+            const targetBytes = CONFIG.TARGET_DOWNLOAD_GB * 1024 * 1024 * 1024;
+            const chunkSize = CONFIG.CHUNK_SIZE_MB * 1024 * 1024;
+            let resolvePromise = null;
+            let rejectPromise = null;
+
+            return new Promise((resolve, reject) => {
+                resolvePromise = resolve;
+                rejectPromise = reject;
+
+                // 超时保护
+                const timeoutId = setTimeout(() => {
+                    if (!completed) {
+                        completed = true;
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        if (totalBytes > 0) {
+                            const speedMbps = (totalBytes * 8) / (durationSec * 1e6);
+                            resolvePromise(Math.min(Math.max(speedMbps, 0.1), 10000));
+                        } else {
+                            rejectPromise(new Error('下载测试超时'));
+                        }
+                    }
+                }, CONFIG.MAX_DOWNLOAD_TIME_MS + 5000);
+
+                async function downloadThread(threadId) {
+                    activeThreads++;
+                    while (!completed && isTesting && totalBytes < targetBytes && (performance.now() - startTime) < CONFIG.MAX_DOWNLOAD_TIME_MS) {
+                        const url = `${DOWNLOAD_ENDPOINT}?bytes=${chunkSize}&cacheBust=${Math.random()}&thread=${threadId}&t=${Date.now()}`;
+                        try {
+                            const response = await fetch(url, {
+                                cache: 'no-store',
+                                signal: abortController?.signal,
+                                mode: 'cors'
+                            });
+                            if (response.ok) {
+                                const data = await response.arrayBuffer();
+                                const received = data.byteLength;
+                                totalBytes += received;
+
+                                // 更新实时速度
+                                const elapsed = (performance.now() - startTime) / 1000;
+                                if (elapsed > 0.5) {
+                                    let instantMbps = (totalBytes * 8) / (elapsed * 1e6);
+                                    if (isFinite(instantMbps)) {
+                                        updateLiveSpeed(instantMbps, 'download', totalBytes, targetBytes);
+                                        let progress = Math.min(85, (totalBytes / targetBytes) * 85);
+                                        setProgress(progress);
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            if (e.name === 'AbortError') break;
+                            console.warn(`线程 ${threadId} 下载失败:`, e);
+                        }
+                    }
+                    activeThreads--;
+
+                    // 检查是否达到目标
+                    if (!completed && totalBytes >= targetBytes) {
+                        completed = true;
+                        clearTimeout(timeoutId);
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        const speedMbps = (totalBytes * 8) / (durationSec * 1e6);
+                        resolvePromise(Math.min(Math.max(speedMbps, 0.1), 10000));
+                    } else if (activeThreads === 0 && !completed && (performance.now() - startTime) >= CONFIG.MAX_DOWNLOAD_TIME_MS) {
+                        completed = true;
+                        clearTimeout(timeoutId);
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        if (totalBytes > 0) {
+                            const speedMbps = (totalBytes * 8) / (durationSec * 1e6);
+                            resolvePromise(Math.min(Math.max(speedMbps, 0.1), 10000));
+                        } else {
+                            rejectPromise(new Error('下载失败'));
+                        }
+                    }
+                }
+
+                // 启动所有下载线程
+                for (let i = 0; i < CONFIG.PARALLEL_DOWNLOADS; i++) {
+                    if (isTesting) downloadThread(i);
+                }
+            });
+        }
+
+        // 生成随机数据块
+        function generateRandomBlob(sizeMB) {
+            const sizeBytes = sizeMB * 1024 * 1024;
+            const CHUNK_SIZE = 65536; // 64KB
+            const buffer = new Uint8Array(sizeBytes);
+            let offset = 0;
+            while (offset < sizeBytes) {
+                const chunkSize = Math.min(CHUNK_SIZE, sizeBytes - offset);
+                const chunk = new Uint8Array(chunkSize);
+                crypto.getRandomValues(chunk);
+                buffer.set(chunk, offset);
+                offset += chunkSize;
+            }
+            return new Blob([buffer], { type: 'application/octet-stream' });
+        }
+
+        // 上传测速
+        async function measureUploadSpeed() {
+            const endpoints = ['https://httpbin.org/post', 'https://postman-echo.com/post'];
+            for (const endpoint of endpoints) {
+                if (!isTesting) throw new Error('测试取消');
+                try {
+                    const speed = await parallelUpload(endpoint);
+                    if (speed > 0) return speed;
+                } catch (e) {
+                    console.warn(`${endpoint} 上传失败:`, e.message);
+                }
+            }
+            if (lastResult.download && lastResult.download > 0) {
+                const estimatedUpload = Math.max(10, lastResult.download * 0.3);
+                showWarning(`上传测试受限，估算值: ${estimatedUpload.toFixed(1)} Mbps`);
+                return estimatedUpload;
+            }
+            throw new Error('上传测试失败');
+        }
+
+        // 并行上传
+        async function parallelUpload(endpoint) {
+            let totalBytesSent = 0;
+            let startTime = performance.now();
+            let activeThreads = 0;
+            let completed = false;
+            const targetBytes = CONFIG.TARGET_UPLOAD_MB * 1024 * 1024;
+            const chunkSize = CONFIG.UPLOAD_CHUNK_MB * 1024 * 1024;
+
+            return new Promise((resolve, reject) => {
+                const timeoutId = setTimeout(() => {
+                    if (!completed) {
+                        completed = true;
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        if (totalBytesSent > 0) {
+                            const speedMbps = (totalBytesSent * 8) / (durationSec * 1e6);
+                            resolve(Math.min(Math.max(speedMbps, 0.1), 5000));
+                        } else {
+                            reject(new Error('上传超时'));
+                        }
+                    }
+                }, CONFIG.MAX_UPLOAD_TIME_MS + 3000);
+
+                async function uploadThread(threadId) {
+                    activeThreads++;
+                    while (!completed && isTesting && totalBytesSent < targetBytes && (performance.now() - startTime) < CONFIG.MAX_UPLOAD_TIME_MS) {
+                        const blob = generateRandomBlob(CONFIG.UPLOAD_CHUNK_MB);
+                        const formData = new FormData();
+                        formData.append('file', blob, `test_${threadId}_${Date.now()}.dat`);
+
+                        try {
+                            const response = await fetch(endpoint, {
+                                method: 'POST',
+                                body: formData,
+                                cache: 'no-store',
+                                signal: abortController?.signal,
+                                mode: 'cors'
+                            });
+
+                            if (response.ok) {
+                                totalBytesSent += chunkSize;
+
+                                const elapsed = (performance.now() - startTime) / 1000;
+                                if (elapsed > 0.5) {
+                                    let instantMbps = (totalBytesSent * 8) / (elapsed * 1e6);
+                                    if (isFinite(instantMbps)) {
+                                        updateLiveSpeed(instantMbps, 'upload', totalBytesSent, targetBytes);
+                                        let progress = 85 + Math.min(15, (totalBytesSent / targetBytes) * 15);
+                                        setProgress(progress);
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            if (e.name === 'AbortError') break;
+                        }
+                    }
+                    activeThreads--;
+
+                    if (!completed && totalBytesSent >= targetBytes) {
+                        completed = true;
+                        clearTimeout(timeoutId);
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        const speedMbps = (totalBytesSent * 8) / (durationSec * 1e6);
+                        resolve(Math.min(Math.max(speedMbps, 0.1), 5000));
+                    } else if (activeThreads === 0 && !completed && (performance.now() - startTime) >= CONFIG.MAX_UPLOAD_TIME_MS) {
+                        completed = true;
+                        clearTimeout(timeoutId);
+                        const durationSec = (performance.now() - startTime) / 1000;
+                        if (totalBytesSent > 0) {
+                            const speedMbps = (totalBytesSent * 8) / (durationSec * 1e6);
+                            resolve(Math.min(Math.max(speedMbps, 0.1), 5000));
+                        } else {
+                            reject(new Error('上传无数据'));
+                        }
+                    }
+                }
+
+                for (let i = 0; i < CONFIG.PARALLEL_UPLOADS; i++) {
+                    if (isTesting) uploadThread(i);
+                }
+            });
+        }
+
+        // 主测速流程
+        async function runSpeedTest() {
+            if (isTesting) return;
+            isTesting = true;
+            abortController = new AbortController();
+            setButtonsEnabled(false);
+            setProgress(1);
+            dataStatsDiv.innerHTML = '📊 开始 1GB 极限测速...';
+
+            try {
+                // 1. 延迟测试
+                setStatusMessage('📡 测量延迟...', true);
+                speedLabelDiv.innerText = '📡 测试 Ping';
+                const pingMs = await measureLatency();
+                lastResult.ping = pingMs;
+                pingSpan.innerText = pingMs.toFixed(0);
+                setProgress(3);
+
+                // 2. 1GB 极限下载
+                setStatusMessage('📥 1GB 极限下载中 (8线程并行，目标 1GB+)...', true);
+                speedLabelDiv.innerText = '📥 1GB 下载测速中';
+                const downloadSpeed = await measureDownloadSpeed();
+                lastResult.download = downloadSpeed;
+                downloadSpan.innerText = downloadSpeed.toFixed(2);
+                setProgress(88);
+
+                // 3. 上传测速
+                setStatusMessage('📤 上传测速中 (4线程并行)...', true);
+                speedLabelDiv.innerText = '📤 上传测速中';
+                const uploadSpeed = await measureUploadSpeed();
+                lastResult.upload = uploadSpeed;
+                uploadSpan.innerText = uploadSpeed.toFixed(2);
+                setProgress(100);
+
+                // 完成
+                setStatusMessage('✅ 1GB 测速完成！', false);
+                speedValueSpan.innerText = downloadSpeed.toFixed(2);
+                speedUnitSpan.innerText = 'Mbps';
+                speedLabelDiv.innerHTML = '🏁 1GB 测速完成';
+                progressFill.style.width = '100%';
+                dataStatsDiv.innerHTML = `✅ 测速完成 | 下载峰值: ${downloadSpeed.toFixed(1)} Mbps | 上传: ${uploadSpeed.toFixed(1)} Mbps`;
+
+                // 带宽评级
+                if (downloadSpeed >= 2500) showWarning('🚀 2.5G+ 超高速宽带！');
+                else if (downloadSpeed >= 1000) showWarning('🎉 千兆宽带！速度极快');
+                else if (downloadSpeed >= 500) showWarning('⚡ 500M+ 宽带');
+                else if (downloadSpeed >= 200) showWarning('📡 200M+ 宽带');
+                else if (downloadSpeed >= 100) showWarning('👍 百兆宽带');
+
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    setStatusMessage('测速已取消', false);
+                    speedLabelDiv.innerText = '测速取消';
+                } else {
+                    console.error('测速错误:', err);
+                    setStatusMessage('测速失败: ' + err.message, false);
+                    speedLabelDiv.innerText = '⚠️ 测速失败';
+                    showWarning('测速失败，请检查网络后重试');
+                }
+                if (lastResult.download) downloadSpan.innerText = lastResult.download.toFixed(2);
+                if (lastResult.upload) uploadSpan.innerText = lastResult.upload.toFixed(2);
+                if (lastResult.ping) pingSpan.innerText = lastResult.ping.toFixed(0);
+                if (!lastResult.download) setProgress(0);
+            } finally {
+                isTesting = false;
+                abortController = null;
+                setButtonsEnabled(true);
+                const loaderSpan = statusTextDiv.querySelector('.loader');
+                if (loaderSpan) loaderSpan.remove();
+                if (lastResult.download && !isTesting) {
+                    speedValueSpan.innerText = lastResult.download.toFixed(2);
+                }
+            }
+        }
+
+        function handleReset() {
+            if (isTesting) {
+                if (abortController) abortController.abort();
+                isTesting = false;
+                setButtonsEnabled(true);
+            }
+            fullResetUI();
+            lastResult = { ping: null, download: null, upload: null };
+        }
+
+        function handleStart() {
+            if (isTesting) return;
+            handleReset();
+            runSpeedTest();
+        }
+
+        startBtn.addEventListener('click', handleStart);
+        resetBtn.addEventListener('click', handleReset);
+        fullResetUI();
+    })();
+    // 安全防护：禁用右键、选择文本、拖拽图片保存、F12等
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            console.log('开发者工具快捷键已禁用');
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

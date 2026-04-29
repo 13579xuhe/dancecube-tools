@@ -7,1496 +7,184 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ========== 全局变量 & 基础重置 ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
-        }
-
-        /* 浅色主题 (默认) */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif; }
         :root {
-            --bg-gradient-start: #f5f7fa;
-            --bg-gradient-end: #c3cfe2;
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --card-bg: #ffffff;
-            --header-border: rgba(0, 0, 0, 0.08);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-            --input-bg: #ffffff;
-            --input-text: #1e293b;
-            --border-light: #e2e8f0;
-            --modal-bg: #ffffff;
-            --feature-bg: #f8fafc;
-            --announcement-bg: linear-gradient(135deg, #fff9e8 0%, #fff4e0 100%);
-            --announcement-border: rgba(255, 152, 0, 0.25);
-            --footer-border: rgba(0, 0, 0, 0.05);
-            --stat-number-color: #1e293b;
-            --feedback-email-bg: rgba(100, 116, 139, 0.1);
+            --bg-gradient-start: #f5f7fa; --bg-gradient-end: #c3cfe2; --text-primary: #1e293b; --text-secondary: #334155;
+            --text-muted: #64748b; --card-bg: #ffffff; --header-border: rgba(0,0,0,0.08); --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08); --shadow-lg: 0 8px 24px rgba(0,0,0,0.12); --input-bg: #ffffff;
+            --input-text: #1e293b; --border-light: #e2e8f0; --modal-bg: #ffffff; --feature-bg: #f8fafc;
+            --announcement-bg: linear-gradient(135deg, #fff9e8 0%, #fff4e0 100%); --announcement-border: rgba(255,152,0,0.25);
+            --footer-border: rgba(0,0,0,0.05); --stat-number-color: #1e293b; --feedback-email-bg: rgba(100,116,139,0.1);
+            --rating-table-border: #e2e8f0; --rating-row-hover: #f1f5f9;
         }
-
-        /* 暗色主题 */
         body.dark {
-            --bg-gradient-start: #0a0a14;
-            --bg-gradient-end: #12121c;
-            --text-primary: #eef2ff;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --card-bg: #1e1e2c;
-            --header-border: rgba(255, 255, 255, 0.08);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-            --input-bg: #2a2a38;
-            --input-text: #eef2ff;
-            --border-light: #2d2d3a;
-            --modal-bg: #1e1e2c;
-            --feature-bg: #2a2a38;
-            --announcement-bg: linear-gradient(135deg, #2a2a1a 0%, #252515 100%);
-            --announcement-border: rgba(255, 152, 0, 0.35);
-            --footer-border: rgba(255, 255, 255, 0.05);
-            --stat-number-color: #eef2ff;
-            --feedback-email-bg: rgba(148, 163, 184, 0.15);
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            padding: 20px;
-            transition: background-color 0.3s ease, color 0.2s ease;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* 头部区域 */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--header-border);
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #39d517 0%, #9dcf0f 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-
-        .logo-text h1 {
-            font-size: 2rem;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-
-        .logo-text p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .feedback-email-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--feedback-email-bg);
-            padding: 4px 12px 4px 16px;
-            border-radius: 40px;
-            margin-left: 8px;
-        }
-
-        .email-address {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            letter-spacing: 0.3px;
-        }
-
-        .email-feedback-btn {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
-            border: none;
-            color: white;
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
-        }
-
-        .email-feedback-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.4);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .theme-toggle,
-        .login-btn {
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--card-bg);
-            border: 1px solid var(--border-light);
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .login-btn {
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: white;
-            border: none;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-        }
-
-        .user-id {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .logout-btn {
-            padding: 5px 10px;
-            background: #f87171;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            margin-top: 2px;
-        }
-
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            overflow: hidden;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* 公告栏 */
-        .announcement-wrapper {
-            margin-bottom: 30px;
-        }
-
-        .announcement-bar {
-            background: var(--announcement-bg);
-            border-radius: 16px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid var(--announcement-border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .announcement-bar:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .announcement-icon {
-            background: #ff9800;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .announcement-icon i {
-            color: white;
-            font-size: 1rem;
-        }
-
-        .marquee-container {
-            flex: 1;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .marquee-text {
-            display: inline-block;
-            white-space: nowrap;
-            animation: scrollText 20s linear infinite;
-            font-weight: 500;
-            color: #e67e22;
-        }
-
-        .marquee-text span {
-            padding-right: 60px;
-        }
-
-        @keyframes scrollText {
-            0% {
-                transform: translateX(0%);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .announcement-hint {
-            flex-shrink: 0;
-            background: rgba(255, 152, 0, 0.15);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #e67e22;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* 搜索区域 */
-        .search-filter {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            flex: 1;
-            position: relative;
-            max-width: 500px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 16px 20px 16px 50px;
-            border: 1px solid var(--border-light);
-            border-radius: 15px;
-            background-color: var(--input-bg);
-            box-shadow: var(--shadow-sm);
-            font-size: 1rem;
-            color: var(--input-text);
-            outline: none;
-        }
-
-        .search-box input:focus {
-            border-color: #6a11cb;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        /* 工具区域 */
-        .tools-section {
-            margin-bottom: 60px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .section-header h2 {
-            font-size: 1.8rem;
-            color: var(--text-primary);
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .tool-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            border: 1px solid var(--border-light);
-        }
-
-        .tool-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .tool-card.featured {
-            border-top: 5px solid #ff9a00;
-        }
-
-        .tool-card.new {
-            border-top: 5px solid #6a11cb;
-        }
-
-        .tool-header {
-            padding: 25px 25px 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .tool-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-            margin-right: 20px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .tool-info h3 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .tool-info p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-transform: capitalize;
-        }
-
-        .tool-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: white;
-            z-index: 2;
-        }
-
-        .featured-badge {
-            background-color: #ff9a00;
-        }
-
-        .new-badge {
-            background-color: #6a11cb;
-        }
-
-        .tool-description {
-            padding: 0 25px 20px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        .tool-footer {
-            padding: 16px 25px 20px;
-            border-top: 1px solid var(--border-light);
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .tool-action {
-            padding: 10px 25px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .tool-action:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(37, 117, 252, 0.3);
-        }
-
-        /* 底部 */
-        .footer {
-            text-align: center;
-            padding: 30px 0;
-            color: var(--text-muted);
-            border-top: 1px solid var(--footer-border);
-            font-size: 0.9rem;
-        }
-
-        /* ========== 谱师数据弹窗 - 彻底修复手机端溢出 ========== */
-        .profile-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2100;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            padding: 20px;
-        }
-
-        .profile-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .profile-modal-content {
-            background-color: var(--modal-bg);
-            border-radius: 2rem;
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            transform: translateY(30px);
-            transition: transform 0.4s ease;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-light);
-        }
-
-        .profile-modal.active .profile-modal-content {
-            transform: translateY(0);
-        }
-
-        .profile-modal-header {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            padding: 20px 24px;
-            border-radius: 2rem 2rem 0 0;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 5;
-        }
-
-        .profile-modal-header i {
-            font-size: 1.8rem;
-            color: white;
-        }
-
-        .profile-modal-header h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .profile-modal-body {
-            padding: 24px;
-            overflow-y: visible;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .profile-stat-item {
-            background: var(--feature-bg);
-            border-radius: 1.2rem;
-            padding: 12px 6px;
-            text-align: center;
-            border: 1px solid var(--border-light);
-            word-break: break-word;
-        }
-
-        .profile-stat-number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--stat-number-color);
-            line-height: 1.2;
-            word-break: break-word;
-        }
-
-        .profile-stat-number.published-number {
-            color: #22c55e;
-        }
-
-        .profile-stat-number.offline-number {
-            color: #ef4444;
-        }
-
-        .profile-stat-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .profile-empty {
-            text-align: center;
-            padding: 32px 20px;
-            color: var(--text-muted);
-        }
-
-        .profile-empty i {
-            font-size: 3rem;
-            margin-bottom: 12px;
-            opacity: 0.6;
-        }
-
-        .profile-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: none;
-            font-size: 1.2rem;
-            color: white;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            z-index: 10;
-        }
-
-        .profile-close:hover {
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .profile-total-info {
-            background: var(--feature-bg);
-            border-radius: 1rem;
-            padding: 12px;
-            text-align: center;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            word-break: break-word;
-        }
-
-        /* 手机端适配 */
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-                margin-bottom: 24px;
-            }
-            .logo-area {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-            .logo {
-                width: 48px;
-                height: 48px;
-                font-size: 1.5rem;
-                margin-right: 12px;
-            }
-            .logo-text h1 {
-                font-size: 1.3rem;
-            }
-            .logo-text p {
-                font-size: 0.7rem;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .feedback-email-wrapper {
-                margin-left: 0;
-                padding: 3px 10px 3px 12px;
-            }
-            .email-address {
-                font-size: 0.75rem;
-            }
-            .email-feedback-btn {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
-            .user-info {
-                width: 100%;
-                justify-content: flex-end;
-                gap: 12px;
-            }
-            .theme-toggle,
-            .login-btn {
-                padding: 8px 14px;
-                border-radius: 40px;
-                font-size: 0.8rem;
-            }
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .tool-icon {
-                width: 56px;
-                height: 56px;
-                border-radius: 16px;
-                font-size: 1.5rem;
-                margin-right: 14px;
-            }
-            .tool-info h3 {
-                font-size: 1.1rem;
-            }
-            .tool-info p {
-                font-size: 0.75rem;
-            }
-            .tool-description {
-                font-size: 0.85rem;
-                padding: 0 20px 16px;
-            }
-            .tool-footer {
-                padding: 14px 20px 18px;
-            }
-            .tool-action {
-                padding: 8px 18px;
-                font-size: 0.85rem;
-            }
-            .profile-modal-content {
-                max-width: 94%;
-                max-height: 80vh;
-            }
-            .profile-modal-header {
-                padding: 16px 20px;
-            }
-            .profile-modal-header i {
-                font-size: 1.4rem;
-            }
-            .profile-modal-header h3 {
-                font-size: 1.2rem;
-            }
-            .profile-modal-body {
-                padding: 18px;
-            }
-            .profile-stats {
-                gap: 10px;
-            }
-            .profile-stat-number {
-                font-size: 1.3rem;
-            }
-            .profile-stat-item {
-                padding: 10px 4px;
-            }
-            .profile-stat-label {
-                font-size: 0.65rem;
-            }
-            .announcement-bar {
-                padding: 10px 16px;
-                gap: 10px;
-            }
-            .announcement-icon {
-                width: 30px;
-                height: 30px;
-            }
-            .announcement-hint {
-                font-size: 0.65rem;
-                padding: 4px 8px;
-            }
-            .marquee-text {
-                font-size: 0.85rem;
-            }
-            .phone-login-content {
-                max-width: 94%;
-                border-radius: 28px;
-                overflow: hidden;
-            }
-            .phone-login-header {
-                padding: 16px 20px 12px !important;
-            }
-            .phone-login-header i {
-                font-size: 1.6rem !important;
-                margin-bottom: 4px !important;
-            }
-            .phone-login-header h2 {
-                font-size: 1.25rem !important;
-                margin-bottom: 4px !important;
-            }
-            .phone-login-header p {
-                font-size: 0.7rem !important;
-                opacity: 0.9;
-            }
-            .phone-login-body {
-                padding: 16px 18px 22px !important;
-            }
-            .phone-login-body .form-group {
-                margin-bottom: 14px !important;
-            }
-            .phone-login-body .form-group label {
-                font-size: 0.7rem !important;
-                margin-bottom: 5px !important;
-            }
-            .phone-login-body .form-group input {
-                padding: 10px 14px !important;
-                font-size: 0.85rem !important;
-                border-radius: 14px !important;
-            }
-            .captcha-row,
-            .sms-row {
-                gap: 8px !important;
-            }
-            .captcha-img {
-                width: 100px !important;
-                height: 44px !important;
-                border-radius: 12px !important;
-            }
-            .btn-secondary {
-                padding: 8px 12px !important;
-                font-size: 0.7rem !important;
-                border-radius: 12px !important;
-                white-space: nowrap;
-            }
-            .btn-block {
-                padding: 10px !important;
-                font-size: 0.85rem !important;
-                border-radius: 40px !important;
-                margin-top: 14px !important;
-            }
-            .message {
-                font-size: 0.7rem !important;
-                padding: 8px 12px !important;
-                margin-top: 12px !important;
-            }
-        }
-
-        .captcha-img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f1f5f9;
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        body.dark .captcha-img {
-            background: #2a2a38;
-        }
-
-        .captcha-img img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .modal-feature i {
-            color: #22c55e !important;
-            font-size: 1rem;
-        }
-
-        body.dark .modal-feature i {
-            color: #4ade80 !important;
-        }
-
-        .modal-icon i,
-        .modal-header i:not(.modal-feature i),
-        .modal-body i:not(.modal-feature i),
-        .modal-btn i,
-        .modal-close i,
-        .tool-modal i:not(.modal-feature i) {
-            color: #ffffff !important;
-        }
-
-        .modal-close i {
-            color: white !important;
-        }
-
-        .modal-content i:not(.modal-feature i):not(.fa-check-circle) {
-            color: #ffffff !important;
-        }
-
-        .modal-feature .fa-check-circle,
-        .modal-feature i.fa-check-circle {
-            color: #22c55e !important;
-        }
-
-        body.dark .modal-feature .fa-check-circle,
-        body.dark .modal-feature i.fa-check-circle {
-            color: #4ade80 !important;
-        }
-
-        .login-modal,
-        .tool-modal,
-        .announce-modal,
-        .phone-login-modal,
-        .login-choice-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            padding: 20px;
-        }
-
-        .login-modal.active,
-        .tool-modal.active,
-        .announce-modal.active,
-        .phone-login-modal.active,
-        .login-choice-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .login-content,
-        .modal-content,
-        .announce-modal-content,
-        .phone-login-content,
-        .login-choice-content {
-            background-color: var(--modal-bg);
-            border-radius: 25px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transform: translateY(30px);
-            transition: transform 0.4s ease;
-        }
-
-        .modal-content {
-            max-width: 900px;
-        }
-
-        .login-header,
-        .phone-login-header {
-            padding: 30px;
-            text-align: center;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 25px 25px 0 0;
-        }
-
-        .login-header h2,
-        .phone-login-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .login-body,
-        .phone-login-body {
-            padding: 30px;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            background: var(--feature-bg);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed var(--border-light);
-            cursor: pointer;
-        }
-
-        #login-qrcode-img {
-            max-width: 200px;
-            border-radius: 10px;
-            display: none;
-        }
-
-        .login-status {
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background: var(--feature-bg);
-            color: var(--text-primary);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 18px;
-            border: 1.5px solid var(--border-light);
-            border-radius: 16px;
-            font-size: 1rem;
-            background: var(--input-bg);
-            color: var(--input-text);
-            outline: none;
-        }
-
-        .captcha-row,
-        .sms-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .captcha-img {
-            width: 130px;
-            height: 52px;
-            background: var(--feature-bg);
-            border-radius: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1.5px solid var(--border-light);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .captcha-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .btn-secondary {
-            background: var(--feature-bg);
-            color: var(--text-primary);
-            border: 1.5px solid var(--border-light);
-            padding: 12px 20px;
-            border-radius: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-block {
-            width: 100%;
-            margin-top: 16px;
-            padding: 14px;
-            border-radius: 40px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 0.85rem;
-            display: none;
-        }
-
-        .login-choice-header {
-            text-align: center;
-            padding: 32px 28px 20px;
-        }
-
-        .login-options {
-            padding: 10px 28px 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .login-option-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px 20px;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-        }
-
-        .login-option-wechat {
-            background: linear-gradient(135deg, #07c160, #06ae56);
-            color: white;
-        }
-
-        .login-option-phone {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-        }
-
-        .modal-header {
-            padding: 30px 30px 20px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .modal-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-right: 20px;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-        }
-
-        .modal-body {
-            padding: 30px;
-        }
-
-        .modal-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .modal-feature {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: var(--feature-bg);
-            border-radius: 12px;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-
-        .announce-modal-header {
-            background: linear-gradient(135deg, #ff9800, #f97316);
-            padding: 24px 28px;
-            border-radius: 25px 25px 0 0;
-            color: white;
-        }
-
-        .announce-modal-body {
-            padding: 28px;
-            line-height: 1.6;
-            color: var(--text-primary);
-        }
-
-        .modal-close,
-        .login-close,
-        .announce-close,
-        .phone-close,
-        .choice-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border: none;
-            font-size: 1.3rem;
-            color: white;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
+            --bg-gradient-start: #0a0a14; --bg-gradient-end: #12121c; --text-primary: #eef2ff; --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8; --card-bg: #1e1e2c; --header-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4); --shadow-lg: 0 8px 24px rgba(0,0,0,0.5); --input-bg: #2a2a38;
+            --input-text: #eef2ff; --border-light: #2d2d3a; --modal-bg: #1e1e2c; --feature-bg: #2a2a38;
+            --announcement-bg: linear-gradient(135deg, #2a2a1a 0%, #252515 100%); --announcement-border: rgba(255,152,0,0.35);
+            --footer-border: rgba(255,255,255,0.05); --stat-number-color: #eef2ff; --feedback-email-bg: rgba(148,163,184,0.15);
+            --rating-table-border: #2d2d3a; --rating-row-hover: #2a2a38;
+        }
+        body { background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%); min-height: 100vh; color: var(--text-primary); padding: 20px; transition: background-color 0.3s ease, color 0.2s ease; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 1px solid var(--header-border); flex-wrap: wrap; gap: 20px; }
+        .logo-area { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { width: 60px; height: 60px; background: linear-gradient(135deg, #39d517 0%, #9dcf0f 100%); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; margin-right: 15px; cursor: pointer; }
+        .logo-text h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 5px; }
+        .logo-text p { color: var(--text-muted); font-size: 0.95rem; display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .feedback-email-wrapper { display: inline-flex; align-items: center; gap: 8px; background: var(--feedback-email-bg); padding: 4px 12px 4px 16px; border-radius: 40px; margin-left: 8px; }
+        .email-feedback-btn { background: linear-gradient(135deg, #4ade80, #22c55e); border: none; color: white; font-size: 0.75rem; padding: 4px 12px; border-radius: 30px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .theme-toggle, .login-btn { padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; background: var(--card-bg); border: 1px solid var(--border-light); color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .login-btn { background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; border: none; }
+        .user-details { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .user-name { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
+        .user-id { font-size: 0.75rem; color: var(--text-muted); }
+        .logout-btn { padding: 5px 10px; background: #f87171; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.75rem; }
+        .user-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6a11cb, #2575fc); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; overflow: hidden; flex-shrink: 0; cursor: pointer; transition: transform 0.2s ease; }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .user-avatar:hover { transform: scale(1.02); }
+        .announcement-wrapper { margin-bottom: 30px; }
+        .announcement-bar { background: var(--announcement-bg); border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid var(--announcement-border); box-shadow: var(--shadow-sm); }
+        .announcement-icon { background: #ff9800; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .marquee-container { flex: 1; overflow: hidden; white-space: nowrap; }
+        .marquee-text { display: inline-block; white-space: nowrap; animation: scrollText 20s linear infinite; font-weight: 500; color: #e67e22; }
+        .marquee-text span { padding-right: 60px; }
+        @keyframes scrollText { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+        .announcement-hint { background: rgba(255,152,0,0.15); padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: #e67e22; display: flex; align-items: center; gap: 5px; }
+        .search-filter { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; gap: 20px; flex-wrap: wrap; }
+        .search-box { flex: 1; position: relative; max-width: 500px; }
+        .search-box input { width: 100%; padding: 16px 20px 16px 50px; border: 1px solid var(--border-light); border-radius: 15px; background-color: var(--input-bg); font-size: 1rem; color: var(--input-text); outline: none; }
+        .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .tools-section { margin-bottom: 60px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+        .section-header h2 { font-size: 1.8rem; color: var(--text-primary); }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .tool-card { background-color: var(--card-bg); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s ease; cursor: pointer; border: 1px solid var(--border-light); position: relative; display: flex; flex-direction: column; }
+        .tool-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
+        .tool-card.featured { border-top: 5px solid #ff9a00; }
+        .tool-card.new { border-top: 5px solid #6a11cb; }
+        .tool-header { padding: 25px 25px 15px; display: flex; align-items: center; position: relative; }
+        .tool-icon { width: 70px; height: 70px; border-radius: 18px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; margin-right: 20px; flex-shrink: 0; }
+        .tool-info h3 { font-size: 1.4rem; margin-bottom: 5px; color: var(--text-primary); }
+        .tool-info p { color: var(--text-muted); font-size: 0.85rem; }
+        .tool-badge { position: absolute; top: 20px; right: 20px; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: white; z-index: 2; }
+        .featured-badge { background-color: #ff9a00; }
+        .new-badge { background-color: #6a11cb; }
+        .tool-description { padding: 0 25px 20px; color: var(--text-secondary); line-height: 1.5; font-size: 0.9rem; flex: 1; }
+        .tool-footer { padding: 16px 25px 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; margin-top: auto; }
+        .tool-action { padding: 10px 25px; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; border: none; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        .footer { text-align: center; padding: 30px 0; color: var(--text-muted); border-top: 1px solid var(--footer-border); font-size: 0.9rem; }
+
+        /* 弹窗通用样式 */
+        .profile-modal, .login-choice-modal, .login-modal, .phone-login-modal, .tool-modal, .announce-modal, .ratings-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; padding: 20px;
+        }
+        .profile-modal.active, .login-choice-modal.active, .login-modal.active, .phone-login-modal.active, .tool-modal.active, .announce-modal.active, .ratings-modal.active { opacity: 1; visibility: visible; }
+        .profile-modal-content, .login-choice-content, .login-content, .phone-login-content, .modal-content, .announce-modal-content, .ratings-modal-content {
+            background-color: var(--modal-bg); border-radius: 2rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; position: relative; transform: translateY(30px); transition: transform 0.4s ease; box-shadow: var(--shadow-lg); border: 1px solid var(--border-light);
+        }
+        .modal-content { max-width: 900px; }
+        .ratings-modal-content { max-width: 650px; }
+        .profile-modal.active .profile-modal-content, .login-choice-modal.active .login-choice-content, .login-modal.active .login-content, .phone-login-modal.active .phone-login-content, .tool-modal.active .modal-content, .announce-modal.active .announce-modal-content, .ratings-modal.active .ratings-modal-content { transform: translateY(0); }
+
+        /* 工具弹窗内部样式 - 图标加大 */
+        .tool-modal .modal-header { display: flex; padding: 20px 24px; border-bottom: 1px solid var(--border-light); align-items: center; }
+        .tool-modal .modal-icon { width: 80px; height: 80px; border-radius: 20px; background: linear-gradient(135deg, #6a11cb, #2575fc); display: flex; align-items: center; justify-content: center; margin-right: 20px; flex-shrink: 0; }
+        .tool-modal .modal-icon i { font-size: 2.8rem; color: white; }
+        .tool-modal .modal-title h2 { font-size: 1.6rem; margin-bottom: 4px; }
+        .tool-modal .modal-title p { color: var(--text-muted); font-size: 0.9rem; }
+        .tool-modal .modal-body { padding: 24px; }
+        .tool-modal .modal-feature { background: var(--feature-bg); padding: 8px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; margin-right: 8px; margin-bottom: 8px; }
+
+        /* 谱师数据弹窗内部样式 */
+        .profile-modal-header { background: linear-gradient(135deg, #6a11cb, #2575fc); padding: 20px 24px; border-radius: 2rem 2rem 0 0; color: white; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 5; }
+        .profile-modal-header i { font-size: 1.8rem; color: white; }
+        .profile-modal-header h3 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+        .profile-modal-body { padding: 24px; overflow-y: visible; }
+        .profile-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+        .profile-stat-item { background: var(--feature-bg); border-radius: 1.2rem; padding: 12px 6px; text-align: center; border: 1px solid var(--border-light); word-break: break-word; }
+        .profile-stat-number { font-size: 1.5rem; font-weight: 800; color: var(--stat-number-color); line-height: 1.2; }
+        .profile-stat-number.published-number { color: #22c55e; }
+        .profile-stat-number.offline-number { color: #ef4444; }
+        .profile-stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 6px; letter-spacing: 0.3px; }
+        .profile-total-info { background: var(--feature-bg); border-radius: 1rem; padding: 12px; text-align: center; margin-top: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+        .profile-empty { text-align: center; padding: 32px 20px; color: var(--text-muted); }
+        .profile-empty i { font-size: 3rem; margin-bottom: 12px; opacity: 0.6; }
+        .profile-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.3); border: none; font-size: 1.2rem; color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+
+        /* 查看评分按钮 - 蓝紫色 */
+        .view-ratings-btn { background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; border: none; border-radius: 40px; padding: 10px 16px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top: 16px; width: 100%; transition: all 0.3s ease; }
+        .view-ratings-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        /* 评分弹窗 */
+        .ratings-modal-header { background: linear-gradient(135deg, #6a11cb, #2575fc); padding: 18px 24px; border-radius: 2rem 2rem 0 0; color: white; display: flex; align-items: center; gap: 12px; }
+        .ratings-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.3); border: none; font-size: 1.2rem; color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .ratings-body { padding: 20px 24px; }
+        .ratings-table { width: 100%; border-collapse: collapse; }
+        .ratings-table th, .ratings-table td { padding: 12px 10px; border-bottom: 1px solid var(--rating-table-border); text-align: left; color: var(--text-primary); }
+        .ratings-table th { background: var(--feature-bg); font-weight: 700; }
+        .rating-score { font-weight: 700; color: #f59e0b; }
+
+        /* 登录弹窗内部样式 */
+        .login-header, .phone-login-header { padding: 24px; text-align: center; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; border-radius: 2rem 2rem 0 0; }
+        .login-body, .phone-login-body { padding: 24px; }
+        .modal-close, .login-close, .announce-close, .phone-close, .choice-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.3); border: none; font-size: 1.2rem; color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .announce-modal-header { background: linear-gradient(135deg, #ff9800, #f97316); padding: 20px 24px; border-radius: 2rem 2rem 0 0; color: white; }
+        .form-group { margin-bottom: 16px; }
+        .form-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-light); background: var(--input-bg); color: var(--input-text); }
+        .captcha-row { display: flex; gap: 10px; align-items: center; }
+        .captcha-img { width: 110px; height: 48px; background: var(--feature-bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border-light); }
+        .btn-secondary { padding: 0 16px; border-radius: 12px; background: var(--feature-bg); border: 1px solid var(--border-light); cursor: pointer; }
+        .btn-block { width: 100%; padding: 12px; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 16px; }
+        @media (max-width: 768px) { body { padding: 12px; } .tools-grid { grid-template-columns: 1fr; } .profile-modal-content, .ratings-modal-content { max-width: 94%; } .tool-badge { top: 12px; right: 12px; padding: 4px 10px; font-size: 0.7rem; } .tool-header { padding: 20px 20px 12px; } .tool-icon { width: 52px; height: 52px; font-size: 1.4rem; margin-right: 14px; } .tool-info h3 { font-size: 1.1rem; } .tool-modal .modal-icon { width: 60px; height: 60px; } .tool-modal .modal-icon i { font-size: 2rem; } .tool-modal .modal-title h2 { font-size: 1.3rem; } }
     </style>
 </head>
 <body>
 <div class="container">
     <header class="header">
-        <div class="logo-area">
-            <a href="./yurenjie.html" style="text-decoration: none;">
-                <div class="logo">
-                    <i class="fa-solid fa-face-grin-tongue-wink"></i>
-                </div>
-            </a>
-            <div class="logo-text">
-                <h1>舞立方自制谱谱师工具</h1>
-                <p>
-                    反馈：miqimiaomiaowushi@163.com
-                    <span class="feedback-email-wrapper">
-                        <i class="fas fa-envelope" style="font-size: 0.7rem; opacity: 0.8;"></i>
-                        <button class="email-feedback-btn" id="directEmailBtn">
-                            <i class="fas fa-paper-plane"></i> 一键反馈
-                        </button>
-                    </span>
-                </p>
-            </div>
-        </div>
+        <div class="logo-area"><a href="./yurenjie.html" style="text-decoration: none;"><div class="logo"><i class="fa-solid fa-face-grin-tongue-wink"></i></div></a><div class="logo-text"><h1>舞立方自制谱谱师工具</h1><p>反馈：miqimiaomiaowushi@163.com<span class="feedback-email-wrapper"><button class="email-feedback-btn" id="directEmailBtn"><i class="fas fa-paper-plane"></i> 一键反馈</button></span></p></div></div>
         <div class="user-info" id="userInfo">
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i> 暗色模式
-            </button>
-            <button class="login-btn" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i> 登录
-            </button>
-            <div class="user-details" id="userDetails" style="display: none;">
-                <div class="user-name" id="userName"></div>
-                <div class="user-id" id="userId"></div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> 退出
-                </button>
-            </div>
-            <div class="user-avatar" id="userAvatar" style="display: none;">
-                <i class="fas fa-user"></i>
-            </div>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
+            <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+            <div class="user-details" id="userDetails" style="display: none;"><div class="user-name" id="userName"></div><div class="user-id" id="userId"></div><button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button></div>
+            <div class="user-avatar" id="userAvatar" style="display: none;"><i class="fas fa-user"></i></div>
         </div>
     </header>
-
-    <div class="announcement-wrapper">
-        <div class="announcement-bar" id="announcementBar">
-            <div class="announcement-icon">
-                <i class="fas fa-bullhorn"></i>
-            </div>
-            <div class="marquee-container">
-                <div class="marquee-text" id="marqueeText">
-                    <span>✨ 增加点击头像查看谱师数据！ ✨</span>
-                    <span>修复各个工具对手机端的适配问题</span>
-                    <span>合并登录入口，支持微信/手机号</span>
-                </div>
-            </div>
-            <div class="announcement-hint">
-                <i class="fas fa-hand-pointer"></i> 详情
-            </div>
-        </div>
-    </div>
-
-    <div class="search-filter">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="搜索工具名称或功能...">
-            <i class="fas fa-search"></i>
-        </div>
-    </div>
-
-    <section class="tools-section">
-        <div class="section-header">
-            <div>
-                <h2>舞立方工具大全</h2>
-            </div>
-            <div>
-                <p>共 <span id="toolCount">0</span> 个工具</p>
-            </div>
-        </div>
-        <div class="tools-grid" id="toolsGrid"></div>
-    </section>
-
-    <footer class="footer">
-        <p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p>
-    </footer>
+    <div class="announcement-wrapper"><div class="announcement-bar" id="announcementBar"><div class="announcement-icon"><i class="fas fa-bullhorn"></i></div><div class="marquee-container"><div class="marquee-text"><span>✨ 点击头像查看谱师数据 & 谱面评分 ✨</span><span>支持微信/手机号登录</span></div></div><div class="announcement-hint"><i class="fas fa-hand-pointer"></i> 详情</div></div></div>
+    <div class="search-filter"><div class="search-box"><input type="text" id="searchInput" placeholder="搜索工具名称或功能..."><i class="fas fa-search"></i></div></div>
+    <section class="tools-section"><div class="section-header"><div><h2>舞立方工具大全</h2></div><div><p>共 <span id="toolCount">0</span> 个工具</p></div></div><div class="tools-grid" id="toolsGrid"></div></section>
+    <footer class="footer"><p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p></footer>
 </div>
 
-<!-- 谱师数据弹窗 -->
-<div class="profile-modal" id="profileModal">
-    <div class="profile-modal-content">
-        <button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button>
-        <div class="profile-modal-header"><i class="fas fa-chart-simple"></i><h3>谱师数据</h3></div>
-        <div class="profile-modal-body" id="profileModalBody"><div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div></div>
-    </div>
-</div>
-
-<!-- 登录选择面板 -->
-<div class="login-choice-modal" id="loginChoiceModal">
-    <div class="login-choice-content"><button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button>
-        <div class="login-choice-header"><i class="fas fa-user-circle" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 12px; display: block;"></i><h2>选择登录方式</h2><p>请选择您要使用的登录方式</p></div>
-        <div class="login-options"><button class="login-option-btn login-option-wechat" id="chooseWechatBtn"><i class="fab fa-weixin"></i> 微信扫码登录</button><button class="login-option-btn login-option-phone" id="choosePhoneBtn"><i class="fas fa-phone-alt"></i> 手机号登录</button></div>
-    </div>
-</div>
-
-<!-- 微信登录模态框 -->
-<div class="login-modal" id="loginModal"><div class="login-content"><button class="login-close" id="loginClose"><i class="fas fa-times"></i></button><div class="login-header"><i class="fab fa-weixin fa-2x"></i><h2>微信扫码登录</h2><p>使用微信扫描二维码登录</p></div><div class="login-body"><div class="qr-container"><div class="qr-placeholder" id="loginQrPlaceholder"><i class="fas fa-qrcode"></i><p>点击生成二维码</p></div><img id="login-qrcode-img" alt="二维码"></div><div class="login-status waiting" id="loginStatus">点击上方区域生成二维码</div></div></div></div>
-
-<!-- 手机号登录模态框 -->
-<div class="phone-login-modal" id="phoneLoginModal"><div class="phone-login-content"><button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button><div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i><h2>手机号登录</h2><p>输入手机号获取验证码登录</p></div><div class="phone-login-body"><div class="form-group"><label>手机号码</label><input type="tel" id="phoneNumber" placeholder="请输入11位手机号"></div><div class="form-group"><label>图形验证码</label><div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码"><div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button"><i class="fas fa-sync-alt"></i></button></div></div><div class="form-group"><label>短信验证码</label><div class="sms-row"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div></div><button id="phoneDoLoginBtn" class="btn-block">立即登录</button><div id="phoneMessage" class="message"></div></div></div></div>
-
-<!-- 工具模态框 -->
-<div class="tool-modal" id="toolModal"><div class="modal-content"><button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button><div class="modal-header"><div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div><div class="modal-title"><h2 id="modalToolName">工具名称</h2><p id="modalToolCategory"></p></div></div><div class="modal-body"><div><h3>工具描述</h3><p id="modalToolDescription"></p></div><div><h3>主要功能</h3><div id="modalFeatures" class="modal-features"></div></div><div><a class="modal-btn" id="openToolBtn" target="_blank"><i class="fas fa-external-link-alt"></i> 打开工具</a></div></div></div></div>
-
-<!-- 公告模态框 -->
-<div class="announce-modal" id="announceModal"><div class="announce-modal-content"><button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button><div class="announce-modal-header"><i class="fas fa-newspaper"></i><h3 style="display:inline-block;">最新公告</h3></div><div class="announce-modal-body"><p><strong>1.增加网络测速工具</strong></p></div></div></div>
+<!-- 弹窗结构 -->
+<div class="profile-modal" id="profileModal"><div class="profile-modal-content"><button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button><div class="profile-modal-header"><i class="fas fa-chart-simple"></i><h3>谱师数据</h3></div><div class="profile-modal-body" id="profileModalBody"><div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div></div></div></div>
+<div class="login-choice-modal" id="loginChoiceModal"><div class="login-choice-content"><button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button><div class="login-choice-header" style="padding:24px;text-align:center;"><i class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;"></i><h2>选择登录方式</h2></div><div class="login-options" style="padding:0 24px 32px;display:flex;flex-direction:column;gap:16px;"><button class="login-option-btn" id="chooseWechatBtn" style="background:linear-gradient(135deg,#07c160,#06ae56);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i class="fab fa-weixin"></i> 微信扫码登录</button><button class="login-option-btn" id="choosePhoneBtn" style="background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i class="fas fa-phone-alt"></i> 手机号登录</button></div></div></div>
+<div class="login-modal" id="loginModal"><div class="login-content"><button class="login-close" id="loginClose"><i class="fas fa-times"></i></button><div class="login-header"><i class="fab fa-weixin fa-2x"></i><h2>微信扫码登录</h2><p>使用微信扫描二维码登录</p></div><div class="login-body"><div class="qr-container" style="text-align:center;"><div class="qr-placeholder" id="loginQrPlaceholder" style="width:200px;height:200px;margin:0 auto;background:var(--feature-bg);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px dashed var(--border-light);"><i class="fas fa-qrcode fa-3x"></i><p>点击生成二维码</p></div><img id="login-qrcode-img" style="display:none;max-width:200px;margin:0 auto;border-radius:16px;"></div><div class="login-status waiting" id="loginStatus" style="text-align:center;margin-top:16px;padding:8px;background:var(--feature-bg);border-radius:12px;">点击上方区域生成二维码</div></div></div></div>
+<div class="phone-login-modal" id="phoneLoginModal"><div class="phone-login-content"><button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button><div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i><h2>手机号登录</h2><p>输入手机号获取验证码</p></div><div class="phone-login-body"><div class="form-group"><label>手机号</label><input type="tel" id="phoneNumber" placeholder="11位手机号"></div><div class="form-group"><label>图形验证码</label><div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码"><div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button">刷新</button></div></div><div class="form-group"><label>短信验证码</label><div class="sms-row" style="display:flex;gap:10px;"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div></div><button id="phoneDoLoginBtn" class="btn-block">立即登录</button><div id="phoneMessage" class="message" style="margin-top:12px;display:none;"></div></div></div></div>
+<div class="tool-modal" id="toolModal"><div class="modal-content"><button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button><div class="modal-header"><div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div><div class="modal-title"><h2 id="modalToolName">工具名称</h2><p id="modalToolCategory"></p></div></div><div class="modal-body"><div><h3>工具描述</h3><p id="modalToolDescription"></p></div><div><h3>主要功能</h3><div id="modalFeatures" class="modal-features"></div></div><div><a class="modal-btn" id="openToolBtn" target="_blank" style="display:inline-block;margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border-radius:40px;text-decoration:none;"><i class="fas fa-external-link-alt"></i> 打开工具</a></div></div></div></div>
+<div class="announce-modal" id="announceModal"><div class="announce-modal-content"><button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button><div class="announce-modal-header"><i class="fas fa-newspaper"></i><h3 style="display:inline-block;margin-left:8px;">最新公告</h3></div><div class="announce-modal-body" style="padding:24px;line-height:1.6;"><p><strong>✨ 新功能：谱面评分查询</strong><br>点击头像 → 谱师数据 → 查看谱面评分，即可获取每个谱面的详细评分。</p><p><strong>🔧 修复问题</strong><br>修复了弹窗显示异常，优化手机端体验。</p></div></div></div>
+<div class="ratings-modal" id="ratingsModal"><div class="ratings-modal-content"><button class="ratings-close" id="ratingsModalClose"><i class="fas fa-times"></i></button><div class="ratings-modal-header"><i class="fas fa-star"></i><h3>谱面评分详情</h3></div><div class="ratings-body" id="ratingsBody"><div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div></div></div></div>
 
 <script>
-    const toolsData = [{
-        id: 1,
-        name: "自制谱上传工具",
-        category: "上传工具",
-        description: "上传您的自制谱到机器上",
-        icon: "fa-solid fa-upload",
-        iconColor: "#0033ff",
-        features: ["直接跳转"],
-        url: "https://danceweb.shenghuayule.com/MusicMaker/#/"
-    }, {
-        id: 2,
-        name: "txt转mc/mcz",
-        category: "转换工具",
-        description: "将txt文件转换为mc文件，并且支持打包为mcz文件",
-        icon: "fas fa-music",
-        iconColor: "#6a11cb",
-        featured: true,
-        features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包"],
-        url: "../txt-mc.html"
-    }, {
-        id: 3,
-        name: "歌曲封面剪裁",
-        category: "剪裁工具",
-        description: "将图片裁剪为可上传大小",
-        icon: "fas fa-image",
-        iconColor: "#117ecb",
-        featured: true,
-        features: ["自动裁剪", "jpg格式", "直接下载"],
-        url: "../picturecut.html"
-    }, {
-        id: 4,
-        name: "标题图制作",
-        category: "制作工具",
-        description: "绘制标题图图片",
-        icon: "fas fa-heading",
-        iconColor: "#cb6511",
-        featured: true,
-        features: ["自动绘制", "png格式", "直接下载"],
-        url: "../maketitle.html"
-    }, {
-        id: 5,
-        name: "音频转换",
-        category: "转换工具",
-        description: "转换音频格式",
-        icon: "fas fa-compact-disc",
-        iconColor: "#b811cb",
-        featured: true,
-        features: ["多格式转换", "直接下载"],
-        url: "../exchange-radio.html"
-    }, {
-        id: 6,
-        name: "ncm转换",
-        category: "转换工具",
-        description: "转换ncm格式",
-        icon: "fas fa-arrows-rotate",
-        iconColor: "#ff0000",
-        featured: true,
-        features: ["自动转换ncm文件", "多文件转换"],
-        url: "../ncmexchange.html"
-    }, {
-        id: 7,
-        name: "mc/mcz转txt",
-        category: "转换工具",
-        description: "将mc/mcz文件转换为txt并打包",
-        icon: "fas fa-right-left",
-        iconColor: "#e600ff",
-        featured: true,
-        features: ["自动转换", "打包zip", "支持变速"],
-        url: "../mc-txt.html"
-    }, {
-        id: 8,
-        name: "免费mp3下载",
-        category: "下载工具",
-        description: "免费下载歌曲mp3音频",
-        icon: "fa-solid fa-download",
-        iconColor: "#2ba31d",
-        featured: true,
-        features: ["免费下载"],
-        url: "https://www.myfreemp3.com.cn/"
-    }, {
-        id: 9,
-        name: "兑换码生成",
-        category: "兑换码生成",
-        description: "生成歌曲兑换码",
-        icon: "fa-solid fa-gift",
-        iconColor: "#520fc5",
-        featured: true,
-        features: ["多种时长", "永久/次数"],
-        url: "../gift.html"
-    }, {
-        id: 10,
-        name: "token获取",
-        category: "获取工具",
-        description: "获取舞立方用户token",
-        icon: "fa-solid fa-key",
-        iconColor: "#c5a007",
-        featured: true,
-        features: ["扫码登录", "获取token"],
-        url: "../gettoken.html"
-    },
-        {
-            id: 11,
-            name: "网络测速",
-            category: "测试工具",
-            description: "测试网速",
-            icon: "fa-solid fa-key",
-            iconColor: "#16a7ba",
-            new: true,
-            features: ["直接测速", "直接显示"],
-            url: "../testweb.html"
-        }
-    ];
     const API_BASE = 'https://dancedemo.shenghuayule.com';
     let accessToken = null;
-    let loginQrCodeData = null;
-    let loginCheckInterval = null;
-    let phoneCountdownInterval = null;
-    let phoneCountdown = 0;
+    let loginQrCodeData = null, loginCheckInterval = null, phoneCountdown = 0, phoneCountdownInterval = null;
 
-    async function saveTokenAndFetchUser(token, userIdHint) {
-        accessToken = token;
-        localStorage.setItem('dance_user_token', JSON.stringify({
-            token,
-            expireTime: new Date(Date.now() + 7 * 864e5).toISOString()
-        }));
-        try {
-            let userId = userIdHint;
-            if (!userId) {
-                const tr = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, {
-                    headers: {
-                        'Authorization': `bearer ${token}`
-                    }
-                });
-                const info = await tr.json();
-                userId = info.UserID || userIdHint;
-            }
-            const uir = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userId || '')}`, {
-                headers: {
-                    'Authorization': `bearer ${token}`
-                }
-            });
-            const ui = await uir.json();
-            const userData = {
-                UserID: ui.UserID || userId,
-                UserName: ui.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'),
-                HeadimgURL: ui.HeadimgURL || ''
-            };
-            localStorage.setItem('dance_user_data', JSON.stringify(userData));
-            showUserInfo(userData);
-        } catch (e) {
-            const fallbackName = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户';
-            const userData = {
-                UserID: userIdHint || 'unknown',
-                UserName: fallbackName,
-                HeadimgURL: ''
-            };
-            localStorage.setItem('dance_user_data', JSON.stringify(userData));
-            showUserInfo(userData);
-        }
-    }
+    const toolsData = [
+        { id: 1, name: "自制谱上传工具", category: "上传工具", description: "上传您的自制谱到机器上", icon: "fa-solid fa-upload", iconColor: "#0033ff", features: ["直接跳转"], url: "https://danceweb.shenghuayule.com/MusicMaker/#/" },
+        { id: 2, name: "txt转mc/mcz", category: "转换工具", description: "将txt文件转换为mc文件，并且支持打包为mcz文件", icon: "fas fa-music", iconColor: "#6a11cb", featured: true, features: ["自动转换", "不同小节转换", "自动计算偏移", "支持打包"], url: "../txt-mc.html" },
+        { id: 3, name: "歌曲封面剪裁", category: "剪裁工具", description: "将图片裁剪为可上传大小", icon: "fas fa-image", iconColor: "#117ecb", featured: true, features: ["自动裁剪", "jpg格式", "直接下载"], url: "../picturecut.html" },
+        { id: 4, name: "标题图制作", category: "制作工具", description: "绘制标题图图片", icon: "fas fa-heading", iconColor: "#cb6511", featured: true, features: ["自动绘制", "png格式", "直接下载"], url: "../maketitle.html" },
+        { id: 5, name: "音频转换", category: "转换工具", description: "转换音频格式", icon: "fas fa-compact-disc", iconColor: "#b811cb", featured: true, features: ["多格式转换", "直接下载"], url: "../exchange-radio.html" },
+        { id: 6, name: "ncm转换", category: "转换工具", description: "转换ncm格式", icon: "fas fa-arrows-rotate", iconColor: "#ff0000", featured: true, features: ["自动转换ncm文件", "多文件转换"], url: "../ncmexchange.html" },
+        { id: 7, name: "mc/mcz转txt", category: "转换工具", description: "将mc/mcz文件转换为txt并打包", icon: "fas fa-right-left", iconColor: "#e600ff", featured: true, features: ["自动转换", "打包zip", "支持变速"], url: "../mc-txt.html" },
+        { id: 8, name: "免费mp3下载", category: "下载工具", description: "免费下载歌曲mp3音频", icon: "fa-solid fa-download", iconColor: "#2ba31d", featured: true, features: ["免费下载"], url: "https://www.myfreemp3.com.cn/" },
+        { id: 9, name: "兑换码生成", category: "兑换码生成", description: "生成歌曲兑换码", icon: "fa-solid fa-gift", iconColor: "#520fc5", featured: true, features: ["多种时长", "永久/次数"], url: "../gift.html" },
+        { id: 10, name: "token获取", category: "获取工具", description: "获取舞立方用户token", icon: "fa-solid fa-key", iconColor: "#c5a007", featured: true, features: ["扫码登录", "获取token"], url: "../gettoken.html" },
+        { id: 11, name: "网络测速", category: "测试工具", description: "测试网速", icon: "fa-solid fa-key", iconColor: "#16a7ba", new: true, features: ["直接测速", "直接显示"], url: "../testweb.html" }
+    ];
 
     function showUserInfo(user) {
         document.getElementById('userName').innerText = user.UserName;
@@ -1504,471 +192,124 @@
         document.getElementById('userDetails').style.display = 'flex';
         document.getElementById('userAvatar').style.display = 'flex';
         document.getElementById('loginBtn').style.display = 'none';
-        if (user.HeadimgURL) {
-            document.getElementById('userAvatar').innerHTML = `<img src="${user.HeadimgURL}">`;
+        if(user.HeadimgURL) {
+            document.getElementById('userAvatar').innerHTML = `<img src="${user.HeadimgURL}" alt="头像">`;
         } else {
             document.getElementById('userAvatar').innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
         }
     }
+    function clearUserData() { localStorage.removeItem('dance_user_data'); localStorage.removeItem('dance_user_token'); accessToken = null; document.getElementById('userDetails').style.display = 'none'; document.getElementById('userAvatar').style.display = 'none'; document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('loginBtn').style.display = 'flex'; }
+    async function saveTokenAndFetchUser(token, userIdHint) { accessToken = token; localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now() + 7 * 864e5).toISOString() })); try { const uir = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, { headers: { 'Authorization': `bearer ${token}` } }); const ui = await uir.json(); const userData = { UserID: ui.UserID || userIdHint, UserName: ui.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'), HeadimgURL: ui.HeadimgURL || '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } catch(e) { const fallbackName = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'; const userData = { UserID: userIdHint || 'unknown', UserName: fallbackName, HeadimgURL: '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } }
+    function checkLoginStatus() { const saved = localStorage.getItem('dance_user_data'); const tokenData = localStorage.getItem('dance_user_token'); if(saved && tokenData) { try { const tok = JSON.parse(tokenData); if(new Date(tok.expireTime) > new Date()) { accessToken = tok.token; showUserInfo(JSON.parse(saved)); } else clearUserData(); } catch(e) { clearUserData(); } } }
 
-    function clearUserData() {
-        localStorage.removeItem('dance_user_data');
-        localStorage.removeItem('dance_user_token');
-        accessToken = null;
-        document.getElementById('userDetails').style.display = 'none';
-        document.getElementById('userAvatar').style.display = 'none';
-        document.getElementById('loginBtn').style.display = 'flex';
-        const phoneInput = document.getElementById('phoneNumber');
-        const graphInput = document.getElementById('graphCodeInput');
-        const smsInput = document.getElementById('smsCodeInput');
-        if (phoneInput) phoneInput.value = '';
-        if (graphInput) graphInput.value = '';
-        if (smsInput) smsInput.value = '';
-        const msgDiv = document.getElementById('phoneMessage');
-        if (msgDiv) msgDiv.style.display = 'none';
-    }
-
-    function checkLoginStatus() {
-        const saved = localStorage.getItem('dance_user_data');
-        const tokenData = localStorage.getItem('dance_user_token');
-        if (saved && tokenData) {
-            try {
-                const tok = JSON.parse(tokenData);
-                if (new Date(tok.expireTime) > new Date()) {
-                    accessToken = tok.token;
-                    showUserInfo(JSON.parse(saved));
-                } else {
-                    clearUserData();
-                }
-            } catch (e) {
-                clearUserData();
-            }
-        }
-    }
-
-    function openLoginChoice() {
-        document.getElementById('loginChoiceModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLoginChoice() {
-        document.getElementById('loginChoiceModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    async function generateLoginQRCode() {
-        const updateStatus = (t, c) => {
-            const d = document.getElementById('loginStatus');
-            d.innerText = t;
-            d.className = `login-status ${c}`;
-        };
-        updateStatus('生成中...', 'waiting');
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`);
-            const data = await res.json();
-            loginQrCodeData = data;
-            document.getElementById('login-qrcode-img').src = data.QrcodeUrl;
-            document.getElementById('login-qrcode-img').style.display = 'block';
-            document.getElementById('loginQrPlaceholder').style.display = 'none';
-            updateStatus('请微信扫码', 'waiting');
-            if (loginCheckInterval) clearInterval(loginCheckInterval);
-            loginCheckInterval = setInterval(async () => {
-                if (!loginQrCodeData?.ID) return;
-                try {
-                    const params = new URLSearchParams({
-                        client_type: 'qrcode',
-                        grant_type: 'client_credentials',
-                        client_id: loginQrCodeData.ID
-                    });
-                    const res2 = await fetch(`${API_BASE}/Dance/token`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: params
-                    });
-                    if (res2.status === 401) return;
-                    const data2 = await res2.json();
-                    const token = data2.access_token;
-                    if (token) {
-                        clearInterval(loginCheckInterval);
-                        updateStatus('登录成功', 'success');
-                        const uid = data2.user_id || data2.userId;
-                        await saveTokenAndFetchUser(token, uid);
-                        setTimeout(() => closeLoginModal(), 1200);
-                    }
-                } catch (e) {}
-            }, 2000);
-        } catch (e) {
-            updateStatus('生成失败', 'error');
-        }
-    }
-
-    function openLoginModal() {
-        closeLoginChoice();
-        document.getElementById('loginModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('login-qrcode-img').style.display = 'none';
-        document.getElementById('loginQrPlaceholder').style.display = 'flex';
-        document.getElementById('loginStatus').innerText = '点击上方区域生成二维码';
-        document.getElementById('loginStatus').className = 'login-status waiting';
-    }
-
-    function closeLoginModal() {
-        document.getElementById('loginModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-        if (loginCheckInterval) clearInterval(loginCheckInterval);
-    }
-
-    async function loadGraphCodeForPhone() {
-        const phone = document.getElementById('phoneNumber').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
-            showPhoneMsg('请填写正确手机号', 'error');
-            return;
-        }
-        const captchaImg = document.getElementById('captchaImage');
-        const captchaSpan = document.getElementById('captchaTextSpan');
-        captchaSpan.style.display = 'flex';
-        captchaSpan.innerText = '⏳加载';
-        captchaImg.style.display = 'none';
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`);
-            const text = await res.text();
-            let base64 = text.trim();
-            if (base64.startsWith('"')) base64 = base64.slice(1, -1);
-            captchaImg.src = `data:image/gif;base64,${base64}`;
-            captchaImg.style.display = 'block';
-            captchaSpan.style.display = 'none';
-            showPhoneMsg('图形码已刷新', 'success');
-        } catch (e) {
-            captchaSpan.innerText = '点击重试';
-            showPhoneMsg('加载失败', 'error');
-        }
-    }
-
-    async function requestSmsCode() {
-        const phone = document.getElementById('phoneNumber').value.trim();
-        const graphCode = document.getElementById('graphCodeInput').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
-            showPhoneMsg('手机号错误', 'error');
-            return;
-        }
-        if (!graphCode) {
-            showPhoneMsg('请填写图形验证码', 'error');
-            return;
-        }
-        if (phoneCountdown > 0) {
-            showPhoneMsg(`请等待${phoneCountdown}秒后重试`, 'error');
-            return;
-        }
-        const btn = document.getElementById('getSmsCodeBtn');
-        btn.disabled = true;
-        phoneCountdown = 60;
-        btn.innerText = `${phoneCountdown}秒后重试`;
-        if (phoneCountdownInterval) clearInterval(phoneCountdownInterval);
-        phoneCountdownInterval = setInterval(() => {
-            if (phoneCountdown <= 1) {
-                clearInterval(phoneCountdownInterval);
-                btn.disabled = false;
-                btn.innerText = '获取验证码';
-                phoneCountdown = 0;
-            } else {
-                phoneCountdown--;
-                btn.innerText = `${phoneCountdown}秒后重试`;
-            }
-        }, 1000);
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`);
-            const text = await res.text();
-            let sms = text.trim();
-            if (sms.startsWith('"')) sms = sms.slice(1, -1);
-            if (/^\d{4,8}$/.test(sms)) {
-                document.getElementById('smsCodeInput').value = sms;
-                showPhoneMsg(`验证码: ${sms}`, 'success');
-            } else {
-                throw new Error('请稍后');
-            }
-        } catch (e) {
-            showPhoneMsg('请稍后', 'waiting');
-        }
-    }
-
-    async function phoneLogin() {
-        const phone = document.getElementById('phoneNumber').value.trim();
-        const smsCode = document.getElementById('smsCodeInput').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
-            showPhoneMsg('手机号错误', 'error');
-            return;
-        }
-        if (!smsCode) {
-            showPhoneMsg('请输入验证码', 'error');
-            return;
-        }
-        const btn = document.getElementById('phoneDoLoginBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 登录中...';
-        try {
-            const params = new URLSearchParams({
-                client_type: 'phone',
-                grant_type: 'client_credentials',
-                client_id: phone,
-                client_secret: smsCode
-            });
-            const res = await fetch(`${API_BASE}/Dance/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: params
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error_description || '登录失败');
-            const token = data.access_token;
-            if (token) {
-                const uid = data.user_id || data.userId || phone;
-                await saveTokenAndFetchUser(token, uid);
-                showPhoneMsg('登录成功', 'success');
-                setTimeout(() => closePhoneModal(), 1200);
-            } else {
-                throw new Error('无token');
-            }
-        } catch (e) {
-            showPhoneMsg(e.message, 'error');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '立即登录';
-        }
-    }
-
-    function showPhoneMsg(msg, type) {
-        const div = document.getElementById('phoneMessage');
-        div.innerText = msg;
-        div.className = `message ${type}`;
-        div.style.display = 'block';
-        setTimeout(() => {
-            if (div.innerText === msg) div.style.display = 'none';
-        }, 4000);
-    }
-
-    function openPhoneModal() {
-        closeLoginChoice();
-        document.getElementById('phoneLoginModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        loadGraphCodeForPhone();
-    }
-
-    function closePhoneModal() {
-        document.getElementById('phoneLoginModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-        if (phoneCountdownInterval) clearInterval(phoneCountdownInterval);
-    }
-
-    async function fetchRawMusicList() {
-        if (!accessToken) return null;
-        try {
-            const res = await fetch(`https://dancedemo.shenghuayule.com/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, {
-                headers: {
-                    'Authorization': `bearer ${accessToken}`
-                }
-            });
-            if (res.status === 401) return null;
-            const data = await res.json();
-            return Array.isArray(data) ? data : (data.List || []);
-        } catch (e) {
-            return null;
-        }
-    }
+    async function fetchRawMusicList() { if(!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if(res.status === 401) return null; const data = await res.json(); return Array.isArray(data) ? data : (data.List || []); } catch(e) { return null; } }
+    async function fetchScoreByMusicId(musicId) { if(!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetScoreStat?musicId=${musicId}`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if(!res.ok) return null; const data = await res.json(); return data.Score !== undefined ? data.Score : null; } catch(e) { return null; } }
 
     async function showProfileModal() {
-        const modal = document.getElementById('profileModal');
-        const bodyDiv = document.getElementById('profileModalBody');
-        bodyDiv.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>';
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        if (!accessToken) {
-            bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>';
-            return;
-        }
+        const modal = document.getElementById('profileModal'), bodyDiv = document.getElementById('profileModalBody');
+        bodyDiv.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden';
+        if(!accessToken) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>'; return; }
+        try { const list = await fetchRawMusicList(); if(!list || !list.length) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>'; return; }
+            let totalDownload=0, totalPlay=0, published=0, offline=0; list.forEach(i => { totalDownload += i.DownloadCount||0; totalPlay += i.ClicksRatio||0; i.IsOnSale ? published++ : offline++; });
+            bodyDiv.innerHTML = `<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div><button class="view-ratings-btn" id="viewRatingsBtn"><i class="fas fa-star"></i> 查看谱面评分</button>`;
+            document.getElementById('viewRatingsBtn')?.addEventListener('click', (e) => { e.stopPropagation(); showRatingsModal(); });
+        } catch(e) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>'; }
+    }
+
+    async function showRatingsModal() {
+        const modal = document.getElementById('ratingsModal'), bodyDiv = document.getElementById('ratingsBody');
+        bodyDiv.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载评分数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden';
+        if(!accessToken) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-exclamation-triangle"></i><p>请先登录</p></div>'; return; }
         try {
-            const list = await fetchRawMusicList();
-            if (!list || !list.length) {
-                bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>';
-                return;
-            }
-            let totalDownload = 0,
-                totalPlay = 0,
-                published = 0,
-                offline = 0;
-            list.forEach(i => {
-                totalDownload += i.DownloadCount || 0;
-                totalPlay += i.ClicksRatio || 0;
-                i.IsOnSale ? published++ : offline++;
+            const musicList = await fetchRawMusicList();
+            if(!musicList || musicList.length===0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无谱面数据</p></div>'; return; }
+            const ratingsPromises = musicList.map(async (item) => {
+                const musicId = item.MusicID || item.musicId;
+                const score = await fetchScoreByMusicId(musicId);
+                const rawName = item.Name || item.MusicName || item.musicName || `谱面${musicId}`;
+                const displayName = `[${musicId}] ${rawName}`;
+                return { musicId, musicName: displayName, score: score !== null ? score : null };
             });
-            bodyDiv.innerHTML = `<div class="profile-stats">
-                        <div class="profile-stat-item">
-                            <div class="profile-stat-number">${totalDownload.toLocaleString()}</div>
-                            <div class="profile-stat-label">总下载</div>
-                        </div>
-                        <div class="profile-stat-item">
-                            <div class="profile-stat-number">${totalPlay.toLocaleString()}</div>
-                            <div class="profile-stat-label">总点播</div>
-                        </div>
-                        <div class="profile-stat-item">
-                            <div class="profile-stat-number published-number">${published}</div>
-                            <div class="profile-stat-label">已上架</div>
-                        </div>
-                        <div class="profile-stat-item">
-                            <div class="profile-stat-number offline-number">${offline}</div>
-                            <div class="profile-stat-label">下架</div>
-                        </div>
-                    </div>
-                    <div class="profile-total-info">📊 共计 ${list.length} 个谱面</div>`;
-        } catch (e) {
-            bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>';
+            const ratings = await Promise.all(ratingsPromises);
+            const validRatings = ratings.filter(r => r.score !== null);
+            if(validRatings.length === 0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无评分数据</p></div>'; return; }
+            let html = `<table class="ratings-table"><thead><tr><th>#</th><th>谱面名称</th><th>综合评分</th></tr></thead><tbody>`;
+            validRatings.forEach((item, idx) => {
+                const displayScore = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
+                html += `<tr><td>${idx+1}</td><td>${escapeHtml(item.musicName)}</td><td class="rating-score">${displayScore} ⭐</td></tr>`;
+            });
+            html += `</tbody></table>`;
+            bodyDiv.innerHTML = html;
+        } catch(err) {
+            console.error(err);
+            bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-bug"></i><p>加载失败，请稍后重试</p></div>';
         }
     }
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
+    function closeRatingsModal() { document.getElementById('ratingsModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
 
-    function closeProfileModal() {
-        document.getElementById('profileModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
+    async function generateLoginQRCode() {
+        const updateStatus = (t) => { const d = document.getElementById('loginStatus'); d.innerText = t; };
+        updateStatus('生成中...');
+        try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`); const data = await res.json(); loginQrCodeData = data; document.getElementById('login-qrcode-img').src = data.QrcodeUrl; document.getElementById('login-qrcode-img').style.display = 'block'; document.getElementById('loginQrPlaceholder').style.display = 'none'; updateStatus('请微信扫码'); if(loginCheckInterval) clearInterval(loginCheckInterval);
+            loginCheckInterval = setInterval(async () => { if(!loginQrCodeData?.ID) return; try { const params = new URLSearchParams({ client_type:'qrcode', grant_type:'client_credentials', client_id:loginQrCodeData.ID }); const res2 = await fetch(`${API_BASE}/Dance/token`, { method:'POST', headers:{ 'Content-Type':'application/x-www-form-urlencoded' }, body:params }); if(res2.status===401) return; const data2 = await res2.json(); const token = data2.access_token; if(token){ clearInterval(loginCheckInterval); updateStatus('登录成功'); const uid = data2.user_id || data2.userId; await saveTokenAndFetchUser(token, uid); setTimeout(() => closeLoginModal(), 1200); } } catch(e){} }, 2000);
+        } catch(e){ updateStatus('生成失败，请重试'); }
     }
+    function openLoginChoice() { document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeLoginChoice() { document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function openLoginModal() { closeLoginChoice(); document.getElementById('loginModal').classList.add('active'); document.body.style.overflow = 'hidden'; document.getElementById('login-qrcode-img').style.display = 'none'; document.getElementById('loginQrPlaceholder').style.display = 'flex'; document.getElementById('loginStatus').innerText = '点击上方区域生成二维码'; }
+    function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if(loginCheckInterval) clearInterval(loginCheckInterval); }
+    function openPhoneModal() { closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); document.body.style.overflow = 'hidden'; loadGraphCodeForPhone(); }
+    function closePhoneModal() { document.getElementById('phoneLoginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); }
+    async function loadGraphCodeForPhone() { const phone = document.getElementById('phoneNumber').value.trim(); if(!phone || !/^1[3-9]\d{9}$/.test(phone)) { showPhoneMsg('正确手机号','error'); return; } const img = document.getElementById('captchaImage'), span = document.getElementById('captchaTextSpan'); span.style.display='flex'; span.innerText='⏳'; img.style.display='none'; try{ const res = await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`); let text = await res.text(); if(text.startsWith('"')) text=text.slice(1,-1); img.src = `data:image/gif;base64,${text}`; img.style.display='block'; span.style.display='none'; } catch(e){ span.innerText='重试'; } }
+    async function requestSmsCode() { const phone = document.getElementById('phoneNumber').value.trim(), graphCode = document.getElementById('graphCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误','error'); if(!graphCode) return showPhoneMsg('图形码必填','error'); if(phoneCountdown>0) return; const btn = document.getElementById('getSmsCodeBtn'); btn.disabled=true; phoneCountdown=60; btn.innerText=`${phoneCountdown}s`; phoneCountdownInterval = setInterval(()=>{ if(phoneCountdown<=1){ clearInterval(phoneCountdownInterval); btn.disabled=false; btn.innerText='获取验证码'; phoneCountdown=0; } else { phoneCountdown--; btn.innerText=`${phoneCountdown}s`; } },1000); try{ const res = await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); let text = await res.text(); if(text.startsWith('"')) text=text.slice(1,-1); if(/^\d{4,8}$/.test(text)){ document.getElementById('smsCodeInput').value = text; showPhoneMsg(`验证码: ${text}`,'success'); } else throw new Error(); } catch(e){ showPhoneMsg('获取失败','error'); } }
+    async function phoneLogin() { const phone = document.getElementById('phoneNumber').value.trim(), smsCode = document.getElementById('smsCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误','error'); if(!smsCode) return showPhoneMsg('验证码必填','error'); const btn = document.getElementById('phoneDoLoginBtn'); btn.disabled=true; btn.innerHTML='登录中...'; try{ const params = new URLSearchParams({ client_type:'phone', grant_type:'client_credentials', client_id:phone, client_secret:smsCode }); const res = await fetch(`${API_BASE}/Dance/token`,{ method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:params }); const data = await res.json(); if(!res.ok) throw new Error(data.error_description); const token = data.access_token; if(token){ const uid = data.user_id || data.userId || phone; await saveTokenAndFetchUser(token, uid); showPhoneMsg('登录成功','success'); setTimeout(()=>closePhoneModal(),1200); } else throw new Error(); } catch(e){ showPhoneMsg('登录失败','error'); } finally{ btn.disabled=false; btn.innerHTML='立即登录'; } }
+    function showPhoneMsg(msg,type){ const div = document.getElementById('phoneMessage'); div.innerText = msg; div.style.display='block'; setTimeout(()=>div.style.display='none',3000); }
 
-    function openToolModal(toolId) {
-        const t = toolsData.find(t => t.id === toolId);
-        if (!t) return;
-        document.getElementById('modalToolName').innerText = t.name;
-        document.getElementById('modalToolCategory').innerText = t.category;
-        document.getElementById('modalToolDescription').innerText = t.description;
-        const iconDiv = document.getElementById('modalIcon');
-        iconDiv.innerHTML = `<i class="${t.icon}"></i>`;
-        iconDiv.style.background = `linear-gradient(135deg, ${t.iconColor}99, ${t.iconColor})`;
-        document.getElementById('modalFeatures').innerHTML = t.features.map(f => `<div class="modal-feature"><i class="fas fa-check-circle"></i><span>${f}</span></div>`).join('');
-        document.getElementById('openToolBtn').href = t.url;
-        document.getElementById('toolModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+    function renderTools(tools) { const grid = document.getElementById('toolsGrid'); grid.innerHTML = ''; tools.forEach(t => { const card = document.createElement('div'); card.className = 'tool-card' + (t.featured ? ' featured' : '') + (t.new ? ' new' : '');
+        card.innerHTML = `<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`;
+        card.addEventListener('click', (e) => { if(!e.target.closest('.tool-action')) openToolModal(t.id); }); grid.appendChild(card); }); document.getElementById('toolCount').innerText = tools.length; }
+    function openToolModal(id) { const t = toolsData.find(t=>t.id===id); if(!t) return; document.getElementById('modalToolName').innerText = t.name; document.getElementById('modalToolCategory').innerText = t.category; document.getElementById('modalToolDescription').innerText = t.description; document.getElementById('modalIcon').innerHTML = `<i class="${t.icon}"></i>`; document.getElementById('modalFeatures').innerHTML = t.features.map(f => `<div class="modal-feature"><i class="fas fa-check-circle" style="color:#22c55e;"></i> ${f}</div>`).join(''); document.getElementById('openToolBtn').href = t.url; document.getElementById('toolModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeToolModal() { document.getElementById('toolModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function filterTools() { const term = document.getElementById('searchInput').value.toLowerCase(); renderTools(toolsData.filter(t => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term))); }
+    function initTheme() { if(localStorage.getItem('dance_theme')==='dark'){ document.body.classList.add('dark'); document.getElementById('themeToggle').innerHTML='<i class="fas fa-sun"></i> 浅色模式'; } }
+    function toggleTheme() { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('dance_theme', isDark ? 'dark' : 'light'); document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式'; }
+    function directEmailFeedback() { window.location.href = 'mailto:miqimiaomiaowushi@163.com'; }
 
-    function closeToolModal() {
-        document.getElementById('toolModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    function initTheme() {
-        const saved = localStorage.getItem('dance_theme');
-        if (saved === 'dark') {
-            document.body.classList.add('dark');
-            const themeToggle = document.getElementById('themeToggle');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i> 浅色模式';
-        }
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        localStorage.setItem('dance_theme', isDark ? 'dark' : 'light');
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式';
-    }
-
-    function renderTools(tools) {
-        const grid = document.getElementById('toolsGrid');
-        grid.innerHTML = '';
-        tools.forEach(t => {
-            const card = document.createElement('div');
-            card.className = 'tool-card';
-            if (t.featured) card.classList.add('featured');
-            if (t.new) card.classList.add('new');
-            card.dataset.id = t.id;
-            card.innerHTML = `<div class="tool-header">
-                        <div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});">
-                            <i class="${t.icon}"></i>
-                        </div>
-                        <div class="tool-info">
-                            <h3>${t.name}</h3>
-                            <p>${t.category}</p>
-                        </div>
-                        ${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}
-                        ${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}
-                    </div>
-                    <div class="tool-description">${t.description}</div>
-                    <div class="tool-footer">
-                        <a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a>
-                    </div>`;
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('.tool-action')) openToolModal(t.id);
-            });
-            grid.appendChild(card);
-        });
-        document.getElementById('toolCount').innerText = tools.length;
-    }
-
-    function filterTools() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        renderTools(toolsData.filter(t => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term)));
-    }
-
-    function directEmailFeedback() {
-        window.location.href = 'mailto:miqimiaomiaowushi@163.com';
-    }
-
-    function bindEvents() {
+    function init() {
+        initTheme(); checkLoginStatus(); renderTools(toolsData);
         document.getElementById('searchInput').addEventListener('input', filterTools);
-        document.getElementById('modalClose').addEventListener('click', closeToolModal);
-        document.getElementById('toolModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('toolModal')) closeToolModal();
-        });
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('directEmailBtn')?.addEventListener('click', directEmailFeedback);
         document.getElementById('loginBtn').addEventListener('click', openLoginChoice);
         document.getElementById('choiceClose').addEventListener('click', closeLoginChoice);
-        document.getElementById('loginChoiceModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('loginChoiceModal')) closeLoginChoice();
-        });
+        document.getElementById('loginChoiceModal').addEventListener('click', (e) => { if(e.target === document.getElementById('loginChoiceModal')) closeLoginChoice(); });
         document.getElementById('chooseWechatBtn').addEventListener('click', openLoginModal);
         document.getElementById('choosePhoneBtn').addEventListener('click', openPhoneModal);
         document.getElementById('loginClose').addEventListener('click', closeLoginModal);
         document.getElementById('loginQrPlaceholder').addEventListener('click', generateLoginQRCode);
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            if (confirm('退出登录？')) clearUserData();
-        });
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('logoutBtn').addEventListener('click', () => { if(confirm('退出登录？')) clearUserData(); });
         document.getElementById('announcementBar').addEventListener('click', () => document.getElementById('announceModal').classList.add('active'));
         document.getElementById('announceModalClose').addEventListener('click', () => document.getElementById('announceModal').classList.remove('active'));
+        document.getElementById('announceModal').addEventListener('click', (e) => { if(e.target === document.getElementById('announceModal')) document.getElementById('announceModal').classList.remove('active'); });
         document.getElementById('phoneModalClose').addEventListener('click', closePhoneModal);
         document.getElementById('refreshCaptchaBtn').addEventListener('click', loadGraphCodeForPhone);
         document.getElementById('captchaImgBox').addEventListener('click', loadGraphCodeForPhone);
         document.getElementById('getSmsCodeBtn').addEventListener('click', requestSmsCode);
         document.getElementById('phoneDoLoginBtn').addEventListener('click', phoneLogin);
-        document.getElementById('userAvatar').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showProfileModal();
-        });
-        document.getElementById('profileModalClose').addEventListener('click', closeProfileModal);
-        document.getElementById('profileModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('profileModal')) closeProfileModal();
-        });
-        document.getElementById('loginModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('loginModal')) closeLoginModal();
-        });
-        document.getElementById('phoneLoginModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('phoneLoginModal')) closePhoneModal();
-        });
-        const emailBtn = document.getElementById('directEmailBtn');
-        if (emailBtn) emailBtn.addEventListener('click', directEmailFeedback);
-    }
-
-    function init() {
-        initTheme();
-        checkLoginStatus();
-        renderTools(toolsData);
-        bindEvents();
+        document.getElementById('userAvatar').addEventListener('click', (e) => { e.stopPropagation(); showProfileModal(); });
+        document.getElementById('profileModalClose').addEventListener('click', () => { document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow = 'auto'; });
+        document.getElementById('profileModal').addEventListener('click', (e) => { if(e.target === document.getElementById('profileModal')){ document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow = 'auto'; } });
+        document.getElementById('ratingsModalClose').addEventListener('click', closeRatingsModal);
+        document.getElementById('ratingsModal').addEventListener('click', (e) => { if(e.target === document.getElementById('ratingsModal')) closeRatingsModal(); });
+        document.getElementById('modalClose').addEventListener('click', closeToolModal);
+        document.getElementById('toolModal').addEventListener('click', (e) => { if(e.target === document.getElementById('toolModal')) closeToolModal(); });
     }
     init();
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('dragstart', e => {
-        if (e.target.tagName === 'IMG') e.preventDefault();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault();
-    });
+    document.addEventListener('dragstart', e => { if(e.target.tagName === 'IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e => { if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault(); });
 </script>
 </body>
+</html>

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>舞立方自制谱谱师工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -93,6 +95,41 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+        }
+
+        /* 新增扫码按钮样式 - 放在logo-area内，与logo在同一行，手机端友好 */
+        .mobile-scan-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, background 0.2s;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .mobile-scan-btn i {
+            font-size: 0.9rem;
+        }
+
+        .mobile-scan-btn:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        @media (max-width: 640px) {
+            .mobile-scan-btn {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
         }
 
         .logo {
@@ -542,7 +579,7 @@
             transform: translateY(0);
         }
 
-        /* 工具弹窗内部样式 - 图标加大 */
+        /* 工具弹窗内部样式 */
         .tool-modal .modal-header {
             display: flex;
             padding: 20px 24px;
@@ -592,7 +629,6 @@
             margin-bottom: 8px;
         }
 
-        /* 谱师数据弹窗内部样式 */
         .profile-modal-header {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             padding: 20px 24px;
@@ -700,7 +736,6 @@
             z-index: 10;
         }
 
-        /* 查看评分按钮 - 蓝紫色 */
         .view-ratings-btn {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: white;
@@ -719,12 +754,6 @@
             transition: all 0.3s ease;
         }
 
-        .view-ratings-btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        /* 评分弹窗 */
         .ratings-modal-header {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             padding: 18px 24px;
@@ -779,7 +808,6 @@
             color: #f59e0b;
         }
 
-        /* 登录弹窗内部样式 */
         .login-header,
         .phone-login-header {
             padding: 24px;
@@ -945,6 +973,8 @@
                         </span>
                 </p>
             </div>
+            <!-- 新增扫码按钮：与logo在同一行，点击跳转到qr.html -->
+            <button class="mobile-scan-btn" id="mobileQrBtn"><i class="fas fa-qrcode"></i> 扫码</button>
         </div>
         <div class="user-info" id="userInfo">
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
@@ -959,6 +989,7 @@
             </div>
         </div>
     </header>
+
     <div class="announcement-wrapper">
         <div class="announcement-bar" id="announcementBar">
             <div class="announcement-icon"><i class="fas fa-bullhorn"></i></div>
@@ -971,12 +1002,14 @@
             <div class="announcement-hint"><i class="fas fa-hand-pointer"></i> 详情</div>
         </div>
     </div>
+
     <div class="search-filter">
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="搜索工具名称或功能...">
             <i class="fas fa-search"></i>
         </div>
     </div>
+
     <section class="tools-section">
         <div class="section-header">
             <div>
@@ -988,17 +1021,17 @@
         </div>
         <div class="tools-grid" id="toolsGrid"></div>
     </section>
+
     <footer class="footer">
         <p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p>
     </footer>
 </div>
 
-<!-- 弹窗结构 -->
+<!-- 弹窗结构 (保持不变) -->
 <div class="profile-modal" id="profileModal">
     <div class="profile-modal-content">
         <button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button>
-        <div class="profile-modal-header">
-            <i class="fas fa-chart-simple"></i>
+        <div class="profile-modal-header"><i class="fas fa-chart-simple"></i>
             <h3>谱师数据</h3>
         </div>
         <div class="profile-modal-body" id="profileModalBody">
@@ -1009,27 +1042,24 @@
 <div class="login-choice-modal" id="loginChoiceModal">
     <div class="login-choice-content">
         <button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button>
-        <div class="login-choice-header" style="padding:24px;text-align:center;">
-            <i class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;"></i>
+        <div class="login-choice-header" style="padding:24px;text-align:center;"><i
+                class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;"></i>
             <h2>选择登录方式</h2>
         </div>
         <div class="login-options" style="padding:0 24px 32px;display:flex;flex-direction:column;gap:16px;">
             <button class="login-option-btn" id="chooseWechatBtn"
-                    style="background:linear-gradient(135deg,#07c160,#06ae56);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;">
-                <i class="fab fa-weixin"></i> 微信扫码登录
-            </button>
+                    style="background:linear-gradient(135deg,#07c160,#06ae56);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i
+                    class="fab fa-weixin"></i> 微信扫码登录</button>
             <button class="login-option-btn" id="choosePhoneBtn"
-                    style="background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;">
-                <i class="fas fa-phone-alt"></i> 手机号登录
-            </button>
+                    style="background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i
+                    class="fas fa-phone-alt"></i> 手机号登录</button>
         </div>
     </div>
 </div>
 <div class="login-modal" id="loginModal">
     <div class="login-content">
         <button class="login-close" id="loginClose"><i class="fas fa-times"></i></button>
-        <div class="login-header">
-            <i class="fab fa-weixin fa-2x"></i>
+        <div class="login-header"><i class="fab fa-weixin fa-2x"></i>
             <h2>微信扫码登录</h2>
             <p>使用微信扫描二维码登录</p>
         </div>
@@ -1039,46 +1069,34 @@
                      style="width:200px;height:200px;margin:0 auto;background:var(--feature-bg);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px dashed var(--border-light);">
                     <i class="fas fa-qrcode fa-3x"></i>
                     <p>点击生成二维码</p>
-                </div>
-                <img id="login-qrcode-img" style="display:none;max-width:200px;margin:0 auto;border-radius:16px;">
+                </div><img id="login-qrcode-img" style="display:none;max-width:200px;margin:0 auto;border-radius:16px;">
             </div>
             <div class="login-status waiting" id="loginStatus"
                  style="text-align:center;margin-top:16px;padding:8px;background:var(--feature-bg);border-radius:12px;">
-                点击上方区域生成二维码
-            </div>
+                点击上方区域生成二维码</div>
         </div>
     </div>
 </div>
 <div class="phone-login-modal" id="phoneLoginModal">
     <div class="phone-login-content">
         <button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button>
-        <div class="phone-login-header">
-            <i class="fas fa-mobile-alt fa-2x"></i>
+        <div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i>
             <h2>手机号登录</h2>
             <p>输入手机号获取验证码</p>
         </div>
         <div class="phone-login-body">
-            <div class="form-group">
-                <label>手机号</label>
-                <input type="tel" id="phoneNumber" placeholder="11位手机号">
-            </div>
-            <div class="form-group">
-                <label>图形验证码</label>
-                <div class="captcha-row">
-                    <input type="text" id="graphCodeInput" placeholder="验证码">
-                    <div class="captcha-img" id="captchaImgBox">
-                        <img id="captchaImage" style="display:none;">
-                        <span id="captchaTextSpan">点击加载</span>
-                    </div>
-                    <button id="refreshCaptchaBtn" class="btn-secondary" type="button">刷新</button>
+            <div class="form-group"><label>手机号</label><input type="tel" id="phoneNumber" placeholder="11位手机号"></div>
+            <div class="form-group"><label>图形验证码</label>
+                <div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码">
+                    <div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span
+                            id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn"
+                                                                              class="btn-secondary" type="button">刷新</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label>短信验证码</label>
-                <div class="sms-row" style="display:flex;gap:10px;">
-                    <input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6" style="flex:1;">
-                    <button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button>
-                </div>
+            <div class="form-group"><label>短信验证码</label>
+                <div class="sms-row" style="display:flex;gap:10px;"><input type="text" id="smsCodeInput"
+                                                                           placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn"
+                                                                                                                                       class="btn-secondary" type="button">获取验证码</button></div>
             </div>
             <button id="phoneDoLoginBtn" class="btn-block">立即登录</button>
             <div id="phoneMessage" class="message" style="margin-top:12px;display:none;"></div>
@@ -1089,9 +1107,7 @@
     <div class="modal-content">
         <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
         <div class="modal-header">
-            <div class="modal-icon" id="modalIcon">
-                <i class="fas fa-tools"></i>
-            </div>
+            <div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div>
             <div class="modal-title">
                 <h2 id="modalToolName">工具名称</h2>
                 <p id="modalToolCategory"></p>
@@ -1106,20 +1122,16 @@
                 <h3>主要功能</h3>
                 <div id="modalFeatures" class="modal-features"></div>
             </div>
-            <div>
-                <a class="modal-btn" id="openToolBtn" target="_blank"
-                   style="display:inline-block;margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border-radius:40px;text-decoration:none;">
-                    <i class="fas fa-external-link-alt"></i> 打开工具
-                </a>
-            </div>
+            <div><a class="modal-btn" id="openToolBtn" target="_blank"
+                    style="display:inline-block;margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border-radius:40px;text-decoration:none;"><i
+                    class="fas fa-external-link-alt"></i> 打开工具</a></div>
         </div>
     </div>
 </div>
 <div class="announce-modal" id="announceModal">
     <div class="announce-modal-content">
         <button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button>
-        <div class="announce-modal-header">
-            <i class="fas fa-newspaper"></i>
+        <div class="announce-modal-header"><i class="fas fa-newspaper"></i>
             <h3 style="display:inline-block;margin-left:8px;">最新公告</h3>
         </div>
         <div class="announce-modal-body" style="padding:24px;line-height:1.6;">
@@ -1131,8 +1143,7 @@
 <div class="ratings-modal" id="ratingsModal">
     <div class="ratings-modal-content">
         <button class="ratings-close" id="ratingsModalClose"><i class="fas fa-times"></i></button>
-        <div class="ratings-modal-header">
-            <i class="fas fa-star"></i>
+        <div class="ratings-modal-header"><i class="fas fa-star"></i>
             <h3>谱面评分详情</h3>
         </div>
         <div class="ratings-body" id="ratingsBody">
@@ -1157,7 +1168,8 @@
         { id: 8, name: "免费mp3下载", category: "下载工具", description: "免费下载歌曲mp3音频", icon: "fa-solid fa-download", iconColor: "#2ba31d", featured: true, features: ["免费下载"], url: "https://www.myfreemp3.com.cn/" },
         { id: 9, name: "兑换码生成", category: "兑换码生成", description: "生成歌曲兑换码", icon: "fa-solid fa-gift", iconColor: "#520fc5", featured: true, features: ["多种时长", "永久/次数"], url: "../gift.html" },
         { id: 10, name: "token获取", category: "获取工具", description: "获取舞立方用户token", icon: "fa-solid fa-key", iconColor: "#c5a007", featured: true, features: ["扫码登录", "获取token"], url: "../gettoken.html" },
-        { id: 11, name: "网络测速", category: "测试工具", description: "测试网速", icon: "fa-solid fa-key", iconColor: "#16a7ba", new: true, features: ["直接测速", "直接显示"], url: "../testweb.html" }
+        { id: 11, name: "网络测速", category: "测试工具", description: "测试网速", icon: "fa-solid fa-wifi", iconColor: "#16a7ba", featured: true, features: ["直接测速", "直接显示"], url: "../testweb.html" },
+        { id: 12, name: "压缩包合并", category: "合并工具", description: "压缩包合并", icon: "fa-solid fa-file-zipper", iconColor: "#97e800", new: true, features: ["多文件选择", "直接下载"], url: "../zipall.html" }
     ];
 
     function showUserInfo(user) {
@@ -1166,365 +1178,37 @@
         document.getElementById('userDetails').style.display = 'flex';
         document.getElementById('userAvatar').style.display = 'flex';
         document.getElementById('loginBtn').style.display = 'none';
-        if (user.HeadimgURL) {
-            document.getElementById('userAvatar').innerHTML = `<img src="${user.HeadimgURL}" alt="头像">`;
-        } else {
-            document.getElementById('userAvatar').innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
-        }
+        if (user.HeadimgURL) document.getElementById('userAvatar').innerHTML = `<img src="${user.HeadimgURL}" alt="头像">`;
+        else document.getElementById('userAvatar').innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
     }
-
-    function clearUserData() {
-        localStorage.removeItem('dance_user_data');
-        localStorage.removeItem('dance_user_token');
-        accessToken = null;
-        document.getElementById('userDetails').style.display = 'none';
-        document.getElementById('userAvatar').style.display = 'none';
-        document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>';
-        document.getElementById('loginBtn').style.display = 'flex';
-    }
-
-    async function saveTokenAndFetchUser(token, userIdHint) {
-        accessToken = token;
-        localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now() + 7 * 864e5).toISOString() }));
-        try {
-            const uir = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, { headers: { 'Authorization': `bearer ${token}` } });
-            const ui = await uir.json();
-            const userData = { UserID: ui.UserID || userIdHint, UserName: ui.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'), HeadimgURL: ui.HeadimgURL || '' };
-            localStorage.setItem('dance_user_data', JSON.stringify(userData));
-            showUserInfo(userData);
-        } catch (e) {
-            const fallbackName = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户';
-            const userData = { UserID: userIdHint || 'unknown', UserName: fallbackName, HeadimgURL: '' };
-            localStorage.setItem('dance_user_data', JSON.stringify(userData));
-            showUserInfo(userData);
-        }
-    }
-
-    function checkLoginStatus() {
-        const saved = localStorage.getItem('dance_user_data');
-        const tokenData = localStorage.getItem('dance_user_token');
-        if (saved && tokenData) {
-            try {
-                const tok = JSON.parse(tokenData);
-                if (new Date(tok.expireTime) > new Date()) {
-                    accessToken = tok.token;
-                    showUserInfo(JSON.parse(saved));
-                } else clearUserData();
-            } catch (e) { clearUserData(); }
-        }
-    }
-
-    async function fetchRawMusicList() {
-        if (!accessToken) return null;
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, { headers: { 'Authorization': `bearer ${accessToken}` } });
-            if (res.status === 401) return null;
-            const data = await res.json();
-            return Array.isArray(data) ? data : (data.List || []);
-        } catch (e) { return null; }
-    }
-
-    async function fetchScoreByMusicId(musicId) {
-        if (!accessToken) return null;
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetScoreStat?musicId=${musicId}`, { headers: { 'Authorization': `bearer ${accessToken}` } });
-            if (!res.ok) return null;
-            const data = await res.json();
-            return data.Score !== undefined ? data.Score : null;
-        } catch (e) { return null; }
-    }
-
-    async function showProfileModal() {
-        const modal = document.getElementById('profileModal'), bodyDiv = document.getElementById('profileModalBody');
-        bodyDiv.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>';
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        if (!accessToken) {
-            bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>';
-            return;
-        }
-        try {
-            const list = await fetchRawMusicList();
-            if (!list || !list.length) {
-                bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>';
-                return;
-            }
-            let totalDownload = 0, totalPlay = 0, published = 0, offline = 0;
-            list.forEach(i => {
-                totalDownload += i.DownloadCount || 0;
-                totalPlay += i.ClicksRatio || 0;
-                i.IsOnSale ? published++ : offline++;
-            });
-            bodyDiv.innerHTML = `<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div><button class="view-ratings-btn" id="viewRatingsBtn"><i class="fas fa-star"></i> 查看谱面评分</button>`;
-            document.getElementById('viewRatingsBtn')?.addEventListener('click', (e) => { e.stopPropagation(); showRatingsModal(); });
-        } catch (e) {
-            bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>';
-        }
-    }
-
-    async function showRatingsModal() {
-        const modal = document.getElementById('ratingsModal'), bodyDiv = document.getElementById('ratingsBody');
-        bodyDiv.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载评分数据...</div>';
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        if (!accessToken) {
-            bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-exclamation-triangle"></i><p>请先登录</p></div>';
-            return;
-        }
-        try {
-            const musicList = await fetchRawMusicList();
-            if (!musicList || musicList.length === 0) {
-                bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无谱面数据</p></div>';
-                return;
-            }
-            const ratingsPromises = musicList.map(async (item) => {
-                const musicId = item.MusicID || item.musicId;
-                const score = await fetchScoreByMusicId(musicId);
-                const rawName = item.Name || item.MusicName || item.musicName || `谱面${musicId}`;
-                const displayName = `[${musicId}] ${rawName}`;
-                return { musicId, musicName: displayName, score: score !== null ? score : null };
-            });
-            const ratings = await Promise.all(ratingsPromises);
-            const validRatings = ratings.filter(r => r.score !== null);
-            if (validRatings.length === 0) {
-                bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无评分数据</p></div>';
-                return;
-            }
-            let html = `<table class="ratings-table"><thead><tr><th>#</th><th>谱面名称</th><th>综合评分</th></tr></thead><tbody>`;
-            validRatings.forEach((item, idx) => {
-                const displayScore = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
-                html += `<tr><td>${idx + 1}</td><td>${escapeHtml(item.musicName)}</td><td class="rating-score">${displayScore} ⭐</td></tr>`;
-            });
-            html += `</tbody></table>`;
-            bodyDiv.innerHTML = html;
-        } catch (err) {
-            console.error(err);
-            bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-bug"></i><p>加载失败，请稍后重试</p></div>';
-        }
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function (m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    function closeRatingsModal() {
-        document.getElementById('ratingsModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    async function generateLoginQRCode() {
-        const updateStatus = (t) => { const d = document.getElementById('loginStatus'); d.innerText = t; };
-        updateStatus('生成中...');
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`);
-            const data = await res.json();
-            loginQrCodeData = data;
-            document.getElementById('login-qrcode-img').src = data.QrcodeUrl;
-            document.getElementById('login-qrcode-img').style.display = 'block';
-            document.getElementById('loginQrPlaceholder').style.display = 'none';
-            updateStatus('请微信扫码');
-            if (loginCheckInterval) clearInterval(loginCheckInterval);
-            loginCheckInterval = setInterval(async () => {
-                if (!loginQrCodeData?.ID) return;
-                try {
-                    const params = new URLSearchParams({ client_type: 'qrcode', grant_type: 'client_credentials', client_id: loginQrCodeData.ID });
-                    const res2 = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
-                    if (res2.status === 401) return;
-                    const data2 = await res2.json();
-                    const token = data2.access_token;
-                    if (token) {
-                        clearInterval(loginCheckInterval);
-                        updateStatus('登录成功');
-                        const uid = data2.user_id || data2.userId;
-                        await saveTokenAndFetchUser(token, uid);
-                        setTimeout(() => closeLoginModal(), 1200);
-                    }
-                } catch (e) { }
-            }, 2000);
-        } catch (e) { updateStatus('生成失败，请重试'); }
-    }
-
-    function openLoginChoice() {
-        document.getElementById('loginChoiceModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLoginChoice() {
-        document.getElementById('loginChoiceModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    function openLoginModal() {
-        closeLoginChoice();
-        document.getElementById('loginModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('login-qrcode-img').style.display = 'none';
-        document.getElementById('loginQrPlaceholder').style.display = 'flex';
-        document.getElementById('loginStatus').innerText = '点击上方区域生成二维码';
-    }
-
-    function closeLoginModal() {
-        document.getElementById('loginModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-        if (loginCheckInterval) clearInterval(loginCheckInterval);
-    }
-
-    function openPhoneModal() {
-        closeLoginChoice();
-        document.getElementById('phoneLoginModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        loadGraphCodeForPhone();
-    }
-
-    function closePhoneModal() {
-        document.getElementById('phoneLoginModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-        if (phoneCountdownInterval) clearInterval(phoneCountdownInterval);
-    }
-
-    async function loadGraphCodeForPhone() {
-        const phone = document.getElementById('phoneNumber').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
-            showPhoneMsg('正确手机号', 'error');
-            return;
-        }
-        const img = document.getElementById('captchaImage'), span = document.getElementById('captchaTextSpan');
-        span.style.display = 'flex';
-        span.innerText = '⏳';
-        img.style.display = 'none';
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`);
-            let text = await res.text();
-            if (text.startsWith('"')) text = text.slice(1, -1);
-            img.src = `data:image/gif;base64,${text}`;
-            img.style.display = 'block';
-            span.style.display = 'none';
-        } catch (e) { span.innerText = '重试'; }
-    }
-
-    async function requestSmsCode() {
-        const phone = document.getElementById('phoneNumber').value.trim(), graphCode = document.getElementById('graphCodeInput').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error');
-        if (!graphCode) return showPhoneMsg('图形码必填', 'error');
-        if (phoneCountdown > 0) return;
-        const btn = document.getElementById('getSmsCodeBtn');
-        btn.disabled = true;
-        phoneCountdown = 60;
-        btn.innerText = `${phoneCountdown}s`;
-        phoneCountdownInterval = setInterval(() => {
-            if (phoneCountdown <= 1) {
-                clearInterval(phoneCountdownInterval);
-                btn.disabled = false;
-                btn.innerText = '获取验证码';
-                phoneCountdown = 0;
-            } else {
-                phoneCountdown--;
-                btn.innerText = `${phoneCountdown}s`;
-            }
-        }, 1000);
-        try {
-            const res = await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`);
-            let text = await res.text();
-            if (text.startsWith('"')) text = text.slice(1, -1);
-            if (/^\d{4,8}$/.test(text)) {
-                document.getElementById('smsCodeInput').value = text;
-                showPhoneMsg(`验证码: ${text}`, 'success');
-            } else throw new Error();
-        } catch (e) { showPhoneMsg('获取失败', 'error'); }
-    }
-
-    async function phoneLogin() {
-        const phone = document.getElementById('phoneNumber').value.trim(), smsCode = document.getElementById('smsCodeInput').value.trim();
-        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error');
-        if (!smsCode) return showPhoneMsg('验证码必填', 'error');
-        const btn = document.getElementById('phoneDoLoginBtn');
-        btn.disabled = true;
-        btn.innerHTML = '登录中...';
-        try {
-            const params = new URLSearchParams({ client_type: 'phone', grant_type: 'client_credentials', client_id: phone, client_secret: smsCode });
-            const res = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error_description);
-            const token = data.access_token;
-            if (token) {
-                const uid = data.user_id || data.userId || phone;
-                await saveTokenAndFetchUser(token, uid);
-                showPhoneMsg('登录成功', 'success');
-                setTimeout(() => closePhoneModal(), 1200);
-            } else throw new Error();
-        } catch (e) { showPhoneMsg('登录失败', 'error'); }
-        finally {
-            btn.disabled = false;
-            btn.innerHTML = '立即登录';
-        }
-    }
-
-    function showPhoneMsg(msg, type) {
-        const div = document.getElementById('phoneMessage');
-        div.innerText = msg;
-        div.style.display = 'block';
-        setTimeout(() => div.style.display = 'none', 3000);
-    }
-
-    function renderTools(tools) {
-        const grid = document.getElementById('toolsGrid');
-        grid.innerHTML = '';
-        tools.forEach(t => {
-            const card = document.createElement('div');
-            card.className = 'tool-card' + (t.featured ? ' featured' : '') + (t.new ? ' new' : '');
-            card.innerHTML = `<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`;
-            card.addEventListener('click', (e) => { if (!e.target.closest('.tool-action')) openToolModal(t.id); });
-            grid.appendChild(card);
-        });
-        document.getElementById('toolCount').innerText = tools.length;
-    }
-
-    function openToolModal(id) {
-        const t = toolsData.find(t => t.id === id);
-        if (!t) return;
-        document.getElementById('modalToolName').innerText = t.name;
-        document.getElementById('modalToolCategory').innerText = t.category;
-        document.getElementById('modalToolDescription').innerText = t.description;
-        document.getElementById('modalIcon').innerHTML = `<i class="${t.icon}"></i>`;
-        document.getElementById('modalFeatures').innerHTML = t.features.map(f => `<div class="modal-feature"><i class="fas fa-check-circle" style="color:#22c55e;"></i> ${f}</div>`).join('');
-        document.getElementById('openToolBtn').href = t.url;
-        document.getElementById('toolModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeToolModal() {
-        document.getElementById('toolModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    function filterTools() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        renderTools(toolsData.filter(t => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term)));
-    }
-
-    function initTheme() {
-        if (localStorage.getItem('dance_theme') === 'dark') {
-            document.body.classList.add('dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> 浅色模式';
-        }
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        localStorage.setItem('dance_theme', isDark ? 'dark' : 'light');
-        document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式';
-    }
-
-    function directEmailFeedback() {
-        window.location.href = 'mailto:miqimiaomiaowushi@163.com';
-    }
+    function clearUserData() { localStorage.removeItem('dance_user_data'); localStorage.removeItem('dance_user_token'); accessToken = null; document.getElementById('userDetails').style.display = 'none'; document.getElementById('userAvatar').style.display = 'none'; document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('loginBtn').style.display = 'flex'; }
+    async function saveTokenAndFetchUser(token, userIdHint) { accessToken = token; localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now() + 7 * 864e5).toISOString() })); try { const uir = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, { headers: { 'Authorization': `bearer ${token}` } }); const ui = await uir.json(); const userData = { UserID: ui.UserID || userIdHint, UserName: ui.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'), HeadimgURL: ui.HeadimgURL || '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } catch (e) { const fallbackName = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'; const userData = { UserID: userIdHint || 'unknown', UserName: fallbackName, HeadimgURL: '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } }
+    function checkLoginStatus() { const saved = localStorage.getItem('dance_user_data'); const tokenData = localStorage.getItem('dance_user_token'); if (saved && tokenData) { try { const tok = JSON.parse(tokenData); if (new Date(tok.expireTime) > new Date()) { accessToken = tok.token; showUserInfo(JSON.parse(saved)); } else clearUserData(); } catch (e) { clearUserData(); } } }
+    async function fetchRawMusicList() { if (!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if (res.status === 401) return null; const data = await res.json(); return Array.isArray(data) ? data : (data.List || []); } catch (e) { return null; } }
+    async function fetchScoreByMusicId(musicId) { if (!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetScoreStat?musicId=${musicId}`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if (!res.ok) return null; const data = await res.json(); return data.Score !== undefined ? data.Score : null; } catch (e) { return null; } }
+    async function showProfileModal() { const modal = document.getElementById('profileModal'), bodyDiv = document.getElementById('profileModalBody'); bodyDiv.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden'; if (!accessToken) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>'; return; } try { const list = await fetchRawMusicList(); if (!list || !list.length) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>'; return; } let totalDownload = 0, totalPlay = 0, published = 0, offline = 0; list.forEach(i => { totalDownload += i.DownloadCount || 0; totalPlay += i.ClicksRatio || 0; i.IsOnSale ? published++ : offline++; }); bodyDiv.innerHTML = `<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div><button class="view-ratings-btn" id="viewRatingsBtn"><i class="fas fa-star"></i> 查看谱面评分</button>`; document.getElementById('viewRatingsBtn')?.addEventListener('click', (e) => { e.stopPropagation(); showRatingsModal(); }); } catch (e) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>'; } }
+    async function showRatingsModal() { const modal = document.getElementById('ratingsModal'), bodyDiv = document.getElementById('ratingsBody'); bodyDiv.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载评分数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden'; if (!accessToken) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-exclamation-triangle"></i><p>请先登录</p></div>'; return; } try { const musicList = await fetchRawMusicList(); if (!musicList || musicList.length === 0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无谱面数据</p></div>'; return; } const ratingsPromises = musicList.map(async (item) => { const musicId = item.MusicID || item.musicId; const score = await fetchScoreByMusicId(musicId); const rawName = item.Name || item.MusicName || item.musicName || `谱面${musicId}`; const displayName = `[${musicId}] ${rawName}`; return { musicId, musicName: displayName, score: score !== null ? score : null }; }); const ratings = await Promise.all(ratingsPromises); const validRatings = ratings.filter(r => r.score !== null); if (validRatings.length === 0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无评分数据</p></div>'; return; } let html = `<table class="ratings-table"><thead><tr><th>#</th><th>谱面名称</th><th>综合评分</th></tr></thead><tbody>`; validRatings.forEach((item, idx) => { const displayScore = typeof item.score === 'number' ? item.score.toFixed(1) : item.score; html += `<tr><td>${idx + 1}</td><td>${escapeHtml(item.musicName)}</td><td class="rating-score">${displayScore} ⭐</td></tr>`; }); html += `</tbody></table>`; bodyDiv.innerHTML = html; } catch (err) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-bug"></i><p>加载失败，请稍后重试</p></div>'; } }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
+    function closeRatingsModal() { document.getElementById('ratingsModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    async function generateLoginQRCode() { const updateStatus = (t) => { const d = document.getElementById('loginStatus'); d.innerText = t; }; updateStatus('生成中...'); try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`); const data = await res.json(); loginQrCodeData = data; document.getElementById('login-qrcode-img').src = data.QrcodeUrl; document.getElementById('login-qrcode-img').style.display = 'block'; document.getElementById('loginQrPlaceholder').style.display = 'none'; updateStatus('请微信扫码'); if (loginCheckInterval) clearInterval(loginCheckInterval); loginCheckInterval = setInterval(async () => { if (!loginQrCodeData?.ID) return; try { const params = new URLSearchParams({ client_type: 'qrcode', grant_type: 'client_credentials', client_id: loginQrCodeData.ID }); const res2 = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params }); if (res2.status === 401) return; const data2 = await res2.json(); const token = data2.access_token; if (token) { clearInterval(loginCheckInterval); updateStatus('登录成功'); const uid = data2.user_id || data2.userId; await saveTokenAndFetchUser(token, uid); setTimeout(() => closeLoginModal(), 1200); } } catch (e) { } }, 2000); } catch (e) { updateStatus('生成失败，请重试'); } }
+    function openLoginChoice() { document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeLoginChoice() { document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function openLoginModal() { closeLoginChoice(); document.getElementById('loginModal').classList.add('active'); document.body.style.overflow = 'hidden'; document.getElementById('login-qrcode-img').style.display = 'none'; document.getElementById('loginQrPlaceholder').style.display = 'flex'; document.getElementById('loginStatus').innerText = '点击上方区域生成二维码'; }
+    function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if (loginCheckInterval) clearInterval(loginCheckInterval); }
+    function openPhoneModal() { closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); document.body.style.overflow = 'hidden'; loadGraphCodeForPhone(); }
+    function closePhoneModal() { document.getElementById('phoneLoginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if (phoneCountdownInterval) clearInterval(phoneCountdownInterval); }
+    async function loadGraphCodeForPhone() { const phone = document.getElementById('phoneNumber').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) { showPhoneMsg('正确手机号', 'error'); return; } const img = document.getElementById('captchaImage'), span = document.getElementById('captchaTextSpan'); span.style.display = 'flex'; span.innerText = '⏳'; img.style.display = 'none'; try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`); let text = await res.text(); if (text.startsWith('"')) text = text.slice(1, -1); img.src = `data:image/gif;base64,${text}`; img.style.display = 'block'; span.style.display = 'none'; } catch (e) { span.innerText = '重试'; } }
+    async function requestSmsCode() { const phone = document.getElementById('phoneNumber').value.trim(), graphCode = document.getElementById('graphCodeInput').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error'); if (!graphCode) return showPhoneMsg('图形码必填', 'error'); if (phoneCountdown > 0) return; const btn = document.getElementById('getSmsCodeBtn'); btn.disabled = true; phoneCountdown = 60; btn.innerText = `${phoneCountdown}s`; phoneCountdownInterval = setInterval(() => { if (phoneCountdown <= 1) { clearInterval(phoneCountdownInterval); btn.disabled = false; btn.innerText = '获取验证码'; phoneCountdown = 0; } else { phoneCountdown--; btn.innerText = `${phoneCountdown}s`; } }, 1000); try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); let text = await res.text(); if (text.startsWith('"')) text = text.slice(1, -1); if (/^\d{4,8}$/.test(text)) { document.getElementById('smsCodeInput').value = text; showPhoneMsg(`验证码: ${text}`, 'success'); } else throw new Error(); } catch (e) { showPhoneMsg('获取失败', 'error'); } }
+    async function phoneLogin() { const phone = document.getElementById('phoneNumber').value.trim(), smsCode = document.getElementById('smsCodeInput').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error'); if (!smsCode) return showPhoneMsg('验证码必填', 'error'); const btn = document.getElementById('phoneDoLoginBtn'); btn.disabled = true; btn.innerHTML = '登录中...'; try { const params = new URLSearchParams({ client_type: 'phone', grant_type: 'client_credentials', client_id: phone, client_secret: smsCode }); const res = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params }); const data = await res.json(); if (!res.ok) throw new Error(data.error_description); const token = data.access_token; if (token) { const uid = data.user_id || data.userId || phone; await saveTokenAndFetchUser(token, uid); showPhoneMsg('登录成功', 'success'); setTimeout(() => closePhoneModal(), 1200); } else throw new Error(); } catch (e) { showPhoneMsg('登录失败', 'error'); } finally { btn.disabled = false; btn.innerHTML = '立即登录'; } }
+    function showPhoneMsg(msg, type) { const div = document.getElementById('phoneMessage'); div.innerText = msg; div.style.display = 'block'; setTimeout(() => div.style.display = 'none', 3000); }
+    function renderTools(tools) { const grid = document.getElementById('toolsGrid'); grid.innerHTML = ''; tools.forEach(t => { const card = document.createElement('div'); card.className = 'tool-card' + (t.featured ? ' featured' : '') + (t.new ? ' new' : ''); card.innerHTML = `<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`; card.addEventListener('click', (e) => { if (!e.target.closest('.tool-action')) openToolModal(t.id); }); grid.appendChild(card); }); document.getElementById('toolCount').innerText = tools.length; }
+    function openToolModal(id) { const t = toolsData.find(t => t.id === id); if (!t) return; document.getElementById('modalToolName').innerText = t.name; document.getElementById('modalToolCategory').innerText = t.category; document.getElementById('modalToolDescription').innerText = t.description; document.getElementById('modalIcon').innerHTML = `<i class="${t.icon}"></i>`; document.getElementById('modalFeatures').innerHTML = t.features.map(f => `<div class="modal-feature"><i class="fas fa-check-circle" style="color:#22c55e;"></i> ${f}</div>`).join(''); document.getElementById('openToolBtn').href = t.url; document.getElementById('toolModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeToolModal() { document.getElementById('toolModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function filterTools() { const term = document.getElementById('searchInput').value.toLowerCase(); renderTools(toolsData.filter(t => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term))); }
+    function initTheme() { if (localStorage.getItem('dance_theme') === 'dark') { document.body.classList.add('dark'); document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> 浅色模式'; } }
+    function toggleTheme() { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('dance_theme', isDark ? 'dark' : 'light'); document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式'; }
+    function directEmailFeedback() { window.location.href = 'mailto:miqimiaomiaowushi@163.com'; }
+    function handleMobileQr() { window.location.href = 'qr.html'; }
 
     function init() {
         initTheme();
@@ -1556,6 +1240,8 @@
         document.getElementById('ratingsModal').addEventListener('click', (e) => { if (e.target === document.getElementById('ratingsModal')) closeRatingsModal(); });
         document.getElementById('modalClose').addEventListener('click', closeToolModal);
         document.getElementById('toolModal').addEventListener('click', (e) => { if (e.target === document.getElementById('toolModal')) closeToolModal(); });
+        const qrBtn = document.getElementById('mobileQrBtn');
+        if (qrBtn) qrBtn.addEventListener('click', handleMobileQr);
     }
     init();
     document.addEventListener('contextmenu', e => e.preventDefault());

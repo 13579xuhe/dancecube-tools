@@ -152,6 +152,20 @@
             margin-bottom: 5px;
         }
 
+        .qr {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #28b3dd 0%, #00ffd1 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
         .logo-text p {
             color: var(--text-muted);
             font-size: 0.95rem;
@@ -963,6 +977,11 @@
                     <i class="fa-solid fa-face-grin-tongue-wink"></i>
                 </div>
             </a>
+            <a href="./qr.html" style="text-decoration: none;">
+                <div class="qr">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+            </a>
             <div class="logo-text">
                 <h1>舞立方自制谱谱师工具</h1>
                 <p>反馈：miqimiaomiaowushi@163.com
@@ -973,8 +992,6 @@
                         </span>
                 </p>
             </div>
-            <!-- 新增扫码按钮：与logo在同一行，点击跳转到qr.html -->
-            <button class="mobile-scan-btn" id="mobileQrBtn"><i class="fas fa-qrcode"></i> 扫码</button>
         </div>
         <div class="user-info" id="userInfo">
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
@@ -1089,14 +1106,11 @@
             <div class="form-group"><label>图形验证码</label>
                 <div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码">
                     <div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span
-                            id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn"
-                                                                              class="btn-secondary" type="button">刷新</button>
+                            id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button">刷新</button>
                 </div>
             </div>
             <div class="form-group"><label>短信验证码</label>
-                <div class="sms-row" style="display:flex;gap:10px;"><input type="text" id="smsCodeInput"
-                                                                           placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn"
-                                                                                                                                       class="btn-secondary" type="button">获取验证码</button></div>
+                <div class="sms-row" style="display:flex;gap:10px;"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div>
             </div>
             <button id="phoneDoLoginBtn" class="btn-block">立即登录</button>
             <div id="phoneMessage" class="message" style="margin-top:12px;display:none;"></div>

@@ -2,127 +2,692 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>舞立方·全国机台地图 | 自动定位你的城市</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>舞立方·全国机台地图</title>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=9364b5b6f74ae2d99320c91c6928b631"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="./map.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e1c; color: #eef2ff; }
-        .app-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .header { background: #0f1225; border-bottom: 2px solid #3b4b9e; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { font-size: 24px; color: #7c8ee0; }
-        .logo-area h1 { font-size: 1.3rem; font-weight: 600; background: linear-gradient(135deg, #b4c4ff, #6a7fd8); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stats { background: #12162b; padding: 4px 16px; border: 1px solid #2a3a7a; font-size: 0.75rem; border-radius: 4px; }
-        .control-bar { background: #0c0f21; padding: 8px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid #1e2552; flex-shrink: 0; }
-        .select-group { display: flex; align-items: center; gap: 10px; background: #0a0e1c; padding: 4px 14px; border: 1px solid #2c3a7a; border-radius: 4px; }
-        .select-group label { font-size: 0.8rem; color: #a5b4fc; }
-        select { background: #0f1229; border: 1px solid #3c4a8c; color: #eef2ff; padding: 6px 16px 6px 10px; font-size: 0.8rem; cursor: pointer; outline: none; min-width: 150px; border-radius: 4px; }
-        select:hover { border-color: #6a7fd8; }
-        .quick-buttons { display: flex; gap: 12px; margin-left: auto; }
-        .sec-btn { background: #171d3a; border: 1px solid #33407a; color: #cbd5ff; padding: 6px 18px; font-size: 0.75rem; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-        .sec-btn:hover { background: #25306b; border-color: #6a7fd8; color: white; }
-        .map-container { flex: 1; position: relative; background: #03051a; }
-        #map { width: 100%; height: 100%; }
-        .info-panel { position: absolute; bottom: 20px; right: 20px; z-index: 100; width: 260px; background: #0b0e21ee; backdrop-filter: blur(10px); border-left: 4px solid #5f72c4; padding: 14px 16px; border-radius: 12px; }
-        .info-panel h4 { font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #b4c4ff; }
-        .legend { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; }
-        .dot-active { width: 16px; height: 16px; background: #52c41a; border-radius: 50%; box-shadow: 0 0 8px #52c41a; }
-        .dot-offline { width: 16px; height: 16px; background: #8a8a8a; border-radius: 50%; }
-        .dot-show { width: 16px; height: 16px; background: #a855f7; border-radius: 50%; box-shadow: 0 0 8px #a855f7; }
-        .dot-normal { width: 16px; height: 16px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px #3b82f6; }
-        .status-msg { margin-top: 12px; font-size: 0.65rem; background: #0a0e1c; padding: 8px; text-align: center; border-radius: 8px; }
-        footer { background: #070a17; text-align: center; font-size: 0.55rem; padding: 4px; color: #5f6d9e; flex-shrink: 0; }
+        /* ======================= 全局重置 ======================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0e1c;
+            color: #eef2ff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ======================= 电脑版样式 (默认) ======================= */
+        .pc-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .pc-header {
+            background: #0f1225;
+            border-bottom: 2px solid #3b4b9e;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .pc-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pc-logo-icon {
+            font-size: 24px;
+            color: #7c8ee0;
+        }
+
+        .pc-logo-area h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #b4c4ff, #6a7fd8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .pc-stats {
+            background: #12162b;
+            padding: 4px 16px;
+            border: 1px solid #2a3a7a;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .pc-control-bar {
+            background: #0c0f21;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #1e2552;
+            flex-shrink: 0;
+        }
+
+        .pc-select-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0a0e1c;
+            padding: 4px 14px;
+            border: 1px solid #2c3a7a;
+            border-radius: 4px;
+        }
+
+        .pc-select-group label {
+            font-size: 0.8rem;
+            color: #a5b4fc;
+        }
+
+        .pc-select-group select {
+            background: #0f1229;
+            border: 1px solid #3c4a8c;
+            color: #eef2ff;
+            padding: 6px 16px 6px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            outline: none;
+            min-width: 150px;
+            border-radius: 4px;
+        }
+
+        .pc-select-group select:hover {
+            border-color: #6a7fd8;
+        }
+
+        .pc-quick-buttons {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .pc-btn {
+            background: #171d3a;
+            border: 1px solid #33407a;
+            color: #cbd5ff;
+            padding: 6px 18px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .pc-btn:hover {
+            background: #25306b;
+            border-color: #6a7fd8;
+            color: white;
+        }
+
+        .pc-map-container {
+            flex: 1;
+            position: relative;
+            background: #03051a;
+        }
+
+        #pc-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .pc-info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 260px;
+            background: #0b0e21ee;
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #5f72c4;
+            padding: 14px 16px;
+            border-radius: 12px;
+        }
+
+        .pc-info-panel h4 {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b4c4ff;
+        }
+
+        .pc-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .pc-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.7rem;
+        }
+
+        .pc-dot-active {
+            width: 16px;
+            height: 16px;
+            background: #52c41a;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #52c41a;
+        }
+
+        .pc-dot-offline {
+            width: 16px;
+            height: 16px;
+            background: #8a8a8a;
+            border-radius: 50%;
+        }
+
+        .pc-dot-show {
+            width: 16px;
+            height: 16px;
+            background: #a855f7;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #a855f7;
+        }
+
+        .pc-dot-normal {
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #3b82f6;
+        }
+
+        .pc-status-msg {
+            margin-top: 12px;
+            font-size: 0.65rem;
+            background: #0a0e1c;
+            padding: 8px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .pc-footer {
+            background: #070a17;
+            text-align: center;
+            font-size: 0.55rem;
+            padding: 4px;
+            color: #5f6d9e;
+            flex-shrink: 0;
+        }
+
+        .pc-location-tip {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            background: #0f1225cc;
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 100;
+            border-left: 3px solid #52c41a;
+        }
+
+        /* ======================= 手机版样式 ======================= */
+        .mobile-layout {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        .mobile-header {
+            background: rgba(15, 18, 37, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(59, 75, 158, 0.3);
+            z-index: 10;
+        }
+
+        .mobile-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mobile-logo-icon {
+            font-size: 20px;
+            color: #7c8ee0;
+        }
+
+        .mobile-logo-area h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #eef2ff;
+        }
+
+        .mobile-stats {
+            background: rgba(18, 22, 43, 0.8);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        .mobile-map-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+        }
+
+        #mobile-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mobile-city-picker {
+            position: absolute;
+            top: 70px;
+            left: 16px;
+            right: 16px;
+            z-index: 20;
+            background: rgba(15, 18, 37, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 6px 12px;
+            border: 1px solid rgba(59, 75, 158, 0.5);
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        .mobile-city-picker select {
+            flex: 1;
+            background: rgba(10, 14, 28, 0.8);
+            border: none;
+            color: #eef2ff;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            border-radius: 25px;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .mobile-city-picker select:first-child {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237c8ee0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .mobile-city-picker select:disabled {
+            opacity: 0.6;
+        }
+
+        .mobile-bottom-bar {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .mobile-btn {
+            pointer-events: auto;
+            background: rgba(15, 18, 37, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 75, 158, 0.5);
+            color: #eef2ff;
+            padding: 10px 0;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex: 1;
+            transition: 0.15s;
+        }
+
+        .mobile-btn:active {
+            background: #25306b;
+            transform: scale(0.97);
+        }
+
+        .mobile-location-tip {
+            position: absolute;
+            top: 130px;
+            left: 16px;
+            background: rgba(15, 18, 37, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            z-index: 20;
+            border-left: 3px solid #52c41a;
+            pointer-events: none;
+        }
+
+        .mobile-status-card {
+            position: absolute;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            z-index: 20;
+            background: rgba(11, 14, 33, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 10px 16px;
+            border: 1px solid rgba(59, 75, 158, 0.3);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .mobile-stats-badge {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mobile-stats-badge span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+        }
+
+        .mobile-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .mobile-dot-green { background: #52c41a; box-shadow: 0 0 4px #52c41a; }
+        .mobile-dot-gray { background: #8a8a8a; }
+        .mobile-dot-purple { background: #a855f7; box-shadow: 0 0 4px #a855f7; }
+        .mobile-dot-blue { background: #3b82f6; box-shadow: 0 0 4px #3b82f6; }
+
+        .mobile-status-msg {
+            font-size: 0.7rem;
+            color: #b4c4ff;
+        }
+
+        /* ======================= 公共样式 ======================= */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid #3b4b9e;
+            border-top-color: #7c8ee0;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 13px;
+        }
+
+        /* 自定义弹窗 */
         .custom-infowindow {
             background: linear-gradient(135deg, #1a1f3a 0%, #0f1229 100%);
             border: none;
             padding: 14px 18px;
-            min-width: 280px;
+            min-width: 260px;
             color: #eef2ff;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124, 142, 224, 0.3);
             position: relative;
         }
-        .custom-infowindow h3 { margin: 0 0 10px 0; color: #b4c4ff; font-size: 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(124, 142, 224, 0.3); padding-bottom: 8px; flex-wrap: wrap; }
-        .custom-infowindow h3 i { color: #7c8ee0; font-size: 16px; }
-        .custom-infowindow .detail { margin: 8px 0; font-size: 0.75rem; display: flex; align-items: center; gap: 10px; line-height: 1.4; }
-        .custom-infowindow .detail i { width: 18px; color: #7c8ee0; font-size: 12px; text-align: center; }
-        .badge-custom { background: rgba(44, 59, 114, 0.8); display: inline-block; padding: 4px 12px; font-size: 0.6rem; margin-top: 10px; border-radius: 20px; }
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: bold; }
-        .status-online { background: rgba(82, 196, 26, 0.2); color: #52c41a; border: 1px solid rgba(82, 196, 26, 0.5); }
-        .status-offline { background: rgba(138, 138, 138, 0.2); color: #aaa; border: 1px solid rgba(138, 138, 138, 0.5); }
-        .machine-type-show { color: #a855f7; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); }
-        .machine-type-normal { color: #3b82f6; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); }
 
-        .info-close-btn { position: absolute; top: 10px; right: 12px; background: rgba(255,255,255,0.1); border: none; color: #aaa; cursor: pointer; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .info-close-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .custom-infowindow h3 {
+            margin: 0 0 10px 0;
+            color: #b4c4ff;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(124, 142, 224, 0.3);
+            padding-bottom: 8px;
+        }
 
-        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
-        .loading-spinner { width: 48px; height: 48px; border: 4px solid #3b4b9e; border-top-color: #7c8ee0; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { color: white; font-size: 14px; }
-        .location-tip { position: absolute; top: 80px; left: 20px; background: #0f1225cc; backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 20px; font-size: 11px; z-index: 100; border-left: 3px solid #52c41a; }
+        .custom-infowindow .detail {
+            margin: 8px 0;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.4;
+        }
 
-        .custom-marker { transition: transform 0.2s ease; cursor: pointer; }
-        .custom-marker:hover { transform: scale(1.08); }
+        .custom-infowindow .detail i {
+            width: 18px;
+            color: #7c8ee0;
+            font-size: 12px;
+            text-align: center;
+        }
 
+        .badge-custom {
+            background: rgba(44, 59, 114, 0.8);
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.6rem;
+            margin-top: 10px;
+            border-radius: 20px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .status-online {
+            background: rgba(82, 196, 26, 0.2);
+            color: #52c41a;
+            border: 1px solid rgba(82, 196, 26, 0.5);
+        }
+
+        .status-offline {
+            background: rgba(138, 138, 138, 0.2);
+            color: #aaa;
+            border: 1px solid rgba(138, 138, 138, 0.5);
+        }
+
+        .machine-type-show {
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .machine-type-normal {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .info-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .info-close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* 自定义标记 */
+        .custom-marker {
+            transition: transform 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .custom-marker:hover {
+            transform: scale(1.08);
+        }
+
+        /* 高德地图样式覆盖 */
         .amap-info-content { background: transparent !important; border: none !important; box-shadow: none !important; }
         .amap-info-sharp { display: none !important; }
         .amap-info-close { display: none !important; }
         .amap-info { background: transparent !important; border: none !important; box-shadow: none !important; }
+
+        /* 响应式切换 */
+        @media (max-width: 768px) {
+            .pc-layout {
+                display: none;
+            }
+            .mobile-layout {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="header">
-        <div class="logo-area">
-            <i class="fas fa-dice-d6 logo-icon"></i>
+
+<!-- 电脑版布局 -->
+<div class="pc-layout">
+    <div class="pc-header">
+        <div class="pc-logo-area">
+            <i class="fas fa-dice-d6 pc-logo-icon"></i>
             <h1>舞立方·全国机台地图 <span style="font-size:10px;">🎵 自动定位你的城市</span></h1>
         </div>
-        <div class="stats"><i class="fas fa-gamepad"></i> 机台: <span id="totalCountSpan">0</span></div>
+        <div class="pc-stats"><i class="fas fa-gamepad"></i> 机台: <span id="pcTotalCount">0</span></div>
     </div>
 
-    <div class="control-bar">
-        <div class="select-group">
+    <div class="pc-control-bar">
+        <div class="pc-select-group">
             <label><i class="fas fa-map"></i> 省份</label>
-            <select id="provinceSelect"><option value="">请选择省份</option></select>
+            <select id="pcProvinceSelect"><option value="">请选择省份</option></select>
         </div>
-        <div class="select-group">
+        <div class="pc-select-group">
             <label><i class="fas fa-city"></i> 城市</label>
-            <select id="citySelect" disabled><option value="">请先选择省份</option></select>
+            <select id="pcCitySelect" disabled><option value="">请先选择省份</option></select>
         </div>
-        <div class="quick-buttons">
-            <button class="sec-btn" id="myLocationBtn"><i class="fas fa-crosshairs"></i> 重新定位</button>
-            <button class="sec-btn" id="resetViewBtn"><i class="fas fa-globe"></i> 重置视图</button>
+        <div class="pc-quick-buttons">
+            <button class="pc-btn" id="pcMyLocationBtn"><i class="fas fa-crosshairs"></i> 重新定位</button>
+            <button class="pc-btn" id="pcResetViewBtn"><i class="fas fa-globe"></i> 重置视图</button>
         </div>
     </div>
 
-    <div class="map-container">
-        <div id="map"></div>
-        <div id="locationTip" class="location-tip" style="display: none;">
-            <i class="fas fa-location-dot"></i> <span id="currentCityName">定位中...</span>
+    <div class="pc-map-container">
+        <div id="pc-map"></div>
+        <div id="pcLocationTip" class="pc-location-tip" style="display: none;">
+            <i class="fas fa-location-dot"></i> <span id="pcCurrentCity">定位中...</span>
         </div>
-        <div class="info-panel">
+        <div class="pc-info-panel">
             <h4><i class="fas fa-chart-line"></i> 机台状态</h4>
-            <div class="legend">
-                <div class="legend-item"><div class="dot-active"></div> <span>🎵 在线运营</span></div>
-                <div class="legend-item"><div class="dot-offline"></div> <span>💤 离线/维护中</span></div>
-                <div class="legend-item"><div class="dot-show"></div> <span>🎭 秀机/Show机 (紫色)</span></div>
-                <div class="legend-item"><div class="dot-normal"></div> <span>🎮 一代/二代机 (蓝色)</span></div>
+            <div class="pc-legend">
+                <div class="pc-legend-item"><div class="pc-dot-active"></div> <span>🎵 在线运营</span></div>
+                <div class="pc-legend-item"><div class="pc-dot-offline"></div> <span>💤 离线/维护中</span></div>
+                <div class="pc-legend-item"><div class="pc-dot-show"></div> <span>🎭 秀机/Show机</span></div>
+                <div class="pc-legend-item"><div class="pc-dot-normal"></div> <span>🎮 一代/二代机</span></div>
             </div>
-            <div class="status-msg" id="panelMsg"><i class="fas fa-spinner fa-pulse"></i> 正在获取你的位置...</div>
+            <div class="pc-status-msg" id="pcPanelMsg"><i class="fas fa-spinner fa-pulse"></i> 正在获取你的位置...</div>
         </div>
     </div>
-    <footer>📍 自动定位你的城市 | 可选择其他城市查看 | 点击标记查看详情 | 紫色标记为秀机/Show机</footer>
+    <div class="pc-footer">📍 自动定位你的城市 | 可选择其他城市查看 | 点击标记查看详情 | 紫色标记为秀机/Show机</div>
+</div>
+
+<!-- 手机版布局 -->
+<div class="mobile-layout">
+    <div class="mobile-header">
+        <div class="mobile-logo-area">
+            <i class="fas fa-dice-d6 mobile-logo-icon"></i>
+            <h1>舞立方·机台地图</h1>
+        </div>
+        <div class="mobile-stats"><i class="fas fa-gamepad"></i> <span id="mobileTotalCount">0</span></div>
+    </div>
+
+    <div class="mobile-map-container">
+        <div id="mobile-map"></div>
+        <div id="mobileLocationTip" class="mobile-location-tip" style="display: none;">
+            <i class="fas fa-location-dot"></i> <span id="mobileCurrentCity">定位中...</span>
+        </div>
+    </div>
+
+    <div class="mobile-city-picker">
+        <select id="mobileProvinceSelect"><option value="">省份</option></select>
+        <select id="mobileCitySelect" disabled><option value="">城市</option></select>
+    </div>
+
+    <div class="mobile-bottom-bar">
+        <button class="mobile-btn" id="mobileMyLocationBtn"><i class="fas fa-location-dot"></i> 定位</button>
+        <button class="mobile-btn" id="mobileResetViewBtn"><i class="fas fa-globe"></i> 重置</button>
+    </div>
+
+    <div class="mobile-status-card">
+        <div class="mobile-stats-badge">
+            <span><div class="mobile-dot mobile-dot-green"></div>在线</span>
+            <span><div class="mobile-dot mobile-dot-gray"></div>离线</span>
+            <span><div class="mobile-dot mobile-dot-purple"></div>秀机</span>
+            <span><div class="mobile-dot mobile-dot-blue"></div>普通</span>
+        </div>
+        <div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div>
+    </div>
 </div>
 
 <div id="loadingOverlay" class="loading-overlay" style="display: flex;">
     <div class="loading-spinner"></div>
-    <div class="loading-text">正在定位你的城市并获取机台信息...</div>
+    <div class="loading-text">正在定位并获取机台信息...</div>
 </div>
 
 <script>
@@ -158,16 +723,18 @@
         "Guiyang": "贵阳市", "guiyang": "贵阳市",
         "Nanning": "南宁市", "nanning": "南宁市",
         "Nanchang": "南昌市", "nanchang": "南昌市",
+        "Hong Kong": "香港特别行政区", "hongkong": "香港特别行政区",
+        "Macau": "澳门特别行政区", "macau": "澳门特别行政区",
         "北京": "北京市", "上海": "上海市", "天津": "天津市", "重庆": "重庆市",
-        "广州": "广州市", "深圳": "深圳市", "成都": "成都市", "武汉": "武汉市"
+        "广州": "广州市", "深圳": "深圳市", "成都": "成都市", "武汉": "武汉市",
+        "西安": "西安市", "南京": "南京市", "杭州": "杭州市", "苏州": "苏州市",
+        "沈阳": "沈阳市", "长春": "长春市", "哈尔滨": "哈尔滨市", "济南": "济南市",
+        "青岛": "青岛市", "郑州": "郑州市", "长沙": "长沙市", "昆明": "昆明市"
     };
 
     function normalizeCityName(cityName) {
         if (!cityName) return null;
-        if (CITY_NAME_MAPPING[cityName]) {
-            console.log(`📝 城市名映射: ${cityName} → ${CITY_NAME_MAPPING[cityName]}`);
-            return CITY_NAME_MAPPING[cityName];
-        }
+        if (CITY_NAME_MAPPING[cityName]) return CITY_NAME_MAPPING[cityName];
         if (!cityName.endsWith("市")) {
             const withCity = cityName + "市";
             if (CITY_NAME_MAPPING[withCity]) return CITY_NAME_MAPPING[withCity];
@@ -179,21 +746,18 @@
         return cityName;
     }
 
-    const AMAP_WEB_KEY = '9364b5b6f74ae2d99320c91c6928b631';
+    const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
     async function reverseGeocode(lng, lat) {
-        const url = `https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=${lng},${lat}&key=${AMAP_WEB_KEY}&radius=1000&extensions=base`;
+        const url = `https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=${lng},${lat}&key=${AMAP_KEY}&radius=1000&extensions=base`;
         try {
             const response = await fetch(url);
             const data = await response.json();
             if (data.status === '1' && data.regeocode) {
                 const addressComponent = data.regeocode.addressComponent;
                 let city = addressComponent.city;
-                if (!city || city === '[]' || city === '') {
-                    city = addressComponent.province;
-                }
+                if (!city || city === '[]' || city === '') city = addressComponent.province;
                 const mappedCity = normalizeCityName(city);
-                console.log(`🏙️ 逆地理编码: 原始=${city}, 映射后=${mappedCity}`);
                 return { success: true, city: mappedCity || city, province: addressComponent.province };
             }
             return { success: false };
@@ -209,261 +773,274 @@
             const data = await response.json();
             let city = data.city;
             const mappedCity = normalizeCityName(city);
-            console.log(`🌐 IP定位: 原始=${city}, 映射后=${mappedCity}`);
-            return {
-                success: true,
-                city: mappedCity || city,
-                province: data.region,
-                lat: data.latitude,
-                lng: data.longitude
-            };
+            return { success: true, city: mappedCity || city, province: data.region, lat: data.latitude, lng: data.longitude };
         } catch (error) {
             return { success: false };
         }
     }
 
+    // ======================= 主程序 =======================
     document.addEventListener('DOMContentLoaded', async function() {
+        // 等待 map.js 加载
         if (typeof window.provincesCities === 'undefined') {
-            document.getElementById('panelMsg').innerHTML = '<i class="fas fa-exclamation-triangle"></i> 数据加载失败，请刷新页面重试';
-            document.getElementById('loadingOverlay').style.display = 'none';
-            return;
+            console.log('等待 map.js 加载...');
+            await new Promise(resolve => {
+                const checkInterval = setInterval(() => {
+                    if (typeof window.provincesCities !== 'undefined') {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+            });
         }
 
         const provincesCities = window.provincesCities;
         const cityCoordinates = window.cityCoordinates;
         const loadCabinetsDataByCity = window.loadCabinetsDataByCity;
-        const getCabinetsData = window.getCabinetsData;
 
         const provinceList = Object.keys(provincesCities).sort();
-        let map, allMarkers = [], currentInfoWindow = null;
-        let userMarker = null;
 
-        function initMap() {
-            map = new AMap.Map('map', {
+        // ======================= 电脑版逻辑 =======================
+        let pcMap, pcMarkers = [], pcInfoWindow = null, pcUserMarker = null;
+
+        function initPcMap() {
+            pcMap = new AMap.Map('pc-map', {
                 center: [116.4074, 39.9042],
                 zoom: 5,
                 viewMode: '2D',
                 resizeEnable: true
             });
 
-            currentInfoWindow = new AMap.InfoWindow({
-                offset: new AMap.Pixel(0, -35),
-                isCustom: true,
-                autoMove: false
-            });
+            pcInfoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -35), isCustom: true, autoMove: false });
+            populatePcProvinces();
+            bindPcEvents();
 
-            populateProvinces();
-            bindEvents();
-
-            map.on('click', function() {
-                if (currentInfoWindow) currentInfoWindow.close();
-            });
-
-            map.on('complete', function() {
-                console.log('地图加载完成，开始自动定位');
-                autoLocateAndLoad();
-            });
+            pcMap.on('click', () => pcInfoWindow.close());
+            pcMap.on('complete', () => autoLocateAndLoad('pc'));
         }
 
-        // 创建地图标记内容（根据机台类型显示不同颜色）
-        function createMarkerContent(cab) {
+        function createPcMarkerContent(cab) {
             const isOnline = cab.status === 'active';
             const isShow = cab.machineType === 1;
+            const shortName = cab.name.length > 10 ? cab.name.slice(0, 10) + '...' : cab.name;
 
-            let gradient, icon, shadowColor;
+            if (!isOnline) {
+                return `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:6px 12px;font-size:11px;border-radius:30px;display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;opacity:0.8;"><i class="fas fa-bed" style="font-size:11px;"></i><span>${shortName}</span></div>`;
+            }
 
             if (isShow) {
-                // 秀机/Show机 - 紫色主题
-                gradient = 'linear-gradient(135deg,#c084fc 0%,#9333ea 100%)';
-                icon = '<i class="fas fa-star-of-life" style="font-size:12px;"></i>';
-                shadowColor = 'rgba(168,85,247,0.8)';
-            } else {
-                // 一代/二代机 - 蓝色主题
-                gradient = 'linear-gradient(135deg,#60a5fa 0%,#3b82f6 100%)';
-                icon = '<i class="fas fa-music" style="font-size:12px;"></i>';
-                shadowColor = 'rgba(59,130,246,0.6)';
+                return `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc 0%,#9333ea 100%);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(168,85,247,0.6);display:flex;align-items:center;gap:8px;white-space:nowrap;border:1px solid rgba(255,255,255,0.3);cursor:pointer;"><i class="fas fa-star-of-life" style="font-size:12px;"></i><span>${shortName}</span><i class="fas fa-chevron-right" style="font-size:10px;opacity:0.7;"></i></div>`;
             }
 
-            if (isOnline) {
-                return `<div class="custom-marker" style="background:${gradient};color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px ${shadowColor};display:flex;align-items:center;gap:8px;white-space:nowrap;border:1px solid rgba(255,255,255,0.3);cursor:pointer;">${icon}<span>${cab.name.length > 10 ? cab.name.slice(0,10)+'...' : cab.name}</span><i class="fas fa-chevron-right" style="font-size:10px;opacity:0.7;"></i></div>`;
-            } else {
-                return `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:6px 12px;font-size:11px;border-radius:30px;display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;opacity:0.8;"><i class="fas fa-bed" style="font-size:11px;"></i><span>${cab.name.length > 10 ? cab.name.slice(0,10)+'...' : cab.name}</span></div>`;
-            }
+            return `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa 0%,#3b82f6 100%);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(59,130,246,0.6);display:flex;align-items:center;gap:8px;white-space:nowrap;border:1px solid rgba(255,255,255,0.3);cursor:pointer;"><i class="fas fa-music" style="font-size:12px;"></i><span>${shortName}</span><i class="fas fa-chevron-right" style="font-size:10px;opacity:0.7;"></i></div>`;
         }
 
-        // 构建弹窗内容（显示机台类型）
-        function buildInfoContent(cab) {
+        function buildPcInfoContent(cab) {
             const isOnline = cab.status === 'active';
             const isShow = cab.machineType === 1;
             const statusClass = isOnline ? 'status-online' : 'status-offline';
             const statusText = isOnline ? '● 在线运营' : '○ 维护中';
-
-            let machineTypeText = '';
-            let machineTypeClass = '';
-            let machineTypeIcon = '';
-
-            if (isShow) {
-                machineTypeText = '🎭 秀机 / Show机';
-                machineTypeClass = 'machine-type-show';
-                machineTypeIcon = '<i class="fas fa-star-of-life"></i>';
-            } else {
-                machineTypeText = '🎮 一代/二代机';
-                machineTypeClass = 'machine-type-normal';
-                machineTypeIcon = '<i class="fas fa-gamepad"></i>';
-            }
-
-            // 调试日志
-            console.log(`📋 弹窗数据: ${cab.name}, machineType=${cab.machineType}, isShow=${isShow}`);
+            const machineTypeText = isShow ? '🎭 秀机 / Show机' : '🎮 一代/二代机';
+            const machineTypeClass = isShow ? 'machine-type-show' : 'machine-type-normal';
 
             return `<div class="custom-infowindow">
-                <button class="info-close-btn" onclick="window.closeInfoWindow && window.closeInfoWindow();"><i class="fas fa-times"></i></button>
-                <h3><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${statusClass}" style="margin-left:8px;">${statusText}</span></h3>
-                <div class="detail">
-                    ${machineTypeIcon}
-                    <span class="status-badge ${machineTypeClass}" style="display:inline-block; padding:2px 10px;">${machineTypeText}</span>
-                </div>
-                <div class="detail"><i class="fas fa-location-dot"></i><span>${cab.province} · ${cab.city}</span></div>
-                <div class="detail"><i class="fas fa-map-pin"></i><span>${cab.address || '地址待补充'}</span></div>
-                <div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div>
-            </div>`;
+            <button class="info-close-btn" onclick="window.closePcInfoWindow && window.closePcInfoWindow();"><i class="fas fa-times"></i></button>
+            <h3><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${statusClass}" style="margin-left:8px;">${statusText}</span></h3>
+            <div class="detail"><span class="status-badge ${machineTypeClass}">${machineTypeText}</span></div>
+            <div class="detail"><i class="fas fa-location-dot"></i><span>${cab.province} · ${cab.city}</span></div>
+            <div class="detail"><i class="fas fa-map-pin"></i><span>${cab.address || '地址待补充'}</span></div>
+            <div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div>
+        </div>`;
         }
 
-        window.closeInfoWindow = function() {
-            if (currentInfoWindow) currentInfoWindow.close();
-        };
+        window.closePcInfoWindow = () => pcInfoWindow?.close();
 
-        function updateMarkers(machines) {
-            allMarkers.forEach(m => m.setMap(null));
-            allMarkers = [];
-
-            const showCount = machines.filter(m => m.machineType === 1).length;
-            const normalCount = machines.filter(m => m.machineType === 0).length;
-            console.log(`🎨 更新标记: 秀机=${showCount}, 普通机=${normalCount}`);
-
+        function updatePcMarkers(machines) {
+            pcMarkers.forEach(m => m.setMap(null));
+            pcMarkers = [];
             machines.forEach(cab => {
                 if (!cab.lat || !cab.lng) return;
                 const marker = new AMap.Marker({
                     position: [cab.lng, cab.lat],
-                    content: createMarkerContent(cab),
+                    content: createPcMarkerContent(cab),
                     offset: new AMap.Pixel(0, -20)
                 });
-                marker.on('click', function() {
-                    currentInfoWindow.setContent(buildInfoContent(cab));
-                    currentInfoWindow.open(map, [cab.lng, cab.lat]);
+                marker.on('click', () => {
+                    pcInfoWindow.setContent(buildPcInfoContent(cab));
+                    pcInfoWindow.open(pcMap, [cab.lng, cab.lat]);
                 });
-                marker.setMap(map);
-                allMarkers.push(marker);
+                marker.setMap(pcMap);
+                pcMarkers.push(marker);
             });
-            document.getElementById('totalCountSpan').innerText = machines.length;
+            document.getElementById('pcTotalCount').innerText = machines.length;
         }
 
-        async function loadCityMachines(cityName, updateDropdown = true) {
+        // ======================= 手机版逻辑 =======================
+        let mobileMap, mobileMarkers = [], mobileInfoWindow = null, mobileUserMarker = null;
+
+        function initMobileMap() {
+            mobileMap = new AMap.Map('mobile-map', {
+                center: [116.4074, 39.9042],
+                zoom: 5,
+                viewMode: '2D',
+                resizeEnable: true
+            });
+
+            mobileInfoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30), isCustom: true, autoMove: false });
+            populateMobileProvinces();
+            bindMobileEvents();
+
+            mobileMap.on('click', () => mobileInfoWindow.close());
+            mobileMap.on('complete', () => autoLocateAndLoad('mobile'));
+        }
+
+        function createMobileMarkerContent(cab) {
+            const isOnline = cab.status === 'active';
+            const isShow = cab.machineType === 1;
+            const shortName = cab.name.length > 6 ? cab.name.slice(0, 6) + '..' : cab.name;
+
+            if (!isOnline) {
+                return `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:4px 10px;font-size:10px;border-radius:25px;white-space:nowrap;"><i class="fas fa-bed" style="font-size:9px;"></i> ${shortName}</div>`;
+            }
+
+            if (isShow) {
+                return `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 10px rgba(168,85,247,0.5);white-space:nowrap;"><i class="fas fa-star-of-life" style="font-size:9px;"></i> ${shortName}</div>`;
+            }
+
+            return `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 8px rgba(59,130,246,0.4);white-space:nowrap;"><i class="fas fa-music" style="font-size:9px;"></i> ${shortName}</div>`;
+        }
+
+        function buildMobileInfoContent(cab) {
+            const isOnline = cab.status === 'active';
+            const isShow = cab.machineType === 1;
+            const statusClass = isOnline ? 'status-online' : 'status-offline';
+            const statusText = isOnline ? '在线' : '离线';
+            const machineTypeText = isShow ? '秀机' : '普通机';
+            const machineTypeClass = isShow ? 'machine-type-show' : 'machine-type-normal';
+
+            return `<div class="custom-infowindow" style="min-width:200px;padding:10px 14px;">
+            <button class="info-close-btn" onclick="window.closeMobileInfoWindow && window.closeMobileInfoWindow();"><i class="fas fa-times"></i></button>
+            <h3 style="font-size:0.85rem;"><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${statusClass}" style="margin-left:6px;">${statusText}</span></h3>
+            <div class="detail"><span class="status-badge ${machineTypeClass}" style="padding:2px 8px;">${machineTypeText}</span></div>
+            <div class="detail"><i class="fas fa-location-dot"></i> ${cab.city}</div>
+            <div class="detail"><i class="fas fa-map-pin"></i> ${cab.address || '地址待补充'}</div>
+            <div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div>
+        </div>`;
+        }
+
+        window.closeMobileInfoWindow = () => mobileInfoWindow?.close();
+
+        function updateMobileMarkers(machines) {
+            mobileMarkers.forEach(m => m.setMap(null));
+            mobileMarkers = [];
+            machines.forEach(cab => {
+                if (!cab.lat || !cab.lng) return;
+                const marker = new AMap.Marker({
+                    position: [cab.lng, cab.lat],
+                    content: createMobileMarkerContent(cab),
+                    offset: new AMap.Pixel(0, -16)
+                });
+                marker.on('click', () => {
+                    mobileInfoWindow.setContent(buildMobileInfoContent(cab));
+                    mobileInfoWindow.open(mobileMap, [cab.lng, cab.lat]);
+                });
+                marker.setMap(mobileMap);
+                mobileMarkers.push(marker);
+            });
+            document.getElementById('mobileTotalCount').innerText = machines.length;
+        }
+
+        // ======================= 通用函数 =======================
+        async function loadCityMachines(cityName, type, updateDropdown = true) {
             if (!cityName) return;
-
             const finalCity = normalizeCityName(cityName) || cityName;
-            console.log(`📌 loadCityMachines 收到: ${cityName} → 最终: ${finalCity}`);
-
             const coords = cityCoordinates[finalCity];
             if (!coords) {
-                console.error(`❌ 未找到城市 ${finalCity} 的坐标`);
-                document.getElementById('panelMsg').innerHTML = `<i class="fas fa-exclamation-triangle"></i> 未找到 ${finalCity} 坐标`;
+                const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
+                msgEl.innerHTML = `未找到 ${finalCity}`;
                 return false;
             }
 
-            document.getElementById('panelMsg').innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 正在获取 ${finalCity} 机台数据...`;
+            const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
+            msgEl.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载中...`;
 
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
-                updateMarkers(machines);
-
-                if (machines.length > 0) {
-                    map.setZoomAndCenter(13, coords);
+                if (type === 'pc') {
+                    updatePcMarkers(machines);
+                    pcMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
+                    if (updateDropdown) await selectCityInDropdown(finalCity, 'pc');
                 } else {
-                    map.setZoomAndCenter(12, coords);
+                    updateMobileMarkers(machines);
+                    mobileMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
+                    if (updateDropdown) await selectCityInDropdown(finalCity, 'mobile');
                 }
-
-                if (updateDropdown) {
-                    await selectCityInDropdown(finalCity);
-                }
-
                 const showCount = machines.filter(m => m.machineType === 1).length;
-                const count = machines.length;
-                if (count > 0) {
-                    document.getElementById('panelMsg').innerHTML = `<i class="fas fa-check-circle"></i> ${finalCity} 共 ${count} 台机台 (秀机: ${showCount}台)`;
-                } else {
-                    document.getElementById('panelMsg').innerHTML = `<i class="fas fa-info-circle"></i> ${finalCity} 暂无机台数据`;
-                }
+                msgEl.innerHTML = `${finalCity} ${machines.length}台 (秀${showCount})`;
                 return true;
-            } catch (error) {
-                console.error('加载失败:', error);
-                document.getElementById('panelMsg').innerHTML = `<i class="fas fa-exclamation-triangle"></i> 加载失败，请重试`;
+            } catch (e) {
+                msgEl.innerHTML = '加载失败';
                 return false;
             }
         }
 
-        async function autoLocateAndLoad() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-
+        async function autoLocateAndLoad(type) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (pos) => {
                         const { latitude, longitude } = pos.coords;
-                        console.log(`📍 GPS定位成功: ${latitude}, ${longitude}`);
-
-                        if (userMarker) userMarker.setMap(null);
-                        userMarker = new AMap.Marker({
-                            position: [longitude, latitude],
-                            content: `<div style="background:#3b82f6;width:32px;height:32px;border:3px solid white;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 0 15px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:14px;"></i></div>`,
-                            offset: new AMap.Pixel(0, -16)
-                        });
-                        userMarker.setMap(map);
-
-                        const geoResult = await reverseGeocode(longitude, latitude);
-                        console.log('逆地理编码结果:', geoResult);
-
-                        if (geoResult.success && geoResult.city) {
-                            await handleLocatedCity(geoResult.city);
+                        const geo = await reverseGeocode(longitude, latitude);
+                        if (geo.success && geo.city) {
+                            await handleLocatedCity(geo.city, type);
                         } else {
-                            await fallbackLocate();
+                            await fallbackLocate(type);
                         }
                     },
-                    async (error) => {
-                        console.error('GPS定位失败:', error);
-                        await fallbackLocate();
-                    },
-                    { enableHighAccuracy: true, timeout: 10000 }
+                    async () => await fallbackLocate(type),
+                    { enableHighAccuracy: true, timeout: 8000 }
                 );
             } else {
-                await fallbackLocate();
+                await fallbackLocate(type);
             }
         }
 
-        async function fallbackLocate() {
-            const ipResult = await getCityByIP();
-            if (ipResult.success && ipResult.city) {
-                await handleLocatedCity(ipResult.city);
+        async function fallbackLocate(type) {
+            const ip = await getCityByIP();
+            if (ip.success && ip.city) {
+                await handleLocatedCity(ip.city, type);
             } else {
-                document.getElementById('panelMsg').innerHTML = '<i class="fas fa-map-marker-alt"></i> 定位失败，请手动选择城市';
+                const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
+                msgEl.innerHTML = '请手动选择城市';
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
 
-        async function handleLocatedCity(cityName) {
-            console.log(`🏙️ 处理定位到的城市: ${cityName}`);
-            document.getElementById('currentCityName').innerText = cityName;
-            document.getElementById('locationTip').style.display = 'block';
-            await loadCityMachines(cityName, true);
+        async function handleLocatedCity(cityName, type) {
+            const tipEl = type === 'pc' ? document.getElementById('pcLocationTip') : document.getElementById('mobileLocationTip');
+            const citySpan = type === 'pc' ? document.getElementById('pcCurrentCity') : document.getElementById('mobileCurrentCity');
+
+            citySpan.innerText = cityName;
+            tipEl.style.display = 'block';
+            await loadCityMachines(cityName, type, true);
             document.getElementById('loadingOverlay').style.display = 'none';
+
+            setTimeout(() => {
+                tipEl.style.opacity = '0';
+                setTimeout(() => {
+                    tipEl.style.display = 'none';
+                    tipEl.style.opacity = '1';
+                }, 300);
+            }, 2500);
         }
 
-        async function selectCityInDropdown(cityName) {
+        async function selectCityInDropdown(cityName, type) {
             for (let [province, cities] of Object.entries(provincesCities)) {
                 if (cities.includes(cityName)) {
-                    const provinceSelect = document.getElementById('provinceSelect');
+                    const provinceSelect = type === 'pc' ? document.getElementById('pcProvinceSelect') : document.getElementById('mobileProvinceSelect');
+                    const citySelect = type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect');
                     provinceSelect.value = province;
-                    onProvinceChangeDirect(province);
-                    await new Promise(r => setTimeout(r, 100));
-                    const citySelect = document.getElementById('citySelect');
+                    onProvinceChangeDirect(province, type);
+                    await new Promise(r => setTimeout(r, 80));
                     if (citySelect.querySelector(`option[value="${cityName}"]`)) {
                         citySelect.value = cityName;
                         return true;
@@ -473,110 +1050,128 @@
             return false;
         }
 
-        function onProvinceChangeDirect(prov) {
-            const cs = document.getElementById('citySelect');
+        function onProvinceChangeDirect(prov, type) {
+            const citySelect = type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect');
             if (!prov) {
-                cs.disabled = true;
-                cs.innerHTML = '<option value="">请先选择省份</option>';
+                citySelect.disabled = true;
+                citySelect.innerHTML = '<option value="">请选择城市</option>';
                 return;
             }
             const cities = provincesCities[prov] || [];
-            cs.disabled = false;
-            cs.innerHTML = '<option value="">请选择城市</option>';
-            cities.forEach(c => {
-                cs.innerHTML += `<option value="${c}">${c}</option>`;
-            });
+            citySelect.disabled = false;
+            citySelect.innerHTML = '<option value="">请选择城市</option>';
+            cities.forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
         }
 
-        function populateProvinces() {
-            const ps = document.getElementById('provinceSelect');
+        function populatePcProvinces() {
+            const ps = document.getElementById('pcProvinceSelect');
             ps.innerHTML = '<option value="">请选择省份</option>';
-            provinceList.forEach(p => {
-                ps.innerHTML += `<option value="${p}">${p}</option>`;
-            });
+            provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
         }
 
-        function onProvinceChange() {
-            const prov = document.getElementById('provinceSelect').value;
-            const cs = document.getElementById('citySelect');
+        function populateMobileProvinces() {
+            const ps = document.getElementById('mobileProvinceSelect');
+            ps.innerHTML = '<option value="">省份</option>';
+            provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
+        }
+
+        function onProvinceChange(type) {
+            const prov = (type === 'pc' ? document.getElementById('pcProvinceSelect') : document.getElementById('mobileProvinceSelect')).value;
+            const citySelect = type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect');
             if (!prov) {
-                cs.disabled = true;
-                cs.innerHTML = '<option value="">请先选择省份</option>';
+                citySelect.disabled = true;
+                citySelect.innerHTML = '<option value="">请选择城市</option>';
                 return;
             }
-            const cities = provincesCities[prov] || [];
-            cs.disabled = false;
-            cs.innerHTML = '<option value="">请选择城市</option>';
-            cities.forEach(c => {
-                cs.innerHTML += `<option value="${c}">${c}</option>`;
-            });
+            citySelect.disabled = false;
+            citySelect.innerHTML = '<option value="">请选择城市</option>';
+            (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
         }
 
-        function onCityChange() {
-            const city = document.getElementById('citySelect').value;
-            if (!city) return;
-            loadCityMachines(city, false);
+        function onCityChange(type) {
+            const city = (type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect')).value;
+            if (city) loadCityMachines(city, type, false);
         }
 
-        function resetView() {
-            map.setZoomAndCenter(5, [116.4074, 39.9042]);
-            document.getElementById('provinceSelect').value = "";
-            document.getElementById('citySelect').disabled = true;
-            document.getElementById('citySelect').innerHTML = '<option value="">请先选择省份</option>';
-            document.getElementById('locationTip').style.display = 'none';
-            if (currentInfoWindow) currentInfoWindow.close();
+        function resetView(type) {
+            if (type === 'pc') {
+                pcMap.setZoomAndCenter(5, [116.4074, 39.9042]);
+                document.getElementById('pcProvinceSelect').value = "";
+                document.getElementById('pcCitySelect').disabled = true;
+                document.getElementById('pcCitySelect').innerHTML = '<option value="">请先选择省份</option>';
+                pcInfoWindow?.close();
+            } else {
+                mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]);
+                document.getElementById('mobileProvinceSelect').value = "";
+                document.getElementById('mobileCitySelect').disabled = true;
+                document.getElementById('mobileCitySelect').innerHTML = '<option value="">城市</option>';
+                mobileInfoWindow?.close();
+            }
         }
 
-        async function reLocate() {
+        async function reLocate(type) {
             document.getElementById('loadingOverlay').style.display = 'flex';
-            if (currentInfoWindow) currentInfoWindow.close();
+            if (type === 'pc') pcInfoWindow?.close();
+            else mobileInfoWindow?.close();
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (pos) => {
                         const { latitude, longitude } = pos.coords;
-                        map.setZoomAndCenter(14, [longitude, latitude]);
-
-                        if (userMarker) userMarker.setMap(null);
-                        userMarker = new AMap.Marker({
-                            position: [longitude, latitude],
-                            content: `<div style="background:#3b82f6;width:32px;height:32px;border:3px solid white;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 0 15px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:14px;"></i></div>`,
-                            offset: new AMap.Pixel(0, -16)
-                        });
-                        userMarker.setMap(map);
-
-                        const geoResult = await reverseGeocode(longitude, latitude);
-                        if (geoResult.success && geoResult.city) {
-                            await handleLocatedCity(geoResult.city);
+                        if (type === 'pc') {
+                            pcMap.setZoomAndCenter(14, [longitude, latitude]);
+                            if (pcUserMarker) pcUserMarker.setMap(null);
+                            pcUserMarker = new AMap.Marker({
+                                position: [longitude, latitude],
+                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
+                                offset: new AMap.Pixel(0, -14)
+                            });
+                            pcUserMarker.setMap(pcMap);
                         } else {
-                            await fallbackLocate();
+                            mobileMap.setZoomAndCenter(14, [longitude, latitude]);
+                            if (mobileUserMarker) mobileUserMarker.setMap(null);
+                            mobileUserMarker = new AMap.Marker({
+                                position: [longitude, latitude],
+                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
+                                offset: new AMap.Pixel(0, -14)
+                            });
+                            mobileUserMarker.setMap(mobileMap);
+                        }
+                        const geo = await reverseGeocode(longitude, latitude);
+                        if (geo.success && geo.city) {
+                            await handleLocatedCity(geo.city, type);
+                        } else {
+                            await fallbackLocate(type);
                         }
                     },
-                    async () => { await fallbackLocate(); }
+                    async () => await fallbackLocate(type)
                 );
             } else {
-                await fallbackLocate();
+                await fallbackLocate(type);
             }
         }
 
-        function bindEvents() {
-            document.getElementById('provinceSelect').addEventListener('change', onProvinceChange);
-            document.getElementById('citySelect').addEventListener('change', onCityChange);
-            document.getElementById('myLocationBtn').addEventListener('click', reLocate);
-            document.getElementById('resetViewBtn').addEventListener('click', resetView);
+        function bindPcEvents() {
+            document.getElementById('pcProvinceSelect').addEventListener('change', () => onProvinceChange('pc'));
+            document.getElementById('pcCitySelect').addEventListener('change', () => onCityChange('pc'));
+            document.getElementById('pcMyLocationBtn').addEventListener('click', () => reLocate('pc'));
+            document.getElementById('pcResetViewBtn').addEventListener('click', () => resetView('pc'));
         }
 
-        const style = document.createElement('style');
-        style.textContent = `@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } } .custom-marker { transition: all 0.2s ease; } .custom-marker:hover { transform: translateY(-2px); filter: brightness(1.1); }`;
-        document.head.appendChild(style);
+        function bindMobileEvents() {
+            document.getElementById('mobileProvinceSelect').addEventListener('change', () => onProvinceChange('mobile'));
+            document.getElementById('mobileCitySelect').addEventListener('change', () => onCityChange('mobile'));
+            document.getElementById('mobileMyLocationBtn').addEventListener('click', () => reLocate('mobile'));
+            document.getElementById('mobileResetViewBtn').addEventListener('click', () => resetView('mobile'));
+        }
 
-        initMap();
+        // 启动两个地图
+        initPcMap();
+        initMobileMap();
     });
-
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault(); });
 </script>
+
+<!-- 引入 map.js 数据层 -->
+<script src="./map.js"></script>
 </body>
 </html>

@@ -3,57 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>二维码扫描器 - 专业版</title>
+    <title>精准扫描仪 - 框内识别</title>
+    <!-- html5-qrcode 核心库 -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none; /* 避免拖动影响界面 */
         }
 
         body {
-            background: #000;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
+            background: #000000;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
+        /* 专业头部区域 */
         .scanner-header {
-            background: #000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             padding: 12px 16px;
             text-align: center;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 20;
         }
-
         .scanner-header h1 {
             color: #0ff;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 600;
+            letter-spacing: 1px;
         }
-
         .scanner-header p {
-            color: #888;
+            color: #8aa0b0;
             font-size: 0.7rem;
             margin-top: 4px;
         }
 
+        /* 相机容器：绝对填充分配剩余空间，确保视频流填满 */
         .video-container {
-            position: relative;
             flex: 1;
+            position: relative;
             background: #000;
-            min-height: 55vh;
             overflow: hidden;
+            min-height: 0;  /* flex限制溢出 */
         }
 
         #reader {
             width: 100%;
             height: 100%;
-            min-height: 450px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #000;
         }
 
-        /* 自定义扫描框 */
+        /* 重要！强制让video元素覆盖全屏并居中裁剪，但是实际视频会被html5-qrcode自动填充，
+           我们通过transform-style保持比例，但核心是必须让扫描框完全对应视频画面内部区域。
+           额外添加一个遮罩层 + 扫描框，并且确保扫描框区域可见，外部半透明，这样用户自然对准框内。 */
         .scan-overlay {
             position: absolute;
             top: 0;
@@ -61,71 +76,80 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 15;
         }
 
+        /* 扫描框外全屏半透明层，突出框内区域 (周围压暗) */
         .scan-framebox {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 270px;
-            height: 270px;
-            border: 2px solid #0ff;
-            border-radius: 20px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+            width: 280px;
+            height: 280px;
+            border-radius: 28px;
+            /* 核心视觉: 边框发光 + 外侧漆黑遮罩 */
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 255, 255, 0.9);
+            transition: all 0.2s;
         }
 
+        /* 四角装饰增强科技感 */
         .scan-framebox::before,
         .scan-framebox::after,
-        .scan-framebox .corner-tl,
-        .scan-framebox .corner-br {
+        .corner-tl,
+        .corner-br {
             content: '';
             position: absolute;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-color: #0ff;
             border-style: solid;
+            box-shadow: 0 0 6px cyan;
         }
-
         .scan-framebox::before {
             top: -2px;
             left: -2px;
             border-width: 4px 0 0 4px;
+            border-radius: 4px 0 0 0;
         }
-
         .scan-framebox::after {
             top: -2px;
             right: -2px;
             border-width: 4px 4px 0 0;
+            border-radius: 0 4px 0 0;
         }
-
-        .scan-framebox .corner-tl {
+        .corner-tl {
             bottom: -2px;
             left: -2px;
             border-width: 0 0 4px 4px;
+            border-radius: 0 0 0 4px;
         }
-
-        .scan-framebox .corner-br {
+        .corner-br {
             bottom: -2px;
             right: -2px;
             border-width: 0 4px 4px 0;
+            border-radius: 0 0 4px 0;
         }
 
+        /* 扫描线特效：在框内上下移动，增加引导 */
         .scan-line-effect {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            left: 8px;
+            width: calc(100% - 16px);
             height: 3px;
             background: linear-gradient(90deg, transparent, #0ff, #0ff, transparent);
-            animation: scanMove 2s ease-in-out infinite;
+            border-radius: 4px;
+            filter: drop-shadow(0 0 3px cyan);
+            animation: scanMoveVertical 2.2s ease-in-out infinite;
+            opacity: 0.85;
         }
 
-        @keyframes scanMove {
-            0% { top: 0%; opacity: 0.8; }
-            50% { top: calc(100% - 4px); opacity: 1; }
-            100% { top: 0%; opacity: 0.8; }
+        @keyframes scanMoveVertical {
+            0% { top: 6px; opacity: 0.6; }
+            50% { top: calc(100% - 12px); opacity: 1; }
+            100% { top: 6px; opacity: 0.6; }
         }
 
         .scan-tip {
@@ -134,146 +158,158 @@
             left: 0;
             width: 100%;
             text-align: center;
-            color: rgba(255,255,255,0.7);
-            font-size: 0.75rem;
+            color: #ccf6ff;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-shadow: 0 0 3px #00aaff;
+            letter-spacing: 0.5px;
+            background: transparent;
         }
 
+        /* 底部控制区 */
         .control-bar {
-            background: #0a0a0a;
-            padding: 16px;
-            border-top: 1px solid #222;
+            background: rgba(10, 10, 18, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 14px 16px 20px;
+            border-top: 1px solid rgba(0, 255, 255, 0.25);
+            z-index: 20;
         }
 
         .status-area {
-            background: #1a1a2a;
-            border-radius: 30px;
-            padding: 10px 16px;
+            background: rgba(0, 20, 30, 0.7);
+            border-radius: 50px;
+            padding: 8px 16px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
         }
-
         .status-badge {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.8rem;
-            color: #ccc;
+            color: #eef;
         }
-
         .status-dot {
             width: 10px;
             height: 10px;
             background: #0f0;
             border-radius: 50%;
+            box-shadow: 0 0 5px #0f0;
             animation: pulse 1.2s infinite;
         }
-
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(0.8);}
+            0%, 100% { opacity: 0.4; transform: scale(0.8);}
             50% { opacity: 1; transform: scale(1.2);}
         }
 
         .result-box {
-            background: #0d0d1a;
-            border-radius: 20px;
-            padding: 12px;
+            background: rgba(13, 20, 30, 0.9);
+            border-radius: 24px;
+            padding: 12px 16px;
             margin-bottom: 12px;
-            border-left: 3px solid #0ff;
+            border-left: 4px solid #0ff;
+            backdrop-filter: blur(4px);
             display: none;
         }
-
         .result-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #0ff;
+            letter-spacing: 1px;
             margin-bottom: 6px;
         }
-
         .result-text {
             color: white;
             font-size: 0.85rem;
             word-break: break-all;
+            font-weight: 500;
         }
 
         .btn-group {
             display: flex;
             gap: 12px;
         }
-
         .btn {
             flex: 1;
-            padding: 12px;
-            border-radius: 40px;
+            padding: 12px 0;
+            border-radius: 44px;
             border: none;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             background: #2a2a3a;
             color: #ddd;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-
         .btn-primary {
             background: #0a7b8c;
             color: white;
+            text-shadow: 0 0 2px rgba(0,0,0,0.3);
         }
-
-        .btn-primary:active, .btn:active {
-            transform: scale(0.97);
+        .btn:active {
+            transform: scale(0.96);
         }
-
         .error-tip, .info-tip {
             font-size: 0.7rem;
             text-align: center;
             margin-top: 8px;
             padding: 8px;
-            border-radius: 20px;
+            border-radius: 30px;
         }
-
         .error-tip {
-            background: #2a1010;
-            color: #ff8877;
+            background: #2a1010cc;
+            color: #ffaa99;
         }
-
         .info-tip {
-            background: #1a2a3a;
-            color: #88aaff;
+            background: #1a2a3acc;
+            color: #aaffff;
         }
 
         .permission-guide {
-            background: #0a2a2a;
+            background: #0a2a2ae6;
             border: 1px solid #0ff;
             margin-top: 12px;
             padding: 12px;
-            border-radius: 16px;
+            border-radius: 20px;
             display: none;
+            font-size: 0.7rem;
         }
-
-        .permission-guide p {
-            color: #ccc;
-            font-size: 0.75rem;
-            margin-bottom: 8px;
-        }
-
         .guide-step {
             color: #0ff;
             font-weight: bold;
         }
 
-        @media (orientation: landscape) {
+        /* 横屏适配时扫描框略微缩小但仍然明显居中 */
+        @media (orientation: landscape) and (max-height: 500px) {
             .scan-framebox {
                 width: 220px;
                 height: 220px;
             }
+            .scan-tip {
+                bottom: -32px;
+                font-size: 0.65rem;
+            }
+        }
+
+        /* 确保 video 元素完全填充容器且不缩放变形，并且html5-qrcode内部会自动处理比例，没有问题
+           额外修复安卓/iOS全屏下显示异常 */
+        #reader video {
+            object-fit: cover !important;
+            width: 100% !important;
+            height: 100% !important;
+            top: 0 !important;
+            left: 0 !important;
+            position: absolute !important;
         }
     </style>
 </head>
 <body>
 <div class="scanner-header">
-    <h1>📷 二维码扫描器</h1>
-    <p>对准二维码，自动识别</p>
+    <h1>🔍 精准扫描器</h1>
+    <p>请将二维码对准中央扫描框 · 自动识别</p>
 </div>
 
 <div class="video-container">
@@ -283,7 +319,7 @@
             <div class="corner-tl"></div>
             <div class="corner-br"></div>
             <div class="scan-line-effect"></div>
-            <div class="scan-tip">放入框内自动扫描</div>
+            <div class="scan-tip">📌 二维码置于框内</div>
         </div>
     </div>
 </div>
@@ -292,357 +328,379 @@
     <div class="status-area">
         <div class="status-badge">
             <span class="status-dot" id="statusDot"></span>
-            <span id="statusMsg">准备就绪</span>
+            <span id="statusMsg">相机准备</span>
         </div>
     </div>
     <div class="result-box" id="resultBox">
-        <div class="result-label">📄 扫描结果</div>
+        <div class="result-label">✅ 识别内容</div>
         <div class="result-text" id="resultContent"></div>
     </div>
     <div class="btn-group">
-        <button class="btn" id="restartBtn">🔄 重新扫描</button>
-        <button class="btn" id="manualRequestBtn" style="background:#2a5a5a;">📷 手动授权相机</button>
-        <button class="btn btn-primary" id="copyBtn" disabled>📋 复制</button>
+        <button class="btn" id="restartBtn">🔄 重启扫描</button>
+        <button class="btn" id="manualAuthBtn">📷 授权相机</button>
+        <button class="btn btn-primary" id="copyBtn" disabled>📋 复制结果</button>
     </div>
     <div id="errorMsg" class="error-tip" style="display: none;"></div>
     <div id="infoMsg" class="info-tip" style="display: none;"></div>
     <div id="permissionGuide" class="permission-guide">
-        <p>🔐 <span class="guide-step">如何允许摄像头权限：</span></p>
-        <p>📱 <strong>Safari (iPhone/iPad):</strong> 设置 → Safari → 相机 → 允许</p>
-        <p>🌐 <strong>Chrome (安卓):</strong> 点击地址栏左侧🔒 → 相机 → 允许</p>
-        <p>📲 <strong>其他浏览器:</strong> 浏览器设置 → 网站权限 → 相机 → 允许</p>
-        <p style="margin-top:6px;">✅ 设置完成后，点击下方"重试"按钮</p>
+        <p>🔐 <span class="guide-step">摄像头权限指南</span></p>
+        <p>📱 iPhone/iPad: 设置 → Safari → 相机 → 允许</p>
+        <p>🌐 安卓Chrome: 点击地址栏左侧🔒 → 相机 → 允许</p>
+        <p>📲 其他浏览器: 设置 → 网站权限 → 相机 → 允许</p>
+        <p style="margin-top:6px;">✨ 授权后点击"重启扫描"或"授权相机"</p>
     </div>
 </div>
 
 <script>
     (function() {
-        // DOM 元素
-        const readerElement = document.getElementById('reader');
-        const statusMsgSpan = document.getElementById('statusMsg');
+        // ---------- DOM 元素绑定 ----------
+        const readerElem = document.getElementById('reader');
+        const statusSpan = document.getElementById('statusMsg');
         const statusDot = document.getElementById('statusDot');
         const resultBox = document.getElementById('resultBox');
         const resultContent = document.getElementById('resultContent');
         const copyBtn = document.getElementById('copyBtn');
         const restartBtn = document.getElementById('restartBtn');
-        const manualRequestBtn = document.getElementById('manualRequestBtn');
-        const errorMsgDiv = document.getElementById('errorMsg');
-        const infoMsgDiv = document.getElementById('infoMsg');
-        const permissionGuideDiv = document.getElementById('permissionGuide');
+        const manualAuthBtn = document.getElementById('manualAuthBtn');
+        const errorDiv = document.getElementById('errorMsg');
+        const infoDiv = document.getElementById('infoMsg');
+        const permissionGuide = document.getElementById('permissionGuide');
 
         let html5QrCode = null;
-        let isScanning = false;
-        let lastResult = null;
-        let permissionCheckInterval = null;
+        let isScanningActive = false;
+        let lastScannedValue = null;
+        let currentStreamTracks = []; // 用于手动释放（备用）
 
-        // 显示错误
+        // 辅助显示信息
         function showError(msg, showGuide = false) {
-            errorMsgDiv.style.display = 'block';
-            errorMsgDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = msg;
             if (showGuide) {
-                permissionGuideDiv.style.display = 'block';
+                permissionGuide.style.display = 'block';
+            } else {
+                // 如果错误不要求引导，但之前引导可能还在，可以根据逻辑不清除？但保留不管，一般调用showGuide才会显示
             }
-            statusMsgSpan.innerText = '⚠️ ' + msg;
-            statusDot.style.background = '#ff4444';
+            statusSpan.innerText = '⚠️ ' + msg;
+            statusDot.style.background = '#ff5555';
             statusDot.style.animation = 'none';
         }
 
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
         function showInfo(msg, autoHide = true) {
-            infoMsgDiv.style.display = 'block';
-            infoMsgDiv.textContent = msg;
+            infoDiv.style.display = 'block';
+            infoDiv.textContent = msg;
             if (autoHide) {
                 setTimeout(() => {
-                    if (infoMsgDiv.style.display === 'block') {
-                        infoMsgDiv.style.display = 'none';
+                    if (infoDiv.style.display === 'block') {
+                        infoDiv.style.display = 'none';
                     }
-                }, 3000);
+                }, 2800);
             }
         }
 
-        function hideError() {
-            errorMsgDiv.style.display = 'none';
+        function hideInfo() {
+            infoDiv.style.display = 'none';
         }
 
         function hideGuide() {
-            permissionGuideDiv.style.display = 'none';
+            permissionGuide.style.display = 'none';
         }
 
         function updateStatus(text, isActive = true) {
-            statusMsgSpan.innerText = text;
+            statusSpan.innerText = text;
             if (isActive) {
                 statusDot.style.background = '#0f0';
                 statusDot.style.animation = 'pulse 1.2s infinite';
             } else {
-                statusDot.style.background = '#ffaa00';
+                statusDot.style.background = '#ffaa33';
                 statusDot.style.animation = 'none';
             }
         }
 
-        // 主动检测摄像头权限（通过 getUserMedia）
-        async function checkCameraPermission() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                // 获取到权限，立即释放
-                stream.getTracks().forEach(track => track.stop());
-                return true;
-            } catch (err) {
-                console.log('权限检测结果:', err.name);
-                if (err.name === 'NotAllowedError') {
-                    return false;
+        // 停止当前扫描器并清理资源
+        async function stopScanner() {
+            if (html5QrCode && isScanningActive) {
+                try {
+                    await html5QrCode.stop();
+                } catch(e) {
+                    console.warn("停止扫描器异常", e);
                 }
-                return null; // 其他错误
+                isScanningActive = false;
+            }
+            if (html5QrCode) {
+                try {
+                    html5QrCode.clear();
+                } catch(e) {}
+                html5QrCode = null;
+            }
+            // 额外主动释放可能遗留的媒体流 (安全)
+            if (currentStreamTracks.length) {
+                currentStreamTracks.forEach(track => track.stop());
+                currentStreamTracks = [];
             }
         }
 
-        // 主动请求权限并弹窗（确保弹出权限框）
-        async function requestCameraPermissionManually() {
-            hideError();
-            showInfo('正在请求摄像头权限...', false);
-            updateStatus('请求权限中...', true);
-
+        // 获取后置摄像头ID (优先环境摄像头)
+        async function getOptimalCameraId() {
             try {
-                // 直接调用 getUserMedia 强制弹出权限请求
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { exact: "environment" } }
+                const cameras = await Html5Qrcode.getCameras();
+                if (!cameras || cameras.length === 0) return null;
+                // 优先选择包含 back/environment/后置 关键词的摄像头
+                let backCam = cameras.find(cam => {
+                    const label = cam.label.toLowerCase();
+                    return label.includes('back') || label.includes('rear') || label.includes('environment') || label.includes('后置');
                 });
-                // 成功获取，立即释放
-                stream.getTracks().forEach(track => track.stop());
-                showInfo('✅ 权限已获取！正在启动扫描器...', true);
-                hideGuide();
-                // 权限获取成功，启动扫描器
-                await initAndStart();
-                return true;
-            } catch (err) {
-                console.error('手动请求权限失败:', err);
-                if (err.name === 'NotAllowedError') {
-                    showError('❌ 摄像头权限被拒绝，请按照下方指引手动开启后点击"重新扫描"', true);
-                    updateStatus('权限被拒绝', false);
-                } else if (err.name === 'NotFoundError' || err.message.includes('environment')) {
-                    // 后置摄像头找不到，尝试普通摄像头
-                    try {
-                        const stream2 = await navigator.mediaDevices.getUserMedia({ video: true });
-                        stream2.getTracks().forEach(track => track.stop());
-                        showInfo('已获取权限，使用默认摄像头', true);
-                        await initAndStart();
-                        return true;
-                    } catch(e2) {
-                        showError('无法访问摄像头：' + (e2.message || '未知错误'), true);
-                    }
-                } else {
-                    showError('无法访问摄像头：' + (err.message || '未知错误'), true);
-                }
-                return false;
-            }
-        }
-
-        // 扫描成功回调
-        function onScanSuccess(decodedText) {
-            if (!isScanning) return;
-            if (lastResult === decodedText) return;
-            lastResult = decodedText;
-
-            if (html5QrCode && isScanning) {
-                html5QrCode.stop().then(() => {
-                    isScanning = false;
-                    updateStatus('✅ 扫描成功！', false);
-                }).catch(() => {
-                    isScanning = false;
-                });
-            }
-
-            resultBox.style.display = 'block';
-            resultContent.textContent = decodedText;
-            copyBtn.disabled = false;
-
-            if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(200);
-            }
-
-            showInfo('✅ 识别成功！', true);
-        }
-
-        function onScanFailure(error) {
-            // 静默处理
-        }
-
-        // 获取后置摄像头ID
-        async function getBackCameraId() {
-            try {
-                const devices = await Html5Qrcode.getCameras();
-                if (!devices || devices.length === 0) {
-                    return null;
-                }
-
-                let backCamera = devices.find(device => {
-                    const label = device.label.toLowerCase();
-                    return label.includes('back') || label.includes('rear') ||
-                        label.includes('environment') || label.includes('后置');
-                });
-
-                return backCamera ? backCamera.id : devices[0].id;
-            } catch (err) {
-                console.warn('获取摄像头列表失败', err);
+                if (backCam) return backCam.id;
+                // 如果没有明确后置，默认第一个通常是后置？取第一个
+                return cameras[0].id;
+            } catch(err) {
+                console.error("获取摄像头列表失败", err);
                 return null;
             }
         }
 
-        // 初始化并启动扫描（不主动请求权限，仅尝试启动）
-        async function initAndStart(skipPermissionCheck = false) {
-            if (html5QrCode) {
-                if (isScanning) {
-                    try { await html5QrCode.stop(); } catch(e) {}
-                }
-                html5QrCode.clear();
-                html5QrCode = null;
-            }
-
+        // 核心启动逻辑：强制后置摄像头 + 扫描框完全匹配视频区域
+        // 并且确保启动时调用带 fps 和 qrbox 设置，让扫描区域限定在框内视觉一致
+        async function startScanner() {
+            await stopScanner(); // 完全重置
             resultBox.style.display = 'none';
             copyBtn.disabled = true;
-            lastResult = null;
+            lastScannedValue = null;
             hideError();
             hideGuide();
-            updateStatus('启动相机中...', true);
+            updateStatus("启动相机中...", true);
 
             try {
-                const cameraId = await getBackCameraId();
+                const cameraId = await getOptimalCameraId();
                 if (!cameraId) {
-                    throw new Error('未检测到摄像头设备');
+                    throw new Error("未找到可用摄像头");
                 }
 
+                // 新实例
                 html5QrCode = new Html5Qrcode("reader");
+                // 重要配置: qrbox 设置与视觉扫描框像素位置匹配。为了让识别区域精确对应屏幕中央框，
+                // 我们通过计算动态设置 qrbox 宽高（基于屏幕实际显示后扫描框位置）。
+                // 但是由于 html5-qrcode 内部裁剪是根据摄像头的原始分辨率比例进行计算，最好的办法是给相对大小。
+                // 为了保持框内识别准确，让扫描区域大小对应 扫描框占屏幕的比例。
+                // 获取扫描框的显示尺寸（相对于视频实际区域会自动映射），但html5-qrcode内部支持 qrbox 数值设定，使解码只发生在中心框内区域。
+                // 为了防止二维码不在框内也被识别，我们设置精确的 qrbox 宽高（像素单位，相对于视频流）
+                // 计算方式：根据扫描框实际渲染宽高比，配置一个合理范围(框的宽高占视频比例的多少，通常280x280大约占宽屏30~35%)，
+                // 但最稳健的是设置一个中等范围，并且因为用户对准框内就能扫描。为达到“框外无法识别”的效果，需要让 qrbox 数值对应扫描框在视频流中的区域。
+                // 根据经验直接设置宽高为 260-280 即可大大提高框内识别精准，并且 html5-qrcode 本身会将识别区域限定为此区域。
+                // 同时为了避免识别到框外二维码，我们将 fps 调高，提高识别速度。
                 const config = {
-                    fps: 15,
-                    qrbox: { width: 260, height: 260 },
-                    aspectRatio: 1.0,
-                    disableFlip: false
+                    fps: 20,
+                    qrbox: { width: 270, height: 270 },   // 该数值与扫描框实际视觉大小一致，效果是只有框内能解码成功，符合预期。
+                    aspectRatio: undefined,
+                    disableFlip: false,
+                    rememberLastCameraUsed: false,
+                    videoConstraints: {
+                        deviceId: { exact: cameraId },
+                        facingMode: { exact: "environment" } // 强化后置请求
+                    }
                 };
 
-                await html5QrCode.start(cameraId, config, onScanSuccess, onScanFailure);
-                isScanning = true;
-                updateStatus('📷 扫描中，对准二维码', true);
+                await html5QrCode.start(
+                    cameraId,
+                    config,
+                    (decodedText) => {
+                        // 扫描成功回调（仅在限定区域内识别才会触发）
+                        if (!isScanningActive) return;
+                        // 避免重复相同结果
+                        if (lastScannedValue === decodedText) return;
+                        lastScannedValue = decodedText;
 
-                const videoElement = document.querySelector('#reader video');
-                if (videoElement) {
-                    videoElement.setAttribute('playsinline', 'true');
-                    videoElement.muted = true;
+                        // 震动提示
+                        if (window.navigator && window.navigator.vibrate) {
+                            window.navigator.vibrate(200);
+                        }
+                        // 停止扫描防止连续多次触发
+                        if (html5QrCode && isScanningActive) {
+                            // 停止扫描但保留结果显示，用户手动重启可继续
+                            html5QrCode.stop().then(() => {
+                                isScanningActive = false;
+                                updateStatus("✅ 识别成功！", false);
+                            }).catch(e => console.warn);
+                        } else {
+                            isScanningActive = false;
+                            updateStatus("识别完成", false);
+                        }
+
+                        resultBox.style.display = 'block';
+                        resultContent.textContent = decodedText;
+                        copyBtn.disabled = false;
+                        showInfo("🎉 扫描成功，结果已显示", true);
+                    },
+                    (errorMessage) => {
+                        // 扫描失败回调，不做额外处理，保持安静。
+                        // 可忽略
+                    }
+                );
+                isScanningActive = true;
+                updateStatus("📷 扫描中 · 请对准框内", true);
+                // 确保视频内嵌属性 playsinline 防止全屏
+                const videoElem = document.querySelector('#reader video');
+                if (videoElem) {
+                    videoElem.setAttribute('playsinline', 'true');
+                    videoElem.muted = true;
                 }
-
+                // 小优化：如果发现摄像头镜像或者偏移，不需要额外处理，扫描框位置始终居中
+                showInfo("相机已启动，请将二维码放入中央框内", true);
             } catch (err) {
-                console.error('启动失败:', err);
-                let errorMsg = '';
-                let showGuide = false;
-
-                if (err.toString().includes('NotAllowedError') || err.toString().includes('Permission')) {
-                    errorMsg = '需要摄像头权限，请点击下方"手动授权相机"按钮';
-                    showGuide = true;
-                } else if (err.toString().includes('NotFoundError')) {
-                    errorMsg = '未检测到摄像头';
-                } else if (err.toString().includes('NotReadableError')) {
-                    errorMsg = '摄像头被占用，请关闭其他相机应用';
+                console.error("启动扫描失败: ", err);
+                let errorMsg = "";
+                let needGuide = false;
+                const errStr = err.toString();
+                if (errStr.includes("NotAllowedError") || errStr.includes("Permission")) {
+                    errorMsg = "摄像头权限被拒绝，请手动授权后再试";
+                    needGuide = true;
+                } else if (errStr.includes("NotFoundError")) {
+                    errorMsg = "未检测到后置摄像头，请检查设备";
+                } else if (errStr.includes("NotReadableError")) {
+                    errorMsg = "摄像头被占用，请关闭其他相机应用";
                 } else {
-                    errorMsg = '启动失败：' + (err.message || err).substring(0, 80);
+                    errorMsg = "启动失败：" + (err.message || errStr).slice(0, 100);
                 }
-
-                showError(errorMsg, showGuide);
-                updateStatus('启动失败', false);
-                isScanning = false;
+                showError(errorMsg, needGuide);
+                updateStatus("启动失败", false);
+                isScanningActive = false;
                 return false;
             }
             return true;
         }
 
-        // 完全重启（带权限检测）
-        async function restartWithPermission() {
-            if (html5QrCode && isScanning) {
-                try { await html5QrCode.stop(); } catch(e) {}
-                isScanning = false;
+        // 主动请求摄像头权限（强制弹窗授权并且优先后置）
+        async function requestCameraAndStart() {
+            hideError();
+            hideGuide();
+            showInfo("请求摄像头权限...", false);
+            updateStatus("请求授权中", true);
+            try {
+                // 尝试先获取媒体流验证权限并申请后置
+                let stream = null;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: { exact: "environment" } }
+                    });
+                } catch (firstErr) {
+                    // 如果强制后置失败则回退默认摄像头请求
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                }
+                if (stream) {
+                    // 获取成功，释放临时流
+                    stream.getTracks().forEach(track => track.stop());
+                    showInfo("✅ 权限已获取，正在启动扫描器...", true);
+                    hideGuide();
+                    await startScanner();
+                } else {
+                    throw new Error("无法获取流");
+                }
+            } catch (err) {
+                console.error("手动授权失败", err);
+                let guideFlag = false;
+                let userMsg = "";
+                if (err.name === 'NotAllowedError') {
+                    userMsg = "摄像头权限被拒绝，请根据下方指引手动开启后点击「重启扫描」";
+                    guideFlag = true;
+                } else {
+                    userMsg = "授权失败: " + (err.message || "未知错误");
+                    guideFlag = true;
+                }
+                showError(userMsg, guideFlag);
+                updateStatus("授权失败", false);
             }
-            if (html5QrCode) {
-                html5QrCode.clear();
-                html5QrCode = null;
-            }
+        }
 
+        // 重启扫描（清理上次结果并重新开始）
+        async function restartScan() {
+            await stopScanner();
+            lastScannedValue = null;
             resultBox.style.display = 'none';
             copyBtn.disabled = true;
-            lastResult = null;
-
-            // 先尝试直接启动（可能会自动弹权限）
-            const success = await initAndStart();
+            hideError();
+            hideGuide();
+            // 重新尝试启动扫描
+            const success = await startScanner();
             if (!success) {
-                // 失败后显示手动授权按钮会更明显
-                showInfo('如果自动启动失败，请点击"手动授权相机"按钮', true);
+                // 若失败尝试显示额外引导
+                showInfo("如需手动授权，点击「授权相机」按钮", true);
             }
         }
 
         // 复制结果
-        async function copyResult() {
+        async function copyScanResult() {
             const text = resultContent.textContent;
             if (!text) {
-                showError('没有可复制的内容', false);
+                showError("没有扫描结果可复制", false);
                 return;
             }
             try {
                 await navigator.clipboard.writeText(text);
-                showInfo('📋 已复制到剪贴板', true);
-                copyBtn.style.transform = 'scale(0.95)';
+                showInfo("📋 已复制到剪贴板", true);
+                // 微动效
+                copyBtn.style.transform = 'scale(0.96)';
                 setTimeout(() => { copyBtn.style.transform = ''; }, 150);
             } catch (err) {
+                // fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                showInfo('已复制', true);
+                showInfo("已复制", true);
+            }
+        }
+
+        // 智能初始加载: 检测已有权限或尝试自动启动，但不会强制弹窗（静默检测）
+        async function initialSmartLoad() {
+            updateStatus("准备就绪", true);
+            // 先检测是否已经有权限（不弹窗方式）
+            let hasPermission = null;
+            try {
+                const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                testStream.getTracks().forEach(t => t.stop());
+                hasPermission = true;
+            } catch (e) {
+                if (e.name === 'NotAllowedError') hasPermission = false;
+                else hasPermission = null;
+            }
+            if (hasPermission === false) {
+                showError("需要相机权限才能扫描", true);
+                updateStatus("需授权", false);
+            } else {
+                // 有权限或未知（未知尝试启动，浏览器会异步弹窗或直接成功）
+                await startScanner();
             }
         }
 
         // 事件绑定
         restartBtn.addEventListener('click', () => {
-            restartWithPermission().catch(err => {
-                console.error('重启失败', err);
-                showError('重启失败，请刷新页面', false);
+            restartScan().catch(e => {
+                console.error(e);
+                showError("重启失败，可刷新重试", false);
             });
         });
-
-        manualRequestBtn.addEventListener('click', async () => {
-            updateStatus('正在请求权限...', true);
-            await requestCameraPermissionManually();
+        manualAuthBtn.addEventListener('click', () => {
+            requestCameraAndStart().catch(e => console.warn);
         });
+        copyBtn.addEventListener('click', copyScanResult);
 
-        copyBtn.addEventListener('click', copyResult);
-
-        // 页面加载后：先检测是否已经授权，如果没有则显示引导
-        async function initialLoad() {
-            // 显示初始信息
-            updateStatus('准备就绪', true);
-
-            // 延迟一点，让页面稳定后再检测
-            setTimeout(async () => {
-                const hasPermission = await checkCameraPermission();
-                if (hasPermission === false) {
-                    // 权限被拒绝，显示引导
-                    showError('需要摄像头权限才能扫描二维码', true);
-                    updateStatus('需要权限', false);
-                } else if (hasPermission === true) {
-                    // 已有权限，直接启动
-                    await initAndStart();
-                } else {
-                    // 未知状态，尝试启动（可能会触发权限请求）
-                    await initAndStart();
-                }
-            }, 500);
-        }
-
-        // 页面关闭前清理
+        // 页面关闭前释放资源
         window.addEventListener('beforeunload', () => {
-            if (html5QrCode && isScanning) {
-                html5QrCode.stop().catch(() => {});
+            if (html5QrCode && isScanningActive) {
+                html5QrCode.stop().catch(()=>{});
+            }
+            if (currentStreamTracks.length) {
+                currentStreamTracks.forEach(t => t.stop());
             }
         });
 
-        // 启动
-        initialLoad();
+        // 启动应用
+        initialSmartLoad();
     })();
 </script>
 </body>

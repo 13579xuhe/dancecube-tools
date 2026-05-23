@@ -644,6 +644,7 @@
             <div class="pc-status-msg" id="pcPanelMsg"><i class="fas fa-spinner fa-pulse"></i> 正在获取你的位置...</div>
         </div>
     </div>
+    <div class="pc-footer">📍 自动定位你的城市 | 可选择其他城市查看 | 点击标记查看详情 | 紫色标记为秀机/Show机</div>
 </div>
 
 <!-- 手机版布局 -->
@@ -815,7 +816,12 @@
             bindPcEvents();
 
             pcMap.on('click', () => pcInfoWindow.close());
-            pcMap.on('complete', () => autoLocateAndLoad('pc'));
+
+            // 地图加载完成后自动定位
+            pcMap.on('complete', () => {
+                console.log('电脑版地图加载完成');
+                autoLocateAndLoad('pc');
+            });
         }
 
         function createPcMarkerContent(cab) {
@@ -876,6 +882,7 @@
 
         // ======================= 手机版逻辑 =======================
         let mobileMap, mobileMarkers = [], mobileInfoWindow = null, mobileUserMarker = null;
+        let mobileMapReady = false;
 
         function initMobileMap() {
             mobileMap = new AMap.Map('mobile-map', {
@@ -890,7 +897,13 @@
             bindMobileEvents();
 
             mobileMap.on('click', () => mobileInfoWindow.close());
-            mobileMap.on('complete', () => autoLocateAndLoad('mobile'));
+
+            // 地图加载完成后自动定位
+            mobileMap.on('complete', () => {
+                console.log('手机版地图加载完成');
+                mobileMapReady = true;
+                autoLocateAndLoad('mobile');
+            });
         }
 
         function createMobileMarkerContent(cab) {
@@ -930,6 +943,7 @@
         window.closeMobileInfoWindow = () => mobileInfoWindow?.close();
 
         function updateMobileMarkers(machines) {
+            console.log('更新手机版标记，数量:', machines.length);
             mobileMarkers.forEach(m => m.setMap(null));
             mobileMarkers = [];
             machines.forEach(cab => {
@@ -951,43 +965,83 @@
 
         // ======================= 通用函数 =======================
         async function loadCityMachines(cityName, type, updateDropdown = true) {
-            if (!cityName) return;
+            if (!cityName) {
+                console.log('城市名为空');
+                return false;
+            }
             const finalCity = normalizeCityName(cityName) || cityName;
+            console.log(`加载城市机台: ${finalCity}, 类型: ${type}`);
+
             const coords = cityCoordinates[finalCity];
             if (!coords) {
+                console.error(`未找到城市 ${finalCity} 的坐标`);
                 const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
                 msgEl.innerHTML = `未找到 ${finalCity}`;
                 return false;
             }
 
             const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
-            msgEl.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载中...`;
+            msgEl.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载 ${finalCity} 机台...`;
 
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
+                console.log(`获取到 ${machines.length} 台机台数据`);
+
                 if (type === 'pc') {
                     updatePcMarkers(machines);
-                    pcMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
+                    if (machines.length > 0) {
+                        pcMap.setZoomAndCenter(13, coords);
+                    } else {
+                        pcMap.setZoomAndCenter(12, coords);
+                    }
                     if (updateDropdown) await selectCityInDropdown(finalCity, 'pc');
                 } else {
                     updateMobileMarkers(machines);
-                    mobileMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
+                    if (machines.length > 0) {
+                        mobileMap.setZoomAndCenter(13, coords);
+                    } else {
+                        mobileMap.setZoomAndCenter(12, coords);
+                    }
                     if (updateDropdown) await selectCityInDropdown(finalCity, 'mobile');
                 }
                 const showCount = machines.filter(m => m.machineType === 1).length;
                 msgEl.innerHTML = `${finalCity} ${machines.length}台 (秀${showCount})`;
                 return true;
             } catch (e) {
-                msgEl.innerHTML = '加载失败';
+                console.error('加载失败:', e);
+                msgEl.innerHTML = '加载失败，请重试';
                 return false;
             }
         }
 
         async function autoLocateAndLoad(type) {
+            console.log(`开始自动定位: ${type}`);
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (pos) => {
                         const { latitude, longitude } = pos.coords;
+                        console.log(`${type} GPS定位成功: ${latitude}, ${longitude}`);
+
+                        // 添加用户位置标记
+                        if (type === 'pc') {
+                            if (pcUserMarker) pcUserMarker.setMap(null);
+                            pcUserMarker = new AMap.Marker({
+                                position: [longitude, latitude],
+                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
+                                offset: new AMap.Pixel(0, -14)
+                            });
+                            pcUserMarker.setMap(pcMap);
+                        } else {
+                            if (mobileUserMarker) mobileUserMarker.setMap(null);
+                            mobileUserMarker = new AMap.Marker({
+                                position: [longitude, latitude],
+                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
+                                offset: new AMap.Pixel(0, -14)
+                            });
+                            mobileUserMarker.setMap(mobileMap);
+                        }
+
                         const geo = await reverseGeocode(longitude, latitude);
                         if (geo.success && geo.city) {
                             await handleLocatedCity(geo.city, type);
@@ -995,8 +1049,11 @@
                             await fallbackLocate(type);
                         }
                     },
-                    async () => await fallbackLocate(type),
-                    { enableHighAccuracy: true, timeout: 8000 }
+                    async (error) => {
+                        console.error(`${type} GPS定位失败:`, error);
+                        await fallbackLocate(type);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
                 );
             } else {
                 await fallbackLocate(type);
@@ -1004,17 +1061,19 @@
         }
 
         async function fallbackLocate(type) {
+            console.log(`${type} 使用IP定位`);
             const ip = await getCityByIP();
             if (ip.success && ip.city) {
                 await handleLocatedCity(ip.city, type);
             } else {
                 const msgEl = type === 'pc' ? document.getElementById('pcPanelMsg') : document.getElementById('mobilePanelMsg');
-                msgEl.innerHTML = '请手动选择城市';
+                msgEl.innerHTML = '定位失败，请手动选择城市';
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
 
         async function handleLocatedCity(cityName, type) {
+            console.log(`${type} 定位到城市: ${cityName}`);
             const tipEl = type === 'pc' ? document.getElementById('pcLocationTip') : document.getElementById('mobileLocationTip');
             const citySpan = type === 'pc' ? document.getElementById('pcCurrentCity') : document.getElementById('mobileCurrentCity');
 
@@ -1023,13 +1082,14 @@
             await loadCityMachines(cityName, type, true);
             document.getElementById('loadingOverlay').style.display = 'none';
 
+            // 3秒后隐藏定位提示
             setTimeout(() => {
                 tipEl.style.opacity = '0';
                 setTimeout(() => {
                     tipEl.style.display = 'none';
                     tipEl.style.opacity = '1';
                 }, 300);
-            }, 2500);
+            }, 3000);
         }
 
         async function selectCityInDropdown(cityName, type) {
@@ -1039,7 +1099,7 @@
                     const citySelect = type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect');
                     provinceSelect.value = province;
                     onProvinceChangeDirect(province, type);
-                    await new Promise(r => setTimeout(r, 80));
+                    await new Promise(r => setTimeout(r, 100));
                     if (citySelect.querySelector(`option[value="${cityName}"]`)) {
                         citySelect.value = cityName;
                         return true;
@@ -1112,42 +1172,7 @@
             document.getElementById('loadingOverlay').style.display = 'flex';
             if (type === 'pc') pcInfoWindow?.close();
             else mobileInfoWindow?.close();
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        if (type === 'pc') {
-                            pcMap.setZoomAndCenter(14, [longitude, latitude]);
-                            if (pcUserMarker) pcUserMarker.setMap(null);
-                            pcUserMarker = new AMap.Marker({
-                                position: [longitude, latitude],
-                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
-                                offset: new AMap.Pixel(0, -14)
-                            });
-                            pcUserMarker.setMap(pcMap);
-                        } else {
-                            mobileMap.setZoomAndCenter(14, [longitude, latitude]);
-                            if (mobileUserMarker) mobileUserMarker.setMap(null);
-                            mobileUserMarker = new AMap.Marker({
-                                position: [longitude, latitude],
-                                content: `<div style="background:#3b82f6;width:28px;height:28px;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px #3b82f6;"><i class="fas fa-user" style="color:white;font-size:12px;"></i></div>`,
-                                offset: new AMap.Pixel(0, -14)
-                            });
-                            mobileUserMarker.setMap(mobileMap);
-                        }
-                        const geo = await reverseGeocode(longitude, latitude);
-                        if (geo.success && geo.city) {
-                            await handleLocatedCity(geo.city, type);
-                        } else {
-                            await fallbackLocate(type);
-                        }
-                    },
-                    async () => await fallbackLocate(type)
-                );
-            } else {
-                await fallbackLocate(type);
-            }
+            await autoLocateAndLoad(type);
         }
 
         function bindPcEvents() {

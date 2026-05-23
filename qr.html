@@ -2,706 +2,832 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>精准扫描仪 - 框内识别</title>
-    <!-- html5-qrcode 核心库 -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>机台扫码登录 - 舞立方</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* 避免拖动影响界面 */
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --input-bg: #ffffff;
+            --input-text: #1e293b;
+            --success-bg: #dcfce7;
+            --success-text: #15803d;
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+            --info-bg: #e0f2fe;
+            --info-text: #0369a1;
+        }
+
+        body.dark {
+            --bg-gradient-start: #0a0a14;
+            --bg-gradient-end: #12121c;
+            --text-primary: #eef2ff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --card-bg: #1e1e2c;
+            --border-light: #2d2d3a;
+            --input-bg: #2a2a38;
+            --input-text: #eef2ff;
+            --success-bg: #14532d;
+            --success-text: #86efac;
+            --error-bg: #7f1d1d;
+            --error-text: #fca5a5;
+            --info-bg: #0c4a6e;
+            --info-text: #7dd3fc;
         }
 
         body {
-            background: #000000;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.2s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 头部样式 */
+        .header {
             display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        /* 专业头部区域 */
-        .scanner-header {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 12px 16px;
-            text-align: center;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-            z-index: 20;
-        }
-        .scanner-header h1 {
-            color: #0ff;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .scanner-header p {
-            color: #8aa0b0;
-            font-size: 0.7rem;
-            margin-top: 4px;
-        }
-
-        /* 相机容器：绝对填充分配剩余空间，确保视频流填满 */
-        .video-container {
-            flex: 1;
-            position: relative;
-            background: #000;
-            overflow: hidden;
-            min-height: 0;  /* flex限制溢出 */
-        }
-
-        #reader {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #000;
-        }
-
-        /* 重要！强制让video元素覆盖全屏并居中裁剪，但是实际视频会被html5-qrcode自动填充，
-           我们通过transform-style保持比例，但核心是必须让扫描框完全对应视频画面内部区域。
-           额外添加一个遮罩层 + 扫描框，并且确保扫描框区域可见，外部半透明，这样用户自然对准框内。 */
-        .scan-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 15;
-        }
-
-        /* 扫描框外全屏半透明层，突出框内区域 (周围压暗) */
-        .scan-framebox {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px;
-            height: 280px;
-            border-radius: 28px;
-            /* 核心视觉: 边框发光 + 外侧漆黑遮罩 */
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(0, 255, 255, 0.9);
-            transition: all 0.2s;
-        }
-
-        /* 四角装饰增强科技感 */
-        .scan-framebox::before,
-        .scan-framebox::after,
-        .corner-tl,
-        .corner-br {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border-color: #0ff;
-            border-style: solid;
-            box-shadow: 0 0 6px cyan;
-        }
-        .scan-framebox::before {
-            top: -2px;
-            left: -2px;
-            border-width: 4px 0 0 4px;
-            border-radius: 4px 0 0 0;
-        }
-        .scan-framebox::after {
-            top: -2px;
-            right: -2px;
-            border-width: 4px 4px 0 0;
-            border-radius: 0 4px 0 0;
-        }
-        .corner-tl {
-            bottom: -2px;
-            left: -2px;
-            border-width: 0 0 4px 4px;
-            border-radius: 0 0 0 4px;
-        }
-        .corner-br {
-            bottom: -2px;
-            right: -2px;
-            border-width: 0 4px 4px 0;
-            border-radius: 0 0 4px 0;
-        }
-
-        /* 扫描线特效：在框内上下移动，增加引导 */
-        .scan-line-effect {
-            position: absolute;
-            top: 0;
-            left: 8px;
-            width: calc(100% - 16px);
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0ff, #0ff, transparent);
-            border-radius: 4px;
-            filter: drop-shadow(0 0 3px cyan);
-            animation: scanMoveVertical 2.2s ease-in-out infinite;
-            opacity: 0.85;
-        }
-
-        @keyframes scanMoveVertical {
-            0% { top: 6px; opacity: 0.6; }
-            50% { top: calc(100% - 12px); opacity: 1; }
-            100% { top: 6px; opacity: 0.6; }
-        }
-
-        .scan-tip {
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: #ccf6ff;
-            font-size: 0.7rem;
-            font-weight: 500;
-            text-shadow: 0 0 3px #00aaff;
-            letter-spacing: 0.5px;
-            background: transparent;
-        }
-
-        /* 底部控制区 */
-        .control-bar {
-            background: rgba(10, 10, 18, 0.95);
-            backdrop-filter: blur(12px);
-            padding: 14px 16px 20px;
-            border-top: 1px solid rgba(0, 255, 255, 0.25);
-            z-index: 20;
-        }
-
-        .status-area {
-            background: rgba(0, 20, 30, 0.7);
-            border-radius: 50px;
-            padding: 8px 16px;
-            margin-bottom: 12px;
+        .logo-area {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            gap: 12px;
         }
-        .status-badge {
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.6rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            padding: 10px 18px;
+            border-radius: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
-            color: #eef;
-        }
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            background: #0f0;
-            border-radius: 50%;
-            box-shadow: 0 0 5px #0f0;
-            animation: pulse 1.2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.8);}
-            50% { opacity: 1; transform: scale(1.2);}
-        }
-
-        .result-box {
-            background: rgba(13, 20, 30, 0.9);
-            border-radius: 24px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid #0ff;
-            backdrop-filter: blur(4px);
-            display: none;
-        }
-        .result-label {
-            font-size: 0.7rem;
-            color: #0ff;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .result-text {
-            color: white;
-            font-size: 0.85rem;
-            word-break: break-all;
             font-weight: 500;
         }
 
+        /* 主卡片 */
+        .scan-card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-light);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 24px;
+            color: white;
+            text-align: center;
+        }
+
+        .card-header i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .card-header h2 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .card-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .card-body {
+            padding: 28px 24px;
+        }
+
+        /* 二维码区域 */
+        .qr-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .qr-box {
+            display: inline-block;
+            background: white;
+            padding: 16px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .qr-box:hover {
+            transform: scale(1.02);
+        }
+
+        #qrcodeImg {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .qr-placeholder {
+            width: 220px;
+            height: 220px;
+            background: var(--feature-bg, #f1f5f9);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-muted);
+            border: 2px dashed var(--border-light);
+            cursor: pointer;
+        }
+
+        body.dark .qr-placeholder {
+            background: #2a2a38;
+        }
+
+        .qr-placeholder i {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        .qr-placeholder span {
+            font-size: 0.85rem;
+        }
+
+        .scan-tip {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* 登录信息区域 */
+        .user-section {
+            background: var(--input-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 16px;
+            border: 1px solid var(--border-light);
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .token-info {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 12px;
+            font-size: 0.7rem;
+            word-break: break-all;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            margin-top: 12px;
+        }
+
+        /* 状态消息 */
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 60px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .status-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .status-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+        }
+
+        .status-info {
+            background: var(--info-bg);
+            color: var(--info-text);
+        }
+
+        /* 按钮 */
         .btn-group {
             display: flex;
             gap: 12px;
+            margin-top: 20px;
         }
+
         .btn {
             flex: 1;
-            padding: 12px 0;
-            border-radius: 44px;
+            padding: 12px;
+            border-radius: 60px;
             border: none;
             font-weight: 600;
-            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            background: #2a2a3a;
-            color: #ddd;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
         }
+
         .btn-primary {
-            background: #0a7b8c;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            border: none;
         }
-        .btn:active {
-            transform: scale(0.96);
+
+        .btn-primary:active {
+            transform: scale(0.97);
         }
-        .error-tip, .info-tip {
-            font-size: 0.7rem;
+
+        .footer {
             text-align: center;
-            margin-top: 8px;
-            padding: 8px;
-            border-radius: 30px;
-        }
-        .error-tip {
-            background: #2a1010cc;
-            color: #ffaa99;
-        }
-        .info-tip {
-            background: #1a2a3acc;
-            color: #aaffff;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-light);
+            margin-top: 20px;
         }
 
-        .permission-guide {
-            background: #0a2a2ae6;
-            border: 1px solid #0ff;
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 20px;
-            display: none;
-            font-size: 0.7rem;
-        }
-        .guide-step {
-            color: #0ff;
-            font-weight: bold;
-        }
-
-        /* 横屏适配时扫描框略微缩小但仍然明显居中 */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .scan-framebox {
-                width: 220px;
-                height: 220px;
+        @media (max-width: 550px) {
+            .qr-box, #qrcodeImg, .qr-placeholder {
+                width: 180px;
+                height: 180px;
             }
-            .scan-tip {
-                bottom: -32px;
-                font-size: 0.65rem;
+            .card-body {
+                padding: 20px;
             }
-        }
-
-        /* 确保 video 元素完全填充容器且不缩放变形，并且html5-qrcode内部会自动处理比例，没有问题
-           额外修复安卓/iOS全屏下显示异常 */
-        #reader video {
-            object-fit: cover !important;
-            width: 100% !important;
-            height: 100% !important;
-            top: 0 !important;
-            left: 0 !important;
-            position: absolute !important;
+            .user-header {
+                flex-wrap: wrap;
+            }
+            .logout-btn {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-<div class="scanner-header">
-    <h1>🔍 精准扫描器</h1>
-    <p>请将二维码对准中央扫描框 · 自动识别</p>
-</div>
+<div class="container">
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fas fa-arcade"></i>
+            </div>
+            <div class="logo-text">
+                <h1>舞立方 · 机台扫码登录</h1>
+                <p>扫描机台二维码，快速登录设备</p>
+            </div>
+        </div>
+        <button class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> 暗色</button>
+    </div>
 
-<div class="video-container">
-    <div id="reader"></div>
-    <div class="scan-overlay">
-        <div class="scan-framebox">
-            <div class="corner-tl"></div>
-            <div class="corner-br"></div>
-            <div class="scan-line-effect"></div>
-            <div class="scan-tip">📌 二维码置于框内</div>
+    <div class="scan-card">
+        <div class="card-header">
+            <i class="fas fa-qrcode"></i>
+            <h2>机台扫码登录</h2>
+            <p>请使用舞立方机台二维码进行登录</p>
+        </div>
+        <div class="card-body">
+            <!-- 二维码展示区 (扫描机台上的二维码) -->
+            <div class="qr-container">
+                <div class="qr-box" id="qrBox">
+                    <div id="qrDisplayArea" class="qr-placeholder" style="display: flex;">
+                        <i class="fas fa-camera"></i>
+                        <span>点击上传/扫描二维码</span>
+                    </div>
+                    <img id="qrcodeImg" style="display: none;" alt="二维码预览">
+                </div>
+                <div class="scan-tip">
+                    <i class="fas fa-info-circle"></i>
+                    <span>点击上方区域，选择或拍摄机台二维码图片</span>
+                </div>
+            </div>
+
+            <!-- 当前登录用户状态 (从本地存储读取, 与index页面共享) -->
+            <div class="user-section" id="userSection">
+                <div class="user-header">
+                    <div class="user-avatar" id="userAvatarDisplay">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3 id="userNameDisplay">未登录</h3>
+                        <p id="userIdDisplay">请先登录舞立方账号</p>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn" style="display: none;">退出登录</button>
+                </div>
+                <div class="token-info" id="tokenInfo">
+                    <i class="fas fa-key"></i> Token状态: 未获取
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="btn-group">
+                <button class="btn" id="manualSelectBtn"><i class="fas fa-folder-open"></i> 选择图片</button>
+                <button class="btn btn-primary" id="sendLoginBtn" disabled><i class="fas fa-sign-in-alt"></i> 发送登录请求</button>
+            </div>
+
+            <!-- 状态消息 -->
+            <div id="statusMsg" class="status-message status-info" style="display: none;">
+                <i class="fas fa-spinner fa-pulse"></i> 等待操作...
+            </div>
         </div>
     </div>
-</div>
 
-<div class="control-bar">
-    <div class="status-area">
-        <div class="status-badge">
-            <span class="status-dot" id="statusDot"></span>
-            <span id="statusMsg">相机准备</span>
-        </div>
-    </div>
-    <div class="result-box" id="resultBox">
-        <div class="result-label">✅ 识别内容</div>
-        <div class="result-text" id="resultContent"></div>
-    </div>
-    <div class="btn-group">
-        <button class="btn" id="restartBtn">🔄 重启扫描</button>
-        <button class="btn" id="manualAuthBtn">📷 授权相机</button>
-        <button class="btn btn-primary" id="copyBtn" disabled>📋 复制结果</button>
-    </div>
-    <div id="errorMsg" class="error-tip" style="display: none;"></div>
-    <div id="infoMsg" class="info-tip" style="display: none;"></div>
-    <div id="permissionGuide" class="permission-guide">
-        <p>🔐 <span class="guide-step">摄像头权限指南</span></p>
-        <p>📱 iPhone/iPad: 设置 → Safari → 相机 → 允许</p>
-        <p>🌐 安卓Chrome: 点击地址栏左侧🔒 → 相机 → 允许</p>
-        <p>📲 其他浏览器: 设置 → 网站权限 → 相机 → 允许</p>
-        <p style="margin-top:6px;">✨ 授权后点击"重启扫描"或"授权相机"</p>
+    <div class="footer">
+        <p>⚠️ 扫码登录后，机台将登录当前舞立方账号 | 数据与《舞立方自制谱谱师工具》同步</p>
+        <p style="margin-top: 8px;">🔐 安全提示：请确保二维码来自官方机台</p>
     </div>
 </div>
 
 <script>
-    (function() {
-        // ---------- DOM 元素绑定 ----------
-        const readerElem = document.getElementById('reader');
-        const statusSpan = document.getElementById('statusMsg');
-        const statusDot = document.getElementById('statusDot');
-        const resultBox = document.getElementById('resultBox');
-        const resultContent = document.getElementById('resultContent');
-        const copyBtn = document.getElementById('copyBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const manualAuthBtn = document.getElementById('manualAuthBtn');
-        const errorDiv = document.getElementById('errorMsg');
-        const infoDiv = document.getElementById('infoMsg');
-        const permissionGuide = document.getElementById('permissionGuide');
+    // ======================= API 配置 =======================
+    const API_BASE = 'https://dancedemo.shenghuayule.com';
+    const APP_LOGIN_URL = `${API_BASE}/Dance/api/Machine/AppLogin`;
 
-        let html5QrCode = null;
-        let isScanningActive = false;
-        let lastScannedValue = null;
-        let currentStreamTracks = []; // 用于手动释放（备用）
+    // 全局变量
+    let currentQrContent = null;      // 解析出的二维码内容
+    let accessToken = null;            // 当前用户的 bearer token (与index页面共用localStorage)
+    let currentUserData = null;        // 当前登录用户信息
 
-        // 辅助显示信息
-        function showError(msg, showGuide = false) {
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = msg;
-            if (showGuide) {
-                permissionGuide.style.display = 'block';
-            } else {
-                // 如果错误不要求引导，但之前引导可能还在，可以根据逻辑不清除？但保留不管，一般调用showGuide才会显示
-            }
-            statusSpan.innerText = '⚠️ ' + msg;
-            statusDot.style.background = '#ff5555';
-            statusDot.style.animation = 'none';
-        }
+    // ======================= DOM 元素 =======================
+    const qrPlaceholder = document.getElementById('qrDisplayArea');
+    const qrcodeImg = document.getElementById('qrcodeImg');
+    const manualSelectBtn = document.getElementById('manualSelectBtn');
+    const sendLoginBtn = document.getElementById('sendLoginBtn');
+    const statusMsgDiv = document.getElementById('statusMsg');
+    const userNameSpan = document.getElementById('userNameDisplay');
+    const userIdSpan = document.getElementById('userIdDisplay');
+    const userAvatarDiv = document.getElementById('userAvatarDisplay');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const tokenInfoDiv = document.getElementById('tokenInfo');
+    const themeToggle = document.getElementById('themeToggleBtn');
 
-        function hideError() {
-            errorDiv.style.display = 'none';
-        }
-
-        function showInfo(msg, autoHide = true) {
-            infoDiv.style.display = 'block';
-            infoDiv.textContent = msg;
-            if (autoHide) {
-                setTimeout(() => {
-                    if (infoDiv.style.display === 'block') {
-                        infoDiv.style.display = 'none';
-                    }
-                }, 2800);
-            }
-        }
-
-        function hideInfo() {
-            infoDiv.style.display = 'none';
-        }
-
-        function hideGuide() {
-            permissionGuide.style.display = 'none';
-        }
-
-        function updateStatus(text, isActive = true) {
-            statusSpan.innerText = text;
-            if (isActive) {
-                statusDot.style.background = '#0f0';
-                statusDot.style.animation = 'pulse 1.2s infinite';
-            } else {
-                statusDot.style.background = '#ffaa33';
-                statusDot.style.animation = 'none';
-            }
-        }
-
-        // 停止当前扫描器并清理资源
-        async function stopScanner() {
-            if (html5QrCode && isScanningActive) {
-                try {
-                    await html5QrCode.stop();
-                } catch(e) {
-                    console.warn("停止扫描器异常", e);
+    // ======================= 辅助函数 =======================
+    function showStatus(message, type = 'info', autoHide = false) {
+        statusMsgDiv.style.display = 'flex';
+        statusMsgDiv.className = `status-message status-${type}`;
+        statusMsgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+        if (autoHide) {
+            setTimeout(() => {
+                if (statusMsgDiv.style.display === 'flex') {
+                    statusMsgDiv.style.display = 'none';
                 }
-                isScanningActive = false;
-            }
-            if (html5QrCode) {
-                try {
-                    html5QrCode.clear();
-                } catch(e) {}
-                html5QrCode = null;
-            }
-            // 额外主动释放可能遗留的媒体流 (安全)
-            if (currentStreamTracks.length) {
-                currentStreamTracks.forEach(track => track.stop());
-                currentStreamTracks = [];
-            }
+            }, 3500);
         }
+    }
 
-        // 获取后置摄像头ID (优先环境摄像头)
-        async function getOptimalCameraId() {
-            try {
-                const cameras = await Html5Qrcode.getCameras();
-                if (!cameras || cameras.length === 0) return null;
-                // 优先选择包含 back/environment/后置 关键词的摄像头
-                let backCam = cameras.find(cam => {
-                    const label = cam.label.toLowerCase();
-                    return label.includes('back') || label.includes('rear') || label.includes('environment') || label.includes('后置');
-                });
-                if (backCam) return backCam.id;
-                // 如果没有明确后置，默认第一个通常是后置？取第一个
-                return cameras[0].id;
-            } catch(err) {
-                console.error("获取摄像头列表失败", err);
-                return null;
-            }
-        }
+    function hideStatus() {
+        statusMsgDiv.style.display = 'none';
+    }
 
-        // 核心启动逻辑：强制后置摄像头 + 扫描框完全匹配视频区域
-        // 并且确保启动时调用带 fps 和 qrbox 设置，让扫描区域限定在框内视觉一致
-        async function startScanner() {
-            await stopScanner(); // 完全重置
-            resultBox.style.display = 'none';
-            copyBtn.disabled = true;
-            lastScannedValue = null;
-            hideError();
-            hideGuide();
-            updateStatus("启动相机中...", true);
-
-            try {
-                const cameraId = await getOptimalCameraId();
-                if (!cameraId) {
-                    throw new Error("未找到可用摄像头");
-                }
-
-                // 新实例
-                html5QrCode = new Html5Qrcode("reader");
-                // 重要配置: qrbox 设置与视觉扫描框像素位置匹配。为了让识别区域精确对应屏幕中央框，
-                // 我们通过计算动态设置 qrbox 宽高（基于屏幕实际显示后扫描框位置）。
-                // 但是由于 html5-qrcode 内部裁剪是根据摄像头的原始分辨率比例进行计算，最好的办法是给相对大小。
-                // 为了保持框内识别准确，让扫描区域大小对应 扫描框占屏幕的比例。
-                // 获取扫描框的显示尺寸（相对于视频实际区域会自动映射），但html5-qrcode内部支持 qrbox 数值设定，使解码只发生在中心框内区域。
-                // 为了防止二维码不在框内也被识别，我们设置精确的 qrbox 宽高（像素单位，相对于视频流）
-                // 计算方式：根据扫描框实际渲染宽高比，配置一个合理范围(框的宽高占视频比例的多少，通常280x280大约占宽屏30~35%)，
-                // 但最稳健的是设置一个中等范围，并且因为用户对准框内就能扫描。为达到“框外无法识别”的效果，需要让 qrbox 数值对应扫描框在视频流中的区域。
-                // 根据经验直接设置宽高为 260-280 即可大大提高框内识别精准，并且 html5-qrcode 本身会将识别区域限定为此区域。
-                // 同时为了避免识别到框外二维码，我们将 fps 调高，提高识别速度。
-                const config = {
-                    fps: 20,
-                    qrbox: { width: 270, height: 270 },   // 该数值与扫描框实际视觉大小一致，效果是只有框内能解码成功，符合预期。
-                    aspectRatio: undefined,
-                    disableFlip: false,
-                    rememberLastCameraUsed: false,
-                    videoConstraints: {
-                        deviceId: { exact: cameraId },
-                        facingMode: { exact: "environment" } // 强化后置请求
-                    }
-                };
-
-                await html5QrCode.start(
-                    cameraId,
-                    config,
-                    (decodedText) => {
-                        // 扫描成功回调（仅在限定区域内识别才会触发）
-                        if (!isScanningActive) return;
-                        // 避免重复相同结果
-                        if (lastScannedValue === decodedText) return;
-                        lastScannedValue = decodedText;
-
-                        // 震动提示
-                        if (window.navigator && window.navigator.vibrate) {
-                            window.navigator.vibrate(200);
-                        }
-                        // 停止扫描防止连续多次触发
-                        if (html5QrCode && isScanningActive) {
-                            // 停止扫描但保留结果显示，用户手动重启可继续
-                            html5QrCode.stop().then(() => {
-                                isScanningActive = false;
-                                updateStatus("✅ 识别成功！", false);
-                            }).catch(e => console.warn);
-                        } else {
-                            isScanningActive = false;
-                            updateStatus("识别完成", false);
-                        }
-
-                        resultBox.style.display = 'block';
-                        resultContent.textContent = decodedText;
-                        copyBtn.disabled = false;
-                        showInfo("🎉 扫描成功，结果已显示", true);
-                    },
-                    (errorMessage) => {
-                        // 扫描失败回调，不做额外处理，保持安静。
-                        // 可忽略
-                    }
-                );
-                isScanningActive = true;
-                updateStatus("📷 扫描中 · 请对准框内", true);
-                // 确保视频内嵌属性 playsinline 防止全屏
-                const videoElem = document.querySelector('#reader video');
-                if (videoElem) {
-                    videoElem.setAttribute('playsinline', 'true');
-                    videoElem.muted = true;
-                }
-                // 小优化：如果发现摄像头镜像或者偏移，不需要额外处理，扫描框位置始终居中
-                showInfo("相机已启动，请将二维码放入中央框内", true);
-            } catch (err) {
-                console.error("启动扫描失败: ", err);
-                let errorMsg = "";
-                let needGuide = false;
-                const errStr = err.toString();
-                if (errStr.includes("NotAllowedError") || errStr.includes("Permission")) {
-                    errorMsg = "摄像头权限被拒绝，请手动授权后再试";
-                    needGuide = true;
-                } else if (errStr.includes("NotFoundError")) {
-                    errorMsg = "未检测到后置摄像头，请检查设备";
-                } else if (errStr.includes("NotReadableError")) {
-                    errorMsg = "摄像头被占用，请关闭其他相机应用";
+    // 从localStorage加载用户token和信息 (与index页面完全兼容)
+    function loadUserFromStorage() {
+        try {
+            const tokenData = localStorage.getItem('dance_user_token');
+            if (tokenData) {
+                const parsed = JSON.parse(tokenData);
+                if (parsed && parsed.token && new Date(parsed.expireTime) > new Date()) {
+                    accessToken = parsed.token;
                 } else {
-                    errorMsg = "启动失败：" + (err.message || errStr).slice(0, 100);
+                    // token过期清理
+                    localStorage.removeItem('dance_user_token');
+                    localStorage.removeItem('dance_user_data');
+                    accessToken = null;
                 }
-                showError(errorMsg, needGuide);
-                updateStatus("启动失败", false);
-                isScanningActive = false;
+            } else {
+                accessToken = null;
+            }
+
+            const userDataStr = localStorage.getItem('dance_user_data');
+            if (userDataStr && accessToken) {
+                currentUserData = JSON.parse(userDataStr);
+                updateUserUI();
+            } else {
+                currentUserData = null;
+                updateUserUI();
+            }
+        } catch (e) {
+            console.warn('读取用户信息失败', e);
+            accessToken = null;
+            currentUserData = null;
+            updateUserUI();
+        }
+        // 更新发送按钮状态
+        updateSendButtonState();
+    }
+
+    // 更新UI显示用户信息
+    function updateUserUI() {
+        if (currentUserData && accessToken) {
+            userNameSpan.innerText = currentUserData.UserName || '舞立方玩家';
+            userIdSpan.innerText = `ID: ${currentUserData.UserID || '未知'}`;
+            if (currentUserData.HeadimgURL) {
+                userAvatarDiv.innerHTML = `<img src="${currentUserData.HeadimgURL}" alt="头像">`;
+            } else {
+                const initial = (currentUserData.UserName?.charAt(0) || 'U').toUpperCase();
+                userAvatarDiv.innerHTML = `<span style="font-size: 1.2rem;">${initial}</span>`;
+            }
+            logoutBtn.style.display = 'block';
+            const tokenShort = accessToken.substring(0, 12) + '...' + accessToken.substring(accessToken.length - 8);
+            tokenInfoDiv.innerHTML = `<i class="fas fa-key"></i> Token状态: 已登录 (有效期至 ${new Date(JSON.parse(localStorage.getItem('dance_user_token')).expireTime).toLocaleDateString()})<br><span style="font-size:0.65rem;">Token: ${tokenShort}</span>`;
+        } else {
+            userNameSpan.innerText = '未登录';
+            userIdSpan.innerText = '请先登录舞立方账号';
+            userAvatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+            logoutBtn.style.display = 'none';
+            tokenInfoDiv.innerHTML = '<i class="fas fa-key"></i> Token状态: 未登录，请返回首页登录或手机号登录';
+        }
+        updateSendButtonState();
+    }
+
+    // 更新发送按钮状态: 需要已登录 + 有二维码内容
+    function updateSendButtonState() {
+        const isLoggedIn = !!(accessToken && currentUserData);
+        const hasQr = !!currentQrContent;
+        sendLoginBtn.disabled = !(isLoggedIn && hasQr);
+        if (!isLoggedIn && hasQr) {
+            sendLoginBtn.title = "请先登录账号";
+        } else if (isLoggedIn && !hasQr) {
+            sendLoginBtn.title = "请先选择机台二维码";
+        } else {
+            sendLoginBtn.title = "点击发送登录请求到机台";
+        }
+    }
+
+    // 退出登录 (清空localStorage)
+    function logout() {
+        if (confirm('确定要退出登录吗？退出后将无法使用机台扫码功能。')) {
+            localStorage.removeItem('dance_user_token');
+            localStorage.removeItem('dance_user_data');
+            accessToken = null;
+            currentUserData = null;
+            updateUserUI();
+            showStatus('已退出登录，请重新登录', 'info', true);
+        }
+    }
+
+    // 调用机台登录接口 POST /Dance/api/Machine/AppLogin
+    // 请求头: Authorization: bearer token
+    // Body: { qrCode: "二维码内容" }
+    async function sendMachineLoginRequest(qrContent) {
+        if (!accessToken) {
+            showStatus('未登录，无法发送登录请求', 'error', true);
+            return false;
+        }
+        if (!qrContent || qrContent.trim() === '') {
+            showStatus('二维码内容为空，请重新选择', 'error', true);
+            return false;
+        }
+
+        showStatus('正在发送登录请求到机台...', 'info');
+        sendLoginBtn.disabled = true;
+        sendLoginBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 请求中...';
+
+        try {
+            const response = await fetch(APP_LOGIN_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${accessToken}`
+                },
+                body: JSON.stringify({ qrCode: qrContent })
+            });
+
+            // 处理响应
+            let responseData = null;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                responseData = await response.json();
+            } else {
+                const text = await response.text();
+                responseData = { message: text };
+            }
+
+            if (response.ok) {
+                // 请求成功
+                showStatus(`✅ 登录成功！机台已登录账号 ${currentUserData?.UserName || ''}`, 'success', true);
+                // 可以添加震动或额外反馈
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(200);
+                }
+                return true;
+            } else {
+                // 请求失败，提取错误信息
+                let errMsg = responseData?.message || responseData?.error || `请求失败 (${response.status})`;
+                // 处理401未授权情况
+                if (response.status === 401) {
+                    errMsg = 'Token已失效或未授权，请重新登录';
+                    // 清理失效token
+                    localStorage.removeItem('dance_user_token');
+                    localStorage.removeItem('dance_user_data');
+                    accessToken = null;
+                    currentUserData = null;
+                    updateUserUI();
+                }
+                showStatus(`❌ 登录失败: ${errMsg}`, 'error', true);
                 return false;
             }
-            return true;
+        } catch (error) {
+            console.error('机台登录接口调用错误:', error);
+            showStatus(`网络错误: ${error.message || '请检查网络'}`, 'error', true);
+            return false;
+        } finally {
+            sendLoginBtn.disabled = false;
+            sendLoginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 发送登录请求';
+            updateSendButtonState();
         }
+    }
 
-        // 主动请求摄像头权限（强制弹窗授权并且优先后置）
-        async function requestCameraAndStart() {
-            hideError();
-            hideGuide();
-            showInfo("请求摄像头权限...", false);
-            updateStatus("请求授权中", true);
-            try {
-                // 尝试先获取媒体流验证权限并申请后置
-                let stream = null;
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "environment" } }
-                    });
-                } catch (firstErr) {
-                    // 如果强制后置失败则回退默认摄像头请求
-                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                }
-                if (stream) {
-                    // 获取成功，释放临时流
-                    stream.getTracks().forEach(track => track.stop());
-                    showInfo("✅ 权限已获取，正在启动扫描器...", true);
-                    hideGuide();
-                    await startScanner();
-                } else {
-                    throw new Error("无法获取流");
-                }
-            } catch (err) {
-                console.error("手动授权失败", err);
-                let guideFlag = false;
-                let userMsg = "";
-                if (err.name === 'NotAllowedError') {
-                    userMsg = "摄像头权限被拒绝，请根据下方指引手动开启后点击「重启扫描」";
-                    guideFlag = true;
-                } else {
-                    userMsg = "授权失败: " + (err.message || "未知错误");
-                    guideFlag = true;
-                }
-                showError(userMsg, guideFlag);
-                updateStatus("授权失败", false);
-            }
-        }
+    // ======================= 二维码解析 (使用html5-qrcode或FileReader) =======================
+    // 引入html5-qrcode库进行二维码解码，更可靠
+    let html5QrCodeScanner = null;
 
-        // 重启扫描（清理上次结果并重新开始）
-        async function restartScan() {
-            await stopScanner();
-            lastScannedValue = null;
-            resultBox.style.display = 'none';
-            copyBtn.disabled = true;
-            hideError();
-            hideGuide();
-            // 重新尝试启动扫描
-            const success = await startScanner();
-            if (!success) {
-                // 若失败尝试显示额外引导
-                showInfo("如需手动授权，点击「授权相机」按钮", true);
-            }
-        }
-
-        // 复制结果
-        async function copyScanResult() {
-            const text = resultContent.textContent;
-            if (!text) {
-                showError("没有扫描结果可复制", false);
+    // 通过图片文件解析二维码
+    async function decodeQrFromImage(file) {
+        return new Promise((resolve, reject) => {
+            // 动态加载html5-qrcode库（如果未加载）
+            if (typeof Html5Qrcode === 'undefined') {
+                reject(new Error('二维码库未加载，请刷新页面重试'));
                 return;
             }
-            try {
-                await navigator.clipboard.writeText(text);
-                showInfo("📋 已复制到剪贴板", true);
-                // 微动效
-                copyBtn.style.transform = 'scale(0.96)';
-                setTimeout(() => { copyBtn.style.transform = ''; }, 150);
-            } catch (err) {
-                // fallback
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showInfo("已复制", true);
-            }
-        }
+            const imageUrl = URL.createObjectURL(file);
+            const scanner = new Html5Qrcode('temp-scanner');
+            // 使用静态图像解码
+            Html5Qrcode.scanFile(file, /* showImage= */ false)
+                .then(decodedText => {
+                    URL.revokeObjectURL(imageUrl);
+                    resolve(decodedText);
+                })
+                .catch(err => {
+                    URL.revokeObjectURL(imageUrl);
+                    reject(err);
+                });
+        });
+    }
 
-        // 智能初始加载: 检测已有权限或尝试自动启动，但不会强制弹窗（静默检测）
-        async function initialSmartLoad() {
-            updateStatus("准备就绪", true);
-            // 先检测是否已经有权限（不弹窗方式）
-            let hasPermission = null;
-            try {
-                const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                testStream.getTracks().forEach(t => t.stop());
-                hasPermission = true;
-            } catch (e) {
-                if (e.name === 'NotAllowedError') hasPermission = false;
-                else hasPermission = null;
-            }
-            if (hasPermission === false) {
-                showError("需要相机权限才能扫描", true);
-                updateStatus("需授权", false);
-            } else {
-                // 有权限或未知（未知尝试启动，浏览器会异步弹窗或直接成功）
-                await startScanner();
-            }
+    // 处理用户选择的图片文件
+    function handleImageFile(file) {
+        if (!file) return;
+        // 检查文件类型
+        if (!file.type.startsWith('image/')) {
+            showStatus('请选择图片文件 (jpg, png等)', 'error', true);
+            return;
         }
+        // 预览图片
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            qrcodeImg.src = e.target.result;
+            qrcodeImg.style.display = 'block';
+            qrPlaceholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
 
-        // 事件绑定
-        restartBtn.addEventListener('click', () => {
-            restartScan().catch(e => {
-                console.error(e);
-                showError("重启失败，可刷新重试", false);
+        // 解码二维码
+        showStatus('正在解析二维码...', 'info');
+        decodeQrFromImage(file)
+            .then(qrText => {
+                if (qrText && qrText.trim()) {
+                    currentQrContent = qrText.trim();
+                    showStatus(`✅ 二维码解析成功！内容: ${currentQrContent.substring(0, 80)}${currentQrContent.length > 80 ? '...' : ''}`, 'success', true);
+                    updateSendButtonState();
+                } else {
+                    throw new Error('二维码内容为空');
+                }
+            })
+            .catch(err => {
+                console.error('解码失败', err);
+                showStatus(`❌ 二维码解析失败: 请确保图片包含有效舞立方机台二维码`, 'error', true);
+                currentQrContent = null;
+                // 重置预览区，让用户重试
+                qrcodeImg.style.display = 'none';
+                qrPlaceholder.style.display = 'flex';
+                updateSendButtonState();
             });
-        });
-        manualAuthBtn.addEventListener('click', () => {
-            requestCameraAndStart().catch(e => console.warn);
-        });
-        copyBtn.addEventListener('click', copyScanResult);
+    }
 
-        // 页面关闭前释放资源
-        window.addEventListener('beforeunload', () => {
-            if (html5QrCode && isScanningActive) {
-                html5QrCode.stop().catch(()=>{});
+    // 打开文件选择器
+    function openFileSelector() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment'; // 手机端默认打开相机
+        input.onchange = (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                handleImageFile(e.target.files[0]);
             }
-            if (currentStreamTracks.length) {
-                currentStreamTracks.forEach(t => t.stop());
-            }
-        });
+        };
+        input.click();
+    }
 
-        // 启动应用
-        initialSmartLoad();
-    })();
+    // 重置扫描区域 (清除当前二维码)
+    function resetQrArea() {
+        currentQrContent = null;
+        qrcodeImg.style.display = 'none';
+        qrPlaceholder.style.display = 'flex';
+        qrcodeImg.src = '';
+        updateSendButtonState();
+        hideStatus();
+        showStatus('已重置，可重新选择二维码', 'info', true);
+    }
+
+    // ======================= 监听登录成功后的定期同步用户状态 =======================
+    // 监听localStorage变化 (多标签页同步)
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'dance_user_token' || event.key === 'dance_user_data') {
+            loadUserFromStorage();
+            showStatus('用户信息已更新', 'info', true);
+        }
+    });
+
+    // ======================= 主题切换 =======================
+    function initTheme() {
+        if (localStorage.getItem('dance_theme') === 'dark') {
+            document.body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> 浅色';
+        } else {
+            document.body.classList.remove('dark');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i> 暗色';
+        }
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('dance_theme', isDark ? 'dark' : 'light');
+        themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色' : '<i class="fas fa-moon"></i> 暗色';
+    }
+
+    // ======================= 事件绑定与初始化 =======================
+    function bindEvents() {
+        manualSelectBtn.addEventListener('click', openFileSelector);
+        sendLoginBtn.addEventListener('click', async () => {
+            if (!currentQrContent) {
+                showStatus('请先选择并解析机台二维码', 'error', true);
+                return;
+            }
+            if (!accessToken) {
+                showStatus('请先登录账号（点击头像返回主页登录）', 'error', true);
+                return;
+            }
+            await sendMachineLoginRequest(currentQrContent);
+        });
+        logoutBtn.addEventListener('click', logout);
+        // 点击二维码区域也可重新选择（方便）
+        const qrBoxDiv = document.getElementById('qrBox');
+        qrBoxDiv.addEventListener('click', (e) => {
+            // 避免点到内部图片触发两次
+            if (e.target === sendLoginBtn || e.target.closest('.btn')) return;
+            openFileSelector();
+        });
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // 加载html5-qrcode库并初始化
+    function loadHtml5QrCodeLib() {
+        return new Promise((resolve, reject) => {
+            if (typeof Html5Qrcode !== 'undefined') {
+                resolve();
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('加载二维码库失败'));
+            document.head.appendChild(script);
+        });
+    }
+
+    async function init() {
+        await loadHtml5QrCodeLib().catch(e => console.warn(e));
+        initTheme();
+        loadUserFromStorage();
+        bindEvents();
+        // 额外处理userAvatar点击跳转回到首页登录（方便用户登录）
+        const userAvatar = document.querySelector('.user-avatar');
+        if (userAvatar) {
+            userAvatar.style.cursor = 'pointer';
+            userAvatar.addEventListener('click', () => {
+                if (!accessToken) {
+                    if (confirm('未登录，是否跳转到主页进行登录？')) {
+                        window.location.href = './index.html';
+                    }
+                } else {
+                    // 已登录可以查看用户详情，但为了体验也允许跳转至个人页面 (可选)
+                    showStatus(`当前已登录: ${currentUserData?.UserName}`, 'info', true);
+                }
+            });
+        }
+
+        // 若登录后无token引导
+        if (!accessToken) {
+            showStatus('请先登录舞立方账号，登录后即可扫码机台', 'info', false);
+            setTimeout(() => hideStatus(), 4000);
+        }
+    }
+
+    init();
 </script>
 </body>
 </html>

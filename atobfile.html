@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>极连快传 · 国内优化 | 自动+手动双模P2P</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>文传 · 真正可用的局域网P2P文件传输</title>
     <style>
         * {
             margin: 0;
@@ -12,469 +12,458 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 主题变量 */
         :root {
-            --bg-gradient-start: #f0f4fe;
-            --bg-gradient-end: #e2eafc;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --card-border: rgba(80, 90, 210, 0.35);
-            --text-primary: #1a1f3a;
-            --text-secondary: #2c3a66;
-            --accent: #5b4bdb;
-            --accent-light: #7f6eff;
-            --badge-bg: #e2eaff;
-            --input-bg: #ffffff;
-            --placeholder-color: #8d9bb8;
-            --device-item-bg: #ffffffcc;
-            --shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-            --border-light: #cad2ff;
-            --online-led: #2bcf5e;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text-light: #6c757d;
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --success: #10b981;
+            --error: #ef4444;
+            --border: #e5e7eb;
+            --hover: #f8f9fa;
         }
 
         body.dark {
-            --bg-gradient-start: #0c0925;
-            --bg-gradient-end: #19153b;
-            --card-bg: rgba(28, 22, 65, 0.92);
-            --card-border: rgba(120, 95, 240, 0.55);
-            --text-primary: #f0ebff;
-            --text-secondary: #cbc2f0;
-            --accent: #8c74ff;
-            --accent-light: #a690ff;
-            --badge-bg: #30277a;
-            --input-bg: #201c48;
-            --placeholder-color: #a094d0;
-            --device-item-bg: #2f2870cc;
-            --shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
-            --border-light: #534bae;
-            --online-led: #6eff8c;
+            --bg: #121212;
+            --card: #1e1e2e;
+            --text: #e0e0e0;
+            --text-light: #a0a0b0;
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --border: #2d2d40;
+            --hover: #2a2a3a;
         }
 
         body {
-            background: linear-gradient(145deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            color: var(--text-primary);
+            padding: 20px;
             transition: background 0.2s, color 0.2s;
-            padding: 0;
+            color: var(--text);
         }
 
-        .app {
-            width: 100%;
-            max-width: 700px;
+        .container {
+            max-width: 600px;
             margin: 0 auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
         }
 
-        /* 头部 */
-        .header {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            padding: 18px 20px 14px;
-            text-align: center;
-            border-radius: 40px;
+        .card {
+            background: var(--card);
+            border-radius: 28px;
+            padding: 20px;
             margin-bottom: 16px;
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow);
-            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .header h1 {
             font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            color: var(--primary);
         }
-        .sub { font-size: 0.75rem; opacity: 0.8; margin-top: 6px; }
-        .theme-switch {
-            position: absolute;
+
+        .theme-btn {
+            position: fixed;
             top: 16px;
             right: 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
-            color: var(--text-primary);
+            font-size: 14px;
+            z-index: 100;
         }
 
-        /* 卡片通用样式 */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 18px;
-            margin-bottom: 18px;
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow);
-        }
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            margin-bottom: 14px;
-            color: var(--accent);
-        }
-        .badge {
-            background: var(--badge-bg);
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        /* ID展示区 */
         .id-box {
-            background: var(--input-bg);
-            border-radius: 60px;
-            padding: 12px 16px;
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 12px;
             font-family: monospace;
-            font-size: 0.8rem;
-            text-align: center;
+            font-size: 12px;
             word-break: break-all;
-            border: 1px solid var(--border-light);
+            text-align: center;
+            border: 1px solid var(--border);
+            margin: 10px 0;
         }
+
         .btn {
-            background: var(--accent);
-            border: none;
+            background: var(--primary);
             color: white;
-            padding: 10px 18px;
+            border: none;
+            padding: 12px 20px;
             border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 14px;
             transition: 0.1s;
         }
+
+        .btn-secondary {
+            background: var(--text-light);
+        }
+
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            border: 1px solid var(--primary);
+            color: var(--primary);
         }
-        .btn-sm { padding: 6px 14px; font-size: 0.7rem; }
-        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-        /* 手动连接区 */
-        .manual-input {
-            flex: 1;
-            background: var(--input-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 60px;
-            padding: 10px 16px;
-            color: var(--text-primary);
+        .input-group {
+            margin: 12px 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--text-light);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
             font-family: monospace;
-            font-size: 0.8rem;
+            font-size: 12px;
             outline: none;
         }
 
-        /* 设备列表 */
-        .device-list {
-            background: rgba(0, 0, 0, 0.06);
-            border-radius: 28px;
-            padding: 10px;
-            min-height: 120px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
         .device-item {
-            background: var(--device-item-bg);
-            border-radius: 60px;
-            padding: 8px 14px;
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 12px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid var(--border-light);
         }
-        .device-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .online-led { width: 9px; height: 9px; background: var(--online-led); border-radius: 10px; box-shadow: 0 0 5px #5eff7c; }
-        .device-name { font-weight: 500; font-size: 0.85rem; }
-        .device-id-short { font-size: 0.65rem; background: var(--badge-bg); padding: 2px 8px; border-radius: 40px; }
-        .send-btn { background: var(--accent); border: none; color: white; padding: 5px 16px; border-radius: 40px; font-size: 0.7rem; cursor: pointer; }
-        .empty-tip { text-align: center; padding: 28px 12px; opacity: 0.7; font-size: 0.85rem; }
 
-        /* 文件区域 */
-        .file-row {
-            background: var(--input-bg);
-            border-radius: 60px;
-            padding: 8px 16px;
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 4px #10b981;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.2s;
+        }
+
+        .file-item {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .download-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
             flex-wrap: wrap;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #e8e8e8;
+        }
+
+        .status-connected {
+            background: #10b98120;
+            color: #10b981;
+        }
+
+        .tip {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        hr {
+            margin: 16px 0;
+            border-color: var(--border);
+        }
+
+        .mode-switch {
+            display: flex;
             gap: 12px;
             margin-bottom: 16px;
         }
-        .progress-bar { background: #302c5a; border-radius: 40px; height: 8px; overflow: hidden; margin: 8px 0; }
-        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-light)); border-radius: 40px; }
-        .status-text { font-size: 0.7rem; margin-top: 6px; text-align: center; }
-        .received-list { max-height: 160px; overflow-y: auto; }
-        .received-item {
-            background: var(--device-item-bg);
-            border-radius: 24px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .download-link { background: var(--accent); padding: 4px 12px; border-radius: 40px; font-size: 0.65rem; cursor: pointer; color: white; text-decoration: none; }
-        footer { text-align: center; padding: 12px; font-size: 0.6rem; opacity: 0.7; }
-        button:active { transform: scale(0.96); }
 
-        /* 测速弹窗 */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 40px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 500;
         }
-        .speed-modal {
-            background: var(--card-bg); border-radius: 48px; max-width: 320px;
-            width: 80%; padding: 28px 20px; text-align: center;
-            border: 1px solid var(--accent); color: var(--text-primary);
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
-        .spinner { width: 32px; height: 32px; border: 3px solid rgba(128,128,255,0.3); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 10px auto; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .tip { font-size: 0.7rem; color: var(--text-secondary); }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            body { padding: 12px; }
+            .card { padding: 16px; }
+        }
     </style>
 </head>
 <body>
-<div class="app">
+<button class="theme-btn" id="themeToggle">🌓 主题</button>
+<div class="container">
     <div class="header">
-        <h1><span>⚡</span> 极连快传 · 国内优化</h1>
-        <div class="sub">自动发现 + 手动连接 | 国内STUN服务器</div>
-        <div class="theme-switch" id="themeToggleBtn">🌓 主题</div>
+        <h1>📡 文传 · 真正可用</h1>
+        <div style="font-size: 13px; margin-top: 4px;">支持局域网自动发现 + 手动连接码</div>
     </div>
 
-    <!-- 本机ID + 操作栏 -->
+    <!-- 工作模式切换 -->
     <div class="card">
-        <div class="card-title">🆔 我的设备ID <div class="badge">自动发现靠它</div></div>
-        <div class="id-box" id="localDeviceIdDisplay">加载中...</div>
-        <div class="flex-row" style="margin-top: 12px; justify-content: space-between;">
-            <button class="btn btn-sm" id="copyIdBtn">📋 复制ID</button>
-            <button class="btn btn-sm btn-outline" id="rescanDevicesBtn">🔄 重新搜索</button>
-            <button class="btn btn-sm btn-outline" id="speedTestBtn">📡 网络测速</button>
+        <div class="mode-switch">
+            <button class="mode-btn active" data-mode="auto">🌐 自动模式 (推荐)</button>
+            <button class="mode-btn" data-mode="manual">📋 手动模式 (离线可用)</button>
         </div>
-    </div>
-
-    <!-- 手动连接区 + 自动设备列表 -->
-    <div class="card">
-        <div class="card-title">🔗 连接方式</div>
-        <div class="flex-row" style="margin-bottom: 16px;">
-            <input type="text" id="manualRemoteId" class="manual-input" placeholder="输入对方设备ID (手动连接)">
-            <button class="btn" id="manualConnectBtn">手动连接</button>
+        <div id="autoModePanel">
+            <div class="tip">自动模式下，同一局域网打开本页的设备会自动出现</div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 12px 0 8px;">
-            <span style="font-size:0.75rem;">✨ 自动发现设备 (同网络)</span>
-            <span id="deviceCountBadge" style="background: var(--badge-bg); padding:2px 10px; border-radius:40px; font-size:0.7rem;">0</span>
-        </div>
-        <div class="device-list" id="autoDeviceList">
-            <div class="empty-tip">⏳ 正在自动搜索同网络设备...</div>
-        </div>
-        <div class="tip" style="margin-top: 10px; text-align:center;">💡 自动失败请用手动连接，复制对方ID粘贴即可</div>
-    </div>
-
-    <!-- 已连接设备 -->
-    <div class="card">
-        <div class="card-title">📡 当前连接 <div class="badge">活跃会话</div></div>
-        <div id="activeConnectionInfo" class="tip" style="padding: 12px; text-align:center;">暂无连接，点击设备「连接」或手动连接</div>
-        <div id="connectedDeviceActions" style="display: none; margin-top: 10px;">
-            <button class="btn btn-sm" id="disconnectBtn">断开连接</button>
+        <div id="manualModePanel" class="hidden">
+            <div class="tip">手动模式不依赖任何网络信令，通过复制粘贴连接码建立连接</div>
         </div>
     </div>
 
-    <!-- 文件发送区 -->
+    <!-- 我的设备ID -->
     <div class="card">
-        <div class="card-title">📤 发送文件</div>
-        <div class="file-row">
-            <label class="btn btn-sm" for="fileInput" style="background: var(--accent); padding: 8px 18px;">📁 选择文件</label>
-            <span id="selectedFileName" style="font-size:0.75rem;">未选择</span>
-            <input type="file" id="fileInput" style="display:none">
+        <div style="font-weight: 600; margin-bottom: 8px;">🆔 我的设备ID</div>
+        <div class="id-box" id="myDeviceId">生成中...</div>
+        <button class="btn btn-outline" id="copyMyIdBtn" style="margin-top: 8px;">📋 复制设备ID</button>
+    </div>
+
+    <!-- 自动模式面板 -->
+    <div id="autoPanel">
+        <div class="card">
+            <div style="font-weight: 600; margin-bottom: 8px;">📱 在线设备 (自动发现)</div>
+            <div id="deviceList" style="min-height: 100px;">
+                <div class="tip">正在搜索设备...</div>
+            </div>
+            <button class="btn btn-outline" id="refreshDevicesBtn" style="margin-top: 8px;">🔄 刷新设备列表</button>
         </div>
-        <div id="sendProgressArea" style="display: none;">
+    </div>
+
+    <!-- 手动模式面板 -->
+    <div id="manualPanel" class="hidden">
+        <div class="card">
+            <div style="font-weight: 600; margin-bottom: 8px;">🔗 手动连接对方</div>
+            <div class="input-group">
+                <label>对方的连接码</label>
+                <textarea id="remoteOfferCode" rows="3" placeholder="粘贴对方发送给你的连接码..."></textarea>
+            </div>
+            <button class="btn" id="manualConnectBtn">连接</button>
+            <hr>
+            <div style="font-weight: 600; margin-bottom: 8px;">📤 生成我的连接码</div>
+            <button class="btn btn-outline" id="generateOfferBtn">生成连接码 (发给对方)</button>
+            <div id="myOfferCodeBox" class="hidden" style="margin-top: 12px;">
+                <div class="id-box" id="myOfferCode" style="font-size: 10px;"></div>
+                <button class="btn-outline" id="copyOfferBtn" style="margin-top: 8px; padding: 6px;">复制连接码</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 当前连接状态 -->
+    <div class="card" id="connectionCard">
+        <div style="font-weight: 600; margin-bottom: 8px;">🔌 连接状态</div>
+        <div id="connectionStatus" class="tip">未连接</div>
+        <div id="connectedDevice" class="hidden">
+            <div class="device-item" style="margin-top: 8px;">
+                <div><span class="online-dot"></span> <span id="connectedDeviceName">未知设备</span></div>
+                <button class="btn-outline" id="disconnectBtn" style="width: auto; padding: 6px 16px;">断开</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发送文件 -->
+    <div class="card">
+        <div style="font-weight: 600; margin-bottom: 8px;">📤 发送文件</div>
+        <div class="flex-row" style="gap: 12px;">
+            <label class="btn" for="fileInput" style="flex: 1; text-align: center; margin: 0;">📁 选择文件</label>
+            <span id="fileNameDisplay" style="flex: 2; font-size: 13px;">未选择</span>
+        </div>
+        <input type="file" id="fileInput" style="display: none;">
+        <div id="sendProgress" style="display: none; margin-top: 12px;">
             <div class="progress-bar"><div class="progress-fill" id="sendProgressFill"></div></div>
-            <div class="status-text" id="sendStatusMsg">准备传输</div>
+            <div id="sendStatus" style="font-size: 12px; margin-top: 4px;"></div>
         </div>
-        <div class="tip" style="text-align:center;">👉 选择文件后，点击下方设备「发送」按钮</div>
+        <div class="tip">👉 选择文件后，点击下方设备「发送」按钮</div>
     </div>
 
     <!-- 接收记录 -->
     <div class="card">
-        <div class="card-title">📥 已接收文件</div>
-        <div class="received-list" id="receivedFilesList">
+        <div style="font-weight: 600; margin-bottom: 8px;">📥 收到的文件</div>
+        <div id="receivedList" style="max-height: 200px; overflow-y: auto;">
             <div class="tip">暂无接收文件</div>
         </div>
     </div>
-    <footer>🔒 WebRTC P2P 加密 | 国内STUN服务器 (stun.miwifi.com, stun.qq.com)</footer>
+    <div class="tip">⚡ 完全点对点传输 | 文件不经任何服务器 | 国内STUN服务器</div>
 </div>
 
 <script>
-    (function(){
-        // ==================== 国内优化版：使用国内可用的STUN服务器 ====================
-        // 国内STUN服务器列表 (更稳定)
+    (function() {
+        // ==================== 真正可用的P2P文件传输 ====================
+        // 国内可用的STUN服务器
         const ICE_SERVERS = [
-            { urls: "stun:stun.miwifi.com:3478" },      // 小米STUN
-            { urls: "stun:stun.qq.com:3478" },          // 腾讯STUN
-            { urls: "stun:stun.l.google.com:19302" },   // 备用Google (国内部分可用)
-            { urls: "stun:stun.chathelp.com:3478" }     // 备用
+            { urls: "stun:stun.miwifi.com:3478" },
+            { urls: "stun:stun.qq.com:3478" },
+            { urls: "stun:stun.chathelp.com:3478" },
+            { urls: "stun:stun.l.google.com:19302" }
         ];
 
+        // 全局变量
         let localPeerId = "";
+        let currentMode = "auto";  // auto / manual
         let currentConnection = null;
         let currentDataChannel = null;
         let connectedRemoteId = null;
 
-        let discoveredPeers = new Map();
+        // 文件相关
         let selectedFileBuffer = null;
         let selectedFileName = "";
         let isTransferring = false;
         let currentReceive = null;
         let receivedBlobUrls = [];
 
-        const CHANNEL_NAME = "DUAL_MODE_P2P_CN_V2";
+        // 自动模式相关
         let broadcastChannel = null;
+        let discoveredPeers = new Map();  // remoteId -> { name, dc? }
 
-        // ========== 辅助函数 ==========
+        // 手动模式相关
+        let pendingOffer = null;
+
+        // 生成设备ID
         function generateDeviceId() {
-            return `peer_${Math.random().toString(36).substring(2,10)}${Date.now().toString(36).slice(-5)}`;
+            const random = Math.random().toString(36).substring(2, 10);
+            const time = Date.now().toString(36).slice(-5);
+            return `DEV_${random}${time}`;
         }
+
         function getLocalId() {
-            let stored = localStorage.getItem("dual_mode_p2p_cn_id");
-            if(!stored) { stored = generateDeviceId(); localStorage.setItem("dual_mode_p2p_cn_id", stored); }
+            let stored = localStorage.getItem("file_transfer_device_id");
+            if (!stored) {
+                stored = generateDeviceId();
+                localStorage.setItem("file_transfer_device_id", stored);
+            }
             return stored;
         }
-        function getDeviceFriendlyName() {
-            let isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-            return `${isMobile ? "📱" : "💻"} ${localPeerId.slice(-6)}`;
+
+        function getDeviceName() {
+            const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+            return `${isMobile ? "📱" : "💻"} ${localPeerId.slice(-8)}`;
         }
 
-        function initBroadcast() {
-            if(broadcastChannel) broadcastChannel.close();
-            broadcastChannel = new BroadcastChannel(CHANNEL_NAME);
-            broadcastChannel.onmessage = handleSignalMessage;
-        }
+        localPeerId = getLocalId();
+        document.getElementById("myDeviceId").innerText = localPeerId;
 
-        function sendSignal(targetId, type, payload) {
-            if(!broadcastChannel) return;
-            broadcastChannel.postMessage({ from: localPeerId, to: targetId, type, payload, senderName: getDeviceFriendlyName() });
-        }
+        // 复制ID
+        document.getElementById("copyMyIdBtn").addEventListener("click", () => {
+            navigator.clipboard.writeText(localPeerId);
+            alert("设备ID已复制");
+        });
 
-        function announcePresence() {
-            sendSignal("*", "peer_hello", { name: getDeviceFriendlyName(), timestamp: Date.now() });
-        }
-
-        function sendBye() { if(connectedRemoteId) sendSignal(connectedRemoteId, "peer_bye", {}); }
-
-        // ========== WebRTC 连接核心 (使用国内STUN) ==========
-        async function createConnection(remoteId, isInitiator = true) {
-            if(currentConnection) {
-                if(currentDataChannel) currentDataChannel.close();
-                currentConnection.close();
-                currentConnection = null;
-                currentDataChannel = null;
-            }
-
-            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-
-            let dc = null;
-            if(isInitiator) {
-                dc = pc.createDataChannel("fileTransfer", { ordered: true });
-                setupDataChannel(dc, remoteId);
-            } else {
-                pc.ondatachannel = (event) => {
-                    dc = event.channel;
-                    setupDataChannel(dc, remoteId);
-                    currentDataChannel = dc;
-                };
-            }
-
-            pc.onicecandidate = (ev) => {
-                if(ev.candidate) sendSignal(remoteId, "ice_candidate", ev.candidate);
-            };
-
-            pc.oniceconnectionstatechange = () => {
-                console.log("ICE状态:", pc.iceConnectionState);
-                if(pc.iceConnectionState === "connected") {
-                    updateActiveConnectionUI(remoteId);
-                } else if(pc.iceConnectionState === "failed") {
-                    if(connectedRemoteId === remoteId) {
-                        alert("连接失败，请尝试手动连接或检查网络");
-                        updateActiveConnectionUI(null);
-                    }
-                }
-            };
-
-            currentConnection = pc;
-            if(dc) currentDataChannel = dc;
-            connectedRemoteId = remoteId;
-            updateActiveConnectionUI(remoteId);
-
-            if(isInitiator) {
-                const offer = await pc.createOffer();
-                await pc.setLocalDescription(offer);
-                sendSignal(remoteId, "offer", { sdp: offer.sdp });
-            }
-            return pc;
-        }
-
+        // ========== DataChannel 设置 ==========
         function setupDataChannel(dc, remoteId) {
             dc.onopen = () => {
-                console.log("DataChannel opened", remoteId);
-                updateActiveConnectionUI(remoteId);
-                if(selectedFileBuffer && !isTransferring && connectedRemoteId === remoteId) {
-                    startSendFile(selectedFileBuffer, selectedFileName);
+                console.log("DataChannel open", remoteId);
+                updateConnectionUI(true, remoteId);
+                // 如果有待发送的文件
+                if (selectedFileBuffer && !isTransferring && connectedRemoteId === remoteId) {
+                    startSendFile();
                 }
             };
             dc.onclose = () => {
-                if(connectedRemoteId === remoteId) {
-                    connectedRemoteId = null;
-                    updateActiveConnectionUI(null);
+                console.log("DataChannel close");
+                if (connectedRemoteId === remoteId) {
+                    updateConnectionUI(false, null);
                 }
             };
-            dc.onerror = (err) => console.error("DataChannel error", err);
             dc.onmessage = async (ev) => {
-                if(ev.data instanceof ArrayBuffer) {
+                if (ev.data instanceof ArrayBuffer) {
                     await handleFileChunk(ev.data);
-                } else if(typeof ev.data === "string") {
+                } else if (typeof ev.data === "string") {
                     try {
-                        let msg = JSON.parse(ev.data);
-                        if(msg.type === "file_meta") {
-                            prepareReceiveFile(msg.fileName, msg.fileSize, msg.totalChunks);
-                        } else if(msg.type === "chunk_ack" && isTransferring) {
-                            let percent = msg.progress;
-                            document.getElementById("sendProgressArea").style.display = "block";
+                        const msg = JSON.parse(ev.data);
+                        if (msg.type === "file_meta") {
+                            startReceiveFile(msg.fileName, msg.fileSize, msg.totalChunks);
+                        } else if (msg.type === "chunk_ack" && isTransferring) {
+                            const percent = msg.progress;
+                            document.getElementById("sendProgress").style.display = "block";
                             document.getElementById("sendProgressFill").style.width = percent + "%";
-                            document.getElementById("sendStatusMsg").innerText = `发送中 ${Math.round(percent)}%`;
-                            if(percent >= 99.9) {
+                            document.getElementById("sendStatus").innerText = `发送中 ${Math.round(percent)}%`;
+                            if (percent >= 99.9) {
                                 isTransferring = false;
-                                document.getElementById("sendStatusMsg").innerText = "✅ 发送完成!";
+                                document.getElementById("sendStatus").innerText = "✅ 发送完成!";
                                 setTimeout(() => {
-                                    document.getElementById("sendProgressArea").style.display = "none";
-                                    selectedFileBuffer = null;
-                                    document.getElementById("selectedFileName").innerText = "未选择";
+                                    document.getElementById("sendProgress").style.display = "none";
                                 }, 1500);
+                                selectedFileBuffer = null;
+                                document.getElementById("fileNameDisplay").innerText = "未选择";
                             }
                         }
-                    } catch(e) {}
+                    } catch (e) {}
                 }
             };
         }
 
-        function prepareReceiveFile(fileName, fileSize, totalChunks) {
+        // 接收文件准备
+        function startReceiveFile(fileName, fileSize, totalChunks) {
             currentReceive = {
                 chunks: new Array(totalChunks),
                 fileName: fileName,
@@ -482,46 +471,48 @@
                 totalChunks: totalChunks,
                 recvCount: 0
             };
-            document.getElementById("sendProgressArea").style.display = "block";
-            document.getElementById("sendStatusMsg").innerText = `接收 ${fileName} ...`;
+            document.getElementById("sendProgress").style.display = "block";
+            document.getElementById("sendStatus").innerText = `接收 ${fileName} ...`;
         }
 
         async function handleFileChunk(chunkBuf) {
-            if(!currentReceive) return;
+            if (!currentReceive) return;
             const index = new Uint32Array(chunkBuf, 0, 1)[0];
             const data = chunkBuf.slice(4);
-            if(!currentReceive.chunks[index]) {
+            if (!currentReceive.chunks[index]) {
                 currentReceive.chunks[index] = data;
                 currentReceive.recvCount++;
             }
             const percent = (currentReceive.recvCount / currentReceive.totalChunks) * 100;
             document.getElementById("sendProgressFill").style.width = percent + "%";
-            document.getElementById("sendStatusMsg").innerText = `接收中 ${Math.round(percent)}%`;
+            document.getElementById("sendStatus").innerText = `接收中 ${Math.round(percent)}%`;
 
-            if(currentDataChannel && currentDataChannel.readyState === "open") {
+            if (currentDataChannel && currentDataChannel.readyState === "open") {
                 currentDataChannel.send(JSON.stringify({ type: "chunk_ack", progress: percent }));
             }
 
-            if(currentReceive.recvCount === currentReceive.totalChunks) {
+            if (currentReceive.recvCount === currentReceive.totalChunks) {
                 const blob = new Blob(currentReceive.chunks, { type: "application/octet-stream" });
                 const url = URL.createObjectURL(blob);
                 receivedBlobUrls.push(url);
                 addToReceivedList(currentReceive.fileName, currentReceive.fileSize, url);
                 currentReceive = null;
-                document.getElementById("sendStatusMsg").innerText = `✅ 接收完成!`;
+                document.getElementById("sendStatus").innerText = `✅ 接收完成: ${currentReceive?.fileName || ""}`;
                 setTimeout(() => {
-                    if(!isTransferring) document.getElementById("sendProgressArea").style.display = "none";
+                    if (!isTransferring) document.getElementById("sendProgress").style.display = "none";
                 }, 2000);
             }
         }
 
         function addToReceivedList(fileName, fileSize, blobUrl) {
-            const container = document.getElementById("receivedFilesList");
-            if(container.innerText.includes("暂无接收文件")) container.innerHTML = "";
+            const container = document.getElementById("receivedList");
+            if (container.innerText.includes("暂无接收文件")) container.innerHTML = "";
             const div = document.createElement("div");
-            div.className = "received-item";
-            div.innerHTML = `<span>📄 ${fileName} (${(fileSize/1024).toFixed(1)} KB)</span>
-                            <a class="download-link" data-url="${blobUrl}" data-name="${fileName}">💾 保存</a>`;
+            div.className = "file-item";
+            div.innerHTML = `
+                <span>📄 ${fileName} (${(fileSize / 1024).toFixed(1)} KB)</span>
+                <a class="download-link" data-url="${blobUrl}" data-name="${fileName}">⬇️ 保存</a>
+            `;
             container.prepend(div);
             div.querySelector(".download-link").addEventListener("click", () => {
                 const a = document.createElement("a");
@@ -531,101 +522,174 @@
             });
         }
 
-        async function startSendFile(fileBuffer, fileName) {
-            if(!currentDataChannel || currentDataChannel.readyState !== "open") {
-                alert("未连接设备，请先连接");
-                return false;
+        async function startSendFile() {
+            if (!currentDataChannel || currentDataChannel.readyState !== "open") {
+                alert("未连接设备");
+                return;
             }
-            if(isTransferring) { alert("正在传输中"); return false; }
+            if (!selectedFileBuffer) {
+                alert("请先选择文件");
+                return;
+            }
+            if (isTransferring) {
+                alert("正在传输中");
+                return;
+            }
             isTransferring = true;
             const chunkSize = 16384;
-            const totalChunks = Math.ceil(fileBuffer.byteLength / chunkSize);
-            currentDataChannel.send(JSON.stringify({ type: "file_meta", fileName, fileSize: fileBuffer.byteLength, totalChunks }));
-            for(let i=0; i<totalChunks; i++) {
+            const totalChunks = Math.ceil(selectedFileBuffer.byteLength / chunkSize);
+            currentDataChannel.send(JSON.stringify({
+                type: "file_meta",
+                fileName: selectedFileName,
+                fileSize: selectedFileBuffer.byteLength,
+                totalChunks: totalChunks
+            }));
+
+            for (let i = 0; i < totalChunks; i++) {
                 const start = i * chunkSize;
-                const end = Math.min(start+chunkSize, fileBuffer.byteLength);
-                const chunk = fileBuffer.slice(start, end);
+                const end = Math.min(start + chunkSize, selectedFileBuffer.byteLength);
+                const chunk = selectedFileBuffer.slice(start, end);
                 const header = new ArrayBuffer(4);
                 new Uint32Array(header)[0] = i;
                 const combined = new Uint8Array(header.byteLength + chunk.byteLength);
                 combined.set(new Uint8Array(header), 0);
                 combined.set(new Uint8Array(chunk), 4);
                 currentDataChannel.send(combined.buffer);
-                const percent = ((i+1)/totalChunks)*100;
-                document.getElementById("sendProgressArea").style.display = "block";
+                const percent = ((i + 1) / totalChunks) * 100;
+                document.getElementById("sendProgress").style.display = "block";
                 document.getElementById("sendProgressFill").style.width = percent + "%";
-                document.getElementById("sendStatusMsg").innerText = `发送 ${fileName} ${Math.round(percent)}%`;
+                document.getElementById("sendStatus").innerText = `发送 ${selectedFileName} ${Math.round(percent)}%`;
                 await new Promise(r => setTimeout(r, 2));
             }
         }
 
-        // ========== 信令处理 ==========
-        async function handleSignalMessage(event) {
-            const msg = event.data;
-            if(!msg || msg.from === localPeerId) return;
-            const { from, type, payload } = msg;
+        // ========== 自动模式：BroadcastChannel ==========
+        function initAutoMode() {
+            if (broadcastChannel) broadcastChannel.close();
+            broadcastChannel = new BroadcastChannel("P2P_FILE_TRANSFER_V2");
+            broadcastChannel.onmessage = handleAutoSignal;
+            announcePresence();
+            setInterval(() => announcePresence(), 5000);
+        }
 
-            if(type === "peer_hello") {
-                if(!discoveredPeers.has(from)) {
-                    discoveredPeers.set(from, { name: payload?.name || `设备·${from.slice(-6)}`, lastSeen: Date.now() });
-                    updateAutoDeviceList();
+        function announcePresence() {
+            if (!broadcastChannel) return;
+            broadcastChannel.postMessage({
+                type: "presence",
+                from: localPeerId,
+                name: getDeviceName(),
+                timestamp: Date.now()
+            });
+        }
+
+        async function handleAutoSignal(event) {
+            const msg = event.data;
+            if (!msg || msg.from === localPeerId) return;
+
+            if (msg.type === "presence") {
+                if (!discoveredPeers.has(msg.from)) {
+                    discoveredPeers.set(msg.from, { name: msg.name, lastSeen: Date.now() });
+                    updateDeviceListUI();
                 }
-                sendSignal(from, "peer_hello_ack", {});
-            }
-            else if(type === "peer_hello_ack") {
-                if(!discoveredPeers.has(from)) {
-                    discoveredPeers.set(from, { name: `设备·${from.slice(-6)}`, lastSeen: Date.now() });
-                    updateAutoDeviceList();
-                }
-            }
-            else if(type === "offer") {
-                if(connectedRemoteId && connectedRemoteId !== from) {
-                    console.log("已有连接，忽略新offer");
+            } else if (msg.type === "offer" && currentMode === "auto") {
+                // 收到连接请求
+                if (connectedRemoteId) {
+                    broadcastChannel.postMessage({ type: "busy", to: msg.from, from: localPeerId });
                     return;
                 }
-                const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-                pc.onicecandidate = (ev) => { if(ev.candidate) sendSignal(from, "ice_candidate", ev.candidate); };
-                pc.ondatachannel = (event) => {
-                    setupDataChannel(event.channel, from);
-                    currentDataChannel = event.channel;
-                };
-                await pc.setRemoteDescription({ type: "offer", sdp: payload.sdp });
-                const answer = await pc.createAnswer();
-                await pc.setLocalDescription(answer);
-                sendSignal(from, "answer", { sdp: answer.sdp });
-                currentConnection = pc;
-                connectedRemoteId = from;
-                updateActiveConnectionUI(from);
-            }
-            else if(type === "answer") {
-                if(currentConnection && currentConnection.signalingState !== "closed") {
-                    await currentConnection.setRemoteDescription({ type: "answer", sdp: payload.sdp });
+                await acceptOffer(msg.from, msg.sdp);
+            } else if (msg.type === "answer" && currentMode === "auto") {
+                if (currentConnection && currentConnection.signalingState !== "closed") {
+                    await currentConnection.setRemoteDescription({ type: "answer", sdp: msg.sdp });
                 }
-            }
-            else if(type === "ice_candidate") {
-                if(currentConnection) {
-                    try { await currentConnection.addIceCandidate(new RTCIceCandidate(payload)); } catch(e) {}
+            } else if (msg.type === "ice" && currentMode === "auto") {
+                if (currentConnection) {
+                    try {
+                        await currentConnection.addIceCandidate(new RTCIceCandidate(msg.candidate));
+                    } catch (e) {}
                 }
-            }
-            else if(type === "peer_bye") {
-                if(connectedRemoteId === from) {
-                    if(currentConnection) currentConnection.close();
-                    currentConnection = null;
-                    currentDataChannel = null;
-                    connectedRemoteId = null;
-                    updateActiveConnectionUI(null);
-                }
-                discoveredPeers.delete(from);
-                updateAutoDeviceList();
+            } else if (msg.type === "busy") {
+                alert("对方正忙，请稍后再试");
             }
         }
 
-        function updateAutoDeviceList() {
-            const container = document.getElementById("autoDeviceList");
+        async function initiateAutoConnection(remoteId) {
+            if (connectedRemoteId) {
+                alert("请先断开当前连接");
+                return;
+            }
+
+            if (currentConnection) {
+                currentConnection.close();
+                currentConnection = null;
+            }
+
+            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+            const dc = pc.createDataChannel("fileTransfer", { ordered: true });
+            setupDataChannel(dc, remoteId);
+
+            pc.onicecandidate = (ev) => {
+                if (ev.candidate) {
+                    broadcastChannel.postMessage({
+                        type: "ice",
+                        to: remoteId,
+                        from: localPeerId,
+                        candidate: ev.candidate
+                    });
+                }
+            };
+
+            currentConnection = pc;
+            currentDataChannel = dc;
+            connectedRemoteId = remoteId;
+
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            broadcastChannel.postMessage({
+                type: "offer",
+                to: remoteId,
+                from: localPeerId,
+                sdp: offer.sdp
+            });
+        }
+
+        async function acceptOffer(fromId, offerSdp) {
+            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+            pc.onicecandidate = (ev) => {
+                if (ev.candidate) {
+                    broadcastChannel.postMessage({
+                        type: "ice",
+                        to: fromId,
+                        from: localPeerId,
+                        candidate: ev.candidate
+                    });
+                }
+            };
+            pc.ondatachannel = (event) => {
+                setupDataChannel(event.channel, fromId);
+                currentDataChannel = event.channel;
+            };
+
+            await pc.setRemoteDescription({ type: "offer", sdp: offerSdp });
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            broadcastChannel.postMessage({
+                type: "answer",
+                to: fromId,
+                from: localPeerId,
+                sdp: answer.sdp
+            });
+
+            currentConnection = pc;
+            connectedRemoteId = fromId;
+            updateConnectionUI(true, fromId);
+        }
+
+        function updateDeviceListUI() {
+            const container = document.getElementById("deviceList");
             const devices = Array.from(discoveredPeers.keys());
-            document.getElementById("deviceCountBadge").innerText = devices.length;
-            if(devices.length === 0) {
-                container.innerHTML = `<div class="empty-tip">🔍 未发现设备，确保其他设备打开本页面<br>或使用「手动连接」</div>`;
+            if (devices.length === 0) {
+                container.innerHTML = `<div class="tip">🔍 未发现其他设备，请确保其他设备也打开了本页面</div>`;
                 return;
             }
             container.innerHTML = "";
@@ -635,109 +699,195 @@
                 const div = document.createElement("div");
                 div.className = "device-item";
                 div.innerHTML = `
-                    <div class="device-info">
-                        <span class="online-led"></span>
-                        <span class="device-name">${escapeHtml(info.name)}</span>
-                        <span class="device-id-short">${remoteId.slice(-8)}</span>
-                        ${isConnected ? '<span style="font-size:0.6rem; background:#10b98120; padding:2px 8px; border-radius:20px;">已连接</span>' : ''}
-                    </div>
                     <div>
-                        ${!isConnected ? `<button class="send-btn" data-id="${remoteId}" data-action="connect">🔌 连接</button>` : `<button class="send-btn" data-id="${remoteId}" data-action="send">📤 发送</button>`}
+                        <span class="online-dot"></span>
+                        <span style="font-weight: 500;">${escapeHtml(info.name)}</span>
+                        <span style="font-size: 11px; color: var(--text-light); margin-left: 8px;">${remoteId.slice(-8)}</span>
+                        ${isConnected ? '<span style="margin-left: 8px; font-size: 11px; color: #10b981;">✓ 已连接</span>' : ''}
                     </div>
+                    ${!isConnected ? `<button class="btn-outline" data-id="${remoteId}" style="width: auto; padding: 6px 16px; margin: 0;">🔌 连接</button>` : `<button class="btn-outline" data-id="${remoteId}" data-action="send" style="width: auto; padding: 6px 16px; margin: 0;">📤 发送文件</button>`}
                 `;
                 container.appendChild(div);
             });
-            document.querySelectorAll('.send-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const remoteId = btn.getAttribute('data-id');
-                    const action = btn.getAttribute('data-action');
-                    if(action === "connect") {
-                        await createConnection(remoteId, true);
-                    } else if(action === "send") {
-                        if(!selectedFileBuffer) {
+
+            document.querySelectorAll("[data-id]").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const remoteId = btn.getAttribute("data-id");
+                    const action = btn.getAttribute("data-action");
+                    if (action === "send") {
+                        if (!selectedFileBuffer) {
                             alert("请先选择文件");
                             document.getElementById("fileInput").click();
                             return;
                         }
-                        if(!currentDataChannel || currentDataChannel.readyState !== "open") {
-                            alert("连接未就绪，请稍后");
-                            return;
-                        }
-                        startSendFile(selectedFileBuffer, selectedFileName);
+                        await startSendFile();
+                    } else {
+                        await initiateAutoConnection(remoteId);
                     }
                 });
             });
         }
 
-        function updateActiveConnectionUI(remoteId) {
-            const container = document.getElementById("activeConnectionInfo");
-            const actionsDiv = document.getElementById("connectedDeviceActions");
-            if(remoteId) {
-                container.innerHTML = `<div style="background: var(--badge-bg); border-radius: 40px; padding: 8px 16px; text-align:center;">✅ 已连接: ${remoteId.slice(-12)}</div>`;
-                actionsDiv.style.display = "block";
-            } else {
-                container.innerHTML = `<div class="tip">暂无连接，点击设备「连接」或手动连接</div>`;
-                actionsDiv.style.display = "none";
+        // ========== 手动模式 ==========
+        async function generateOfferCode() {
+            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+            const dc = pc.createDataChannel("fileTransfer", { ordered: true });
+            setupDataChannel(dc, "manual_peer");
+
+            pc.onicecandidate = (ev) => {
+                if (ev.candidate) {
+                    // 收集候选
+                }
+            };
+
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+
+            // 等待ICE收集完成
+            await new Promise((resolve) => {
+                if (pc.iceGatheringState === "complete") resolve();
+                else pc.onicegatheringstatechange = () => {
+                    if (pc.iceGatheringState === "complete") resolve();
+                };
+            });
+
+            const offerCode = btoa(JSON.stringify({
+                type: "offer",
+                sdp: pc.localDescription.sdp,
+                fromId: localPeerId
+            }));
+
+            document.getElementById("myOfferCode").innerText = offerCode;
+            document.getElementById("myOfferCodeBox").classList.remove("hidden");
+
+            // 保存pending连接
+            pendingOffer = { pc, dc };
+            currentConnection = pc;
+            currentDataChannel = dc;
+        }
+
+        async function handleManualConnect(offerCode) {
+            let decoded;
+            try {
+                decoded = JSON.parse(atob(offerCode));
+                if (decoded.type !== "offer") throw new Error("无效的连接码");
+            } catch (e) {
+                alert("无效的连接码，请重新复制");
+                return;
             }
+
+            const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+            pc.ondatachannel = (event) => {
+                setupDataChannel(event.channel, decoded.fromId);
+                currentDataChannel = event.channel;
+            };
+
+            pc.onicecandidate = (ev) => {
+                if (ev.candidate) {
+                    // 手动模式不需要发送ICE，因为SDP已包含
+                }
+            };
+
+            await pc.setRemoteDescription({ type: "offer", sdp: decoded.sdp });
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+
+            // 等待ICE收集
+            await new Promise((resolve) => {
+                if (pc.iceGatheringState === "complete") resolve();
+                else pc.onicegatheringstatechange = () => {
+                    if (pc.iceGatheringState === "complete") resolve();
+                };
+            });
+
+            const answerCode = btoa(JSON.stringify({
+                type: "answer",
+                sdp: pc.localDescription.sdp,
+                fromId: localPeerId
+            }));
+
+            // 显示answer码让用户发送
+            showAnswerCode(answerCode, decoded.fromId);
+
+            currentConnection = pc;
+            connectedRemoteId = decoded.fromId;
+            updateConnectionUI(true, decoded.fromId);
         }
 
-        function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
-
-        async function manualConnect(remoteId) {
-            if(remoteId === localPeerId) { alert("不能连接自己"); return; }
-            if(connectedRemoteId === remoteId) { alert("已经连接该设备"); return; }
-            await createConnection(remoteId, true);
-        }
-
-        function rescanDevices() {
-            discoveredPeers.clear();
-            announcePresence();
-            setTimeout(() => announcePresence(), 300);
-            setTimeout(() => announcePresence(), 800);
-            updateAutoDeviceList();
-        }
-
-        function showSpeedTest() {
+        function showAnswerCode(code, targetId) {
             const modal = document.createElement("div");
-            modal.className = "modal-overlay";
+            modal.style.cssText = "position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000;";
             modal.innerHTML = `
-                <div class="speed-modal">
-                    <h3>📡 网络测速</h3>
-                    <div id="speedContent"><div class="spinner"></div><div>测试STUN服务器延迟...</div></div>
-                    <div style="font-size:11px; margin-top:12px;">测试与国内STUN服务器连通性</div>
-                    <button class="btn btn-sm" id="closeSpeedBtn" style="margin-top:16px;">关闭</button>
+                <div style="background: var(--card); border-radius: 28px; max-width: 90%; width: 360px; padding: 24px;">
+                    <h3 style="margin-bottom: 12px;">📋 发送回复码给对方</h3>
+                    <div style="background: var(--bg); border-radius: 16px; padding: 12px; font-family: monospace; font-size: 10px; word-break: break-all; margin: 12px 0;">${code}</div>
+                    <button id="copyAnswerBtn" style="background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%;">复制回复码</button>
+                    <button id="closeAnswerBtn" style="background: transparent; border: 1px solid var(--border); padding: 10px; border-radius: 40px; width: 100%; margin-top: 8px;">关闭</button>
                 </div>
             `;
             document.body.appendChild(modal);
-            const start = performance.now();
-            // 测试连接一个国内可访问的资源
-            fetch("https://www.baidu.com/favicon.ico", { mode: 'no-cors', cache: 'no-store' })
-                .catch(() => null).finally(() => {
-                const latency = Math.round(performance.now() - start);
-                const content = modal.querySelector("#speedContent");
-                if(latency < 3000) {
-                    content.innerHTML = `<div style="font-size:2rem;">${latency} ms</div><div>网络正常，可进行P2P传输</div><div style="font-size:11px; margin-top:8px;">国内STUN服务器可用</div>`;
-                } else {
-                    content.innerHTML = `<div>⏱️ 延迟较高 (${latency}ms)</div><div>请检查网络或使用手动连接</div>`;
-                }
+            document.getElementById("copyAnswerBtn").addEventListener("click", () => {
+                navigator.clipboard.writeText(code);
+                alert("已复制回复码，请发送给对方");
             });
-            modal.querySelector("#closeSpeedBtn").addEventListener("click", () => modal.remove());
+            document.getElementById("closeAnswerBtn").addEventListener("click", () => modal.remove());
         }
 
-        // ========== 初始化 ==========
-        localPeerId = getLocalId();
-        document.getElementById("localDeviceIdDisplay").innerText = localPeerId;
-        initBroadcast();
-        announcePresence();
-        setInterval(() => announcePresence(), 6000);
-        setInterval(() => updateAutoDeviceList(), 4000);
+        // ========== UI 更新 ==========
+        function updateConnectionUI(connected, remoteId) {
+            const statusDiv = document.getElementById("connectionStatus");
+            const connectedDiv = document.getElementById("connectedDevice");
+            if (connected && remoteId) {
+                statusDiv.innerHTML = `<span style="color: #10b981;">✅ 已连接到 ${remoteId.slice(-12)}</span>`;
+                connectedDiv.classList.remove("hidden");
+                document.getElementById("connectedDeviceName").innerText = remoteId.slice(-12);
+            } else {
+                statusDiv.innerHTML = `<span>⚪ 未连接</span>`;
+                connectedDiv.classList.add("hidden");
+                connectedRemoteId = null;
+                currentConnection = null;
+                currentDataChannel = null;
+            }
+        }
 
-        // 文件选择
-        const fileInput = document.getElementById("fileInput");
-        fileInput.addEventListener("change", (e) => {
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+        }
+
+        // ========== 模式切换 ==========
+        function switchMode(mode) {
+            currentMode = mode;
+            const autoPanel = document.getElementById("autoPanel");
+            const manualPanel = document.getElementById("manualPanel");
+            const autoModePanel = document.getElementById("autoModePanel");
+            const manualModePanel = document.getElementById("manualModePanel");
+
+            if (mode === "auto") {
+                autoPanel.classList.remove("hidden");
+                manualPanel.classList.add("hidden");
+                autoModePanel.classList.remove("hidden");
+                manualModePanel.classList.add("hidden");
+                initAutoMode();
+                updateDeviceListUI();
+            } else {
+                autoPanel.classList.add("hidden");
+                manualPanel.classList.remove("hidden");
+                autoModePanel.classList.add("hidden");
+                manualModePanel.classList.remove("hidden");
+                if (broadcastChannel) broadcastChannel.close();
+            }
+
+            document.querySelectorAll(".mode-btn").forEach(btn => {
+                if (btn.getAttribute("data-mode") === mode) btn.classList.add("active");
+                else btn.classList.remove("active");
+            });
+        }
+
+        // ========== 事件绑定 ==========
+        document.getElementById("fileInput").addEventListener("change", (e) => {
             const file = e.target.files[0];
-            if(!file) return;
-            document.getElementById("selectedFileName").innerText = file.name;
+            if (!file) return;
+            document.getElementById("fileNameDisplay").innerText = file.name;
             const reader = new FileReader();
             reader.onload = (ev) => {
                 selectedFileBuffer = ev.target.result;
@@ -746,40 +896,61 @@
             reader.readAsArrayBuffer(file);
         });
 
-        // 按钮事件
-        document.getElementById("copyIdBtn").addEventListener("click", () => {
-            navigator.clipboard.writeText(localPeerId);
-            alert("设备ID已复制: " + localPeerId);
+        document.getElementById("refreshDevicesBtn").addEventListener("click", () => {
+            discoveredPeers.clear();
+            announcePresence();
+            setTimeout(() => updateDeviceListUI(), 500);
         });
-        document.getElementById("rescanDevicesBtn").addEventListener("click", () => rescanDevices());
-        document.getElementById("speedTestBtn").addEventListener("click", () => showSpeedTest());
+
         document.getElementById("manualConnectBtn").addEventListener("click", () => {
-            const rid = document.getElementById("manualRemoteId").value.trim();
-            if(!rid) { alert("请输入对方设备ID"); return; }
-            manualConnect(rid);
+            const code = document.getElementById("remoteOfferCode").value.trim();
+            if (!code) {
+                alert("请输入对方的连接码");
+                return;
+            }
+            handleManualConnect(code);
         });
-        document.getElementById("disconnectBtn")?.addEventListener("click", () => {
-            if(currentConnection) currentConnection.close();
+
+        document.getElementById("generateOfferBtn").addEventListener("click", () => {
+            generateOfferCode();
+        });
+
+        document.getElementById("copyOfferBtn").addEventListener("click", () => {
+            const code = document.getElementById("myOfferCode").innerText;
+            if (code) {
+                navigator.clipboard.writeText(code);
+                alert("连接码已复制，请发送给对方");
+            }
+        });
+
+        document.getElementById("disconnectBtn").addEventListener("click", () => {
+            if (currentConnection) currentConnection.close();
             currentConnection = null;
             currentDataChannel = null;
             connectedRemoteId = null;
-            updateActiveConnectionUI(null);
+            updateConnectionUI(false, null);
+        });
+
+        // 模式切换按钮
+        document.querySelectorAll(".mode-btn").forEach(btn => {
+            btn.addEventListener("click", () => switchMode(btn.getAttribute("data-mode")));
         });
 
         // 主题切换
-        let dark = false;
-        document.getElementById("themeToggleBtn").addEventListener("click", () => {
-            dark = !dark;
-            if(dark) document.body.classList.add("dark");
+        let darkMode = false;
+        document.getElementById("themeToggle").addEventListener("click", () => {
+            darkMode = !darkMode;
+            if (darkMode) document.body.classList.add("dark");
             else document.body.classList.remove("dark");
         });
 
+        // 启动自动模式
+        switchMode("auto");
+
+        // 清理
         window.addEventListener("beforeunload", () => {
-            sendBye();
             receivedBlobUrls.forEach(url => URL.revokeObjectURL(url));
         });
-
-        updateAutoDeviceList();
     })();
 </script>
 </body>

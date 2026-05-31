@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>音频剪辑</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-panel: #f8fafc;
+            --bg-wave: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --wave-color: #3b82f6;
+            --handle-color: #3b82f6;
+            --handle-hover: #2563eb;
+            --ruler-color: #64748b;
+            --select-bg: #ffffff;
+        }
+
+        body.dark {
+            --bg-body: #0a0e1a;
+            --bg-card: #1a1f2e;
+            --bg-panel: #141824;
+            --bg-wave: #0f1320;
+            --text-primary: #f0f3ff;
+            --text-secondary: #cbd5e6;
+            --border-color: #2a3042;
+            --accent: #5b8cdf;
+            --accent-hover: #7ca5f0;
+            --wave-color: #5b8cdf;
+            --handle-color: #5b8cdf;
+            --handle-hover: #7ca5f0;
+            --ruler-color: #8e9bb5;
+            --select-bg: #1e2438;
+        }
+
+        .editor-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .theme-btn-group {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 3px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+        }
+        .theme-btn {
+            background: transparent;
+            border: none;
+            padding: 5px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: 0.1s;
+        }
+        .theme-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .file-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+        .file-name {
+            background: var(--bg-card);
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .upload-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .wave-section {
+            padding: 20px 24px;
+            background: var(--bg-wave);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .time-ruler {
+            position: relative;
+            height: 28px;
+            margin-bottom: 6px;
+            font-family: monospace;
+            font-size: 10px;
+            color: var(--ruler-color);
+        }
+        .ruler-markers {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .wave-container {
+            position: relative;
+        }
+        #waveformCanvas {
+            width: 100%;
+            height: 170px;
+            display: block;
+            background: var(--bg-wave);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .handles-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            top: -170px;
+            pointer-events: none;
+        }
+        .drag-handle {
+            position: absolute;
+            width: 14px;
+            height: 170px;
+            background: var(--handle-color);
+            border-radius: 8px;
+            cursor: ew-resize;
+            pointer-events: auto;
+            top: 0;
+            opacity: 0.92;
+            transition: width 0.08s linear, left 0.02s linear;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.5), 0 0 0 4px rgba(59,130,246,0.3);
+            z-index: 20;
+        }
+        .drag-handle:hover {
+            opacity: 1;
+            background: var(--handle-hover);
+            width: 16px;
+            margin-left: -1px;
+        }
+        .drag-handle::after {
+            content: '⋮';
+            position: absolute;
+            left: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 2px black;
+            pointer-events: none;
+        }
+        .handle-left { left: 0; transform: translateX(-7px); }
+        .handle-right { left: 100%; transform: translateX(-7px); }
+
+        .selection-overlay {
+            position: absolute;
+            top: 0;
+            height: 170px;
+            background: var(--accent);
+            opacity: 0.22;
+            pointer-events: none;
+            z-index: 15;
+            border-left: 2px solid var(--accent);
+            border-right: 2px solid var(--accent);
+        }
+
+        .time-display {
+            margin-top: 14px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .clip-controls {
+            padding: 16px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .clip-input-group {
+            display: flex;
+            gap: 20px;
+            background: var(--bg-card);
+            padding: 6px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+        .clip-input-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+        .clip-input-item input {
+            width: 90px;
+            background: var(--select-bg);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 30px;
+            font-family: monospace;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .btn {
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .transport-bar {
+            padding: 12px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .play-pause-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .gain-section {
+            padding: 12px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            color: var(--text-primary);
+        }
+        .gain-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        input[type="range"] {
+            width: 220px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        .auto-badge {
+            background: var(--accent);
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: white;
+            margin-left: 8px;
+        }
+
+        .export-section {
+            padding: 16px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .format-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .format-selector select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .format-selector select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .save-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .error-msg {
+            padding: 8px 24px;
+            color: #ef4444;
+            font-size: 0.75rem;
+        }
+        .footer {
+            padding: 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: var(--bg-panel);
+        }
+        button { cursor: pointer; }
+        .status-badge {
+            margin-left: 12px;
+            font-size: 0.7rem;
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+<div class="editor-container">
+    <div class="toolbar">
+        <div class="logo">音频剪辑</div>
+        <div class="theme-btn-group" id="themeToggleGroup">
+            <button class="theme-btn" data-theme="light">☀️ 亮色</button>
+            <button class="theme-btn" data-theme="dark">🌙 暗色</button>
+        </div>
+    </div>
+
+    <div class="file-bar">
+        <div class="file-info">
+            <span>📁 当前</span>
+            <span class="file-name" id="fileNameDisplay">未加载音频</span>
+        </div>
+        <div>
+            <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+            <button class="upload-btn" id="uploadBtn">📂 选择音频文件</button>
+        </div>
+    </div>
+
+    <div class="wave-section">
+        <div class="time-ruler" id="rulerContainer">
+            <div class="ruler-markers" id="rulerMarkers"></div>
+        </div>
+        <div class="wave-container" id="waveContainer" style="position: relative;">
+            <canvas id="waveformCanvas" width="1200" height="170"></canvas>
+            <div id="selectionOverlay" class="selection-overlay" style="left:0%; width:0%;"></div>
+            <div class="handles-container" id="handlesContainer">
+                <div id="handleLeft" class="drag-handle handle-left"></div>
+                <div id="handleRight" class="drag-handle handle-right"></div>
+            </div>
+        </div>
+        <div class="time-display" id="timeDisplay">00:00.00 → 00:00.00 / 全长 00:00.00</div>
+    </div>
+
+    <div class="clip-controls">
+        <div class="clip-input-group">
+            <div class="clip-input-item"><span>◀ 入点</span><input type="number" id="startHandle" step="0.01" value="0.00"><span>秒</span></div>
+            <div class="clip-input-item"><span>出点 ▶</span><input type="number" id="endHandle" step="0.01" value="0.00"><span>秒</span></div>
+            <button id="applyHandleBtn" class="btn">应用区间</button>
+            <button id="resetHandleBtn" class="btn">重置全选</button>
+        </div>
+        <button id="clearRegionBtn" class="btn">清除选区</button>
+    </div>
+
+    <div class="transport-bar">
+        <button id="playPauseBtn" class="play-pause-btn">▶ 播放</button>
+        <div class="quality-info" id="durationInfo" style="color:var(--text-primary);">时长: --:--</div>
+    </div>
+
+    <div class="gain-section">
+        <div class="gain-control">
+            <span>音量增益 (实时自动应用)</span>
+            <input type="range" id="gainSlider" min="0" max="2" step="0.01" value="1.0">
+            <span id="gainValue" style="color:var(--text-primary);">1.00x</span>
+            <span class="auto-badge">⚡ 自动重载</span>
+            <span id="gainStatus" class="status-badge">就绪</span>
+        </div>
+    </div>
+
+    <div class="export-section">
+        <div class="format-selector">
+            <span>📀 格式</span>
+            <select id="exportFormat">
+                <option value="mp3">MP3 (192kbps)</option>
+                <option value="wav">WAV 无损</option>
+            </select>
+        </div>
+        <div class="format-selector">
+            <span>⚡ 质量</span>
+            <select id="exportQuality">
+                <option value="128">128kbps</option>
+                <option value="192" selected>192kbps ~适中</option>
+                <option value="320">320kbps 高质</option>
+            </select>
+        </div>
+        <button id="saveExportBtn" class="save-btn">💾 保存剪辑</button>
+    </div>
+
+    <div id="errorMsg" class="error-msg"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<script>
+    // ======================= 核心变量 =======================
+    let audioContext = null;
+    let originalBuffer = null;
+    let workingBuffer = null;       // 经过增益处理的缓冲区
+    let sourceNode = null;
+    let isPlaying = false;
+    let currentFileName = "未加载";
+    let currentAudioBlob = null;
+    let audioDuration = 0;
+    let waveformData = [];
+    let canvas = null, ctx = null;
+    let selectionStart = 0, selectionEnd = 0;
+    let currentGain = 1.0;
+    let isApplyingGain = false;      // 防抖标志
+    let gainApplyTimer = null;
+
+    let handleLeft, handleRight, selectionOverlay;
+    let activeHandle = null;
+    let rafPending = false;
+    let pendingUpdate = { start: null, end: null };
+
+    // 主题
+    const THEME_KEY = "audio_editor_auto_gain";
+    function setTheme(theme) {
+        if (theme === 'dark') document.body.classList.add('dark');
+        else document.body.classList.remove('dark');
+        localStorage.setItem(THEME_KEY, theme);
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            if (btn.getAttribute('data-theme') === theme) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        drawWaveform();
+        updateUI();
+        drawRuler();
+    }
+    function loadTheme() { setTheme(localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'); }
+
+    // ========== 核心功能：彻底停止播放并清理 (修复混音关键) ==========
+    function stopPlaybackAndReset() {
+        if (sourceNode) {
+            try {
+                sourceNode.onended = null;
+                sourceNode.stop();
+            } catch(e) { /* 忽略 */ }
+            sourceNode.disconnect();
+            sourceNode = null;
+        }
+        if (audioContext && audioContext.state === 'running') {
+            audioContext.suspend().catch(e => console.warn);
+        }
+        isPlaying = false;
+        const btn = document.getElementById('playPauseBtn');
+        if (btn) btn.innerHTML = '▶ 播放';
+    }
+
+    function fullStopAndReset() {
+        stopPlaybackAndReset();
+    }
+
+    function showError(msg) {
+        const d = document.getElementById('errorMsg');
+        d.innerText = msg;
+        setTimeout(() => { if(d.innerText === msg) d.innerText = ''; }, 4000);
+    }
+    function showInfo(msg) { document.getElementById('fileNameDisplay').innerHTML = msg; }
+    function formatTime(sec) {
+        if(isNaN(sec) || sec === undefined) return "00:00.00";
+        const m = Math.floor(sec/60);
+        const s = (sec%60).toFixed(2);
+        return `${m.toString().padStart(2,'0')}:${s.toString().padStart(5,'0')}`;
+    }
+
+    function updateTimeDisplay() {
+        document.getElementById('timeDisplay').innerHTML = `${formatTime(selectionStart)} → ${formatTime(selectionEnd)} / 全长 ${formatTime(audioDuration)}`;
+        document.getElementById('startHandle').value = selectionStart.toFixed(2);
+        document.getElementById('endHandle').value = selectionEnd.toFixed(2);
+        document.getElementById('durationInfo').innerHTML = `时长: ${formatTime(audioDuration)}`;
+    }
+
+    function updateUI() {
+        if (!audioDuration || audioDuration <= 0) return;
+        const leftPct = (selectionStart / audioDuration) * 100;
+        const rightPct = (selectionEnd / audioDuration) * 100;
+        const widthPct = rightPct - leftPct;
+        if (selectionOverlay) {
+            selectionOverlay.style.left = `${leftPct}%`;
+            selectionOverlay.style.width = `${Math.max(0, widthPct)}%`;
+        }
+        if (handleLeft && handleRight) {
+            handleLeft.style.left = `${leftPct}%`;
+            handleRight.style.left = `${rightPct}%`;
+        }
+    }
+
+    function scheduleUpdate(start, end) {
+        pendingUpdate.start = start;
+        pendingUpdate.end = end;
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => {
+                if (pendingUpdate.start !== null && pendingUpdate.end !== null) {
+                    selectionStart = pendingUpdate.start;
+                    selectionEnd = pendingUpdate.end;
+                    pendingUpdate.start = null;
+                    pendingUpdate.end = null;
+                    updateTimeDisplay();
+                    drawWaveform();
+                    updateUI();
+                }
+                rafPending = false;
+            });
+        }
+    }
+
+    function drawWaveform() {
+        if (!canvas || !ctx) return;
+        if (!workingBuffer || !waveformData.length) {
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-wave');
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            return;
+        }
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-wave');
+        ctx.fillRect(0, 0, w, h);
+        const barWidth = w / waveformData.length;
+        const halfH = h / 2;
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--wave-color');
+        for (let i = 0; i < waveformData.length; i++) {
+            let amp = waveformData[i] * halfH;
+            amp = Math.min(halfH, amp);
+            ctx.fillRect(i * barWidth, halfH - amp, Math.max(1, barWidth - 0.5), amp * 2);
+        }
+        if (selectionEnd > selectionStart && audioDuration > 0) {
+            const startX = (selectionStart / audioDuration) * w;
+            const endX = (selectionEnd / audioDuration) * w;
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--accent') + '33';
+            ctx.fillRect(startX, 0, endX - startX, h);
+            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--accent');
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(startX, 0, endX - startX, h);
+        }
+    }
+
+    function computeWaveform(buffer, samples = 850) {
+        const data = buffer.getChannelData(0);
+        const step = Math.max(1, Math.floor(data.length / samples));
+        const peaks = [];
+        for (let i = 0; i < samples; i++) {
+            let sum = 0, cnt = 0;
+            for (let j = 0; j < step && (i*step + j) < data.length; j++) { sum += Math.abs(data[i*step + j]); cnt++; }
+            peaks.push(Math.min(1.0, (sum / cnt) * 1.6));
+        }
+        return peaks;
+    }
+
+    function drawRuler() {
+        if (!audioDuration || audioDuration <= 0) return;
+        const container = document.getElementById('rulerMarkers');
+        const markers = [];
+        for (let t = 0; t <= audioDuration; t += 15) {
+            const percent = (t / audioDuration) * 100;
+            const mins = Math.floor(t / 60);
+            const secs = Math.floor(t % 60);
+            markers.push(`<div style="position:absolute; left:${percent}%; transform:translateX(-50%); font-size:9px; top:0; color:var(--ruler-color);">${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}</div>`);
+        }
+        container.innerHTML = markers.join('');
+    }
+
+    async function applyGainToBuffer(buffer, gain) {
+        const offline = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+        const src = offline.createBufferSource();
+        src.buffer = buffer;
+        const gainNode = offline.createGain();
+        gainNode.gain.value = gain;
+        src.connect(gainNode);
+        gainNode.connect(offline.destination);
+        src.start();
+        return await offline.startRendering();
+    }
+
+    // 核心：自动应用增益，带防抖和状态提示
+    async function autoApplyGain(gainValue) {
+        if (!originalBuffer) return;
+        if (isApplyingGain) return;
+
+        isApplyingGain = true;
+        const statusSpan = document.getElementById('gainStatus');
+        statusSpan.innerText = '⏳ 应用增益中...';
+        statusSpan.style.color = 'var(--accent)';
+
+        try {
+            fullStopAndReset();  // 停止任何播放
+
+            // 应用增益到新缓冲区
+            const newBuffer = await applyGainToBuffer(originalBuffer, gainValue);
+            workingBuffer = newBuffer;
+            currentGain = gainValue;
+            audioDuration = workingBuffer.duration;
+
+            // 保持选区比例，但确保选区不超出范围
+            let newStart = Math.min(selectionStart, audioDuration);
+            let newEnd = Math.min(selectionEnd, audioDuration);
+            if (newEnd <= newStart) {
+                newStart = 0;
+                newEnd = audioDuration;
+            }
+            selectionStart = newStart;
+            selectionEnd = newEnd;
+
+            // 更新波形
+            waveformData = computeWaveform(workingBuffer, 900);
+            resizeCanvas();
+            drawWaveform();
+            drawRuler();
+            updateTimeDisplay();
+            updateUI();
+
+            statusSpan.innerText = '✅ 已应用';
+            setTimeout(() => { if(statusSpan.innerText === '✅ 已应用') statusSpan.innerText = '就绪'; }, 1500);
+        } catch (err) {
+            console.error(err);
+            statusSpan.innerText = '❌ 失败';
+            setTimeout(() => { if(statusSpan.innerText === '❌ 失败') statusSpan.innerText = '就绪'; }, 2000);
+        } finally {
+            isApplyingGain = false;
+        }
+    }
+
+    // 延迟自动应用（滑块拖动时仅停止播放，松开后生效）
+    let gainSliderTimeout = null;
+    function scheduleAutoApply(gain) {
+        if (gainSliderTimeout) clearTimeout(gainSliderTimeout);
+        // 立即停止播放，避免干扰
+        if (isPlaying) fullStopAndReset();
+        const statusSpan = document.getElementById('gainStatus');
+        statusSpan.innerText = '⏳ 等待松开...';
+        gainSliderTimeout = setTimeout(() => {
+            autoApplyGain(gain);
+            gainSliderTimeout = null;
+        }, 180);
+    }
+
+    async function loadAudio(file) {
+        if (!file || !file.type.startsWith('audio/')) { showError('请选择音频文件'); return; }
+        currentFileName = file.name;
+        showInfo(`加载中...`);
+        try {
+            fullStopAndReset();
+            if (audioContext) {
+                await audioContext.close();
+                audioContext = null;
+            }
+            const blob = file.slice(0, file.size, file.type);
+            currentAudioBlob = blob;
+            const arrayBuffer = await blob.arrayBuffer();
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const decoded = await audioContext.decodeAudioData(arrayBuffer);
+            originalBuffer = decoded;
+            currentGain = 1.0;
+            document.getElementById('gainSlider').value = '1.0';
+            document.getElementById('gainValue').innerText = '1.00x';
+            workingBuffer = await applyGainToBuffer(originalBuffer, 1.0);
+            audioDuration = workingBuffer.duration;
+            waveformData = computeWaveform(workingBuffer, 900);
+            resizeCanvas();
+            drawWaveform();
+            drawRuler();
+            selectionStart = 0;
+            selectionEnd = audioDuration;
+            updateTimeDisplay();
+            updateUI();
+            showInfo(`✅ ${currentFileName}  ${Math.floor(audioDuration/60)}:${Math.floor(audioDuration%60).toString().padStart(2,'0')}`);
+            document.getElementById('gainStatus').innerText = '就绪';
+            if (audioContext.state === 'suspended') await audioContext.resume();
+        } catch(e) { showError('解码失败: '+e.message); }
+    }
+
+    // 播放选区 —— 完全阻止混音
+    function playSelection() {
+        if (!workingBuffer) { showError('无音频'); return; }
+        fullStopAndReset();  // 关键：完全清除旧播放
+
+        let start = selectionStart, end = selectionEnd;
+        if (end <= start) { start = 0; end = audioDuration; }
+
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === 'suspended') {
+            audioContext.resume().catch(e => console.warn);
+        }
+
+        sourceNode = audioContext.createBufferSource();
+        sourceNode.buffer = workingBuffer;
+        sourceNode.connect(audioContext.destination);
+        sourceNode.start(0, start, end - start);
+        isPlaying = true;
+
+        const thisNode = sourceNode;
+        sourceNode.onended = () => {
+            if (sourceNode === thisNode) {
+                isPlaying = false;
+                const btn = document.getElementById('playPauseBtn');
+                if (btn) btn.innerHTML = '▶ 播放';
+                sourceNode = null;
+            }
+        };
+
+        const btn = document.getElementById('playPauseBtn');
+        if (btn) btn.innerHTML = '⏸ 暂停';
+    }
+
+    function togglePlayPause() {
+        if (!workingBuffer) { showError('请先加载音频'); return; }
+        if (isPlaying) {
+            fullStopAndReset();
+        } else {
+            playSelection();
+        }
+    }
+
+    async function exportClip() {
+        if (!workingBuffer) { showError('无音频'); return; }
+        fullStopAndReset();
+        let start = selectionStart, end = selectionEnd;
+        if (end <= start) { showError('请拖拽手柄选择有效区域'); return; }
+        const sampleRate = workingBuffer.sampleRate;
+        const offline = new OfflineAudioContext(workingBuffer.numberOfChannels, Math.floor((end - start) * sampleRate), sampleRate);
+        const src = offline.createBufferSource();
+        src.buffer = workingBuffer;
+        src.connect(offline.destination);
+        src.start(0, start, end - start);
+        const rendered = await offline.startRendering();
+        const format = document.getElementById('exportFormat').value;
+        const quality = parseInt(document.getElementById('exportQuality').value);
+        if (format === 'wav') downloadBlob(audioBufferToWav(rendered), `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.wav`);
+        else {
+            const mp3 = await encodeMp3(rendered, quality);
+            downloadBlob(mp3, `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.mp3`);
+        }
+        showError('✅ 导出成功');
+    }
+
+    function encodeMp3(audioBuffer, bitrate) {
+        return new Promise((resolve) => {
+            const ch = audioBuffer.numberOfChannels;
+            const sr = audioBuffer.sampleRate;
+            const left = audioBuffer.getChannelData(0);
+            const right = ch > 1 ? audioBuffer.getChannelData(1) : left;
+            const encoder = new lamejs.Mp3Encoder(ch, sr, bitrate);
+            const mp3Data = [];
+            const block = 1152;
+            for (let i = 0; i < left.length; i += block) {
+                const leftChunk = left.subarray(i, i+block);
+                const rightChunk = right.subarray(i, i+block);
+                const buf = encoder.encodeBuffer(leftChunk, rightChunk);
+                if(buf.length) mp3Data.push(buf);
+            }
+            const end = encoder.flush();
+            if(end.length) mp3Data.push(end);
+            resolve(new Blob(mp3Data, { type: 'audio/mp3' }));
+        });
+    }
+
+    function audioBufferToWav(buffer) {
+        const ch=buffer.numberOfChannels, sr=buffer.sampleRate, samples=buffer.getChannelData(0).length;
+        const dataLen = samples * ch * 2;
+        const buf = new ArrayBuffer(44+dataLen);
+        const view = new DataView(buf);
+        const write=(o,s)=>{for(let i=0;i<s.length;i++) view.setUint8(o+i,s.charCodeAt(i));};
+        write(0,'RIFF'); view.setUint32(4,buf.byteLength-8,true); write(8,'WAVE'); write(12,'fmt ');
+        view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,ch,true);
+        view.setUint32(24,sr,true); view.setUint32(28,sr*ch*2,true); view.setUint16(32,ch*2,true);
+        view.setUint16(34,16,true); write(36,'data'); view.setUint32(40,dataLen,true);
+        let offset=44;
+        for(let i=0;i<samples;i++) for(let c=0;c<ch;c++){ let s=buffer.getChannelData(c)[i]; s=Math.max(-1,Math.min(1,s)); const int=s<0?s*0x8000:s*0x7FFF; view.setInt16(offset,int,true); offset+=2; }
+        return new Blob([view],{type:'audio/wav'});
+    }
+    function downloadBlob(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+
+    function resizeCanvas() {
+        canvas = document.getElementById('waveformCanvas');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.max(rect.width, 600) || 1200;
+        canvas.height = 170;
+        ctx = canvas.getContext('2d');
+        drawWaveform();
+    }
+    window.addEventListener('resize', () => { resizeCanvas(); drawWaveform(); updateUI(); drawRuler(); });
+
+    function initHandles() {
+        handleLeft = document.getElementById('handleLeft');
+        handleRight = document.getElementById('handleRight');
+        selectionOverlay = document.getElementById('selectionOverlay');
+
+        const getTimeFromMouse = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            let x = (e.clientX - rect.left) / rect.width;
+            x = Math.min(1, Math.max(0, x));
+            return x * audioDuration;
+        };
+
+        const onDrag = (e) => {
+            if (!activeHandle || !audioDuration) return;
+            e.preventDefault();
+            if (isPlaying) fullStopAndReset();
+            const time = getTimeFromMouse(e);
+            let newStart = selectionStart, newEnd = selectionEnd;
+            if (activeHandle === 'left') {
+                newStart = Math.min(time, newEnd - 0.01);
+                newStart = Math.max(0, newStart);
+            } else if (activeHandle === 'right') {
+                newEnd = Math.max(time, newStart + 0.01);
+                newEnd = Math.min(audioDuration, newEnd);
+            }
+            if (newEnd - newStart < 0.01) {
+                if (activeHandle === 'left') newStart = Math.max(0, newEnd - 0.01);
+                else newEnd = Math.min(audioDuration, newStart + 0.01);
+            }
+            scheduleUpdate(newStart, newEnd);
+        };
+        const onUp = () => { activeHandle = null; };
+        handleLeft.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'left'; if (isPlaying) fullStopAndReset(); });
+        handleRight.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'right'; if (isPlaying) fullStopAndReset(); });
+        window.addEventListener('mousemove', onDrag);
+        window.addEventListener('mouseup', onUp);
+    }
+
+    function bindEvents() {
+        document.getElementById('uploadBtn').onclick = () => document.getElementById('audioFileInput').click();
+        document.getElementById('audioFileInput').onchange = (e) => { if(e.target.files.length) loadAudio(e.target.files[0]); };
+        document.getElementById('playPauseBtn').onclick = togglePlayPause;
+        document.getElementById('saveExportBtn').onclick = exportClip;
+
+        document.getElementById('applyHandleBtn').onclick = () => {
+            fullStopAndReset();
+            let s = parseFloat(document.getElementById('startHandle').value);
+            let e = parseFloat(document.getElementById('endHandle').value);
+            if(isNaN(s)) s=0; if(isNaN(e)) e=audioDuration;
+            s = Math.max(0, Math.min(audioDuration, s));
+            e = Math.max(s, Math.min(audioDuration, e));
+            selectionStart = s; selectionEnd = e;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+        };
+        document.getElementById('resetHandleBtn').onclick = () => {
+            fullStopAndReset();
+            selectionStart = 0; selectionEnd = audioDuration;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+        };
+        document.getElementById('clearRegionBtn').onclick = () => {
+            fullStopAndReset();
+            selectionStart = 0; selectionEnd = audioDuration;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+        };
+
+        const startInput = document.getElementById('startHandle');
+        const endInput = document.getElementById('endHandle');
+        startInput.addEventListener('change', () => {
+            fullStopAndReset();
+            let s = parseFloat(startInput.value);
+            s = Math.max(0, Math.min(audioDuration, isNaN(s) ? selectionStart : s));
+            if (s < selectionEnd) selectionStart = s;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+        });
+        endInput.addEventListener('change', () => {
+            fullStopAndReset();
+            let e = parseFloat(endInput.value);
+            e = Math.max(selectionStart, Math.min(audioDuration, isNaN(e) ? selectionEnd : e));
+            selectionEnd = e;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+        });
+
+        // 音量控制：实时显示数值，松开时自动应用（无按钮）
+        const gainSlider = document.getElementById('gainSlider');
+        const gainValSpan = document.getElementById('gainValue');
+        gainSlider.oninput = () => {
+            const val = parseFloat(gainSlider.value);
+            gainValSpan.innerText = val.toFixed(2) + 'x';
+            scheduleAutoApply(val);
+        };
+        // 初始无动作
+        document.querySelectorAll('.theme-btn').forEach(btn => btn.onclick = () => setTheme(btn.getAttribute('data-theme')));
+    }
+
+    async function init() {
+        loadTheme();
+        bindEvents();
+        resizeCanvas();
+        initHandles();
+        showInfo('就绪 | 音量滑块松开即自动应用增益，播放不会混音');
+    }
+    init();
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault(); });
+</script>
+</body>
+</html>

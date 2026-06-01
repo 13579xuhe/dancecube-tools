@@ -86,107 +86,42 @@
         .amap-info-sharp { display: none !important; }
         .amap-info-close { display: none !important; }
 
+        /* 权限被拒绝后的提示条 */
+        .permission-denied-tip {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: rgba(220, 38, 38, 0.9);
+            backdrop-filter: blur(12px);
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 200;
+            border-left: 4px solid #ff6b6b;
+            font-weight: 500;
+        }
+        .permission-denied-tip button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        .permission-denied-tip button:hover { background: rgba(255,255,255,0.3); }
+
         @media (max-width: 768px) {
             .pc-layout { display: none; }
             .mobile-layout { display: flex; }
-        }
-
-        /* 新增权限请求弹窗样式 - 优雅科技感 */
-        .permission-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-            animation: fadeIn 0.25s ease-out;
-        }
-        .permission-modal-card {
-            background: linear-gradient(145deg, #12162b 0%, #0a0e1c 100%);
-            border-radius: 32px;
-            width: 320px;
-            max-width: 85vw;
-            padding: 28px 24px 32px;
-            text-align: center;
-            border: 1px solid rgba(100, 120, 200, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(124, 142, 224, 0.2);
-            animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .permission-modal-icon {
-            font-size: 56px;
-            color: #7c8ee0;
-            margin-bottom: 16px;
-            background: rgba(124, 142, 224, 0.15);
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 0 15px rgba(124, 142, 224, 0.3);
-        }
-        .permission-modal-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #eef2ff, #b4c4ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 12px;
-        }
-        .permission-modal-desc {
-            font-size: 0.85rem;
-            color: #b9c3e8;
-            line-height: 1.45;
-            margin-bottom: 28px;
-            padding: 0 8px;
-        }
-        .permission-modal-buttons {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-        }
-        .permission-btn {
-            flex: 1;
-            padding: 12px 0;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
-            border: none;
-            background: rgba(30, 40, 80, 0.8);
-            color: #ccd6ff;
-            backdrop-filter: blur(4px);
-        }
-        .permission-btn-primary {
-            background: linear-gradient(95deg, #4b5fc5, #3b4b9e);
-            color: white;
-            box-shadow: 0 2px 12px rgba(59, 75, 158, 0.4);
-        }
-        .permission-btn-primary:hover {
-            transform: scale(0.98);
-            background: linear-gradient(95deg, #5c6fd9, #4a5db5);
-        }
-        .permission-btn-secondary {
-            border: 1px solid #4a5b9e;
-            background: rgba(10, 14, 28, 0.8);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            .permission-denied-tip { bottom: 100px; left: 16px; right: 16px; }
         }
     </style>
 </head>
@@ -281,73 +216,107 @@
         return null;
     }
 
-    // 新增：显示权限请求弹窗（仅首次加载时展示，优雅请求定位）
-    function showLocationPermissionModal(onGrant, onDeny) {
-        const modalDiv = document.createElement('div');
-        modalDiv.className = 'permission-modal-overlay';
-        modalDiv.innerHTML = `
-            <div class="permission-modal-card">
-                <div class="permission-modal-icon">
-                    <i class="fas fa-location-dot"></i>
-                </div>
-                <div class="permission-modal-title">开启位置服务</div>
-                <div class="permission-modal-desc">
-                    舞立方地图需要获取你的地理位置，以便自动定位到你所在的城市，展示附近的机台分布。<br><span style="font-size:0.7rem; opacity:0.7;">我们不会记录你的精确位置，仅用于机台查询。</span>
-                </div>
-                <div class="permission-modal-buttons">
-                    <button class="permission-btn permission-btn-primary" id="permissionAllowBtn"><i class="fas fa-check-circle"></i> 允许定位</button>
-                    <button class="permission-btn permission-btn-secondary" id="permissionDenyBtn"><i class="fas fa-ban"></i> 暂不</button>
-                </div>
-            </div>
+    // 显示权限被拒绝的提示（引导用户手动开启）
+    function showPermissionDeniedTip(type) {
+        const existingTip = document.querySelector('.permission-denied-tip');
+        if (existingTip) existingTip.remove();
+
+        const tip = document.createElement('div');
+        tip.className = 'permission-denied-tip';
+        tip.innerHTML = `
+            <span><i class="fas fa-exclamation-triangle"></i> 定位权限被拒绝，无法自动定位到您所在城市</span>
+            <button id="closeTipBtn">知道了</button>
         `;
-        document.body.appendChild(modalDiv);
-        const allowBtn = modalDiv.querySelector('#permissionAllowBtn');
-        const denyBtn = modalDiv.querySelector('#permissionDenyBtn');
-        const removeModal = () => modalDiv.remove();
-        allowBtn.addEventListener('click', () => { removeModal(); if(onGrant) onGrant(); });
-        denyBtn.addEventListener('click', () => { removeModal(); if(onDeny) onDeny(); });
+        document.body.appendChild(tip);
+        document.getElementById('closeTipBtn').addEventListener('click', () => tip.remove());
+        setTimeout(() => { if(tip) tip.remove(); }, 8000);
     }
 
-    async function getCityByGPSWithModal() {
+    // 通过GPS获取城市（直接调用浏览器原生定位）
+    async function getCityByGPS() {
         return new Promise((resolve) => {
             if (!navigator.geolocation) {
                 console.log("浏览器不支持GPS");
                 resolve(null);
                 return;
             }
+
+            // 显示loading
+            const loadingDiv = document.getElementById('loadingOverlay');
+            if(loadingDiv) loadingDiv.style.display = 'flex';
+            document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
+            document.querySelector('.loading-sub').innerHTML = '请在弹出的浏览器窗口中点击"允许"';
+
+            // 直接调用浏览器原生定位API - 这会触发浏览器原生权限弹窗
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     const { longitude, latitude } = pos.coords;
                     console.log('✅ GPS获取坐标成功:', longitude, latitude);
+
+                    // 隐藏loading
+                    if(loadingDiv) loadingDiv.style.display = 'none';
+
+                    // 方法1：根据坐标范围直接匹配城市
                     const coordCity = getCityByCoordinates(longitude, latitude);
                     if (coordCity) {
+                        console.log('🎯 坐标匹配城市成功:', coordCity);
                         resolve(coordCity);
                         return;
                     }
+
+                    // 方法2：高德逆地理编码
                     try {
                         const url = `https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=${longitude},${latitude}&key=${AMAP_KEY}&radius=200&extensions=base`;
                         const resp = await fetch(url);
                         const data = await resp.json();
+                        console.log('逆地理编码返回:', data);
+
                         if (data.status === '1' && data.regeocode) {
                             const addr = data.regeocode.addressComponent;
                             let city = addr.city;
                             if (!city || city === '[]') city = addr.district;
                             if (!city || city === '[]') city = addr.province;
+
                             if (city && city !== '[]') {
                                 if (city === '吉林省' || city === '吉林') {
-                                    if (longitude >= 126.3 && longitude <= 126.9 && latitude >= 43.6 && latitude <= 44.0) resolve("吉林市");
-                                    else resolve("长春市");
-                                    return;
+                                    if (longitude >= 126.3 && longitude <= 126.9 && latitude >= 43.6 && latitude <= 44.0) {
+                                        resolve("吉林市");
+                                        return;
+                                    } else {
+                                        resolve("长春市");
+                                        return;
+                                    }
                                 }
                                 const normalized = normalizeCityName(city);
-                                if (normalized) { resolve(normalized); return; }
+                                if (normalized) {
+                                    resolve(normalized);
+                                    return;
+                                }
                             }
                         }
                         resolve(null);
-                    } catch(e) { console.error(e); resolve(null); }
+                    } catch(e) {
+                        console.error('逆地理编码错误:', e);
+                        resolve(null);
+                    }
                 },
                 (err) => {
                     console.error('GPS定位失败:', err.code, err.message);
+                    if(loadingDiv) loadingDiv.style.display = 'none';
+
+                    // 用户拒绝权限时显示友好提示
+                    if (err.code === 1) {
+                        showPermissionDeniedTip();
+                    }
+
+                    let errorMsg = '';
+                    switch(err.code) {
+                        case 1: errorMsg = '您拒绝了地理位置权限'; break;
+                        case 2: errorMsg = '无法获取位置，请检查GPS开关'; break;
+                        case 3: errorMsg = '定位超时，请检查网络后重试'; break;
+                        default: errorMsg = err.message;
+                    }
+                    document.querySelector('.loading-sub').innerHTML = `定位失败：${errorMsg}`;
                     resolve(null);
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -355,47 +324,43 @@
         });
     }
 
+    // IP定位（备用）
     async function getCityByIP() {
         try {
             const ipResponse = await fetch('https://restapi.amap.com/v3/ip?key=' + AMAP_KEY);
             const ipData = await ipResponse.json();
+            console.log('IP定位结果:', ipData);
             if (ipData.status === '1' && ipData.city && ipData.city !== '[]') {
                 const mappedCity = normalizeCityName(ipData.city);
                 if (mappedCity) return mappedCity;
             }
-        } catch (e) { console.log('IP定位失败:', e); }
+        } catch (e) {
+            console.log('IP定位失败:', e);
+        }
         return "北京市";
     }
 
-    // 主定位函数（含弹窗逻辑，只请求一次）
-    let permissionAsked = false;
-    async function getAccurateCityWithPermission() {
-        return new Promise(async (resolve) => {
-            if (!permissionAsked) {
-                permissionAsked = true;
-                showLocationPermissionModal(
-                    async () => {
-                        // 用户允许
-                        const gpsCity = await getCityByGPSWithModal();
-                        if (gpsCity) {
-                            resolve(gpsCity);
-                        } else {
-                            const ipCity = await getCityByIP();
-                            resolve(ipCity);
-                        }
-                    },
-                    async () => {
-                        // 用户拒绝 -> 直接IP定位
-                        const ipCity = await getCityByIP();
-                        resolve(ipCity);
-                    }
-                );
-            } else {
-                const gpsCity = await getCityByGPSWithModal();
-                if (gpsCity) resolve(gpsCity);
-                else resolve(await getCityByIP());
-            }
-        });
+    // 主定位函数：优先GPS，失败则IP备用
+    async function getAccurateCity() {
+        const loadingDiv = document.getElementById('loadingOverlay');
+        if(loadingDiv) loadingDiv.style.display = 'flex';
+        document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
+        document.querySelector('.loading-sub').innerHTML = '请在弹出的浏览器窗口中点击"允许"';
+
+        const gpsCity = await getCityByGPS();
+        if (gpsCity) {
+            console.log('🎯 GPS定位成功:', gpsCity);
+            if(loadingDiv) loadingDiv.style.display = 'none';
+            return gpsCity;
+        }
+
+        // GPS失败或用户拒绝，使用IP定位作为备用
+        console.log('⚠️ GPS定位失败，使用IP备用定位');
+        document.querySelector('.loading-text').innerHTML = 'GPS定位未成功，使用网络定位...';
+        const ipCity = await getCityByIP();
+        console.log('📍 IP备用定位:', ipCity);
+        if(loadingDiv) loadingDiv.style.display = 'none';
+        return ipCity;
     }
 
     document.addEventListener('DOMContentLoaded', async function() {
@@ -452,6 +417,7 @@
                     if (!isOnline) content = `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:6px 12px;font-size:11px;border-radius:30px;white-space:nowrap;cursor:pointer;"><i class="fas fa-bed"></i> ${shortName}</div>`;
                     else if (isShow) content = `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(168,85,247,0.6);white-space:nowrap;cursor:pointer;"><i class="fas fa-star-of-life"></i> ${shortName}</div>`;
                     else content = `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(59,130,246,0.6);white-space:nowrap;cursor:pointer;"><i class="fas fa-music"></i> ${shortName}</div>`;
+
                     const marker = new AMap.Marker({ position: [cab.lng, cab.lat], content: content, offset: new AMap.Pixel(0, -20) });
                     marker.on('click', () => {
                         const isOnline2 = cab.status === 'active';
@@ -476,14 +442,11 @@
         window.closePcInfoWindow = () => pcInfoWindow?.close();
 
         async function pcDoLocate() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
             pcInfoWindow?.close();
-            const city = await getAccurateCityWithPermission();
+            const city = await getAccurateCity();
             document.getElementById('pcCurrentCity').innerText = city;
             document.getElementById('pcLocationTip').style.display = 'block';
             await pcLoadCityMachines(city);
-            document.getElementById('loadingOverlay').style.display = 'none';
             setTimeout(() => { const tip = document.getElementById('pcLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
@@ -524,7 +487,11 @@
                     const isOnline = cab.status === 'active';
                     const isShow = cab.machineType === 1;
                     const shortName = cab.name.length > 8 ? cab.name.slice(0, 8) + '..' : cab.name;
-                    let content = !isOnline ? `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:4px 10px;font-size:10px;border-radius:25px;"><i class="fas fa-bed"></i> ${shortName}</div>` : (isShow ? `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:4px 12px;font-size:10px;border-radius:25px;"><i class="fas fa-star-of-life"></i> ${shortName}</div>` : `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:4px 12px;font-size:10px;border-radius:25px;"><i class="fas fa-music"></i> ${shortName}</div>`);
+                    let content = '';
+                    if (!isOnline) content = `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:4px 10px;font-size:10px;border-radius:25px;white-space:nowrap;"><i class="fas fa-bed"></i> ${shortName}</div>`;
+                    else if (isShow) content = `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 10px rgba(168,85,247,0.5);white-space:nowrap;"><i class="fas fa-star-of-life"></i> ${shortName}</div>`;
+                    else content = `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 8px rgba(59,130,246,0.4);white-space:nowrap;"><i class="fas fa-music"></i> ${shortName}</div>`;
+
                     const marker = new AMap.Marker({ position: [cab.lng, cab.lat], content: content, offset: new AMap.Pixel(0, -16) });
                     marker.on('click', () => {
                         const isOnline2 = cab.status === 'active';
@@ -543,17 +510,16 @@
             } catch(e) { document.getElementById('mobilePanelMsg').innerHTML = '加载失败'; }
         }
         window.closeMobileInfoWindow = () => mobileInfoWindow?.close();
+
         async function mobileDoLocate() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
             mobileInfoWindow?.close();
-            const city = await getAccurateCityWithPermission();
+            const city = await getAccurateCity();
             document.getElementById('mobileCurrentCity').innerText = city;
             document.getElementById('mobileLocationTip').style.display = 'block';
             await mobileLoadCityMachines(city);
-            document.getElementById('loadingOverlay').style.display = 'none';
             setTimeout(() => { const tip = document.getElementById('mobileLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
+
         function initMobileMap() {
             mobileMap = new AMap.Map('mobile-map', { center: [116.4074, 39.9042], zoom: 5, viewMode: '2D', resizeEnable: true });
             mobileInfoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30), isCustom: true, autoMove: false });
@@ -574,6 +540,7 @@
             mobileMap.on('click', () => mobileInfoWindow.close());
             mobileMap.on('complete', () => mobileDoLocate());
         }
+
         initPcMap();
         initMobileMap();
     });

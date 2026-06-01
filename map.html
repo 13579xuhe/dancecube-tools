@@ -90,6 +90,104 @@
             .pc-layout { display: none; }
             .mobile-layout { display: flex; }
         }
+
+        /* 新增权限请求弹窗样式 - 优雅科技感 */
+        .permission-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .permission-modal-card {
+            background: linear-gradient(145deg, #12162b 0%, #0a0e1c 100%);
+            border-radius: 32px;
+            width: 320px;
+            max-width: 85vw;
+            padding: 28px 24px 32px;
+            text-align: center;
+            border: 1px solid rgba(100, 120, 200, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(124, 142, 224, 0.2);
+            animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .permission-modal-icon {
+            font-size: 56px;
+            color: #7c8ee0;
+            margin-bottom: 16px;
+            background: rgba(124, 142, 224, 0.15);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 0 15px rgba(124, 142, 224, 0.3);
+        }
+        .permission-modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #eef2ff, #b4c4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+        .permission-modal-desc {
+            font-size: 0.85rem;
+            color: #b9c3e8;
+            line-height: 1.45;
+            margin-bottom: 28px;
+            padding: 0 8px;
+        }
+        .permission-modal-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+        }
+        .permission-btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            background: rgba(30, 40, 80, 0.8);
+            color: #ccd6ff;
+            backdrop-filter: blur(4px);
+        }
+        .permission-btn-primary {
+            background: linear-gradient(95deg, #4b5fc5, #3b4b9e);
+            color: white;
+            box-shadow: 0 2px 12px rgba(59, 75, 158, 0.4);
+        }
+        .permission-btn-primary:hover {
+            transform: scale(0.98);
+            background: linear-gradient(95deg, #5c6fd9, #4a5db5);
+        }
+        .permission-btn-secondary {
+            border: 1px solid #4a5b9e;
+            background: rgba(10, 14, 28, 0.8);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -120,7 +218,7 @@
     <div class="mobile-status-card"><div class="mobile-stats-badge"><span><div class="mobile-dot mobile-dot-green"></div>在线</span><span><div class="mobile-dot mobile-dot-gray"></div>离线</span><span><div class="mobile-dot mobile-dot-purple"></div>秀机</span><span><div class="mobile-dot mobile-dot-blue"></div>普通</span></div><div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div></div>
 </div>
 
-<div id="loadingOverlay" class="loading-overlay" style="display: flex;">
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
     <div class="loading-spinner"></div>
     <div class="loading-text">正在获取您的位置...</div>
     <div class="loading-sub">请允许浏览器获取地理位置权限</div>
@@ -129,27 +227,21 @@
 <script>
     // ======================= 城市名映射表 =======================
     const CITY_NAME_MAPPING = {
-        // 吉林省
         "吉林市": "吉林市", "吉林": "吉林市", "Jilin": "吉林市", "jilin": "吉林市",
         "长春市": "长春市", "长春": "长春市", "Changchun": "长春市", "changchun": "长春市",
         "四平市": "四平市", "辽源市": "辽源市", "通化市": "通化市", "白山市": "白山市",
         "松原市": "松原市", "白城市": "白城市", "延边朝鲜族自治州": "延吉市",
-        // 直辖市
         "北京市": "北京市", "北京": "北京市", "Beijing": "北京市", "beijing": "北京市",
         "上海市": "上海市", "上海": "上海市", "Shanghai": "上海市", "shanghai": "上海市",
         "天津市": "天津市", "天津": "天津市", "Tianjin": "天津市", "tianjin": "天津市",
         "重庆市": "重庆市", "重庆": "重庆市", "Chongqing": "重庆市", "chongqing": "重庆市",
-        // 广东省
         "广州市": "广州市", "广州": "广州市", "Guangzhou": "广州市", "guangzhou": "广州市",
         "深圳市": "深圳市", "深圳": "深圳市", "Shenzhen": "深圳市", "shenzhen": "深圳市",
         "佛山市": "佛山市", "佛山": "佛山市", "Foshan": "佛山市", "foshan": "佛山市",
         "东莞市": "东莞市", "东莞": "东莞市", "Dongguan": "东莞市", "dongguan": "东莞市",
-        // 江苏省
         "南京市": "南京市", "南京": "南京市", "Nanjing": "南京市", "nanjing": "南京市",
         "苏州市": "苏州市", "苏州": "苏州市", "Suzhou": "苏州市", "suzhou": "苏州市",
-        // 浙江省
         "杭州市": "杭州市", "杭州": "杭州市", "Hangzhou": "杭州市", "hangzhou": "杭州市",
-        // 其他省会
         "成都市": "成都市", "成都": "成都市", "Chengdu": "成都市", "chengdu": "成都市",
         "武汉市": "武汉市", "武汉": "武汉市", "Wuhan": "武汉市", "wuhan": "武汉市",
         "西安市": "西安市", "西安": "西安市", "Xian": "西安市", "xian": "西安市",
@@ -179,145 +271,131 @@
 
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
-    // 根据GPS坐标直接匹配城市（不依赖API返回的city字段）
     function getCityByCoordinates(lng, lat) {
-        // 吉林市坐标范围：经度 126.3-126.8，纬度 43.6-44.0
-        if (lng >= 126.3 && lng <= 126.9 && lat >= 43.6 && lat <= 44.0) {
-            return "吉林市";
-        }
-        // 长春市坐标范围
-        if (lng >= 125.1 && lng <= 125.5 && lat >= 43.7 && lat <= 44.0) {
-            return "长春市";
-        }
-        // 北京市坐标范围
-        if (lng >= 116.2 && lng <= 116.5 && lat >= 39.8 && lat <= 40.1) {
-            return "北京市";
-        }
-        // 上海市坐标范围
-        if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.3) {
-            return "上海市";
-        }
-        // 广州市坐标范围
-        if (lng >= 113.2 && lng <= 113.4 && lat >= 23.1 && lat <= 23.2) {
-            return "广州市";
-        }
-        // 深圳市坐标范围
-        if (lng >= 113.8 && lng <= 114.2 && lat >= 22.5 && lat <= 22.6) {
-            return "深圳市";
-        }
+        if (lng >= 126.3 && lng <= 126.9 && lat >= 43.6 && lat <= 44.0) return "吉林市";
+        if (lng >= 125.1 && lng <= 125.5 && lat >= 43.7 && lat <= 44.0) return "长春市";
+        if (lng >= 116.2 && lng <= 116.5 && lat >= 39.8 && lat <= 40.1) return "北京市";
+        if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.3) return "上海市";
+        if (lng >= 113.2 && lng <= 113.4 && lat >= 23.1 && lat <= 23.2) return "广州市";
+        if (lng >= 113.8 && lng <= 114.2 && lat >= 22.5 && lat <= 22.6) return "深圳市";
         return null;
     }
 
-    // GPS定位 + 逆地理编码
-    async function getCityByGPS() {
+    // 新增：显示权限请求弹窗（仅首次加载时展示，优雅请求定位）
+    function showLocationPermissionModal(onGrant, onDeny) {
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'permission-modal-overlay';
+        modalDiv.innerHTML = `
+            <div class="permission-modal-card">
+                <div class="permission-modal-icon">
+                    <i class="fas fa-location-dot"></i>
+                </div>
+                <div class="permission-modal-title">开启位置服务</div>
+                <div class="permission-modal-desc">
+                    舞立方地图需要获取你的地理位置，以便自动定位到你所在的城市，展示附近的机台分布。<br><span style="font-size:0.7rem; opacity:0.7;">我们不会记录你的精确位置，仅用于机台查询。</span>
+                </div>
+                <div class="permission-modal-buttons">
+                    <button class="permission-btn permission-btn-primary" id="permissionAllowBtn"><i class="fas fa-check-circle"></i> 允许定位</button>
+                    <button class="permission-btn permission-btn-secondary" id="permissionDenyBtn"><i class="fas fa-ban"></i> 暂不</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        const allowBtn = modalDiv.querySelector('#permissionAllowBtn');
+        const denyBtn = modalDiv.querySelector('#permissionDenyBtn');
+        const removeModal = () => modalDiv.remove();
+        allowBtn.addEventListener('click', () => { removeModal(); if(onGrant) onGrant(); });
+        denyBtn.addEventListener('click', () => { removeModal(); if(onDeny) onDeny(); });
+    }
+
+    async function getCityByGPSWithModal() {
         return new Promise((resolve) => {
             if (!navigator.geolocation) {
                 console.log("浏览器不支持GPS");
                 resolve(null);
                 return;
             }
-
-            document.querySelector('.loading-sub').innerHTML = '正在获取GPS位置，请允许权限...';
-
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     const { longitude, latitude } = pos.coords;
                     console.log('✅ GPS获取坐标成功:', longitude, latitude);
-
-                    // 方法1：根据坐标范围直接匹配城市
                     const coordCity = getCityByCoordinates(longitude, latitude);
                     if (coordCity) {
-                        console.log('🎯 坐标匹配城市成功:', coordCity);
                         resolve(coordCity);
                         return;
                     }
-
-                    document.querySelector('.loading-sub').innerHTML = 'GPS定位成功，正在获取城市信息...';
-
                     try {
-                        // 方法2：高德逆地理编码
                         const url = `https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=${longitude},${latitude}&key=${AMAP_KEY}&radius=200&extensions=base`;
                         const resp = await fetch(url);
                         const data = await resp.json();
-                        console.log('逆地理编码返回:', data);
-
                         if (data.status === '1' && data.regeocode) {
                             const addr = data.regeocode.addressComponent;
-                            // 优先使用city字段
                             let city = addr.city;
                             if (!city || city === '[]') city = addr.district;
                             if (!city || city === '[]') city = addr.province;
-
-                            console.log('提取的城市名:', city);
-
                             if (city && city !== '[]') {
-                                // 特殊处理：如果city是"吉林省"，返回"长春市"或根据坐标判断
                                 if (city === '吉林省' || city === '吉林') {
-                                    // 根据坐标判断是吉林市还是长春市
-                                    if (longitude >= 126.3 && longitude <= 126.9 && latitude >= 43.6 && latitude <= 44.0) {
-                                        resolve("吉林市");
-                                        return;
-                                    } else {
-                                        resolve("长春市");
-                                        return;
-                                    }
-                                }
-                                const normalized = normalizeCityName(city);
-                                if (normalized) {
-                                    resolve(normalized);
+                                    if (longitude >= 126.3 && longitude <= 126.9 && latitude >= 43.6 && latitude <= 44.0) resolve("吉林市");
+                                    else resolve("长春市");
                                     return;
                                 }
+                                const normalized = normalizeCityName(city);
+                                if (normalized) { resolve(normalized); return; }
                             }
                         }
                         resolve(null);
-                    } catch(e) {
-                        console.error('逆地理编码错误:', e);
-                        resolve(null);
-                    }
+                    } catch(e) { console.error(e); resolve(null); }
                 },
                 (err) => {
                     console.error('GPS定位失败:', err.code, err.message);
-                    let errorMsg = '';
-                    switch(err.code) {
-                        case 1: errorMsg = '用户拒绝了地理位置权限'; break;
-                        case 2: errorMsg = '无法获取位置，请检查GPS开关'; break;
-                        case 3: errorMsg = '定位超时，请检查网络后重试'; break;
-                        default: errorMsg = err.message;
-                    }
-                    document.querySelector('.loading-sub').innerHTML = `GPS失败：${errorMsg}`;
                     resolve(null);
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
         });
     }
 
-    // IP定位（备用）
     async function getCityByIP() {
         try {
             const ipResponse = await fetch('https://restapi.amap.com/v3/ip?key=' + AMAP_KEY);
             const ipData = await ipResponse.json();
-            console.log('IP定位结果:', ipData);
             if (ipData.status === '1' && ipData.city && ipData.city !== '[]') {
                 const mappedCity = normalizeCityName(ipData.city);
                 if (mappedCity) return mappedCity;
             }
-        } catch (e) {
-            console.log('IP定位失败:', e);
-        }
+        } catch (e) { console.log('IP定位失败:', e); }
         return "北京市";
     }
 
-    // 主定位函数
-    async function getAccurateCity() {
-        const gpsCity = await getCityByGPS();
-        if (gpsCity) {
-            console.log('🎯 GPS定位成功:', gpsCity);
-            return gpsCity;
-        }
-        const ipCity = await getCityByIP();
-        console.log('📍 IP备用定位:', ipCity);
-        return ipCity;
+    // 主定位函数（含弹窗逻辑，只请求一次）
+    let permissionAsked = false;
+    async function getAccurateCityWithPermission() {
+        return new Promise(async (resolve) => {
+            if (!permissionAsked) {
+                permissionAsked = true;
+                showLocationPermissionModal(
+                    async () => {
+                        // 用户允许
+                        const gpsCity = await getCityByGPSWithModal();
+                        if (gpsCity) {
+                            resolve(gpsCity);
+                        } else {
+                            const ipCity = await getCityByIP();
+                            resolve(ipCity);
+                        }
+                    },
+                    async () => {
+                        // 用户拒绝 -> 直接IP定位
+                        const ipCity = await getCityByIP();
+                        resolve(ipCity);
+                    }
+                );
+            } else {
+                const gpsCity = await getCityByGPSWithModal();
+                if (gpsCity) resolve(gpsCity);
+                else resolve(await getCityByIP());
+            }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', async function() {
@@ -337,7 +415,6 @@
         const loadCabinetsDataByCity = window.loadCabinetsDataByCity;
         const provinceList = Object.keys(provincesCities).sort();
 
-        // ========== 设置下拉框 ==========
         async function setDropdownByCity(cityName, type) {
             for (let [province, cities] of Object.entries(provincesCities)) {
                 if (cities.includes(cityName)) {
@@ -349,24 +426,18 @@
                     (provincesCities[province] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
                     await new Promise(r => setTimeout(r, 50));
                     citySelect.value = cityName;
-                    console.log(`✅ ${type}下拉框设置成功: ${province} - ${cityName}`);
                     return true;
                 }
             }
             return false;
         }
 
-        // ========== 电脑版 ==========
         let pcMap, pcMarkers = [], pcInfoWindow = null;
-
         async function pcLoadCityMachines(cityName) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
-            if (!coords) {
-                document.getElementById('pcPanelMsg').innerHTML = `未找到 ${finalCity} 坐标`;
-                return;
-            }
+            if (!coords) { document.getElementById('pcPanelMsg').innerHTML = `未找到 ${finalCity} 坐标`; return; }
             document.getElementById('pcPanelMsg').innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载 ${finalCity}...`;
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
@@ -381,7 +452,6 @@
                     if (!isOnline) content = `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:6px 12px;font-size:11px;border-radius:30px;white-space:nowrap;cursor:pointer;"><i class="fas fa-bed"></i> ${shortName}</div>`;
                     else if (isShow) content = `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(168,85,247,0.6);white-space:nowrap;cursor:pointer;"><i class="fas fa-star-of-life"></i> ${shortName}</div>`;
                     else content = `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:6px 14px;font-size:12px;font-weight:bold;border-radius:30px;box-shadow:0 0 15px rgba(59,130,246,0.6);white-space:nowrap;cursor:pointer;"><i class="fas fa-music"></i> ${shortName}</div>`;
-
                     const marker = new AMap.Marker({ position: [cab.lng, cab.lat], content: content, offset: new AMap.Pixel(0, -20) });
                     marker.on('click', () => {
                         const isOnline2 = cab.status === 'active';
@@ -401,39 +471,28 @@
                 await setDropdownByCity(finalCity, 'pc');
                 const showCount = machines.filter(m => m.machineType === 1).length;
                 document.getElementById('pcPanelMsg').innerHTML = `${finalCity} ${machines.length}台 (秀机${showCount})`;
-            } catch(e) {
-                console.error(e);
-                document.getElementById('pcPanelMsg').innerHTML = '加载失败';
-            }
+            } catch(e) { document.getElementById('pcPanelMsg').innerHTML = '加载失败'; }
         }
         window.closePcInfoWindow = () => pcInfoWindow?.close();
 
         async function pcDoLocate() {
             document.getElementById('loadingOverlay').style.display = 'flex';
             document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
-            document.querySelector('.loading-sub').innerHTML = '请允许浏览器获取地理位置权限';
             pcInfoWindow?.close();
-            const city = await getAccurateCity();
-            console.log('电脑端最终城市:', city);
+            const city = await getAccurateCityWithPermission();
             document.getElementById('pcCurrentCity').innerText = city;
             document.getElementById('pcLocationTip').style.display = 'block';
             await pcLoadCityMachines(city);
             document.getElementById('loadingOverlay').style.display = 'none';
-            setTimeout(() => {
-                const tip = document.getElementById('pcLocationTip');
-                tip.style.opacity = '0';
-                setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000);
-            }, 4000);
+            setTimeout(() => { const tip = document.getElementById('pcLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
         function initPcMap() {
             pcMap = new AMap.Map('pc-map', { center: [116.4074, 39.9042], zoom: 5, viewMode: '2D', resizeEnable: true });
             pcInfoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -35), isCustom: true, autoMove: false });
-
             const ps = document.getElementById('pcProvinceSelect');
             ps.innerHTML = '<option value="">请选择省份</option>';
             provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
-
             document.getElementById('pcProvinceSelect').addEventListener('change', () => {
                 const prov = document.getElementById('pcProvinceSelect').value;
                 const citySelect = document.getElementById('pcCitySelect');
@@ -442,32 +501,19 @@
                 citySelect.innerHTML = '<option value="">请选择城市</option>';
                 (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
             });
-            document.getElementById('pcCitySelect').addEventListener('change', () => {
-                const city = document.getElementById('pcCitySelect').value;
-                if (city) pcLoadCityMachines(city);
-            });
+            document.getElementById('pcCitySelect').addEventListener('change', () => { const city = document.getElementById('pcCitySelect').value; if (city) pcLoadCityMachines(city); });
             document.getElementById('pcMyLocationBtn').addEventListener('click', pcDoLocate);
-            document.getElementById('pcResetViewBtn').addEventListener('click', () => {
-                pcMap.setZoomAndCenter(5, [116.4074, 39.9042]);
-                document.getElementById('pcProvinceSelect').value = "";
-                document.getElementById('pcCitySelect').disabled = true;
-                pcInfoWindow?.close();
-            });
+            document.getElementById('pcResetViewBtn').addEventListener('click', () => { pcMap.setZoomAndCenter(5, [116.4074, 39.9042]); document.getElementById('pcProvinceSelect').value = ""; document.getElementById('pcCitySelect').disabled = true; pcInfoWindow?.close(); });
             pcMap.on('click', () => pcInfoWindow.close());
             pcMap.on('complete', () => pcDoLocate());
         }
 
-        // ========== 手机版 ==========
         let mobileMap, mobileMarkers = [], mobileInfoWindow = null;
-
         async function mobileLoadCityMachines(cityName) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
-            if (!coords) {
-                document.getElementById('mobilePanelMsg').innerHTML = `未找到 ${finalCity}`;
-                return;
-            }
+            if (!coords) { document.getElementById('mobilePanelMsg').innerHTML = `未找到 ${finalCity}`; return; }
             document.getElementById('mobilePanelMsg').innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载 ${finalCity}...`;
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
@@ -478,20 +524,12 @@
                     const isOnline = cab.status === 'active';
                     const isShow = cab.machineType === 1;
                     const shortName = cab.name.length > 8 ? cab.name.slice(0, 8) + '..' : cab.name;
-                    let content = '';
-                    if (!isOnline) content = `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:4px 10px;font-size:10px;border-radius:25px;white-space:nowrap;"><i class="fas fa-bed"></i> ${shortName}</div>`;
-                    else if (isShow) content = `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 10px rgba(168,85,247,0.5);white-space:nowrap;"><i class="fas fa-star-of-life"></i> ${shortName}</div>`;
-                    else content = `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:4px 12px;font-size:10px;border-radius:25px;box-shadow:0 0 8px rgba(59,130,246,0.4);white-space:nowrap;"><i class="fas fa-music"></i> ${shortName}</div>`;
-
+                    let content = !isOnline ? `<div class="custom-marker" style="background:#4a4a6a;color:#ccc;padding:4px 10px;font-size:10px;border-radius:25px;"><i class="fas fa-bed"></i> ${shortName}</div>` : (isShow ? `<div class="custom-marker" style="background:linear-gradient(135deg,#c084fc,#9333ea);color:white;padding:4px 12px;font-size:10px;border-radius:25px;"><i class="fas fa-star-of-life"></i> ${shortName}</div>` : `<div class="custom-marker" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;padding:4px 12px;font-size:10px;border-radius:25px;"><i class="fas fa-music"></i> ${shortName}</div>`);
                     const marker = new AMap.Marker({ position: [cab.lng, cab.lat], content: content, offset: new AMap.Pixel(0, -16) });
                     marker.on('click', () => {
                         const isOnline2 = cab.status === 'active';
                         const isShow2 = cab.machineType === 1;
-                        const statusClass = isOnline2 ? 'status-online' : 'status-offline';
-                        const statusText = isOnline2 ? '在线' : '离线';
-                        const machineTypeText = isShow2 ? '秀机' : '普通机';
-                        const machineTypeClass = isShow2 ? 'machine-type-show' : 'machine-type-normal';
-                        mobileInfoWindow.setContent(`<div class="custom-infowindow" style="min-width:200px;padding:10px 14px;"><button class="info-close-btn" onclick="window.closeMobileInfoWindow()"><i class="fas fa-times"></i></button><h3 style="font-size:0.85rem;"><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${statusClass}" style="margin-left:6px;">${statusText}</span></h3><div class="detail"><span class="status-badge ${machineTypeClass}">${machineTypeText}</span></div><div class="detail"><i class="fas fa-location-dot"></i> ${cab.city}</div><div class="detail"><i class="fas fa-map-pin"></i> ${cab.address || '地址待补充'}</div><div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div></div>`);
+                        mobileInfoWindow.setContent(`<div class="custom-infowindow" style="min-width:200px;padding:10px 14px;"><button class="info-close-btn" onclick="window.closeMobileInfoWindow()"><i class="fas fa-times"></i></button><h3 style="font-size:0.85rem;"><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${isOnline2?'status-online':'status-offline'}" style="margin-left:6px;">${isOnline2?'在线':'离线'}</span></h3><div class="detail"><span class="status-badge ${isShow2?'machine-type-show':'machine-type-normal'}">${isShow2?'秀机':'普通机'}</span></div><div class="detail"><i class="fas fa-location-dot"></i> ${cab.city}</div><div class="detail"><i class="fas fa-map-pin"></i> ${cab.address || '地址待补充'}</div><div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div></div>`);
                         mobileInfoWindow.open(mobileMap, [cab.lng, cab.lat]);
                     });
                     marker.setMap(mobileMap);
@@ -505,33 +543,23 @@
             } catch(e) { document.getElementById('mobilePanelMsg').innerHTML = '加载失败'; }
         }
         window.closeMobileInfoWindow = () => mobileInfoWindow?.close();
-
         async function mobileDoLocate() {
             document.getElementById('loadingOverlay').style.display = 'flex';
             document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
-            document.querySelector('.loading-sub').innerHTML = '请允许获取地理位置权限';
             mobileInfoWindow?.close();
-            const city = await getAccurateCity();
-            console.log('手机端最终城市:', city);
+            const city = await getAccurateCityWithPermission();
             document.getElementById('mobileCurrentCity').innerText = city;
             document.getElementById('mobileLocationTip').style.display = 'block';
             await mobileLoadCityMachines(city);
             document.getElementById('loadingOverlay').style.display = 'none';
-            setTimeout(() => {
-                const tip = document.getElementById('mobileLocationTip');
-                tip.style.opacity = '0';
-                setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000);
-            }, 4000);
+            setTimeout(() => { const tip = document.getElementById('mobileLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
-
         function initMobileMap() {
             mobileMap = new AMap.Map('mobile-map', { center: [116.4074, 39.9042], zoom: 5, viewMode: '2D', resizeEnable: true });
             mobileInfoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30), isCustom: true, autoMove: false });
-
             const ps = document.getElementById('mobileProvinceSelect');
             ps.innerHTML = '<option value="">省份</option>';
             provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
-
             document.getElementById('mobileProvinceSelect').addEventListener('change', () => {
                 const prov = document.getElementById('mobileProvinceSelect').value;
                 const citySelect = document.getElementById('mobileCitySelect');
@@ -540,21 +568,12 @@
                 citySelect.innerHTML = '<option value="">城市</option>';
                 (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
             });
-            document.getElementById('mobileCitySelect').addEventListener('change', () => {
-                const city = document.getElementById('mobileCitySelect').value;
-                if (city) mobileLoadCityMachines(city);
-            });
+            document.getElementById('mobileCitySelect').addEventListener('change', () => { const city = document.getElementById('mobileCitySelect').value; if (city) mobileLoadCityMachines(city); });
             document.getElementById('mobileMyLocationBtn').addEventListener('click', mobileDoLocate);
-            document.getElementById('mobileResetViewBtn').addEventListener('click', () => {
-                mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]);
-                document.getElementById('mobileProvinceSelect').value = "";
-                document.getElementById('mobileCitySelect').disabled = true;
-                mobileInfoWindow?.close();
-            });
+            document.getElementById('mobileResetViewBtn').addEventListener('click', () => { mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]); document.getElementById('mobileProvinceSelect').value = ""; document.getElementById('mobileCitySelect').disabled = true; mobileInfoWindow?.close(); });
             mobileMap.on('click', () => mobileInfoWindow.close());
             mobileMap.on('complete', () => mobileDoLocate());
         }
-
         initPcMap();
         initMobileMap();
     });

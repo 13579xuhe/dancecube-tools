@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>音频剪辑</title>
     <style>
         * {
@@ -10,6 +10,7 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -17,7 +18,7 @@
             background: var(--bg-body);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 24px;
+            padding: 12px;
             transition: background 0.2s, color 0.2s;
         }
 
@@ -36,6 +37,12 @@
             --handle-hover: #2563eb;
             --ruler-color: #64748b;
             --select-bg: #ffffff;
+            --meter-low: #10b981;
+            --meter-mid: #f59e0b;
+            --meter-high: #ef4444;
+            --alert-red: #dc2626;
+            --playhead-color: #f59e0b;
+            --playhead-glow: rgba(245,158,11,0.5);
         }
 
         body.dark {
@@ -53,31 +60,42 @@
             --handle-hover: #7ca5f0;
             --ruler-color: #8e9bb5;
             --select-bg: #1e2438;
+            --meter-low: #34d399;
+            --meter-mid: #fbbf24;
+            --meter-high: #f87171;
+            --alert-red: #ef4444;
+            --playhead-color: #fbbf24;
+            --playhead-glow: rgba(251,191,36,0.5);
         }
 
         .editor-container {
             max-width: 1400px;
             margin: 0 auto;
             background: var(--bg-card);
-            border-radius: 24px;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
             border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .editor-container { border-radius: 16px; }
         }
 
         .toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
         .logo {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
             background-clip: text;
             -webkit-background-clip: text;
@@ -85,18 +103,18 @@
         }
         .theme-btn-group {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             background: var(--bg-card);
-            padding: 3px;
+            padding: 2px;
             border-radius: 40px;
             border: 1px solid var(--border-color);
         }
         .theme-btn {
             background: transparent;
             border: none;
-            padding: 5px 18px;
+            padding: 5px 14px;
             border-radius: 40px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
             color: var(--text-secondary);
             transition: 0.1s;
@@ -110,97 +128,169 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
         .file-info {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 0.85rem;
+            gap: 8px;
+            font-size: 0.8rem;
             color: var(--text-primary);
+            flex: 1;
+            min-width: 0;
         }
         .file-name {
             background: var(--bg-card);
-            padding: 4px 14px;
+            padding: 4px 12px;
             border-radius: 30px;
             border: 1px solid var(--border-color);
             color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 160px;
         }
         .upload-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 6px 20px;
+            padding: 6px 16px;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .meter-section {
+            padding: 8px 16px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .meter-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .meter-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 50px;
+        }
+        .meter-outer-frame {
+            flex: 1;
+            height: 32px;
+            background: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .meter-fill-smooth {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--meter-low), var(--meter-mid), var(--meter-high));
+            transition: width 0.04s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .overload-indicator {
+            width: 10px;
+            height: 32px;
+            background-color: var(--alert-red);
+            border-radius: 4px;
+            margin-left: 4px;
+            transition: opacity 0.1s;
+            opacity: 0;
+            box-shadow: 0 0 4px rgba(220,38,38,0.5);
+        }
+        .overload-indicator.active { opacity: 1; }
+        .meter-value {
+            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 55px;
+            text-align: right;
+            color: var(--accent);
+        }
+        .meter-db-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding: 0 2px;
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+        }
+        @media (max-width: 640px) {
+            .meter-outer-frame { height: 28px; }
+            .overload-indicator { height: 28px; width: 8px; }
         }
 
         .wave-section {
-            padding: 20px 24px;
+            padding: 16px;
             background: var(--bg-wave);
             border-bottom: 1px solid var(--border-color);
         }
         .time-ruler {
             position: relative;
-            height: 28px;
-            margin-bottom: 6px;
+            height: 24px;
+            margin-bottom: 4px;
             font-family: monospace;
-            font-size: 10px;
+            font-size: 9px;
             color: var(--ruler-color);
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
         }
-        .ruler-markers {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
+        .ruler-markers { position: relative; width: 100%; height: 100%; }
         .wave-container {
             position: relative;
+            touch-action: none;
         }
         #waveformCanvas {
             width: 100%;
-            height: 170px;
+            height: 140px;
             display: block;
             background: var(--bg-wave);
             border-radius: 12px;
             cursor: pointer;
+            touch-action: none;
         }
 
         .handles-container {
             position: relative;
             width: 100%;
             height: 0;
-            top: -170px;
+            top: -140px;
             pointer-events: none;
         }
         .drag-handle {
             position: absolute;
-            width: 14px;
-            height: 170px;
+            width: 16px;
+            height: 140px;
             background: var(--handle-color);
             border-radius: 8px;
             cursor: ew-resize;
             pointer-events: auto;
             top: 0;
             opacity: 0.92;
-            transition: width 0.08s linear, left 0.02s linear;
             box-shadow: 0 0 0 2px rgba(255,255,255,0.5), 0 0 0 4px rgba(59,130,246,0.3);
             z-index: 20;
+            touch-action: none;
         }
-        .drag-handle:hover {
-            opacity: 1;
-            background: var(--handle-hover);
-            width: 16px;
-            margin-left: -1px;
+        @media (max-width: 768px) {
+            .drag-handle { width: 20px; transform: translateX(-10px); }
+            .handle-left { left: 0; transform: translateX(-10px); }
+            .handle-right { left: 100%; transform: translateX(-10px); }
+            .drag-handle::after { left: 5px; font-size: 20px; }
         }
         .drag-handle::after {
             content: '⋮';
             position: absolute;
-            left: 3px;
+            left: 4px;
             top: 50%;
             transform: translateY(-50%);
             color: white;
@@ -209,13 +299,13 @@
             text-shadow: 0 0 2px black;
             pointer-events: none;
         }
-        .handle-left { left: 0; transform: translateX(-7px); }
-        .handle-right { left: 100%; transform: translateX(-7px); }
+        .handle-left { left: 0; transform: translateX(-8px); }
+        .handle-right { left: 100%; transform: translateX(-8px); }
 
         .selection-overlay {
             position: absolute;
             top: 0;
-            height: 170px;
+            height: 140px;
             background: var(--accent);
             opacity: 0.22;
             pointer-events: none;
@@ -224,189 +314,241 @@
             border-right: 2px solid var(--accent);
         }
 
+        .playhead {
+            position: absolute;
+            top: 0;
+            width: 3px;
+            height: 140px;
+            background-color: var(--playhead-color);
+            pointer-events: auto;
+            cursor: ew-resize;
+            z-index: 25;
+            box-shadow: 0 0 8px var(--playhead-glow);
+            transform: translateX(-1.5px);
+            transition: left 0.05s linear;
+        }
+        .playhead::before {
+            content: '▼';
+            position: absolute;
+            top: -12px;
+            left: -4px;
+            font-size: 10px;
+            color: var(--playhead-color);
+            text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        .playhead::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: -2px;
+            width: 7px;
+            height: 7px;
+            background: var(--playhead-color);
+            border-radius: 1px;
+            pointer-events: none;
+        }
+
         .time-display {
-            margin-top: 14px;
+            margin-top: 12px;
             text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-family: monospace;
+            font-size: 12px;
             font-weight: 500;
             color: var(--accent);
         }
 
         .clip-controls {
-            padding: 16px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
         }
         .clip-input-group {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             background: var(--bg-card);
-            padding: 6px 20px;
+            padding: 4px 14px;
             border-radius: 50px;
             border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .clip-input-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-primary);
+            gap: 6px;
+            font-size: 0.75rem;
         }
         .clip-input-item input {
-            width: 90px;
+            width: 70px;
             background: var(--select-bg);
             border: 1px solid var(--border-color);
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 30px;
             font-family: monospace;
             text-align: center;
             color: var(--text-primary);
+            font-size: 0.75rem;
         }
         .btn {
-            padding: 6px 18px;
+            padding: 5px 14px;
             border-radius: 40px;
             border: 1px solid var(--border-color);
             background: var(--bg-card);
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-primary);
-        }
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
+            white-space: nowrap;
         }
 
         .transport-bar {
-            padding: 12px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
         }
         .play-pause-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 8px 32px;
+            padding: 8px 24px;
             border-radius: 40px;
             font-weight: 600;
-            min-width: 120px;
+            min-width: 100px;
+            font-size: 0.85rem;
+        }
+        .playhead-info {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 30px;
         }
 
         .gain-section {
-            padding: 12px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             display: flex;
-            align-items: center;
-            gap: 24px;
             flex-wrap: wrap;
-            color: var(--text-primary);
+            align-items: center;
+            gap: 16px;
         }
         .gain-control {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex: 2;
+            min-width: 180px;
+            flex-wrap: wrap;
         }
         input[type="range"] {
-            width: 220px;
+            width: 180px;
             height: 4px;
             -webkit-appearance: none;
             background: var(--border-color);
             border-radius: 4px;
+            flex: 1;
+            min-width: 120px;
         }
         input[type="range"]::-webkit-slider-thumb {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             background: var(--accent);
             cursor: pointer;
+            -webkit-appearance: none;
         }
         .auto-badge {
             background: var(--accent);
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 30px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: white;
-            margin-left: 8px;
+            white-space: nowrap;
+        }
+        .status-badge {
+            font-size: 0.65rem;
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
         }
 
         .export-section {
-            padding: 16px 24px;
+            padding: 12px 16px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
         }
         .format-selector {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             background: var(--bg-card);
-            padding: 6px 18px;
+            padding: 5px 12px;
             border-radius: 40px;
             border: 1px solid var(--border-color);
-            color: var(--text-primary);
+            font-size: 0.75rem;
         }
         .format-selector select {
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
-        }
-        .format-selector select option {
-            background: var(--bg-card);
-            color: var(--text-primary);
         }
         .save-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 8px 32px;
+            padding: 7px 24px;
             border-radius: 40px;
             font-weight: 600;
         }
         .error-msg {
-            padding: 8px 24px;
+            padding: 8px 16px;
             color: #ef4444;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            text-align: center;
         }
         .footer {
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-secondary);
             background: var(--bg-panel);
         }
-        button { cursor: pointer; }
-        .status-badge {
-            margin-left: 12px;
-            font-size: 0.7rem;
+        button { cursor: pointer; touch-action: manipulation; }
+
+        .key-hint {
             background: var(--bg-card);
             padding: 2px 8px;
-            border-radius: 30px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.7rem;
             border: 1px solid var(--border-color);
+            margin-left: 8px;
         }
     </style>
 </head>
 <body>
 <div class="editor-container">
     <div class="toolbar">
-        <div class="logo">音频剪辑</div>
+        <div class="logo">🎵 音频剪辑</div>
         <div class="theme-btn-group" id="themeToggleGroup">
             <button class="theme-btn" data-theme="light">☀️ 亮色</button>
             <button class="theme-btn" data-theme="dark">🌙 暗色</button>
@@ -415,26 +557,35 @@
 
     <div class="file-bar">
         <div class="file-info">
-            <span>📁 当前</span>
+            <span>📁</span>
             <span class="file-name" id="fileNameDisplay">未加载音频</span>
         </div>
         <div>
             <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
-            <button class="upload-btn" id="uploadBtn">📂 选择音频文件</button>
+            <button class="upload-btn" id="uploadBtn">📂 选择文件</button>
         </div>
     </div>
 
-    <div class="wave-section">
-        <div class="time-ruler" id="rulerContainer">
-            <div class="ruler-markers" id="rulerMarkers"></div>
+    <div class="meter-section">
+        <div class="meter-container">
+            <div class="meter-label">🎚️ 实时电平</div>
+            <div class="meter-outer-frame"><div class="meter-fill-smooth" id="meterFillSmooth"></div></div>
+            <div class="overload-indicator" id="overloadIndicator"></div>
+            <div class="meter-value" id="meterValue">-∞ dB</div>
         </div>
+        <div class="meter-db-scale"><span>0 dB</span><span>-12 dB</span><span>-24 dB</span><span>-48 dB</span><span>-∞</span></div>
+    </div>
+
+    <div class="wave-section">
+        <div class="time-ruler" id="rulerContainer"><div class="ruler-markers" id="rulerMarkers"></div></div>
         <div class="wave-container" id="waveContainer" style="position: relative;">
-            <canvas id="waveformCanvas" width="1200" height="170"></canvas>
+            <canvas id="waveformCanvas" width="1200" height="140"></canvas>
             <div id="selectionOverlay" class="selection-overlay" style="left:0%; width:0%;"></div>
             <div class="handles-container" id="handlesContainer">
                 <div id="handleLeft" class="drag-handle handle-left"></div>
                 <div id="handleRight" class="drag-handle handle-right"></div>
             </div>
+            <div id="playhead" class="playhead" style="left: 0%;"></div>
         </div>
         <div class="time-display" id="timeDisplay">00:00.00 → 00:00.00 / 全长 00:00.00</div>
     </div>
@@ -443,44 +594,33 @@
         <div class="clip-input-group">
             <div class="clip-input-item"><span>◀ 入点</span><input type="number" id="startHandle" step="0.01" value="0.00"><span>秒</span></div>
             <div class="clip-input-item"><span>出点 ▶</span><input type="number" id="endHandle" step="0.01" value="0.00"><span>秒</span></div>
-            <button id="applyHandleBtn" class="btn">应用区间</button>
-            <button id="resetHandleBtn" class="btn">重置全选</button>
+            <button id="applyHandleBtn" class="btn">应用</button>
+            <button id="resetHandleBtn" class="btn">重置</button>
         </div>
         <button id="clearRegionBtn" class="btn">清除选区</button>
     </div>
 
     <div class="transport-bar">
         <button id="playPauseBtn" class="play-pause-btn">▶ 播放</button>
-        <div class="quality-info" id="durationInfo" style="color:var(--text-primary);">时长: --:--</div>
+        <div class="playhead-info" id="playheadTimeDisplay">播放头: 00:00.00</div>
+        <div class="quality-info" id="durationInfo" style="color:var(--text-primary); font-size:0.8rem;">时长: --:--</div>
+        <span class="key-hint">␣ 空格键</span>
     </div>
 
     <div class="gain-section">
         <div class="gain-control">
-            <span>音量增益 (实时自动应用)</span>
+            <span>🎚️ 音量</span>
             <input type="range" id="gainSlider" min="0" max="2" step="0.01" value="1.0">
-            <span id="gainValue" style="color:var(--text-primary);">1.00x</span>
-            <span class="auto-badge">⚡ 自动重载</span>
+            <span id="gainValue" style="font-size:0.75rem;">1.00x</span>
+            <span class="auto-badge">⚡ 自动应用</span>
             <span id="gainStatus" class="status-badge">就绪</span>
         </div>
     </div>
 
     <div class="export-section">
-        <div class="format-selector">
-            <span>📀 格式</span>
-            <select id="exportFormat">
-                <option value="mp3">MP3 (192kbps)</option>
-                <option value="wav">WAV 无损</option>
-            </select>
-        </div>
-        <div class="format-selector">
-            <span>⚡ 质量</span>
-            <select id="exportQuality">
-                <option value="128">128kbps</option>
-                <option value="192" selected>192kbps ~适中</option>
-                <option value="320">320kbps 高质</option>
-            </select>
-        </div>
-        <button id="saveExportBtn" class="save-btn">💾 保存剪辑</button>
+        <div class="format-selector"><span>📀 格式</span><select id="exportFormat"><option value="mp3">MP3</option><option value="wav">WAV</option></select></div>
+        <div class="format-selector"><span>⚡ 质量</span><select id="exportQuality"><option value="128">128kbps</option><option value="192" selected>192kbps</option><option value="320">320kbps</option></select></div>
+        <button id="saveExportBtn" class="save-btn">💾 保存</button>
     </div>
 
     <div id="errorMsg" class="error-msg"></div>
@@ -491,25 +631,33 @@
     // ======================= 核心变量 =======================
     let audioContext = null;
     let originalBuffer = null;
-    let workingBuffer = null;       // 经过增益处理的缓冲区
+    let workingBuffer = null;
     let sourceNode = null;
     let isPlaying = false;
     let currentFileName = "未加载";
-    let currentAudioBlob = null;
     let audioDuration = 0;
     let waveformData = [];
     let canvas = null, ctx = null;
     let selectionStart = 0, selectionEnd = 0;
     let currentGain = 1.0;
-    let isApplyingGain = false;      // 防抖标志
+    let isApplyingGain = false;
     let gainApplyTimer = null;
 
-    let handleLeft, handleRight, selectionOverlay;
+    let playheadPosition = 0;
+    let playheadUpdateInterval = null;
+
+    let meterAnimationId = null;
+    let meterFillSmooth = null;
+    let overloadIndicator = null;
+    let overloadTriggered = false;
+    let currentPlaybackActive = false;
+
+    let handleLeft, handleRight, selectionOverlay, playheadElement;
     let activeHandle = null;
+    let isDraggingPlayhead = false;
     let rafPending = false;
     let pendingUpdate = { start: null, end: null };
 
-    // 主题
     const THEME_KEY = "audio_editor_auto_gain";
     function setTheme(theme) {
         if (theme === 'dark') document.body.classList.add('dark');
@@ -522,29 +670,15 @@
         drawWaveform();
         updateUI();
         drawRuler();
+        updatePlayheadUI();
     }
     function loadTheme() { setTheme(localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'); }
 
-    // ========== 核心功能：彻底停止播放并清理 (修复混音关键) ==========
-    function stopPlaybackAndReset() {
-        if (sourceNode) {
-            try {
-                sourceNode.onended = null;
-                sourceNode.stop();
-            } catch(e) { /* 忽略 */ }
-            sourceNode.disconnect();
-            sourceNode = null;
-        }
-        if (audioContext && audioContext.state === 'running') {
-            audioContext.suspend().catch(e => console.warn);
-        }
-        isPlaying = false;
-        const btn = document.getElementById('playPauseBtn');
-        if (btn) btn.innerHTML = '▶ 播放';
-    }
-
-    function fullStopAndReset() {
-        stopPlaybackAndReset();
+    function formatTime(sec) {
+        if(isNaN(sec) || sec === undefined) return "00:00.00";
+        const m = Math.floor(sec/60);
+        const s = (sec%60).toFixed(2);
+        return `${m.toString().padStart(2,'0')}:${s.toString().padStart(5,'0')}`;
     }
 
     function showError(msg) {
@@ -553,11 +687,214 @@
         setTimeout(() => { if(d.innerText === msg) d.innerText = ''; }, 4000);
     }
     function showInfo(msg) { document.getElementById('fileNameDisplay').innerHTML = msg; }
-    function formatTime(sec) {
-        if(isNaN(sec) || sec === undefined) return "00:00.00";
-        const m = Math.floor(sec/60);
-        const s = (sec%60).toFixed(2);
-        return `${m.toString().padStart(2,'0')}:${s.toString().padStart(5,'0')}`;
+
+    function updatePlayheadUI() {
+        if (!playheadElement || !audioDuration || audioDuration <= 0) return;
+        let percent = (playheadPosition / audioDuration) * 100;
+        percent = Math.min(100, Math.max(0, percent));
+        playheadElement.style.left = `${percent}%`;
+        document.getElementById('playheadTimeDisplay').innerHTML = `播放头: ${formatTime(playheadPosition)}`;
+    }
+
+    function getTimeFromEvent(clientX) {
+        const rect = canvas.getBoundingClientRect();
+        let x = (clientX - rect.left) / rect.width;
+        x = Math.min(1, Math.max(0, x));
+        return x * audioDuration;
+    }
+
+    // 核心：设置播放头位置（可停止播放）
+    function setPlayheadPosition(time, stopPlayback = true) {
+        if (!workingBuffer) return;
+        if (stopPlayback && isPlaying) fullStopAndReset();
+        let newTime = Math.min(audioDuration, Math.max(0, time));
+        if (selectionEnd > selectionStart) {
+            if (newTime < selectionStart) newTime = selectionStart;
+            if (newTime > selectionEnd) newTime = selectionEnd;
+        }
+        playheadPosition = newTime;
+        updatePlayheadUI();
+    }
+
+    // 点击波形图直接跳转播放线
+    function onWaveformClick(e) {
+        if (!workingBuffer) return;
+        // 获取点击位置的时间
+        const rect = canvas.getBoundingClientRect();
+        let clientX;
+        if (e.touches) {
+            clientX = e.touches[0].clientX;
+            e.preventDefault();
+        } else {
+            clientX = e.clientX;
+        }
+        let x = (clientX - rect.left) / rect.width;
+        x = Math.min(1, Math.max(0, x));
+        let clickTime = x * audioDuration;
+        // 约束到选区内
+        if (selectionEnd > selectionStart) {
+            if (clickTime < selectionStart) clickTime = selectionStart;
+            if (clickTime > selectionEnd) clickTime = selectionEnd;
+        }
+        // 跳转播放头
+        setPlayheadPosition(clickTime, true);
+    }
+
+    function amplitudeToDB(amp) {
+        if (amp <= 0.00001) return -Infinity;
+        let db = 20 * Math.log10(amp);
+        return Math.max(-60, db);
+    }
+    const SAFE_LINEAR_THRESHOLD = 0.944;
+    function isOverload(linearAmp) { return linearAmp >= SAFE_LINEAR_THRESHOLD; }
+
+    function resetMeterDisplay(resetOverloadFlag = true) {
+        if (meterFillSmooth) meterFillSmooth.style.width = '0%';
+        if (overloadIndicator) overloadIndicator.classList.remove('active');
+        document.getElementById('meterValue').innerText = '-∞ dB';
+        if (resetOverloadFlag) overloadTriggered = false;
+    }
+
+    function updateSmoothMeter(peakLevelLinear) {
+        if (!meterFillSmooth) return;
+        let db = amplitudeToDB(peakLevelLinear);
+        if (db === -Infinity) db = -60;
+        let percent = Math.min(100, Math.max(0, ((db + 60) / 60) * 100));
+        meterFillSmooth.style.width = percent + '%';
+        document.getElementById('meterValue').innerText = db === -Infinity ? '-∞' : db.toFixed(1) + ' dB';
+        if (currentPlaybackActive) {
+            if (isOverload(peakLevelLinear)) overloadTriggered = true;
+            if (overloadIndicator) overloadIndicator.classList.toggle('active', overloadTriggered);
+        } else {
+            if (overloadIndicator) overloadIndicator.classList.remove('active');
+        }
+    }
+
+    let meterProcessor = null, meterGainNode = null;
+    function startMeterCapture() {
+        if (!audioContext || !sourceNode) return;
+        if (meterProcessor) stopMeterCapture();
+        try {
+            meterProcessor = audioContext.createScriptProcessor(256, 1, 1);
+            meterGainNode = audioContext.createGain();
+            meterGainNode.gain.value = 1.0;
+            if (sourceNode) {
+                sourceNode.disconnect();
+                sourceNode.connect(meterGainNode);
+                meterGainNode.connect(audioContext.destination);
+                meterGainNode.connect(meterProcessor);
+                meterProcessor.connect(audioContext.destination);
+            }
+            let peak = 0;
+            meterProcessor.onaudioprocess = (event) => {
+                const inputData = event.inputBuffer.getChannelData(0);
+                let maxSample = 0;
+                for (let i = 0; i < inputData.length; i++) maxSample = Math.max(maxSample, Math.abs(inputData[i]));
+                peak = Math.max(peak, maxSample);
+                if (!meterAnimationId) {
+                    meterAnimationId = requestAnimationFrame(() => {
+                        updateSmoothMeter(peak);
+                        if (peak > 0.0001) peak *= 0.995; else peak = 0;
+                        meterAnimationId = null;
+                    });
+                }
+            };
+        } catch(e) { console.warn(e); }
+    }
+    function stopMeterCapture() {
+        if (meterProcessor) { try { meterProcessor.disconnect(); meterProcessor.onaudioprocess = null; } catch(e){} meterProcessor = null; }
+        if (meterGainNode) { try { meterGainNode.disconnect(); } catch(e){} meterGainNode = null; }
+        if (meterAnimationId) { cancelAnimationFrame(meterAnimationId); meterAnimationId = null; }
+    }
+
+    function stopPlaybackAndReset() {
+        if (playheadUpdateInterval) {
+            clearInterval(playheadUpdateInterval);
+            playheadUpdateInterval = null;
+        }
+        if (sourceNode) {
+            try { sourceNode.onended = null; sourceNode.stop(); } catch(e) { }
+            sourceNode.disconnect();
+            sourceNode = null;
+        }
+        stopMeterCapture();
+        if (audioContext && audioContext.state === 'running') audioContext.suspend().catch(e => console.warn);
+        currentPlaybackActive = false;
+        overloadTriggered = false;
+        isPlaying = false;
+        const btn = document.getElementById('playPauseBtn');
+        if (btn) btn.innerHTML = '▶ 播放';
+        resetMeterDisplay(true);
+    }
+    function fullStopAndReset() { stopPlaybackAndReset(); }
+
+    function syncPlayheadFromAudio() {
+        if (!isPlaying || !sourceNode || !audioContext) return;
+        try {
+            const startTime = sourceNode._startTime || 0;
+            const elapsed = audioContext.currentTime - startTime;
+            let currentPos = (sourceNode._playheadStart || 0) + elapsed;
+            if (currentPos >= audioDuration || (selectionEnd > selectionStart && currentPos >= selectionEnd)) {
+                fullStopAndReset();
+            } else {
+                playheadPosition = Math.min(audioDuration, Math.max(0, currentPos));
+                updatePlayheadUI();
+            }
+        } catch(e) { }
+    }
+
+    function playFromPlayhead() {
+        if (!workingBuffer) { showError('无音频'); return; }
+        fullStopAndReset();
+
+        let startTime = playheadPosition;
+        if (selectionEnd > selectionStart) {
+            if (startTime < selectionStart) startTime = selectionStart;
+            if (startTime > selectionEnd) startTime = selectionEnd;
+            playheadPosition = startTime;
+            updatePlayheadUI();
+        }
+        if (startTime >= audioDuration) {
+            showError('播放头已到结尾');
+            return;
+        }
+        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') audioContext.resume().catch(e => console.warn);
+
+        sourceNode = audioContext.createBufferSource();
+        sourceNode.buffer = workingBuffer;
+        sourceNode.connect(audioContext.destination);
+        sourceNode._playheadStart = startTime;
+        sourceNode._startTime = audioContext.currentTime;
+        sourceNode.start(0, startTime);
+        isPlaying = true;
+        currentPlaybackActive = true;
+        overloadTriggered = false;
+
+        playheadUpdateInterval = setInterval(() => { syncPlayheadFromAudio(); }, 30);
+
+        sourceNode.onended = () => {
+            if (playheadUpdateInterval) { clearInterval(playheadUpdateInterval); playheadUpdateInterval = null; }
+            isPlaying = false;
+            currentPlaybackActive = false;
+            const btn = document.getElementById('playPauseBtn');
+            if (btn) btn.innerHTML = '▶ 播放';
+            sourceNode = null;
+            stopMeterCapture();
+            resetMeterDisplay(true);
+            let endPos = (selectionEnd > selectionStart) ? selectionEnd : audioDuration;
+            playheadPosition = Math.min(audioDuration, endPos);
+            updatePlayheadUI();
+        };
+        const btn = document.getElementById('playPauseBtn');
+        if (btn) btn.innerHTML = '⏸ 暂停';
+        startMeterCapture();
+    }
+
+    function togglePlayPause() {
+        if (!workingBuffer) { showError('请先加载音频'); return; }
+        if (isPlaying) { syncPlayheadFromAudio(); fullStopAndReset(); }
+        else { playFromPlayhead(); }
     }
 
     function updateTimeDisplay() {
@@ -566,7 +903,6 @@
         document.getElementById('endHandle').value = selectionEnd.toFixed(2);
         document.getElementById('durationInfo').innerHTML = `时长: ${formatTime(audioDuration)}`;
     }
-
     function updateUI() {
         if (!audioDuration || audioDuration <= 0) return;
         const leftPct = (selectionStart / audioDuration) * 100;
@@ -580,19 +916,19 @@
             handleLeft.style.left = `${leftPct}%`;
             handleRight.style.left = `${rightPct}%`;
         }
+        if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
+        if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
+        updatePlayheadUI();
     }
-
     function scheduleUpdate(start, end) {
-        pendingUpdate.start = start;
-        pendingUpdate.end = end;
+        pendingUpdate.start = start; pendingUpdate.end = end;
         if (!rafPending) {
             rafPending = true;
             requestAnimationFrame(() => {
                 if (pendingUpdate.start !== null && pendingUpdate.end !== null) {
                     selectionStart = pendingUpdate.start;
                     selectionEnd = pendingUpdate.end;
-                    pendingUpdate.start = null;
-                    pendingUpdate.end = null;
+                    pendingUpdate.start = null; pendingUpdate.end = null;
                     updateTimeDisplay();
                     drawWaveform();
                     updateUI();
@@ -632,7 +968,7 @@
         }
     }
 
-    function computeWaveform(buffer, samples = 850) {
+    function computeWaveform(buffer, samples = 800) {
         const data = buffer.getChannelData(0);
         const step = Math.max(1, Math.floor(data.length / samples));
         const peaks = [];
@@ -643,7 +979,6 @@
         }
         return peaks;
     }
-
     function drawRuler() {
         if (!audioDuration || audioDuration <= 0) return;
         const container = document.getElementById('rulerMarkers');
@@ -652,7 +987,7 @@
             const percent = (t / audioDuration) * 100;
             const mins = Math.floor(t / 60);
             const secs = Math.floor(t % 60);
-            markers.push(`<div style="position:absolute; left:${percent}%; transform:translateX(-50%); font-size:9px; top:0; color:var(--ruler-color);">${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}</div>`);
+            markers.push(`<div style="position:absolute; left:${percent}%; transform:translateX(-50%); font-size:8px; top:0; color:var(--ruler-color); white-space:nowrap;">${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}</div>`);
         }
         container.innerHTML = markers.join('');
     }
@@ -668,67 +1003,37 @@
         src.start();
         return await offline.startRendering();
     }
-
-    // 核心：自动应用增益，带防抖和状态提示
     async function autoApplyGain(gainValue) {
         if (!originalBuffer) return;
         if (isApplyingGain) return;
-
         isApplyingGain = true;
         const statusSpan = document.getElementById('gainStatus');
         statusSpan.innerText = '⏳ 应用增益中...';
-        statusSpan.style.color = 'var(--accent)';
-
         try {
-            fullStopAndReset();  // 停止任何播放
-
-            // 应用增益到新缓冲区
+            fullStopAndReset();
             const newBuffer = await applyGainToBuffer(originalBuffer, gainValue);
             workingBuffer = newBuffer;
             currentGain = gainValue;
             audioDuration = workingBuffer.duration;
-
-            // 保持选区比例，但确保选区不超出范围
             let newStart = Math.min(selectionStart, audioDuration);
             let newEnd = Math.min(selectionEnd, audioDuration);
-            if (newEnd <= newStart) {
-                newStart = 0;
-                newEnd = audioDuration;
-            }
-            selectionStart = newStart;
-            selectionEnd = newEnd;
-
-            // 更新波形
-            waveformData = computeWaveform(workingBuffer, 900);
-            resizeCanvas();
-            drawWaveform();
-            drawRuler();
-            updateTimeDisplay();
-            updateUI();
-
+            if (newEnd <= newStart) { newStart = 0; newEnd = audioDuration; }
+            selectionStart = newStart; selectionEnd = newEnd;
+            if (playheadPosition > audioDuration) playheadPosition = 0;
+            waveformData = computeWaveform(workingBuffer, 800);
+            resizeCanvas(); drawWaveform(); drawRuler(); updateTimeDisplay(); updateUI();
             statusSpan.innerText = '✅ 已应用';
             setTimeout(() => { if(statusSpan.innerText === '✅ 已应用') statusSpan.innerText = '就绪'; }, 1500);
-        } catch (err) {
-            console.error(err);
-            statusSpan.innerText = '❌ 失败';
-            setTimeout(() => { if(statusSpan.innerText === '❌ 失败') statusSpan.innerText = '就绪'; }, 2000);
-        } finally {
-            isApplyingGain = false;
-        }
+        } catch(err) { statusSpan.innerText = '❌ 失败'; setTimeout(() => { if(statusSpan.innerText === '❌ 失败') statusSpan.innerText = '就绪'; }, 2000);
+        } finally { isApplyingGain = false; }
     }
-
-    // 延迟自动应用（滑块拖动时仅停止播放，松开后生效）
     let gainSliderTimeout = null;
     function scheduleAutoApply(gain) {
         if (gainSliderTimeout) clearTimeout(gainSliderTimeout);
-        // 立即停止播放，避免干扰
         if (isPlaying) fullStopAndReset();
         const statusSpan = document.getElementById('gainStatus');
         statusSpan.innerText = '⏳ 等待松开...';
-        gainSliderTimeout = setTimeout(() => {
-            autoApplyGain(gain);
-            gainSliderTimeout = null;
-        }, 180);
+        gainSliderTimeout = setTimeout(() => { autoApplyGain(gain); gainSliderTimeout = null; }, 180);
     }
 
     async function loadAudio(file) {
@@ -737,13 +1042,8 @@
         showInfo(`加载中...`);
         try {
             fullStopAndReset();
-            if (audioContext) {
-                await audioContext.close();
-                audioContext = null;
-            }
-            const blob = file.slice(0, file.size, file.type);
-            currentAudioBlob = blob;
-            const arrayBuffer = await blob.arrayBuffer();
+            if (audioContext) { await audioContext.close(); audioContext = null; }
+            const arrayBuffer = await file.arrayBuffer();
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const decoded = await audioContext.decodeAudioData(arrayBuffer);
             originalBuffer = decoded;
@@ -752,62 +1052,16 @@
             document.getElementById('gainValue').innerText = '1.00x';
             workingBuffer = await applyGainToBuffer(originalBuffer, 1.0);
             audioDuration = workingBuffer.duration;
-            waveformData = computeWaveform(workingBuffer, 900);
-            resizeCanvas();
-            drawWaveform();
-            drawRuler();
-            selectionStart = 0;
-            selectionEnd = audioDuration;
-            updateTimeDisplay();
-            updateUI();
-            showInfo(`✅ ${currentFileName}  ${Math.floor(audioDuration/60)}:${Math.floor(audioDuration%60).toString().padStart(2,'0')}`);
+            waveformData = computeWaveform(workingBuffer, 800);
+            resizeCanvas(); drawWaveform(); drawRuler();
+            selectionStart = 0; selectionEnd = audioDuration;
+            playheadPosition = 0;
+            updateTimeDisplay(); updateUI();
+            showInfo(`✅ ${currentFileName.substring(0, 20)}`);
             document.getElementById('gainStatus').innerText = '就绪';
             if (audioContext.state === 'suspended') await audioContext.resume();
+            resetMeterDisplay(true);
         } catch(e) { showError('解码失败: '+e.message); }
-    }
-
-    // 播放选区 —— 完全阻止混音
-    function playSelection() {
-        if (!workingBuffer) { showError('无音频'); return; }
-        fullStopAndReset();  // 关键：完全清除旧播放
-
-        let start = selectionStart, end = selectionEnd;
-        if (end <= start) { start = 0; end = audioDuration; }
-
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioContext.state === 'suspended') {
-            audioContext.resume().catch(e => console.warn);
-        }
-
-        sourceNode = audioContext.createBufferSource();
-        sourceNode.buffer = workingBuffer;
-        sourceNode.connect(audioContext.destination);
-        sourceNode.start(0, start, end - start);
-        isPlaying = true;
-
-        const thisNode = sourceNode;
-        sourceNode.onended = () => {
-            if (sourceNode === thisNode) {
-                isPlaying = false;
-                const btn = document.getElementById('playPauseBtn');
-                if (btn) btn.innerHTML = '▶ 播放';
-                sourceNode = null;
-            }
-        };
-
-        const btn = document.getElementById('playPauseBtn');
-        if (btn) btn.innerHTML = '⏸ 暂停';
-    }
-
-    function togglePlayPause() {
-        if (!workingBuffer) { showError('请先加载音频'); return; }
-        if (isPlaying) {
-            fullStopAndReset();
-        } else {
-            playSelection();
-        }
     }
 
     async function exportClip() {
@@ -815,29 +1069,59 @@
         fullStopAndReset();
         let start = selectionStart, end = selectionEnd;
         if (end <= start) { showError('请拖拽手柄选择有效区域'); return; }
-        const sampleRate = workingBuffer.sampleRate;
-        const offline = new OfflineAudioContext(workingBuffer.numberOfChannels, Math.floor((end - start) * sampleRate), sampleRate);
-        const src = offline.createBufferSource();
-        src.buffer = workingBuffer;
-        src.connect(offline.destination);
-        src.start(0, start, end - start);
-        const rendered = await offline.startRendering();
-        const format = document.getElementById('exportFormat').value;
-        const quality = parseInt(document.getElementById('exportQuality').value);
-        if (format === 'wav') downloadBlob(audioBufferToWav(rendered), `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.wav`);
-        else {
-            const mp3 = await encodeMp3(rendered, quality);
-            downloadBlob(mp3, `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.mp3`);
+
+        const saveBtn = document.getElementById('saveExportBtn');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '⏳ 处理中...';
+        saveBtn.disabled = true;
+
+        try {
+            const sampleRate = workingBuffer.sampleRate;
+            const offline = new OfflineAudioContext(workingBuffer.numberOfChannels, Math.floor((end - start) * sampleRate), sampleRate);
+            const src = offline.createBufferSource();
+            src.buffer = workingBuffer;
+            src.connect(offline.destination);
+            src.start(0, start, end - start);
+            const rendered = await offline.startRendering();
+            const format = document.getElementById('exportFormat').value;
+            const quality = parseInt(document.getElementById('exportQuality').value);
+
+            let blob;
+            let fileName;
+            if (format === 'wav') {
+                blob = audioBufferToWav(rendered);
+                fileName = `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.wav`;
+            } else {
+                blob = await encodeMp3(rendered, quality);
+                fileName = `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.mp3`;
+            }
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 150);
+
+            showError('✅ 导出成功');
+        } catch (err) {
+            console.error(err);
+            showError('❌ 导出失败: ' + err.message);
+        } finally {
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
         }
-        showError('✅ 导出成功');
     }
 
     function encodeMp3(audioBuffer, bitrate) {
         return new Promise((resolve) => {
-            const ch = audioBuffer.numberOfChannels;
-            const sr = audioBuffer.sampleRate;
-            const left = audioBuffer.getChannelData(0);
-            const right = ch > 1 ? audioBuffer.getChannelData(1) : left;
+            const ch = audioBuffer.numberOfChannels, sr = audioBuffer.sampleRate, left = audioBuffer.getChannelData(0), right = ch > 1 ? audioBuffer.getChannelData(1) : left;
             const encoder = new lamejs.Mp3Encoder(ch, sr, bitrate);
             const mp3Data = [];
             const block = 1152;
@@ -849,7 +1133,7 @@
             }
             const end = encoder.flush();
             if(end.length) mp3Data.push(end);
-            resolve(new Blob(mp3Data, { type: 'audio/mp3' }));
+            resolve(new Blob(mp3Data, { type: 'audio/mpeg' }));
         });
     }
 
@@ -867,54 +1151,69 @@
         for(let i=0;i<samples;i++) for(let c=0;c<ch;c++){ let s=buffer.getChannelData(c)[i]; s=Math.max(-1,Math.min(1,s)); const int=s<0?s*0x8000:s*0x7FFF; view.setInt16(offset,int,true); offset+=2; }
         return new Blob([view],{type:'audio/wav'});
     }
-    function downloadBlob(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
 
     function resizeCanvas() {
         canvas = document.getElementById('waveformCanvas');
         const rect = canvas.getBoundingClientRect();
         canvas.width = Math.max(rect.width, 600) || 1200;
-        canvas.height = 170;
+        canvas.height = 140;
         ctx = canvas.getContext('2d');
         drawWaveform();
     }
     window.addEventListener('resize', () => { resizeCanvas(); drawWaveform(); updateUI(); drawRuler(); });
 
-    function initHandles() {
+    function initDragControls() {
         handleLeft = document.getElementById('handleLeft');
         handleRight = document.getElementById('handleRight');
         selectionOverlay = document.getElementById('selectionOverlay');
+        playheadElement = document.getElementById('playhead');
 
-        const getTimeFromMouse = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            let x = (e.clientX - rect.left) / rect.width;
-            x = Math.min(1, Math.max(0, x));
-            return x * audioDuration;
-        };
-
-        const onDrag = (e) => {
-            if (!activeHandle || !audioDuration) return;
-            e.preventDefault();
-            if (isPlaying) fullStopAndReset();
-            const time = getTimeFromMouse(e);
-            let newStart = selectionStart, newEnd = selectionEnd;
+        const onDragMove = (clientX) => {
+            if (!audioDuration) return;
+            const time = getTimeFromEvent(clientX);
             if (activeHandle === 'left') {
-                newStart = Math.min(time, newEnd - 0.01);
+                let newStart = Math.min(time, selectionEnd - 0.01);
                 newStart = Math.max(0, newStart);
+                scheduleUpdate(newStart, selectionEnd);
             } else if (activeHandle === 'right') {
-                newEnd = Math.max(time, newStart + 0.01);
+                let newEnd = Math.max(time, selectionStart + 0.01);
                 newEnd = Math.min(audioDuration, newEnd);
+                scheduleUpdate(selectionStart, newEnd);
+            } else if (isDraggingPlayhead) {
+                if (isPlaying) fullStopAndReset();
+                let newTime = Math.min(audioDuration, Math.max(0, time));
+                if (selectionEnd > selectionStart) {
+                    if (newTime < selectionStart) newTime = selectionStart;
+                    if (newTime > selectionEnd) newTime = selectionEnd;
+                }
+                playheadPosition = newTime;
+                updatePlayheadUI();
             }
-            if (newEnd - newStart < 0.01) {
-                if (activeHandle === 'left') newStart = Math.max(0, newEnd - 0.01);
-                else newEnd = Math.min(audioDuration, newStart + 0.01);
-            }
-            scheduleUpdate(newStart, newEnd);
         };
-        const onUp = () => { activeHandle = null; };
+        const onMouseMove = (e) => onDragMove(e.clientX);
+        const onTouchMove = (e) => { e.preventDefault(); if(e.touches[0]) onDragMove(e.touches[0].clientX); };
+        const onUp = () => { activeHandle = null; isDraggingPlayhead = false; };
+
         handleLeft.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'left'; if (isPlaying) fullStopAndReset(); });
         handleRight.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'right'; if (isPlaying) fullStopAndReset(); });
-        window.addEventListener('mousemove', onDrag);
+        playheadElement.addEventListener('mousedown', (e) => { e.stopPropagation(); isDraggingPlayhead = true; if (isPlaying) fullStopAndReset(); });
+        playheadElement.addEventListener('touchstart', (e) => { e.stopPropagation(); isDraggingPlayhead = true; if (isPlaying) fullStopAndReset(); });
+
+        window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onUp);
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+        window.addEventListener('touchend', onUp);
+        window.addEventListener('touchcancel', onUp);
+
+        // 点击波形图跳转播放线（同时支持鼠标和触摸）
+        canvas.addEventListener('click', onWaveformClick);
+        canvas.addEventListener('touchstart', (e) => {
+            // 防止触摸时滚动页面，并且只在不是拖动手柄时处理
+            if (activeHandle === null && !isDraggingPlayhead) {
+                e.preventDefault();
+                onWaveformClick(e);
+            }
+        });
     }
 
     function bindEvents() {
@@ -922,7 +1221,6 @@
         document.getElementById('audioFileInput').onchange = (e) => { if(e.target.files.length) loadAudio(e.target.files[0]); };
         document.getElementById('playPauseBtn').onclick = togglePlayPause;
         document.getElementById('saveExportBtn').onclick = exportClip;
-
         document.getElementById('applyHandleBtn').onclick = () => {
             fullStopAndReset();
             let s = parseFloat(document.getElementById('startHandle').value);
@@ -931,6 +1229,8 @@
             s = Math.max(0, Math.min(audioDuration, s));
             e = Math.max(s, Math.min(audioDuration, e));
             selectionStart = s; selectionEnd = e;
+            if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
+            if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
             updateTimeDisplay(); drawWaveform(); updateUI();
         };
         document.getElementById('resetHandleBtn').onclick = () => {
@@ -943,14 +1243,13 @@
             selectionStart = 0; selectionEnd = audioDuration;
             updateTimeDisplay(); drawWaveform(); updateUI();
         };
-
-        const startInput = document.getElementById('startHandle');
-        const endInput = document.getElementById('endHandle');
+        const startInput = document.getElementById('startHandle'); const endInput = document.getElementById('endHandle');
         startInput.addEventListener('change', () => {
             fullStopAndReset();
             let s = parseFloat(startInput.value);
             s = Math.max(0, Math.min(audioDuration, isNaN(s) ? selectionStart : s));
             if (s < selectionEnd) selectionStart = s;
+            if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
             updateTimeDisplay(); drawWaveform(); updateUI();
         });
         endInput.addEventListener('change', () => {
@@ -958,34 +1257,38 @@
             let e = parseFloat(endInput.value);
             e = Math.max(selectionStart, Math.min(audioDuration, isNaN(e) ? selectionEnd : e));
             selectionEnd = e;
+            if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
             updateTimeDisplay(); drawWaveform(); updateUI();
         });
-
-        // 音量控制：实时显示数值，松开时自动应用（无按钮）
-        const gainSlider = document.getElementById('gainSlider');
-        const gainValSpan = document.getElementById('gainValue');
-        gainSlider.oninput = () => {
-            const val = parseFloat(gainSlider.value);
-            gainValSpan.innerText = val.toFixed(2) + 'x';
-            scheduleAutoApply(val);
-        };
-        // 初始无动作
+        const gainSlider = document.getElementById('gainSlider'); const gainValSpan = document.getElementById('gainValue');
+        gainSlider.oninput = () => { const val = parseFloat(gainSlider.value); gainValSpan.innerText = val.toFixed(2) + 'x'; scheduleAutoApply(val); };
         document.querySelectorAll('.theme-btn').forEach(btn => btn.onclick = () => setTheme(btn.getAttribute('data-theme')));
+
+        // 空格键播放/暂停
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                const activeEl = document.activeElement;
+                if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable)) {
+                    return;
+                }
+                togglePlayPause();
+            }
+        });
     }
 
     async function init() {
+        meterFillSmooth = document.getElementById('meterFillSmooth');
+        overloadIndicator = document.getElementById('overloadIndicator');
         loadTheme();
         bindEvents();
         resizeCanvas();
-        initHandles();
-        showInfo('就绪 | 音量滑块松开即自动应用增益，播放不会混音');
+        initDragControls();
+        showInfo('就绪 | 点击波形任意位置跳转 | 空格键播放/暂停');
     }
     init();
-
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault(); });
 </script>
 </body>
 </html>

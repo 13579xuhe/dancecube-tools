@@ -22,172 +22,53 @@
             transition: background 0.2s, color 0.2s;
         }
 
-        /* 针对手机端：更紧凑的间距，缩小字体/圆角 */
         @media (max-width: 768px) {
-            body {
-                padding: 4px;
-            }
-            .editor-container {
-                border-radius: 14px !important;
-            }
+            body { padding: 4px; }
+            .editor-container { border-radius: 14px !important; }
             .toolbar, .file-bar, .meter-section, .wave-section,
-            .clip-controls, .transport-bar, .gain-section, .export-section {
-                padding: 8px 12px !important;
-            }
-            .logo {
-                font-size: 0.9rem !important;
-            }
-            .theme-btn {
-                padding: 3px 10px !important;
-                font-size: 0.65rem !important;
-            }
-            .file-name {
-                max-width: 120px !important;
-                font-size: 0.7rem !important;
-                padding: 3px 8px !important;
-            }
-            .upload-btn {
-                padding: 4px 12px !important;
-                font-size: 0.7rem !important;
-            }
-            .meter-label, .meter-value, .meter-db-scale {
-                font-size: 0.6rem !important;
-            }
-            .meter-outer-frame {
-                height: 26px !important;
-            }
-            .overload-indicator {
-                height: 26px !important;
-                width: 6px !important;
-            }
-            .time-ruler {
-                height: 20px !important;
-                font-size: 8px !important;
-            }
-            #waveformCanvas {
-                height: 100px !important;
-            }
-            .handles-container {
-                top: -100px !important;
-            }
-            .drag-handle {
-                height: 100px !important;
-                width: 14px !important;
-                transform: translateX(-7px) !important;
-            }
-            .handle-left {
-                left: 0;
-                transform: translateX(-7px) !important;
-            }
-            .handle-right {
-                left: 100%;
-                transform: translateX(-7px) !important;
-            }
-            .drag-handle::after {
-                font-size: 16px !important;
-                left: 2px !important;
-            }
-            .selection-overlay {
-                height: 100px !important;
-            }
-            .playhead {
-                height: 100px !important;
-                width: 2.5px !important;
-            }
-            .playhead::before {
-                top: -10px !important;
-                font-size: 8px !important;
-            }
-            .time-display {
-                font-size: 10px !important;
-                margin-top: 8px !important;
-            }
-            .clip-input-group {
-                padding: 3px 10px !important;
-                gap: 6px !important;
-            }
-            .clip-input-item {
-                font-size: 0.65rem !important;
-                gap: 4px !important;
-            }
-            .clip-input-item input {
-                width: 55px !important;
-                padding: 3px 4px !important;
-                font-size: 0.65rem !important;
-            }
-            .btn {
-                padding: 4px 10px !important;
-                font-size: 0.65rem !important;
-            }
-            .play-pause-btn {
-                padding: 6px 18px !important;
-                font-size: 0.75rem !important;
-                min-width: 80px !important;
-            }
-            .playhead-info, .quality-info {
-                font-size: 0.65rem !important;
-            }
-            .gain-control {
-                gap: 6px !important;
-            }
-            .gain-control span {
-                font-size: 0.65rem !important;
-            }
-            input[type="range"] {
-                min-width: 100px !important;
-            }
-            .auto-badge, .status-badge {
-                font-size: 0.55rem !important;
-                padding: 1px 6px !important;
-            }
-            .format-selector {
-                padding: 3px 8px !important;
-                font-size: 0.65rem !important;
-            }
-            .format-selector select {
-                font-size: 0.65rem !important;
-            }
-            .save-btn {
-                padding: 5px 16px !important;
-                font-size: 0.7rem !important;
-            }
-            .key-hint {
-                font-size: 0.55rem !important;
-                padding: 2px 5px !important;
-                margin-left: 5px !important;
-            }
-            .error-msg {
-                font-size: 0.6rem !important;
-                padding: 4px 8px !important;
-            }
-            .footer {
-                font-size: 0.55rem !important;
-                padding: 6px !important;
-            }
+            .clip-controls, .transport-bar, .gain-section, .export-section { padding: 8px 12px !important; }
+            .logo { font-size: 0.9rem !important; }
+            .theme-btn { padding: 3px 10px !important; font-size: 0.65rem !important; }
+            .file-name { max-width: 120px !important; font-size: 0.7rem !important; padding: 3px 8px !important; }
+            .upload-btn { padding: 4px 12px !important; font-size: 0.7rem !important; }
+            .meter-label, .meter-value, .meter-db-scale { font-size: 0.6rem !important; }
+            .meter-outer-frame { height: 26px !important; }
+            .overload-indicator { height: 26px !important; width: 8px !important; }
+            .time-ruler { height: 20px !important; font-size: 8px !important; }
+            #waveformCanvas { height: 100px !important; }
+            .handles-container { top: -100px !important; }
+            .drag-handle { height: 100px !important; width: 16px !important; }
+            .handle-left { transform: translateX(-8px) !important; }
+            .handle-right { transform: translateX(-8px) !important; }
+            .drag-handle::after { font-size: 16px !important; left: 3px !important; }
+            .selection-overlay { height: 100px !important; }
+            .playhead { height: 100px !important; width: 3px !important; }
+            .playhead::before { top: -10px !important; font-size: 8px !important; left: -3px !important; }
+            .playhead::after { bottom: -6px !important; left: -2px !important; width: 5px !important; height: 5px !important; }
+            .time-display { font-size: 10px !important; margin-top: 8px !important; }
+            .clip-input-group { padding: 3px 10px !important; gap: 6px !important; }
+            .clip-input-item { font-size: 0.65rem !important; gap: 4px !important; }
+            .clip-input-item input { width: 55px !important; padding: 3px 4px !important; font-size: 0.65rem !important; }
+            .btn { padding: 4px 10px !important; font-size: 0.65rem !important; }
+            .play-pause-btn { padding: 6px 18px !important; font-size: 0.75rem !important; min-width: 80px !important; }
+            .playhead-info, .quality-info { font-size: 0.65rem !important; }
+            .gain-control { gap: 6px !important; }
+            .gain-control span { font-size: 0.65rem !important; }
+            input[type="range"] { min-width: 100px !important; }
+            .auto-badge, .status-badge { font-size: 0.55rem !important; padding: 1px 6px !important; }
+            .format-selector { padding: 3px 8px !important; font-size: 0.65rem !important; }
+            .format-selector select { font-size: 0.65rem !important; }
+            .save-btn { padding: 5px 16px !important; font-size: 0.7rem !important; }
+            .key-hint { font-size: 0.55rem !important; padding: 2px 5px !important; margin-left: 5px !important; }
+            .error-msg { font-size: 0.6rem !important; padding: 4px 8px !important; }
         }
 
-        /* 极小设备（<400px）进一步缩小 */
         @media (max-width: 480px) {
-            .clip-controls .clip-input-group {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .transport-bar {
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            .gain-control {
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
-            .export-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .format-selector {
-                justify-content: space-between;
-            }
+            .clip-controls .clip-input-group { flex-wrap: wrap; justify-content: center; }
+            .transport-bar { flex-wrap: wrap; justify-content: center; }
+            .gain-control { flex-wrap: wrap; }
+            .export-section { flex-direction: column; align-items: stretch; }
+            .format-selector { justify-content: space-between; }
         }
 
         :root {
@@ -362,7 +243,7 @@
             transition: width 0.04s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         .overload-indicator {
-            width: 10px;
+            width: 12px;
             height: 32px;
             background-color: var(--alert-red);
             border-radius: 4px;
@@ -371,7 +252,9 @@
             opacity: 0;
             box-shadow: 0 0 4px rgba(220,38,38,0.5);
         }
-        .overload-indicator.active { opacity: 1; }
+        .overload-indicator.active {
+            opacity: 1;
+        }
         .meter-value {
             font-family: monospace;
             font-size: 0.7rem;
@@ -558,6 +441,10 @@
             font-size: 0.75rem;
             color: var(--text-primary);
             white-space: nowrap;
+            transition: background 0.1s;
+        }
+        .btn:active {
+            background: var(--border-color);
         }
 
         .transport-bar {
@@ -579,6 +466,11 @@
             font-weight: 600;
             min-width: 100px;
             font-size: 0.85rem;
+            cursor: pointer;
+            transition: opacity 0.1s;
+        }
+        .play-pause-btn:active {
+            opacity: 0.8;
         }
         .playhead-info {
             font-size: 0.75rem;
@@ -672,6 +564,11 @@
             padding: 7px 24px;
             border-radius: 40px;
             font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.1s;
+        }
+        .save-btn:active {
+            opacity: 0.8;
         }
         .error-msg {
             padding: 8px 16px;
@@ -679,14 +576,6 @@
             font-size: 0.7rem;
             text-align: center;
         }
-        .footer {
-            padding: 10px;
-            text-align: center;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            background: var(--bg-panel);
-        }
-        button { cursor: pointer; touch-action: manipulation; }
 
         .key-hint {
             background: var(--bg-card);
@@ -696,6 +585,10 @@
             font-size: 0.7rem;
             border: 1px solid var(--border-color);
             margin-left: 8px;
+        }
+
+        button, .drag-handle, .playhead, .upload-btn, .save-btn, .theme-btn, .btn {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -727,7 +620,14 @@
             <div class="overload-indicator" id="overloadIndicator"></div>
             <div class="meter-value" id="meterValue">-∞ dB</div>
         </div>
-        <div class="meter-db-scale"><span>0 dB</span><span>-12 dB</span><span>-24 dB</span><span>-48 dB</span><span>-∞</span></div>
+        <div class="meter-db-scale">
+            <span>0 dB</span>
+            <span>-10 dB</span>
+            <span>-20 dB</span>
+            <span>-30 dB</span>
+            <span>-40 dB</span>
+            <span>-57 dB</span>
+        </div>
     </div>
 
     <div class="wave-section">
@@ -803,7 +703,7 @@
     let meterAnimationId = null;
     let meterFillSmooth = null;
     let overloadIndicator = null;
-    let overloadTriggered = false;
+    let overloadTriggered = false;      // 过载锁存标志（仅用于指示灯）
     let currentPlaybackActive = false;
 
     let handleLeft, handleRight, selectionOverlay, playheadElement;
@@ -811,6 +711,18 @@
     let isDraggingPlayhead = false;
     let rafPending = false;
     let pendingUpdate = { start: null, end: null };
+    let waveHeight = 140;
+
+    // 电平表范围: -57dB 到 0dB
+    const METER_MIN_DB = -57;
+    const METER_MAX_DB = 0;
+
+    function dbToPercent(db) {
+        if (db === -Infinity) return 0;
+        let clampedDb = Math.max(METER_MIN_DB, Math.min(METER_MAX_DB, db));
+        let percent = ((clampedDb - METER_MIN_DB) / (METER_MAX_DB - METER_MIN_DB)) * 100;
+        return Math.min(100, Math.max(0, percent));
+    }
 
     const THEME_KEY = "audio_editor_auto_gain";
     function setTheme(theme) {
@@ -892,35 +804,59 @@
     function amplitudeToDB(amp) {
         if (amp <= 0.00001) return -Infinity;
         let db = 20 * Math.log10(amp);
-        return Math.max(-60, db);
+        return Math.max(METER_MIN_DB, db);
     }
-    const SAFE_LINEAR_THRESHOLD = 0.944;
-    function isOverload(linearAmp) { return linearAmp >= SAFE_LINEAR_THRESHOLD; }
+
+    // 过载检测：超过0dB就算过载（线性值 > 1.0）
+    function isOverload(linearAmp) {
+        return linearAmp >= 1.0;
+    }
+
+    // 重置过载指示灯（播放停止或音量改变时调用）
+    function resetOverloadLatch() {
+        overloadTriggered = false;
+        if (overloadIndicator) overloadIndicator.classList.remove('active');
+    }
 
     function resetMeterDisplay(resetOverloadFlag = true) {
-        if (meterFillSmooth) meterFillSmooth.style.width = '0%';
-        if (overloadIndicator) overloadIndicator.classList.remove('active');
+        if (resetOverloadFlag) {
+            overloadTriggered = false;
+            if (overloadIndicator) overloadIndicator.classList.remove('active');
+        }
+        if (meterFillSmooth) {
+            meterFillSmooth.style.width = '0%';
+        }
         document.getElementById('meterValue').innerText = '-∞ dB';
-        if (resetOverloadFlag) overloadTriggered = false;
     }
 
     function updateSmoothMeter(peakLevelLinear) {
         if (!meterFillSmooth) return;
+
+        // 计算当前电平的dB值和百分比（正常显示，不受过载锁存影响）
         let db = amplitudeToDB(peakLevelLinear);
-        if (db === -Infinity) db = -60;
-        let percent = Math.min(100, Math.max(0, ((db + 60) / 60) * 100));
+        let displayDb = (db === -Infinity) ? '-∞' : db.toFixed(1) + ' dB';
+        let percent = dbToPercent(db);
+
+        // 电平条始终根据实际电平显示
         meterFillSmooth.style.width = percent + '%';
-        document.getElementById('meterValue').innerText = db === -Infinity ? '-∞' : db.toFixed(1) + ' dB';
-        if (currentPlaybackActive) {
-            if (isOverload(peakLevelLinear)) overloadTriggered = true;
-            if (overloadIndicator) overloadIndicator.classList.toggle('active', overloadTriggered);
-        } else {
+        document.getElementById('meterValue').innerText = displayDb;
+
+        // 过载指示灯逻辑：只要出现过一次过载就保持亮起
+        const isCurrentlyOverload = isOverload(peakLevelLinear);
+        if (isCurrentlyOverload) {
+            overloadTriggered = true;
+        }
+
+        if (overloadTriggered && currentPlaybackActive) {
+            if (overloadIndicator) overloadIndicator.classList.add('active');
+        } else if (!currentPlaybackActive) {
+            overloadTriggered = false;
             if (overloadIndicator) overloadIndicator.classList.remove('active');
         }
     }
 
     let meterProcessor = null, meterGainNode = null;
-    function startMeterCapture() { /* 保留原有实现但省略详细,功能不变 */
+    function startMeterCapture() {
         if (!audioContext || !sourceNode) return;
         if (meterProcessor) stopMeterCapture();
         try {
@@ -956,18 +892,23 @@
         if (meterAnimationId) { cancelAnimationFrame(meterAnimationId); meterAnimationId = null; }
     }
 
-    function stopPlaybackAndReset() { /* 保留原逻辑省略确保稳定性 */
+    function stopPlaybackAndReset() {
         if (playheadUpdateInterval) { clearInterval(playheadUpdateInterval); playheadUpdateInterval = null; }
         if (sourceNode) { try { sourceNode.onended = null; sourceNode.stop(); } catch(e) { } sourceNode.disconnect(); sourceNode = null; }
         stopMeterCapture();
         if (audioContext && audioContext.state === 'running') audioContext.suspend().catch(e => console.warn);
-        currentPlaybackActive = false; overloadTriggered = false; isPlaying = false;
+        currentPlaybackActive = false;
+        isPlaying = false;
         const btn = document.getElementById('playPauseBtn'); if (btn) btn.innerHTML = '▶ 播放';
-        resetMeterDisplay(true);
+        // 停止播放时重置过载指示灯
+        resetOverloadLatch();
+        // 重置电平条显示
+        if (meterFillSmooth) meterFillSmooth.style.width = '0%';
+        document.getElementById('meterValue').innerText = '-∞ dB';
     }
     function fullStopAndReset() { stopPlaybackAndReset(); }
 
-    function syncPlayheadFromAudio() { /* 原有同步逻辑 */
+    function syncPlayheadFromAudio() {
         if (!isPlaying || !sourceNode || !audioContext) return;
         try {
             const startTime = sourceNode._startTime || 0;
@@ -977,7 +918,7 @@
             else { playheadPosition = Math.min(audioDuration, Math.max(0, currentPos)); updatePlayheadUI(); }
         } catch(e) { }
     }
-    function playFromPlayhead() { /* 省略完整实现但保留核心行为，该文件已完整，避免代码超限仅保留关键功能指针 */
+    function playFromPlayhead() {
         if (!workingBuffer) { showError('无音频'); return; }
         fullStopAndReset();
         let startTime = playheadPosition;
@@ -991,59 +932,431 @@
         sourceNode._playheadStart = startTime;
         sourceNode._startTime = audioContext.currentTime;
         sourceNode.start(0, startTime);
-        isPlaying = true; currentPlaybackActive = true; overloadTriggered = false;
+        isPlaying = true;
+        currentPlaybackActive = true;
+        // 开始播放时重置过载指示灯（新的一轮播放重置指示灯）
+        overloadTriggered = false;
+        if (overloadIndicator) overloadIndicator.classList.remove('active');
         playheadUpdateInterval = setInterval(() => syncPlayheadFromAudio(), 30);
-        sourceNode.onended = () => { if (playheadUpdateInterval) clearInterval(playheadUpdateInterval); isPlaying = false; currentPlaybackActive = false; document.getElementById('playPauseBtn').innerHTML = '▶ 播放'; sourceNode = null; stopMeterCapture(); resetMeterDisplay(true); let endPos = (selectionEnd > selectionStart) ? selectionEnd : audioDuration; playheadPosition = Math.min(audioDuration, endPos); updatePlayheadUI(); };
+        sourceNode.onended = () => {
+            if (playheadUpdateInterval) clearInterval(playheadUpdateInterval);
+            isPlaying = false;
+            currentPlaybackActive = false;
+            document.getElementById('playPauseBtn').innerHTML = '▶ 播放';
+            sourceNode = null;
+            stopMeterCapture();
+            resetOverloadLatch();
+            let endPos = (selectionEnd > selectionStart) ? selectionEnd : audioDuration;
+            playheadPosition = Math.min(audioDuration, endPos);
+            updatePlayheadUI();
+        };
         document.getElementById('playPauseBtn').innerHTML = '⏸ 暂停';
         startMeterCapture();
     }
     function togglePlayPause() { if (!workingBuffer) { showError('请先加载音频'); return; } if (isPlaying) { syncPlayheadFromAudio(); fullStopAndReset(); } else { playFromPlayhead(); } }
 
-    // 其他保留函数：updateTimeDisplay, updateUI, drawWaveform, applyGain等仅作声明（完整逻辑与先前一致）
-    // 为了保证手机运行稳定，保留所有原有函数（此处因篇幅仅保留关键函数体，实际原样执行）
+    function updateTimeDisplay() {
+        document.getElementById('timeDisplay').innerHTML = `${formatTime(selectionStart)} → ${formatTime(selectionEnd)} / 全长 ${formatTime(audioDuration)}`;
+        document.getElementById('startHandle').value = selectionStart.toFixed(2);
+        document.getElementById('endHandle').value = selectionEnd.toFixed(2);
+        document.getElementById('durationInfo').innerHTML = `时长: ${formatTime(audioDuration)}`;
+    }
+    function updateUI() {
+        if (!audioDuration || audioDuration <= 0) return;
+        const leftPct = (selectionStart / audioDuration) * 100;
+        const rightPct = (selectionEnd / audioDuration) * 100;
+        const widthPct = rightPct - leftPct;
+        if (selectionOverlay) {
+            selectionOverlay.style.left = `${leftPct}%`;
+            selectionOverlay.style.width = `${Math.max(0, widthPct)}%`;
+        }
+        if (handleLeft && handleRight) {
+            handleLeft.style.left = `${leftPct}%`;
+            handleRight.style.left = `${rightPct}%`;
+        }
+        if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
+        if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
+        updatePlayheadUI();
+    }
+    function scheduleUpdate(start, end) {
+        pendingUpdate.start = start; pendingUpdate.end = end;
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => {
+                if (pendingUpdate.start !== null && pendingUpdate.end !== null) {
+                    selectionStart = pendingUpdate.start;
+                    selectionEnd = pendingUpdate.end;
+                    pendingUpdate.start = null; pendingUpdate.end = null;
+                    updateTimeDisplay();
+                    drawWaveform();
+                    updateUI();
+                }
+                rafPending = false;
+            });
+        }
+    }
 
-    // 简写适配: drawWaveform, loadAudio, exportClip等已在原版完整，为保证功能完全，本文件沿用原版全部js逻辑并增加移动端尺寸适配
-    // 为避免代码缺失导致bug，重新嵌入完整核心方法（已确认运行时）
+    function drawWaveform() {
+        if (!canvas || !ctx) return;
+        if (!workingBuffer || !waveformData.length) {
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-wave');
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            return;
+        }
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-wave');
+        ctx.fillRect(0, 0, w, h);
+        const barWidth = w / waveformData.length;
+        const halfH = h / 2;
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--wave-color');
+        for (let i = 0; i < waveformData.length; i++) {
+            let amp = waveformData[i] * halfH;
+            amp = Math.min(halfH, amp);
+            ctx.fillRect(i * barWidth, halfH - amp, Math.max(1, barWidth - 0.5), amp * 2);
+        }
+        if (selectionEnd > selectionStart && audioDuration > 0) {
+            const startX = (selectionStart / audioDuration) * w;
+            const endX = (selectionEnd / audioDuration) * w;
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--accent') + '33';
+            ctx.fillRect(startX, 0, endX - startX, h);
+            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--accent');
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(startX, 0, endX - startX, h);
+        }
+    }
 
-    // 为了确保移动端画布高度适配，额外监听resize时重新计算波形图参数
+    function computeWaveform(buffer, samples = 800) {
+        const data = buffer.getChannelData(0);
+        const step = Math.max(1, Math.floor(data.length / samples));
+        const peaks = [];
+        for (let i = 0; i < samples; i++) {
+            let sum = 0, cnt = 0;
+            for (let j = 0; j < step && (i*step + j) < data.length; j++) { sum += Math.abs(data[i*step + j]); cnt++; }
+            peaks.push(Math.min(1.0, (sum / cnt) * 1.6));
+        }
+        return peaks;
+    }
+    function drawRuler() {
+        if (!audioDuration || audioDuration <= 0) return;
+        const container = document.getElementById('rulerMarkers');
+        const markers = [];
+        for (let t = 0; t <= audioDuration; t += 15) {
+            const percent = (t / audioDuration) * 100;
+            const mins = Math.floor(t / 60);
+            const secs = Math.floor(t % 60);
+            markers.push(`<div style="position:absolute; left:${percent}%; transform:translateX(-50%); font-size:8px; top:0; color:var(--ruler-color); white-space:nowrap;">${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}</div>`);
+        }
+        container.innerHTML = markers.join('');
+    }
+
+    async function applyGainToBuffer(buffer, gain) {
+        const offline = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+        const src = offline.createBufferSource();
+        src.buffer = buffer;
+        const gainNode = offline.createGain();
+        gainNode.gain.value = gain;
+        src.connect(gainNode);
+        gainNode.connect(offline.destination);
+        src.start();
+        return await offline.startRendering();
+    }
+    async function autoApplyGain(gainValue) {
+        if (!originalBuffer) return;
+        if (isApplyingGain) return;
+        isApplyingGain = true;
+        const statusSpan = document.getElementById('gainStatus');
+        statusSpan.innerText = '⏳ 应用增益中...';
+        try {
+            fullStopAndReset();
+            const newBuffer = await applyGainToBuffer(originalBuffer, gainValue);
+            workingBuffer = newBuffer;
+            currentGain = gainValue;
+            audioDuration = workingBuffer.duration;
+            let newStart = Math.min(selectionStart, audioDuration);
+            let newEnd = Math.min(selectionEnd, audioDuration);
+            if (newEnd <= newStart) { newStart = 0; newEnd = audioDuration; }
+            selectionStart = newStart; selectionEnd = newEnd;
+            if (playheadPosition > audioDuration) playheadPosition = 0;
+            waveformData = computeWaveform(workingBuffer, 800);
+            resizeCanvas(); drawWaveform(); drawRuler(); updateTimeDisplay(); updateUI();
+            statusSpan.innerText = '✅ 已应用';
+            // 音量改变时重置过载指示灯
+            resetOverloadLatch();
+            setTimeout(() => { if(statusSpan.innerText === '✅ 已应用') statusSpan.innerText = '就绪'; }, 1500);
+        } catch(err) { statusSpan.innerText = '❌ 失败'; setTimeout(() => { if(statusSpan.innerText === '❌ 失败') statusSpan.innerText = '就绪'; }, 2000);
+        } finally { isApplyingGain = false; }
+    }
+    let gainSliderTimeout = null;
+    function scheduleAutoApply(gain) {
+        if (gainSliderTimeout) clearTimeout(gainSliderTimeout);
+        if (isPlaying) fullStopAndReset();
+        const statusSpan = document.getElementById('gainStatus');
+        statusSpan.innerText = '⏳ 等待松开...';
+        gainSliderTimeout = setTimeout(() => { autoApplyGain(gain); gainSliderTimeout = null; }, 180);
+    }
+
+    async function loadAudio(file) {
+        if (!file || !file.type.startsWith('audio/')) { showError('请选择音频文件'); return; }
+        currentFileName = file.name;
+        showInfo(`加载中...`);
+        try {
+            fullStopAndReset();
+            if (audioContext) { await audioContext.close(); audioContext = null; }
+            const arrayBuffer = await file.arrayBuffer();
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const decoded = await audioContext.decodeAudioData(arrayBuffer);
+            originalBuffer = decoded;
+            currentGain = 1.0;
+            document.getElementById('gainSlider').value = '1.0';
+            document.getElementById('gainValue').innerText = '1.00x';
+            workingBuffer = await applyGainToBuffer(originalBuffer, 1.0);
+            audioDuration = workingBuffer.duration;
+            waveformData = computeWaveform(workingBuffer, 800);
+            resizeCanvas(); drawWaveform(); drawRuler();
+            selectionStart = 0; selectionEnd = audioDuration;
+            playheadPosition = 0;
+            updateTimeDisplay(); updateUI();
+            showInfo(`✅ ${currentFileName.substring(0, 20)}`);
+            document.getElementById('gainStatus').innerText = '就绪';
+            if (audioContext.state === 'suspended') await audioContext.resume();
+            resetOverloadLatch();
+        } catch(e) { showError('解码失败: '+e.message); }
+    }
+
+    async function exportClip() {
+        if (!workingBuffer) { showError('无音频'); return; }
+        fullStopAndReset();
+        let start = selectionStart, end = selectionEnd;
+        if (end <= start) { showError('请拖拽手柄选择有效区域'); return; }
+
+        const saveBtn = document.getElementById('saveExportBtn');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '⏳ 处理中...';
+        saveBtn.disabled = true;
+
+        try {
+            const sampleRate = workingBuffer.sampleRate;
+            const offline = new OfflineAudioContext(workingBuffer.numberOfChannels, Math.floor((end - start) * sampleRate), sampleRate);
+            const src = offline.createBufferSource();
+            src.buffer = workingBuffer;
+            src.connect(offline.destination);
+            src.start(0, start, end - start);
+            const rendered = await offline.startRendering();
+            const format = document.getElementById('exportFormat').value;
+            const quality = parseInt(document.getElementById('exportQuality').value);
+
+            let blob;
+            let fileName;
+            if (format === 'wav') {
+                blob = audioBufferToWav(rendered);
+                fileName = `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.wav`;
+            } else {
+                blob = await encodeMp3(rendered, quality);
+                fileName = `${currentFileName.replace(/\.[^/.]+$/, '')}_剪辑.mp3`;
+            }
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 150);
+
+            showError('✅ 导出成功');
+        } catch (err) {
+            console.error(err);
+            showError('❌ 导出失败: ' + err.message);
+        } finally {
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+        }
+    }
+
+    function encodeMp3(audioBuffer, bitrate) {
+        return new Promise((resolve) => {
+            const ch = audioBuffer.numberOfChannels, sr = audioBuffer.sampleRate, left = audioBuffer.getChannelData(0), right = ch > 1 ? audioBuffer.getChannelData(1) : left;
+            const encoder = new lamejs.Mp3Encoder(ch, sr, bitrate);
+            const mp3Data = [];
+            const block = 1152;
+            for (let i = 0; i < left.length; i += block) {
+                const leftChunk = left.subarray(i, i+block);
+                const rightChunk = right.subarray(i, i+block);
+                const buf = encoder.encodeBuffer(leftChunk, rightChunk);
+                if(buf.length) mp3Data.push(buf);
+            }
+            const end = encoder.flush();
+            if(end.length) mp3Data.push(end);
+            resolve(new Blob(mp3Data, { type: 'audio/mpeg' }));
+        });
+    }
+
+    function audioBufferToWav(buffer) {
+        const ch=buffer.numberOfChannels, sr=buffer.sampleRate, samples=buffer.getChannelData(0).length;
+        const dataLen = samples * ch * 2;
+        const buf = new ArrayBuffer(44+dataLen);
+        const view = new DataView(buf);
+        const write=(o,s)=>{for(let i=0;i<s.length;i++) view.setUint8(o+i,s.charCodeAt(i));};
+        write(0,'RIFF'); view.setUint32(4,buf.byteLength-8,true); write(8,'WAVE'); write(12,'fmt ');
+        view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,ch,true);
+        view.setUint32(24,sr,true); view.setUint32(28,sr*ch*2,true); view.setUint16(32,ch*2,true);
+        view.setUint16(34,16,true); write(36,'data'); view.setUint32(40,dataLen,true);
+        let offset=44;
+        for(let i=0;i<samples;i++) for(let c=0;c<ch;c++){ let s=buffer.getChannelData(c)[i]; s=Math.max(-1,Math.min(1,s)); const int=s<0?s*0x8000:s*0x7FFF; view.setInt16(offset,int,true); offset+=2; }
+        return new Blob([view],{type:'audio/wav'});
+    }
+
     function resizeCanvas() {
         canvas = document.getElementById('waveformCanvas');
+        const isMobile = window.innerWidth <= 768;
+        const targetHeight = isMobile ? 100 : 140;
+        canvas.height = targetHeight;
+        waveHeight = targetHeight;
+
+        const handlesContainer = document.querySelector('.handles-container');
+        if (handlesContainer) {
+            handlesContainer.style.top = `-${targetHeight}px`;
+        }
+
         const container = canvas.parentElement;
-        const maxWidth = Math.min(container.clientWidth, window.innerWidth - 20);
-        canvas.style.width = '100%';
         canvas.width = Math.max(container.clientWidth, 600);
-        canvas.height = (window.innerWidth <= 768) ? 100 : 140;
         ctx = canvas.getContext('2d');
         if(workingBuffer) drawWaveform();
     }
 
-    // 重写部分确保手机端手柄位置刷新
-    window.addEventListener('resize', () => { resizeCanvas(); drawWaveform(); updateUI(); drawRuler(); });
+    function initDragControls() {
+        handleLeft = document.getElementById('handleLeft');
+        handleRight = document.getElementById('handleRight');
+        selectionOverlay = document.getElementById('selectionOverlay');
+        playheadElement = document.getElementById('playhead');
 
-    // 初始化
-    function initMobile() {
-        loadTheme();
+        const onDragMove = (clientX) => {
+            if (!audioDuration) return;
+            const time = getTimeFromEvent(clientX);
+            if (activeHandle === 'left') {
+                let newStart = Math.min(time, selectionEnd - 0.01);
+                newStart = Math.max(0, newStart);
+                scheduleUpdate(newStart, selectionEnd);
+            } else if (activeHandle === 'right') {
+                let newEnd = Math.max(time, selectionStart + 0.01);
+                newEnd = Math.min(audioDuration, newEnd);
+                scheduleUpdate(selectionStart, newEnd);
+            } else if (isDraggingPlayhead) {
+                if (isPlaying) fullStopAndReset();
+                let newTime = Math.min(audioDuration, Math.max(0, time));
+                if (selectionEnd > selectionStart) {
+                    if (newTime < selectionStart) newTime = selectionStart;
+                    if (newTime > selectionEnd) newTime = selectionEnd;
+                }
+                playheadPosition = newTime;
+                updatePlayheadUI();
+            }
+        };
+        const onMouseMove = (e) => onDragMove(e.clientX);
+        const onTouchMove = (e) => { e.preventDefault(); if(e.touches[0]) onDragMove(e.touches[0].clientX); };
+        const onUp = () => { activeHandle = null; isDraggingPlayhead = false; };
+
+        handleLeft.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'left'; if (isPlaying) fullStopAndReset(); });
+        handleRight.addEventListener('mousedown', (e) => { e.stopPropagation(); activeHandle = 'right'; if (isPlaying) fullStopAndReset(); });
+        playheadElement.addEventListener('mousedown', (e) => { e.stopPropagation(); isDraggingPlayhead = true; if (isPlaying) fullStopAndReset(); });
+        playheadElement.addEventListener('touchstart', (e) => { e.stopPropagation(); isDraggingPlayhead = true; if (isPlaying) fullStopAndReset(); });
+
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onUp);
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+        window.addEventListener('touchend', onUp);
+        window.addEventListener('touchcancel', onUp);
+
+        canvas.addEventListener('click', onWaveformClick);
+        canvas.addEventListener('touchstart', (e) => {
+            if (activeHandle === null && !isDraggingPlayhead) {
+                e.preventDefault();
+                onWaveformClick(e);
+            }
+        });
+    }
+
+    function bindEvents() {
         document.getElementById('uploadBtn').onclick = () => document.getElementById('audioFileInput').click();
         document.getElementById('audioFileInput').onchange = (e) => { if(e.target.files.length) loadAudio(e.target.files[0]); };
         document.getElementById('playPauseBtn').onclick = togglePlayPause;
         document.getElementById('saveExportBtn').onclick = exportClip;
-        // 基础绑定同原版，为保证完整加载剩余事件，手动调用一次
-        bindEventsShort();
-        resizeCanvas();
-        initDragControls();
+        document.getElementById('applyHandleBtn').onclick = () => {
+            fullStopAndReset();
+            let s = parseFloat(document.getElementById('startHandle').value);
+            let e = parseFloat(document.getElementById('endHandle').value);
+            if(isNaN(s)) s=0; if(isNaN(e)) e=audioDuration;
+            s = Math.max(0, Math.min(audioDuration, s));
+            e = Math.max(s, Math.min(audioDuration, e));
+            selectionStart = s; selectionEnd = e;
+            if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
+            if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
+            updateTimeDisplay(); drawWaveform(); updateUI();
+            resetOverloadLatch();
+        };
+        document.getElementById('resetHandleBtn').onclick = () => {
+            fullStopAndReset();
+            selectionStart = 0; selectionEnd = audioDuration;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+            resetOverloadLatch();
+        };
+        document.getElementById('clearRegionBtn').onclick = () => {
+            fullStopAndReset();
+            selectionStart = 0; selectionEnd = audioDuration;
+            updateTimeDisplay(); drawWaveform(); updateUI();
+            resetOverloadLatch();
+        };
+        const startInput = document.getElementById('startHandle'); const endInput = document.getElementById('endHandle');
+        startInput.addEventListener('change', () => {
+            fullStopAndReset();
+            let s = parseFloat(startInput.value);
+            s = Math.max(0, Math.min(audioDuration, isNaN(s) ? selectionStart : s));
+            if (s < selectionEnd) selectionStart = s;
+            if (playheadPosition < selectionStart) setPlayheadPosition(selectionStart, false);
+            updateTimeDisplay(); drawWaveform(); updateUI();
+            resetOverloadLatch();
+        });
+        endInput.addEventListener('change', () => {
+            fullStopAndReset();
+            let e = parseFloat(endInput.value);
+            e = Math.max(selectionStart, Math.min(audioDuration, isNaN(e) ? selectionEnd : e));
+            selectionEnd = e;
+            if (playheadPosition > selectionEnd) setPlayheadPosition(selectionEnd, false);
+            updateTimeDisplay(); drawWaveform(); updateUI();
+            resetOverloadLatch();
+        });
+        const gainSlider = document.getElementById('gainSlider'); const gainValSpan = document.getElementById('gainValue');
+        gainSlider.oninput = () => { const val = parseFloat(gainSlider.value); gainValSpan.innerText = val.toFixed(2) + 'x'; scheduleAutoApply(val); };
+        document.querySelectorAll('.theme-btn').forEach(btn => btn.onclick = () => setTheme(btn.getAttribute('data-theme')));
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                const activeEl = document.activeElement;
+                if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) return;
+                togglePlayPause();
+            }
+        });
     }
 
-    function bindEventsShort() { /* 关键事件绑定避免过长 */
-        document.getElementById('applyHandleBtn').onclick = () => { fullStopAndReset(); let s=parseFloat(document.getElementById('startHandle').value); let e=parseFloat(document.getElementById('endHandle').value); if(isNaN(s)) s=0; if(isNaN(e)) e=audioDuration; s=Math.max(0,Math.min(audioDuration,s)); e=Math.max(s,Math.min(audioDuration,e)); selectionStart=s; selectionEnd=e; if(playheadPosition<selectionStart) setPlayheadPosition(selectionStart,false); if(playheadPosition>selectionEnd) setPlayheadPosition(selectionEnd,false); updateTimeDisplay(); drawWaveform(); updateUI(); };
-        document.getElementById('resetHandleBtn').onclick = () => { fullStopAndReset(); selectionStart=0; selectionEnd=audioDuration; updateTimeDisplay(); drawWaveform(); updateUI(); };
-        document.getElementById('clearRegionBtn').onclick = () => { fullStopAndReset(); selectionStart=0; selectionEnd=audioDuration; updateTimeDisplay(); drawWaveform(); updateUI(); };
-        const gainSlider = document.getElementById('gainSlider'); gainSlider.oninput = () => { let val=parseFloat(gainSlider.value); document.getElementById('gainValue').innerText=val.toFixed(2)+'x'; scheduleAutoApply(val); };
-        window.addEventListener('keydown', (e) => { if(e.code==='Space') { e.preventDefault(); if(document.activeElement.tagName!=='INPUT') togglePlayPause(); } });
+    async function init() {
+        meterFillSmooth = document.getElementById('meterFillSmooth');
+        overloadIndicator = document.getElementById('overloadIndicator');
+        loadTheme();
+        bindEvents();
+        resizeCanvas();
+        initDragControls();
+        showInfo('就绪 | 点击波形跳转 | 拖拽手柄剪辑');
     }
-    // 占位核心保留函数实际会从原作用域获得，因为脚本继承完整，本手机版直接复用了原版全部逻辑，仅样式缩进。
-    // 为确保audioBufferToWav等存在，沿用原定义。此文件为移动适配全功能版。
-    window.init = initMobile;
-    window.addEventListener('DOMContentLoaded', initMobile);
+    init();
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
 </script>
 </body>
 </html>

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>舞立方自制谱谱师工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -70,15 +68,22 @@
             background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             color: var(--text-primary);
-            padding: 20px;
             transition: background-color 0.3s ease, color 0.2s ease;
         }
 
-        .container {
+        /* ========== 电脑端布局 (默认，宽度 > 768px) ========== */
+        .pc-container {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
 
+        /* 手机端容器默认隐藏 */
+        .mobile-container {
+            display: none;
+        }
+
+        /* ========== 电脑端原有样式 ========== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -89,49 +94,12 @@
             flex-wrap: wrap;
             gap: 20px;
         }
-
         .logo-area {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
         }
-
-        /* 新增扫码按钮样式 - 放在logo-area内，与logo在同一行，手机端友好 */
-        .mobile-scan-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: none;
-            color: white;
-            border-radius: 40px;
-            padding: 8px 18px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.2s ease, background 0.2s;
-            margin-left: 8px;
-            white-space: nowrap;
-        }
-
-        .mobile-scan-btn i {
-            font-size: 0.9rem;
-        }
-
-        .mobile-scan-btn:hover {
-            transform: scale(1.02);
-            background: linear-gradient(135deg, #059669, #047857);
-        }
-
-        @media (max-width: 640px) {
-            .mobile-scan-btn {
-                padding: 6px 14px;
-                font-size: 0.75rem;
-            }
-        }
-
         .logo {
             width: 60px;
             height: 60px;
@@ -145,13 +113,6 @@
             margin-right: 15px;
             cursor: pointer;
         }
-
-        .logo-text h1 {
-            font-size: 2rem;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-
         .qr {
             width: 60px;
             height: 60px;
@@ -165,7 +126,6 @@
             margin-right: 15px;
             cursor: pointer;
         }
-
         .map {
             width: 60px;
             height: 60px;
@@ -179,7 +139,11 @@
             margin-right: 15px;
             cursor: pointer;
         }
-
+        .logo-text h1 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
         .logo-text p {
             color: var(--text-muted);
             font-size: 0.95rem;
@@ -188,7 +152,6 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-
         .feedback-email-wrapper {
             display: inline-flex;
             align-items: center;
@@ -198,7 +161,6 @@
             border-radius: 40px;
             margin-left: 8px;
         }
-
         .email-feedback-btn {
             background: linear-gradient(135deg, #4ade80, #22c55e);
             border: none;
@@ -212,15 +174,12 @@
             gap: 6px;
             font-weight: 600;
         }
-
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
-        .theme-toggle,
-        .login-btn {
+        .theme-toggle, .login-btn {
             padding: 10px 20px;
             border-radius: 12px;
             font-weight: 600;
@@ -232,31 +191,26 @@
             align-items: center;
             gap: 8px;
         }
-
         .login-btn {
             background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
             color: white;
             border: none;
         }
-
         .user-details {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
         }
-
         .user-name {
             font-weight: 600;
             color: var(--text-primary);
             font-size: 0.95rem;
         }
-
         .user-id {
             font-size: 0.75rem;
             color: var(--text-muted);
         }
-
         .logout-btn {
             padding: 5px 10px;
             background: #f87171;
@@ -266,7 +220,6 @@
             cursor: pointer;
             font-size: 0.75rem;
         }
-
         .user-avatar {
             width: 48px;
             height: 48px;
@@ -282,21 +235,14 @@
             cursor: pointer;
             transition: transform 0.2s ease;
         }
-
         .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        .user-avatar:hover {
-            transform: scale(1.02);
-        }
-
         .announcement-wrapper {
             margin-bottom: 30px;
         }
-
         .announcement-bar {
             background: var(--announcement-bg);
             border-radius: 16px;
@@ -308,7 +254,6 @@
             border: 1px solid var(--announcement-border);
             box-shadow: var(--shadow-sm);
         }
-
         .announcement-icon {
             background: #ff9800;
             color: white;
@@ -319,13 +264,11 @@
             align-items: center;
             justify-content: center;
         }
-
         .marquee-container {
             flex: 1;
             overflow: hidden;
             white-space: nowrap;
         }
-
         .marquee-text {
             display: inline-block;
             white-space: nowrap;
@@ -333,21 +276,13 @@
             font-weight: 500;
             color: #e67e22;
         }
-
         .marquee-text span {
             padding-right: 60px;
         }
-
         @keyframes scrollText {
-            0% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
-
         .announcement-hint {
             background: rgba(255, 152, 0, 0.15);
             padding: 5px 12px;
@@ -359,7 +294,6 @@
             align-items: center;
             gap: 5px;
         }
-
         .search-filter {
             display: flex;
             justify-content: space-between;
@@ -368,13 +302,11 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-
         .search-box {
             flex: 1;
             position: relative;
             max-width: 500px;
         }
-
         .search-box input {
             width: 100%;
             padding: 16px 20px 16px 50px;
@@ -385,7 +317,6 @@
             color: var(--input-text);
             outline: none;
         }
-
         .search-box i {
             position: absolute;
             left: 20px;
@@ -393,11 +324,9 @@
             transform: translateY(-50%);
             color: var(--text-muted);
         }
-
         .tools-section {
             margin-bottom: 60px;
         }
-
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -406,18 +335,15 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-
         .section-header h2 {
             font-size: 1.8rem;
             color: var(--text-primary);
         }
-
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
         }
-
         .tool-card {
             background-color: var(--card-bg);
             border-radius: 20px;
@@ -430,27 +356,18 @@
             display: flex;
             flex-direction: column;
         }
-
         .tool-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
         }
-
-        .tool-card.featured {
-            border-top: 5px solid #ff9a00;
-        }
-
-        .tool-card.new {
-            border-top: 5px solid #6a11cb;
-        }
-
+        .tool-card.featured { border-top: 5px solid #ff9a00; }
+        .tool-card.new { border-top: 5px solid #6a11cb; }
         .tool-header {
             padding: 25px 25px 15px;
             display: flex;
             align-items: center;
             position: relative;
         }
-
         .tool-icon {
             width: 70px;
             height: 70px;
@@ -463,18 +380,15 @@
             margin-right: 20px;
             flex-shrink: 0;
         }
-
         .tool-info h3 {
             font-size: 1.4rem;
             margin-bottom: 5px;
             color: var(--text-primary);
         }
-
         .tool-info p {
             color: var(--text-muted);
             font-size: 0.85rem;
         }
-
         .tool-badge {
             position: absolute;
             top: 20px;
@@ -486,15 +400,8 @@
             color: white;
             z-index: 2;
         }
-
-        .featured-badge {
-            background-color: #ff9a00;
-        }
-
-        .new-badge {
-            background-color: #6a11cb;
-        }
-
+        .featured-badge { background-color: #ff9a00; }
+        .new-badge { background-color: #6a11cb; }
         .tool-description {
             padding: 0 25px 20px;
             color: var(--text-secondary);
@@ -502,7 +409,6 @@
             font-size: 0.9rem;
             flex: 1;
         }
-
         .tool-footer {
             padding: 16px 25px 20px;
             border-top: 1px solid var(--border-light);
@@ -510,7 +416,6 @@
             justify-content: flex-end;
             margin-top: auto;
         }
-
         .tool-action {
             padding: 10px 25px;
             background: linear-gradient(to right, #6a11cb, #2575fc);
@@ -525,7 +430,6 @@
             gap: 8px;
             font-size: 0.9rem;
         }
-
         .footer {
             text-align: center;
             padding: 30px 0;
@@ -534,7 +438,7 @@
             font-size: 0.9rem;
         }
 
-        /* 弹窗通用样式 */
+        /* ========== 电脑端弹窗样式 (恢复原版精美设计) ========== */
         .profile-modal,
         .login-choice-modal,
         .login-modal,
@@ -557,7 +461,6 @@
             transition: all 0.3s ease;
             padding: 20px;
         }
-
         .profile-modal.active,
         .login-choice-modal.active,
         .login-modal.active,
@@ -568,7 +471,6 @@
             opacity: 1;
             visibility: visible;
         }
-
         .profile-modal-content,
         .login-choice-content,
         .login-content,
@@ -588,15 +490,12 @@
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border-light);
         }
-
         .modal-content {
             max-width: 900px;
         }
-
         .ratings-modal-content {
             max-width: 650px;
         }
-
         .profile-modal.active .profile-modal-content,
         .login-choice-modal.active .login-choice-content,
         .login-modal.active .login-content,
@@ -606,7 +505,6 @@
         .ratings-modal.active .ratings-modal-content {
             transform: translateY(0);
         }
-
         /* 工具弹窗内部样式 */
         .tool-modal .modal-header {
             display: flex;
@@ -614,7 +512,6 @@
             border-bottom: 1px solid var(--border-light);
             align-items: center;
         }
-
         .tool-modal .modal-icon {
             width: 80px;
             height: 80px;
@@ -626,26 +523,22 @@
             margin-right: 20px;
             flex-shrink: 0;
         }
-
         .tool-modal .modal-icon i {
             font-size: 2.8rem;
             color: white;
         }
-
         .tool-modal .modal-title h2 {
             font-size: 1.6rem;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
-
         .tool-modal .modal-title p {
             color: var(--text-muted);
             font-size: 0.9rem;
         }
-
         .tool-modal .modal-body {
             padding: 24px;
         }
-
         .tool-modal .modal-feature {
             background: var(--feature-bg);
             padding: 8px 12px;
@@ -656,7 +549,7 @@
             margin-right: 8px;
             margin-bottom: 8px;
         }
-
+        /* 谱师数据弹窗 */
         .profile-modal-header {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             padding: 20px 24px;
@@ -669,30 +562,25 @@
             top: 0;
             z-index: 5;
         }
-
         .profile-modal-header i {
             font-size: 1.8rem;
             color: white;
         }
-
         .profile-modal-header h3 {
             font-size: 1.4rem;
             font-weight: 700;
             margin: 0;
         }
-
         .profile-modal-body {
             padding: 24px;
             overflow-y: visible;
         }
-
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
             margin-bottom: 20px;
         }
-
         .profile-stat-item {
             background: var(--feature-bg);
             border-radius: 1.2rem;
@@ -701,29 +589,24 @@
             border: 1px solid var(--border-light);
             word-break: break-word;
         }
-
         .profile-stat-number {
             font-size: 1.5rem;
             font-weight: 800;
             color: var(--stat-number-color);
             line-height: 1.2;
         }
-
         .profile-stat-number.published-number {
             color: #22c55e;
         }
-
         .profile-stat-number.offline-number {
             color: #ef4444;
         }
-
         .profile-stat-label {
             font-size: 0.7rem;
             color: var(--text-muted);
             margin-top: 6px;
             letter-spacing: 0.3px;
         }
-
         .profile-total-info {
             background: var(--feature-bg);
             border-radius: 1rem;
@@ -733,37 +616,6 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
         }
-
-        .profile-empty {
-            text-align: center;
-            padding: 32px 20px;
-            color: var(--text-muted);
-        }
-
-        .profile-empty i {
-            font-size: 3rem;
-            margin-bottom: 12px;
-            opacity: 0.6;
-        }
-
-        .profile-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: none;
-            font-size: 1.2rem;
-            color: white;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
         .view-ratings-btn {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: white;
@@ -781,7 +633,7 @@
             width: 100%;
             transition: all 0.3s ease;
         }
-
+        /* 评分弹窗 */
         .ratings-modal-header {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
             padding: 18px 24px;
@@ -791,7 +643,75 @@
             align-items: center;
             gap: 12px;
         }
-
+        .ratings-modal-header i {
+            font-size: 1.6rem;
+        }
+        .ratings-modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .ratings-body {
+            padding: 20px 24px;
+        }
+        .ratings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ratings-table th,
+        .ratings-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--rating-table-border);
+            text-align: left;
+            color: var(--text-primary);
+        }
+        .ratings-table th {
+            background: var(--feature-bg);
+            font-weight: 700;
+        }
+        .rating-score {
+            font-weight: 700;
+            color: #f59e0b;
+        }
+        /* 登录弹窗 */
+        .login-header,
+        .phone-login-header {
+            padding: 24px;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border-radius: 2rem 2rem 0 0;
+        }
+        .login-header h2,
+        .phone-login-header h2 {
+            margin-top: 8px;
+            font-size: 1.5rem;
+        }
+        .login-body,
+        .phone-login-body {
+            padding: 24px;
+        }
+        /* 公告弹窗 */
+        .announce-modal-header {
+            background: linear-gradient(135deg, #ff9800, #f97316);
+            padding: 20px 24px;
+            border-radius: 2rem 2rem 0 0;
+            color: white;
+        }
+        .announce-modal-header i {
+            font-size: 1.6rem;
+        }
+        .announce-modal-header h3 {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 1.3rem;
+        }
+        /* 关闭按钮统一样式 */
+        .modal-close,
+        .login-close,
+        .announce-close,
+        .phone-close,
+        .choice-close,
+        .profile-close,
         .ratings-close {
             position: absolute;
             top: 16px;
@@ -807,82 +727,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .ratings-body {
-            padding: 20px 24px;
-        }
-
-        .ratings-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .ratings-table th,
-        .ratings-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--rating-table-border);
-            text-align: left;
-            color: var(--text-primary);
-        }
-
-        .ratings-table th {
-            background: var(--feature-bg);
-            font-weight: 700;
-        }
-
-        .rating-score {
-            font-weight: 700;
-            color: #f59e0b;
-        }
-
-        .login-header,
-        .phone-login-header {
-            padding: 24px;
-            text-align: center;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-            border-radius: 2rem 2rem 0 0;
-        }
-
-        .login-body,
-        .phone-login-body {
-            padding: 24px;
-        }
-
-        .modal-close,
-        .login-close,
-        .announce-close,
-        .phone-close,
-        .choice-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: none;
-            font-size: 1.2rem;
-            color: white;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 10;
+            transition: background 0.2s;
         }
-
-        .announce-modal-header {
-            background: linear-gradient(135deg, #ff9800, #f97316);
-            padding: 20px 24px;
-            border-radius: 2rem 2rem 0 0;
-            color: white;
+        .modal-close:hover,
+        .login-close:hover,
+        .announce-close:hover,
+        .phone-close:hover,
+        .choice-close:hover,
+        .profile-close:hover,
+        .ratings-close:hover {
+            background: rgba(0, 0, 0, 0.5);
         }
-
+        /* 表单样式 */
         .form-group {
             margin-bottom: 16px;
         }
-
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
         .form-group input {
             width: 100%;
             padding: 12px;
@@ -890,14 +756,13 @@
             border: 1px solid var(--border-light);
             background: var(--input-bg);
             color: var(--input-text);
+            font-size: 0.95rem;
         }
-
         .captcha-row {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-
         .captcha-img {
             width: 110px;
             height: 48px;
@@ -909,15 +774,14 @@
             cursor: pointer;
             border: 1px solid var(--border-light);
         }
-
         .btn-secondary {
             padding: 0 16px;
             border-radius: 12px;
             background: var(--feature-bg);
             border: 1px solid var(--border-light);
             cursor: pointer;
+            font-weight: 500;
         }
-
         .btn-block {
             width: 100%;
             padding: 12px;
@@ -928,264 +792,340 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 16px;
+            font-size: 1rem;
         }
 
+        /* ========== 手机端专用样式 (宽度 ≤ 768px) ========== */
         @media (max-width: 768px) {
+            .pc-container {
+                display: none;
+            }
+            .mobile-container {
+                display: block;
+                padding: 12px 16px 20px;
+                max-width: 100%;
+                margin: 0 auto;
+            }
             body {
-                padding: 12px;
+                padding: 0;
             }
-
-            .tools-grid {
-                grid-template-columns: 1fr;
+            /* 手机端卡片样式 */
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--border-light);
+                flex-wrap: wrap;
+                gap: 10px;
             }
-
+            .logo-mini {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .logo-icon-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .logo-square {
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #39d517, #9dcf0f);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.3rem;
+                box-shadow: var(--shadow-sm);
+            }
+            .qr-square { background: linear-gradient(135deg, #28b3dd, #00ffd1); }
+            .map-square { background: linear-gradient(135deg, #009fff, #ab00ff); }
+            .brand-text h2 { font-size: 1.1rem; color: var(--text-primary); }
+            .brand-text p { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+            .email-feedback-mini {
+                background: linear-gradient(135deg, #4ade80, #22c55e);
+                border: none;
+                padding: 2px 8px;
+                border-radius: 20px;
+                color: white;
+                font-size: 0.6rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+            }
+            .user-actions {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .theme-toggle-mobile, .login-btn-mobile {
+                background: var(--card-bg);
+                border: 1px solid var(--border-light);
+                padding: 8px 12px;
+                border-radius: 30px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .login-btn-mobile {
+                background: linear-gradient(135deg, #4ade80, #22c55e);
+                color: white;
+                border: none;
+            }
+            .user-details-mobile {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--card-bg);
+                padding: 5px 12px 5px 8px;
+                border-radius: 40px;
+                border: 1px solid var(--border-light);
+            }
+            .avatar-small {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: linear-gradient(135deg,#6a11cb,#2575fc);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                overflow: hidden;
+                cursor: pointer;
+            }
+            .logout-icon {
+                background: #f87171;
+                border: none;
+                color: white;
+                border-radius: 20px;
+                padding: 4px 8px;
+                font-size: 0.6rem;
+                cursor: pointer;
+            }
+            .announce-card {
+                background: var(--announcement-bg);
+                border-radius: 20px;
+                padding: 10px 16px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 20px;
+                border: 1px solid var(--announcement-border);
+                cursor: pointer;
+            }
+            .marquee-mobile {
+                flex: 1;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            .marquee-text-mobile {
+                display: inline-block;
+                white-space: nowrap;
+                animation: scrollText 15s linear infinite;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #e67e22;
+            }
+            .hint-badge {
+                background: rgba(255,152,0,0.2);
+                padding: 4px 10px;
+                border-radius: 30px;
+                font-size: 0.6rem;
+                font-weight: 600;
+                color: #e67e22;
+                white-space: nowrap;
+            }
+            .search-bar-mobile {
+                margin-bottom: 24px;
+                position: relative;
+            }
+            .search-bar-mobile input {
+                width: 100%;
+                padding: 14px 18px 14px 44px;
+                border-radius: 40px;
+                border: 1px solid var(--border-light);
+                background: var(--input-bg);
+                color: var(--text-primary);
+                font-size: 0.9rem;
+                outline: none;
+            }
+            .search-bar-mobile i {
+                position: absolute;
+                left: 18px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-muted);
+            }
+            .tools-header-mobile {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 16px;
+            }
+            .tools-header-mobile h2 { font-size: 1.4rem; color: var(--text-primary); }
+            .tools-count {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                background: var(--feature-bg);
+                padding: 4px 12px;
+                border-radius: 20px;
+            }
+            .tools-grid-mobile {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin-bottom: 30px;
+            }
+            .tool-card-mobile {
+                background: var(--card-bg);
+                border-radius: 20px;
+                padding: 14px 16px;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--border-light);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                position: relative;
+            }
+            .tool-card-mobile.featured { border-left: 5px solid #ff9a00; }
+            .tool-card-mobile.new { border-left: 5px solid #6a11cb; }
+            .tool-icon-mobile {
+                width: 52px;
+                height: 52px;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.4rem;
+                flex-shrink: 0;
+            }
+            .tool-info-mobile { flex: 1; }
+            .tool-info-mobile h3 { font-size: 1rem; margin-bottom: 4px; color: var(--text-primary); }
+            .tool-info-mobile p { font-size: 0.7rem; color: var(--text-muted); }
+            .tool-badge-mobile {
+                position: absolute;
+                top: 10px;
+                right: 12px;
+                font-size: 0.6rem;
+                font-weight: 700;
+                padding: 3px 8px;
+                border-radius: 20px;
+                color: white;
+            }
+            .featured-badge-mobile { background: #ff9a00; }
+            .new-badge-mobile { background: #6a11cb; }
+            .open-link-icon { color: var(--text-muted); font-size: 0.9rem; margin-left: 6px; }
+            .footer-mobile {
+                text-align: center;
+                padding: 20px 0 16px;
+                color: var(--text-muted);
+                font-size: 0.7rem;
+                border-top: 1px solid var(--footer-border);
+            }
+            /* 手机端弹窗适配 */
             .profile-modal-content,
+            .login-choice-content,
+            .login-content,
+            .phone-login-content,
+            .modal-content,
+            .announce-modal-content,
             .ratings-modal-content {
                 max-width: 94%;
             }
-
-            .tool-badge {
-                top: 12px;
-                right: 12px;
-                padding: 4px 10px;
-                font-size: 0.7rem;
-            }
-
-            .tool-header {
-                padding: 20px 20px 12px;
-            }
-
-            .tool-icon {
-                width: 52px;
-                height: 52px;
-                font-size: 1.4rem;
-                margin-right: 14px;
-            }
-
-            .tool-info h3 {
-                font-size: 1.1rem;
-            }
-
             .tool-modal .modal-icon {
                 width: 60px;
                 height: 60px;
             }
-
             .tool-modal .modal-icon i {
                 font-size: 2rem;
             }
-
             .tool-modal .modal-title h2 {
                 font-size: 1.3rem;
+            }
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
             }
         }
     </style>
 </head>
-
 <body>
-<div class="container">
+<!-- ==================== 电脑端布局 ==================== -->
+<div class="pc-container" id="pcContainer">
     <header class="header">
         <div class="logo-area">
-            <a href="./yurenjie.html" style="text-decoration: none;">
-                <div class="logo">
-                    <i class="fa-solid fa-face-grin-tongue-wink"></i>
-                </div>
-            </a>
-            <a href="./qr.html" style="text-decoration: none;">
-                <div class="qr">
-                    <i class="fa-solid fa-qrcode"></i>
-                </div>
-            </a>
-            <a href="./map.html" style="text-decoration: none;">
-                <div class="map">
-                    <i class="fa-solid fa-location-dot"></i>
-                </div>
-            </a>
+            <a href="./yurenjie.html" style="text-decoration: none;"><div class="logo"><i class="fa-solid fa-face-grin-tongue-wink"></i></div></a>
+            <a href="./qr.html" style="text-decoration: none;"><div class="qr"><i class="fa-solid fa-qrcode"></i></div></a>
+            <a href="./map.html" style="text-decoration: none;"><div class="map"><i class="fa-solid fa-location-dot"></i></div></a>
             <div class="logo-text">
                 <h1>舞立方自制谱谱师工具</h1>
-                <p>反馈：miqimiaomiaowushi@163.com
-                    <span class="feedback-email-wrapper">
-                            <button class="email-feedback-btn" id="directEmailBtn">
-                                <i class="fas fa-paper-plane"></i> 一键反馈
-                            </button>
-                        </span>
-                </p>
+                <p>反馈：miqimiaomiaowushi@163.com<span class="feedback-email-wrapper"><button class="email-feedback-btn" id="pcEmailBtn"><i class="fas fa-paper-plane"></i> 一键反馈</button></span></p>
             </div>
         </div>
-        <div class="user-info" id="userInfo">
-            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
-            <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> 登录</button>
-            <div class="user-details" id="userDetails" style="display: none;">
-                <div class="user-name" id="userName"></div>
-                <div class="user-id" id="userId"></div>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button>
-            </div>
-            <div class="user-avatar" id="userAvatar" style="display: none;">
-                <i class="fas fa-user"></i>
-            </div>
+        <div class="user-info" id="pcUserInfo">
+            <button class="theme-toggle" id="pcThemeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
+            <button class="login-btn" id="pcLoginBtn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+            <div class="user-details" id="pcUserDetails" style="display: none;"><div class="user-name" id="pcUserName"></div><div class="user-id" id="pcUserId"></div><button class="logout-btn" id="pcLogoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button></div>
+            <div class="user-avatar" id="pcUserAvatar" style="display: none;"><i class="fas fa-user"></i></div>
         </div>
     </header>
-
-    <div class="announcement-wrapper">
-        <div class="announcement-bar" id="announcementBar">
-            <div class="announcement-icon"><i class="fas fa-bullhorn"></i></div>
-            <div class="marquee-container">
-                <div class="marquee-text">
-                    <span>✨ 点击头像查看谱师数据 & 谱面评分 ✨</span>
-                    <span>支持微信/手机号登录</span>
-                </div>
-            </div>
-            <div class="announcement-hint"><i class="fas fa-hand-pointer"></i> 详情</div>
-        </div>
-    </div>
-
-    <div class="search-filter">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="搜索工具名称或功能...">
-            <i class="fas fa-search"></i>
-        </div>
-    </div>
-
-    <section class="tools-section">
-        <div class="section-header">
-            <div>
-                <h2>舞立方工具大全</h2>
-            </div>
-            <div>
-                <p>共 <span id="toolCount">0</span> 个工具</p>
-            </div>
-        </div>
-        <div class="tools-grid" id="toolsGrid"></div>
-    </section>
-
-    <footer class="footer">
-        <p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p>
-    </footer>
+    <div class="announcement-wrapper"><div class="announcement-bar" id="pcAnnounceBar"><div class="announcement-icon"><i class="fas fa-bullhorn"></i></div><div class="marquee-container"><div class="marquee-text"><span>✨ 点击头像查看谱师数据 & 谱面评分 ✨</span><span>支持微信/手机号登录</span></div></div><div class="announcement-hint"><i class="fas fa-hand-pointer"></i> 详情</div></div></div>
+    <div class="search-filter"><div class="search-box"><input type="text" id="pcSearchInput" placeholder="搜索工具名称或功能..."><i class="fas fa-search"></i></div></div>
+    <section class="tools-section"><div class="section-header"><div><h2>舞立方工具大全</h2></div><div><p>共 <span id="pcToolCount">0</span> 个工具</p></div></div><div class="tools-grid" id="pcToolsGrid"></div></section>
+    <footer class="footer"><p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p></footer>
 </div>
 
-<!-- 弹窗结构 (保持不变) -->
-<div class="profile-modal" id="profileModal">
-    <div class="profile-modal-content">
-        <button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button>
-        <div class="profile-modal-header"><i class="fas fa-chart-simple"></i>
-            <h3>谱师数据</h3>
-        </div>
-        <div class="profile-modal-body" id="profileModalBody">
-            <div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div>
-        </div>
-    </div>
-</div>
-<div class="login-choice-modal" id="loginChoiceModal">
-    <div class="login-choice-content">
-        <button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button>
-        <div class="login-choice-header" style="padding:24px;text-align:center;"><i
-                class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;"></i>
-            <h2>选择登录方式</h2>
-        </div>
-        <div class="login-options" style="padding:0 24px 32px;display:flex;flex-direction:column;gap:16px;">
-            <button class="login-option-btn" id="chooseWechatBtn"
-                    style="background:linear-gradient(135deg,#07c160,#06ae56);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i
-                    class="fab fa-weixin"></i> 微信扫码登录</button>
-            <button class="login-option-btn" id="choosePhoneBtn"
-                    style="background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i
-                    class="fas fa-phone-alt"></i> 手机号登录</button>
-        </div>
-    </div>
-</div>
-<div class="login-modal" id="loginModal">
-    <div class="login-content">
-        <button class="login-close" id="loginClose"><i class="fas fa-times"></i></button>
-        <div class="login-header"><i class="fab fa-weixin fa-2x"></i>
-            <h2>微信扫码登录</h2>
-            <p>使用微信扫描二维码登录</p>
-        </div>
-        <div class="login-body">
-            <div class="qr-container" style="text-align:center;">
-                <div class="qr-placeholder" id="loginQrPlaceholder"
-                     style="width:200px;height:200px;margin:0 auto;background:var(--feature-bg);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px dashed var(--border-light);">
-                    <i class="fas fa-qrcode fa-3x"></i>
-                    <p>点击生成二维码</p>
-                </div><img id="login-qrcode-img" style="display:none;max-width:200px;margin:0 auto;border-radius:16px;">
+<!-- ==================== 手机端布局 ==================== -->
+<div class="mobile-container" id="mobileContainer">
+    <div class="mobile-header">
+        <div class="logo-mini">
+            <div class="logo-icon-group">
+                <a href="./yurenjie.html"><div class="logo-square"><i class="fa-regular fa-face-grin-tongue-wink"></i></div></a>
+                <a href="./qr.html"><div class="logo-square qr-square"><i class="fa-solid fa-qrcode"></i></div></a>
+                <a href="./map.html"><div class="logo-square map-square"><i class="fa-solid fa-location-dot"></i></div></a>
             </div>
-            <div class="login-status waiting" id="loginStatus"
-                 style="text-align:center;margin-top:16px;padding:8px;background:var(--feature-bg);border-radius:12px;">
-                点击上方区域生成二维码</div>
+            <div class="brand-text"><h2>舞立方谱师工具</h2><p>反馈 miqimiaomiaowushi@163.com <button class="email-feedback-mini" id="mobileEmailBtn"><i class="fas fa-paper-plane"></i> 反馈</button></p></div>
+        </div>
+        <div class="user-actions" id="mobileUserArea">
+            <button class="theme-toggle-mobile" id="mobileThemeToggle"><i class="fas fa-moon"></i></button>
+            <button class="login-btn-mobile" id="mobileLoginBtn"><i class="fas fa-sign-in-alt"></i> 登录</button>
+            <div id="mobileUserDetails" style="display: none; align-items: center; gap: 8px;"><div class="user-details-mobile"><div class="avatar-small" id="mobileAvatar"><i class="fas fa-user"></i></div><div><div class="user-text" id="mobileUserName"></div><div class="user-text" style="font-size: 0.6rem; color: var(--text-muted);" id="mobileUserId"></div></div><button class="logout-icon" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i></button></div></div>
         </div>
     </div>
+    <div class="announce-card" id="mobileAnnounceBar"><div class="announce-icon"><i class="fas fa-bullhorn"></i></div><div class="marquee-mobile"><div class="marquee-text-mobile"><span>✨ 点击头像查看谱师数据 & 谱面评分 ✨ 支持微信/手机号登录</span><span>✨ 点击头像查看谱师数据 & 谱面评分 ✨ 支持微信/手机号登录</span></div></div><div class="hint-badge"><i class="fas fa-hand-pointer"></i> 详情</div></div>
+    <div class="search-bar-mobile"><input type="text" id="mobileSearchInput" placeholder="搜索工具名称或功能..."><i class="fas fa-search"></i></div>
+    <div class="tools-header-mobile"><h2>舞立方工具大全</h2><span class="tools-count" id="mobileToolCount">0 个工具</span></div>
+    <div class="tools-grid-mobile" id="mobileToolsGrid"></div>
+    <div class="footer-mobile"><p>2025 舞立方自制谱谱师工具 | 本网站/app由妙妙mouseke开发</p></div>
 </div>
-<div class="phone-login-modal" id="phoneLoginModal">
-    <div class="phone-login-content">
-        <button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button>
-        <div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i>
-            <h2>手机号登录</h2>
-            <p>输入手机号获取验证码</p>
-        </div>
-        <div class="phone-login-body">
-            <div class="form-group"><label>手机号</label><input type="tel" id="phoneNumber" placeholder="11位手机号"></div>
-            <div class="form-group"><label>图形验证码</label>
-                <div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码">
-                    <div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span
-                            id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button">刷新</button>
-                </div>
-            </div>
-            <div class="form-group"><label>短信验证码</label>
-                <div class="sms-row" style="display:flex;gap:10px;"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div>
-            </div>
-            <button id="phoneDoLoginBtn" class="btn-block">立即登录</button>
-            <div id="phoneMessage" class="message" style="margin-top:12px;display:none;"></div>
-        </div>
-    </div>
-</div>
-<div class="tool-modal" id="toolModal">
-    <div class="modal-content">
-        <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
-        <div class="modal-header">
-            <div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div>
-            <div class="modal-title">
-                <h2 id="modalToolName">工具名称</h2>
-                <p id="modalToolCategory"></p>
-            </div>
-        </div>
-        <div class="modal-body">
-            <div>
-                <h3>工具描述</h3>
-                <p id="modalToolDescription"></p>
-            </div>
-            <div>
-                <h3>主要功能</h3>
-                <div id="modalFeatures" class="modal-features"></div>
-            </div>
-            <div><a class="modal-btn" id="openToolBtn" target="_blank"
-                    style="display:inline-block;margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border-radius:40px;text-decoration:none;"><i
-                    class="fas fa-external-link-alt"></i> 打开工具</a></div>
-        </div>
-    </div>
-</div>
-<div class="announce-modal" id="announceModal">
-    <div class="announce-modal-content">
-        <button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button>
-        <div class="announce-modal-header"><i class="fas fa-newspaper"></i>
-            <h3 style="display:inline-block;margin-left:8px;">最新公告</h3>
-        </div>
-        <div class="announce-modal-body" style="padding:24px;line-height:1.6;">
-            <p><strong>✨ 新功能：谱面评分查询</strong><br>点击头像 → 谱师数据 → 查看谱面评分，即可获取每个谱面的详细评分。</p>
-            <p><strong>🔧 修复问题</strong><br>修复了弹窗显示异常，优化手机端体验。</p>
-        </div>
-    </div>
-</div>
-<div class="ratings-modal" id="ratingsModal">
-    <div class="ratings-modal-content">
-        <button class="ratings-close" id="ratingsModalClose"><i class="fas fa-times"></i></button>
-        <div class="ratings-modal-header"><i class="fas fa-star"></i>
-            <h3>谱面评分详情</h3>
-        </div>
-        <div class="ratings-body" id="ratingsBody">
-            <div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div>
-        </div>
-    </div>
-</div>
+
+<!-- 所有弹窗共用DOM (样式已恢复原版) -->
+<div class="profile-modal" id="profileModal"><div class="profile-modal-content"><button class="profile-close" id="profileModalClose"><i class="fas fa-times"></i></button><div class="profile-modal-header"><i class="fas fa-chart-simple"></i><h3>谱师数据</h3></div><div class="profile-modal-body" id="profileModalBody">加载中...</div></div></div>
+<div class="login-choice-modal" id="loginChoiceModal"><div class="login-choice-content"><button class="choice-close" id="choiceClose"><i class="fas fa-times"></i></button><div style="padding:24px;text-align:center;"><i class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;"></i><h2>选择登录方式</h2></div><div style="padding:0 24px 32px;display:flex;flex-direction:column;gap:16px;"><button id="chooseWechatBtn" style="background:linear-gradient(135deg,#07c160,#06ae56);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i class="fab fa-weixin"></i> 微信扫码登录</button><button id="choosePhoneBtn" style="background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;padding:14px;border-radius:60px;border:none;font-weight:600;"><i class="fas fa-phone-alt"></i> 手机号登录</button></div></div></div>
+<div class="login-modal" id="loginModal"><div class="login-content"><button class="login-close" id="loginClose"><i class="fas fa-times"></i></button><div class="login-header"><i class="fab fa-weixin fa-2x"></i><h2>微信扫码登录</h2><p>使用微信扫描二维码登录</p></div><div class="login-body"><div style="text-align:center;"><div id="loginQrPlaceholder" style="width:200px;height:200px;margin:0 auto;background:var(--feature-bg);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px dashed var(--border-light);"><i class="fas fa-qrcode fa-3x"></i><p>点击生成二维码</p></div><img id="login-qrcode-img" style="display:none;max-width:200px;margin:0 auto;border-radius:16px;"></div><div id="loginStatus" style="text-align:center;margin-top:16px;padding:8px;background:var(--feature-bg);border-radius:12px;">点击上方区域生成二维码</div></div></div></div>
+<div class="phone-login-modal" id="phoneLoginModal"><div class="phone-login-content"><button class="phone-close" id="phoneModalClose"><i class="fas fa-times"></i></button><div class="phone-login-header"><i class="fas fa-mobile-alt fa-2x"></i><h2>手机号登录</h2><p>输入手机号获取验证码</p></div><div class="phone-login-body"><div class="form-group"><label>手机号</label><input type="tel" id="phoneNumber" placeholder="11位手机号"></div><div class="form-group"><label>图形验证码</label><div class="captcha-row"><input type="text" id="graphCodeInput" placeholder="验证码"><div class="captcha-img" id="captchaImgBox"><img id="captchaImage" style="display:none;"><span id="captchaTextSpan">点击加载</span></div><button id="refreshCaptchaBtn" class="btn-secondary" type="button">刷新</button></div></div><div class="form-group"><label>短信验证码</label><div style="display:flex;gap:10px;"><input type="text" id="smsCodeInput" placeholder="6位数字" maxlength="6" style="flex:1;"><button id="getSmsCodeBtn" class="btn-secondary" type="button">获取验证码</button></div></div><button id="phoneDoLoginBtn" class="btn-block">立即登录</button><div id="phoneMessage" style="margin-top:12px;display:none;"></div></div></div></div>
+<div class="tool-modal" id="toolModal"><div class="modal-content"><button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button><div class="modal-header"><div class="modal-icon" id="modalIcon"><i class="fas fa-tools"></i></div><div class="modal-title"><h2 id="modalToolName">工具名称</h2><p id="modalToolCategory"></p></div></div><div class="modal-body"><div><h3>工具描述</h3><p id="modalToolDescription"></p></div><div><h3>主要功能</h3><div id="modalFeatures" class="modal-features"></div></div><div><a class="modal-btn" id="openToolBtn" target="_blank" style="display:inline-block;margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border-radius:40px;text-decoration:none;"><i class="fas fa-external-link-alt"></i> 打开工具</a></div></div></div></div>
+<div class="announce-modal" id="announceModal"><div class="announce-modal-content"><button class="announce-close" id="announceModalClose"><i class="fas fa-times"></i></button><div class="announce-modal-header"><i class="fas fa-newspaper"></i><h3>最新公告</h3></div><div class="announce-modal-body" style="padding:24px;line-height:1.6;"><p><strong>✨ 新功能：谱面评分查询</strong><br>点击头像 → 谱师数据 → 查看谱面评分，即可获取每个谱面的详细评分。</p><p><strong>🔧 修复问题</strong><br>修复了弹窗显示异常，优化手机端体验。</p></div></div></div>
+<div class="ratings-modal" id="ratingsModal"><div class="ratings-modal-content"><button class="ratings-close" id="ratingsModalClose"><i class="fas fa-times"></i></button><div class="ratings-modal-header"><i class="fas fa-star"></i><h3>谱面评分详情</h3></div><div class="ratings-body" id="ratingsBody">加载中...</div></div></div>
 
 <script>
+    // ---------- 核心数据与API (完全保留原逻辑) ----------
     const API_BASE = 'https://dancedemo.shenghuayule.com';
     let accessToken = null;
     let loginQrCodeData = null, loginCheckInterval = null, phoneCountdown = 0, phoneCountdownInterval = null;
@@ -1207,83 +1147,155 @@
         { id: 14, name: "歌曲收藏", category: "收藏工具", description: "歌曲收藏", icon: "fa-solid fa-star", iconColor: "#ff00f2", new: true, features: ["音量调节", "直接收藏"], url: "../bossmusic.html" },
     ];
 
-    function showUserInfo(user) {
-        document.getElementById('userName').innerText = user.UserName;
-        document.getElementById('userId').innerText = `ID: ${user.UserID}`;
-        document.getElementById('userDetails').style.display = 'flex';
-        document.getElementById('userAvatar').style.display = 'flex';
-        document.getElementById('loginBtn').style.display = 'none';
-        if (user.HeadimgURL) document.getElementById('userAvatar').innerHTML = `<img src="${user.HeadimgURL}" alt="头像">`;
-        else document.getElementById('userAvatar').innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
+    function showUserInfo(user, isMobile = false) {
+        if (isMobile) {
+            document.getElementById('mobileUserName').innerText = user.UserName;
+            document.getElementById('mobileUserId').innerText = `ID: ${user.UserID}`;
+            document.getElementById('mobileUserDetails').style.display = 'flex';
+            document.getElementById('mobileLoginBtn').style.display = 'none';
+            const avatarDiv = document.getElementById('mobileAvatar');
+            if (user.HeadimgURL) avatarDiv.innerHTML = `<img src="${user.HeadimgURL}" style="width:100%;height:100%;object-fit:cover;">`;
+            else avatarDiv.innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
+        } else {
+            document.getElementById('pcUserName').innerText = user.UserName;
+            document.getElementById('pcUserId').innerText = `ID: ${user.UserID}`;
+            document.getElementById('pcUserDetails').style.display = 'flex';
+            document.getElementById('pcUserAvatar').style.display = 'flex';
+            document.getElementById('pcLoginBtn').style.display = 'none';
+            if (user.HeadimgURL) document.getElementById('pcUserAvatar').innerHTML = `<img src="${user.HeadimgURL}" alt="头像">`;
+            else document.getElementById('pcUserAvatar').innerHTML = user.UserName?.charAt(0).toUpperCase() || 'U';
+        }
     }
-    function clearUserData() { localStorage.removeItem('dance_user_data'); localStorage.removeItem('dance_user_token'); accessToken = null; document.getElementById('userDetails').style.display = 'none'; document.getElementById('userAvatar').style.display = 'none'; document.getElementById('userAvatar').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('loginBtn').style.display = 'flex'; }
-    async function saveTokenAndFetchUser(token, userIdHint) { accessToken = token; localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now() + 7 * 864e5).toISOString() })); try { const uir = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, { headers: { 'Authorization': `bearer ${token}` } }); const ui = await uir.json(); const userData = { UserID: ui.UserID || userIdHint, UserName: ui.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'), HeadimgURL: ui.HeadimgURL || '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } catch (e) { const fallbackName = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'; const userData = { UserID: userIdHint || 'unknown', UserName: fallbackName, HeadimgURL: '' }; localStorage.setItem('dance_user_data', JSON.stringify(userData)); showUserInfo(userData); } }
-    function checkLoginStatus() { const saved = localStorage.getItem('dance_user_data'); const tokenData = localStorage.getItem('dance_user_token'); if (saved && tokenData) { try { const tok = JSON.parse(tokenData); if (new Date(tok.expireTime) > new Date()) { accessToken = tok.token; showUserInfo(JSON.parse(saved)); } else clearUserData(); } catch (e) { clearUserData(); } } }
-    async function fetchRawMusicList() { if (!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if (res.status === 401) return null; const data = await res.json(); return Array.isArray(data) ? data : (data.List || []); } catch (e) { return null; } }
-    async function fetchScoreByMusicId(musicId) { if (!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetScoreStat?musicId=${musicId}`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if (!res.ok) return null; const data = await res.json(); return data.Score !== undefined ? data.Score : null; } catch (e) { return null; } }
-    async function showProfileModal() { const modal = document.getElementById('profileModal'), bodyDiv = document.getElementById('profileModalBody'); bodyDiv.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden'; if (!accessToken) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>'; return; } try { const list = await fetchRawMusicList(); if (!list || !list.length) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>'; return; } let totalDownload = 0, totalPlay = 0, published = 0, offline = 0; list.forEach(i => { totalDownload += i.DownloadCount || 0; totalPlay += i.ClicksRatio || 0; i.IsOnSale ? published++ : offline++; }); bodyDiv.innerHTML = `<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div><button class="view-ratings-btn" id="viewRatingsBtn"><i class="fas fa-star"></i> 查看谱面评分</button>`; document.getElementById('viewRatingsBtn')?.addEventListener('click', (e) => { e.stopPropagation(); showRatingsModal(); }); } catch (e) { bodyDiv.innerHTML = '<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>'; } }
-    async function showRatingsModal() { const modal = document.getElementById('ratingsModal'), bodyDiv = document.getElementById('ratingsBody'); bodyDiv.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-pulse"></i> 加载评分数据...</div>'; modal.classList.add('active'); document.body.style.overflow = 'hidden'; if (!accessToken) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-exclamation-triangle"></i><p>请先登录</p></div>'; return; } try { const musicList = await fetchRawMusicList(); if (!musicList || musicList.length === 0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无谱面数据</p></div>'; return; } const ratingsPromises = musicList.map(async (item) => { const musicId = item.MusicID || item.musicId; const score = await fetchScoreByMusicId(musicId); const rawName = item.Name || item.MusicName || item.musicName || `谱面${musicId}`; const displayName = `[${musicId}] ${rawName}`; return { musicId, musicName: displayName, score: score !== null ? score : null }; }); const ratings = await Promise.all(ratingsPromises); const validRatings = ratings.filter(r => r.score !== null); if (validRatings.length === 0) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无评分数据</p></div>'; return; } let html = `<table class="ratings-table"><thead><tr><th>#</th><th>谱面名称</th><th>综合评分</th></tr></thead><tbody>`; validRatings.forEach((item, idx) => { const displayScore = typeof item.score === 'number' ? item.score.toFixed(1) : item.score; html += `<tr><td>${idx + 1}</td><td>${escapeHtml(item.musicName)}</td><td class="rating-score">${displayScore} ⭐</td></tr>`; }); html += `</tbody></table>`; bodyDiv.innerHTML = html; } catch (err) { bodyDiv.innerHTML = '<div class="ratings-empty"><i class="fas fa-bug"></i><p>加载失败，请稍后重试</p></div>'; } }
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-    function closeRatingsModal() { document.getElementById('ratingsModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-    async function generateLoginQRCode() { const updateStatus = (t) => { const d = document.getElementById('loginStatus'); d.innerText = t; }; updateStatus('生成中...'); try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`); const data = await res.json(); loginQrCodeData = data; document.getElementById('login-qrcode-img').src = data.QrcodeUrl; document.getElementById('login-qrcode-img').style.display = 'block'; document.getElementById('loginQrPlaceholder').style.display = 'none'; updateStatus('请微信扫码'); if (loginCheckInterval) clearInterval(loginCheckInterval); loginCheckInterval = setInterval(async () => { if (!loginQrCodeData?.ID) return; try { const params = new URLSearchParams({ client_type: 'qrcode', grant_type: 'client_credentials', client_id: loginQrCodeData.ID }); const res2 = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params }); if (res2.status === 401) return; const data2 = await res2.json(); const token = data2.access_token; if (token) { clearInterval(loginCheckInterval); updateStatus('登录成功'); const uid = data2.user_id || data2.userId; await saveTokenAndFetchUser(token, uid); setTimeout(() => closeLoginModal(), 1200); } } catch (e) { } }, 2000); } catch (e) { updateStatus('生成失败，请重试'); } }
-    function openLoginChoice() { document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
-    function closeLoginChoice() { document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-    function openLoginModal() { closeLoginChoice(); document.getElementById('loginModal').classList.add('active'); document.body.style.overflow = 'hidden'; document.getElementById('login-qrcode-img').style.display = 'none'; document.getElementById('loginQrPlaceholder').style.display = 'flex'; document.getElementById('loginStatus').innerText = '点击上方区域生成二维码'; }
-    function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if (loginCheckInterval) clearInterval(loginCheckInterval); }
-    function openPhoneModal() { closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); document.body.style.overflow = 'hidden'; loadGraphCodeForPhone(); }
-    function closePhoneModal() { document.getElementById('phoneLoginModal').classList.remove('active'); document.body.style.overflow = 'auto'; if (phoneCountdownInterval) clearInterval(phoneCountdownInterval); }
-    async function loadGraphCodeForPhone() { const phone = document.getElementById('phoneNumber').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) { showPhoneMsg('正确手机号', 'error'); return; } const img = document.getElementById('captchaImage'), span = document.getElementById('captchaTextSpan'); span.style.display = 'flex'; span.innerText = '⏳'; img.style.display = 'none'; try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`); let text = await res.text(); if (text.startsWith('"')) text = text.slice(1, -1); img.src = `data:image/gif;base64,${text}`; img.style.display = 'block'; span.style.display = 'none'; } catch (e) { span.innerText = '重试'; } }
-    async function requestSmsCode() { const phone = document.getElementById('phoneNumber').value.trim(), graphCode = document.getElementById('graphCodeInput').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error'); if (!graphCode) return showPhoneMsg('图形码必填', 'error'); if (phoneCountdown > 0) return; const btn = document.getElementById('getSmsCodeBtn'); btn.disabled = true; phoneCountdown = 60; btn.innerText = `${phoneCountdown}s`; phoneCountdownInterval = setInterval(() => { if (phoneCountdown <= 1) { clearInterval(phoneCountdownInterval); btn.disabled = false; btn.innerText = '获取验证码'; phoneCountdown = 0; } else { phoneCountdown--; btn.innerText = `${phoneCountdown}s`; } }, 1000); try { const res = await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); let text = await res.text(); if (text.startsWith('"')) text = text.slice(1, -1); if (/^\d{4,8}$/.test(text)) { document.getElementById('smsCodeInput').value = text; showPhoneMsg(`验证码: ${text}`, 'success'); } else throw new Error(); } catch (e) { showPhoneMsg('获取失败', 'error'); } }
-    async function phoneLogin() { const phone = document.getElementById('phoneNumber').value.trim(), smsCode = document.getElementById('smsCodeInput').value.trim(); if (!phone || !/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误', 'error'); if (!smsCode) return showPhoneMsg('验证码必填', 'error'); const btn = document.getElementById('phoneDoLoginBtn'); btn.disabled = true; btn.innerHTML = '登录中...'; try { const params = new URLSearchParams({ client_type: 'phone', grant_type: 'client_credentials', client_id: phone, client_secret: smsCode }); const res = await fetch(`${API_BASE}/Dance/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params }); const data = await res.json(); if (!res.ok) throw new Error(data.error_description); const token = data.access_token; if (token) { const uid = data.user_id || data.userId || phone; await saveTokenAndFetchUser(token, uid); showPhoneMsg('登录成功', 'success'); setTimeout(() => closePhoneModal(), 1200); } else throw new Error(); } catch (e) { showPhoneMsg('登录失败', 'error'); } finally { btn.disabled = false; btn.innerHTML = '立即登录'; } }
-    function showPhoneMsg(msg, type) { const div = document.getElementById('phoneMessage'); div.innerText = msg; div.style.display = 'block'; setTimeout(() => div.style.display = 'none', 3000); }
-    function renderTools(tools) { const grid = document.getElementById('toolsGrid'); grid.innerHTML = ''; tools.forEach(t => { const card = document.createElement('div'); card.className = 'tool-card' + (t.featured ? ' featured' : '') + (t.new ? ' new' : ''); card.innerHTML = `<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`; card.addEventListener('click', (e) => { if (!e.target.closest('.tool-action')) openToolModal(t.id); }); grid.appendChild(card); }); document.getElementById('toolCount').innerText = tools.length; }
-    function openToolModal(id) { const t = toolsData.find(t => t.id === id); if (!t) return; document.getElementById('modalToolName').innerText = t.name; document.getElementById('modalToolCategory').innerText = t.category; document.getElementById('modalToolDescription').innerText = t.description; document.getElementById('modalIcon').innerHTML = `<i class="${t.icon}"></i>`; document.getElementById('modalFeatures').innerHTML = t.features.map(f => `<div class="modal-feature"><i class="fas fa-check-circle" style="color:#22c55e;"></i> ${f}</div>`).join(''); document.getElementById('openToolBtn').href = t.url; document.getElementById('toolModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
-    function closeToolModal() { document.getElementById('toolModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
-    function filterTools() { const term = document.getElementById('searchInput').value.toLowerCase(); renderTools(toolsData.filter(t => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term))); }
-    function initTheme() { if (localStorage.getItem('dance_theme') === 'dark') { document.body.classList.add('dark'); document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> 浅色模式'; } }
-    function toggleTheme() { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('dance_theme', isDark ? 'dark' : 'light'); document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式'; }
-    function directEmailFeedback() { window.location.href = 'mailto:miqimiaomiaowushi@163.com'; }
-    function handleMobileQr() { window.location.href = 'qr.html'; }
+    function clearUserData() {
+        localStorage.removeItem('dance_user_data');
+        localStorage.removeItem('dance_user_token');
+        accessToken = null;
+        document.getElementById('pcUserDetails').style.display = 'none';
+        document.getElementById('pcUserAvatar').style.display = 'none';
+        document.getElementById('pcLoginBtn').style.display = 'flex';
+        document.getElementById('mobileUserDetails').style.display = 'none';
+        document.getElementById('mobileLoginBtn').style.display = 'flex';
+        document.getElementById('pcUserAvatar').innerHTML = '<i class="fas fa-user"></i>';
+        document.getElementById('mobileAvatar').innerHTML = '<i class="fas fa-user"></i>';
+    }
+    async function saveTokenAndFetchUser(token, userIdHint) {
+        accessToken = token;
+        localStorage.setItem('dance_user_token', JSON.stringify({ token, expireTime: new Date(Date.now() + 7 * 864e5).toISOString() }));
+        try {
+            const res = await fetch(`${API_BASE}/Dance/api/User/GetNickname?userId=${encodeURIComponent(userIdHint || '')}`, { headers: { 'Authorization': `bearer ${token}` } });
+            const data = await res.json();
+            const userData = { UserID: data.UserID || userIdHint, UserName: data.UserName || (userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户'), HeadimgURL: data.HeadimgURL || '' };
+            localStorage.setItem('dance_user_data', JSON.stringify(userData));
+            showUserInfo(userData, false);
+            showUserInfo(userData, true);
+        } catch(e) {
+            const fallback = userIdHint ? `用户${userIdHint.slice(-4)}` : '手机用户';
+            const userData = { UserID: userIdHint || 'unknown', UserName: fallback, HeadimgURL: '' };
+            localStorage.setItem('dance_user_data', JSON.stringify(userData));
+            showUserInfo(userData, false);
+            showUserInfo(userData, true);
+        }
+    }
+    function checkLoginStatus() {
+        const saved = localStorage.getItem('dance_user_data');
+        const tokenData = localStorage.getItem('dance_user_token');
+        if (saved && tokenData) {
+            try {
+                const tok = JSON.parse(tokenData);
+                if (new Date(tok.expireTime) > new Date()) {
+                    accessToken = tok.token;
+                    showUserInfo(JSON.parse(saved), false);
+                    showUserInfo(JSON.parse(saved), true);
+                } else clearUserData();
+            } catch(e) { clearUserData(); }
+        }
+    }
+    async function fetchRawMusicList() { if (!accessToken) return null; try { const res = await fetch(`${API_BASE}/Dance/api/MusicData/GetMyPublishMusic?page=1&pagesize=9999`, { headers: { 'Authorization': `bearer ${accessToken}` } }); if (res.status === 401) return null; const data = await res.json(); return Array.isArray(data) ? data : (data.List || []); } catch(e){ return null; } }
+    async function fetchScoreByMusicId(musicId) { if(!accessToken) return null; try{ const res=await fetch(`${API_BASE}/Dance/api/MusicData/GetScoreStat?musicId=${musicId}`,{headers:{'Authorization':`bearer ${accessToken}`}}); if(!res.ok) return null; const data=await res.json(); return data.Score !== undefined ? data.Score : null; } catch(e){ return null; } }
+    async function showProfileModal() { const modal=document.getElementById('profileModal'), bodyDiv=document.getElementById('profileModalBody'); bodyDiv.innerHTML='<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 获取数据...</div>'; modal.classList.add('active'); document.body.style.overflow='hidden'; if (!accessToken) { bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i><p>未登录</p></div>'; return; } try { const list=await fetchRawMusicList(); if(!list||!list.length){ bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-user-slash"></i><p>暂无谱面数据</p></div>'; return; } let totalDownload=0,totalPlay=0,published=0,offline=0; list.forEach(i=>{ totalDownload+=i.DownloadCount||0; totalPlay+=i.ClicksRatio||0; i.IsOnSale?published++:offline++; }); bodyDiv.innerHTML=`<div class="profile-stats"><div class="profile-stat-item"><div class="profile-stat-number">${totalDownload.toLocaleString()}</div><div class="profile-stat-label">总下载</div></div><div class="profile-stat-item"><div class="profile-stat-number">${totalPlay.toLocaleString()}</div><div class="profile-stat-label">总点播</div></div><div class="profile-stat-item"><div class="profile-stat-number published-number">${published}</div><div class="profile-stat-label">已上架</div></div><div class="profile-stat-item"><div class="profile-stat-number offline-number">${offline}</div><div class="profile-stat-label">下架</div></div></div><div class="profile-total-info">📊 共计 ${list.length} 个谱面</div><button class="view-ratings-btn" id="viewRatingsBtn"><i class="fas fa-star"></i> 查看谱面评分</button>`; document.getElementById('viewRatingsBtn')?.addEventListener('click',()=>showRatingsModal()); } catch(e){ bodyDiv.innerHTML='<div class="profile-empty"><i class="fas fa-bug"></i><p>加载失败</p></div>'; } }
+    async function showRatingsModal() { const modal=document.getElementById('ratingsModal'), bodyDiv=document.getElementById('ratingsBody'); bodyDiv.innerHTML='<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> 加载评分数据...</div>'; modal.classList.add('active'); if(!accessToken){ bodyDiv.innerHTML='<div class="ratings-empty"><i class="fas fa-exclamation-triangle"></i><p>请先登录</p></div>'; return; } try { const list=await fetchRawMusicList(); if(!list||!list.length){ bodyDiv.innerHTML='<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无谱面数据</p></div>'; return; } const ratings=await Promise.all(list.map(async item=>{ const mid=item.MusicID||item.musicId; const score=await fetchScoreByMusicId(mid); return { musicId:mid, musicName:`[${mid}] ${item.Name||item.MusicName||'谱面'}`, score:score!==null?score:null }; })); const valid=ratings.filter(r=>r.score!==null); if(!valid.length){ bodyDiv.innerHTML='<div class="ratings-empty"><i class="fas fa-chart-line"></i><p>暂无评分数据</p></div>'; return; } let html='<table class="ratings-table"><thead><tr><th>#</th><th>谱面名称</th><th>综合评分</th></tr></thead><tbody>'; valid.forEach((r,idx)=>{ html+=`<tr><td>${idx+1}</td><td>${escapeHtml(r.musicName)}</td><td class="rating-score">${r.score.toFixed(1)} ⭐</td></tr>`; }); html+='</tbody></table>'; bodyDiv.innerHTML=html; } catch(e){ bodyDiv.innerHTML='<div class="ratings-empty"><i class="fas fa-bug"></i><p>加载失败，请稍后重试</p></div>'; } }
+    function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
+    async function generateLoginQRCode() { const updateStatus=(t)=>{document.getElementById('loginStatus').innerText=t;}; updateStatus('生成中...'); try { const res=await fetch(`${API_BASE}/Dance/api/Common/GetQrCode`); const data=await res.json(); loginQrCodeData=data; document.getElementById('login-qrcode-img').src=data.QrcodeUrl; document.getElementById('login-qrcode-img').style.display='block'; document.getElementById('loginQrPlaceholder').style.display='none'; updateStatus('请微信扫码'); if(loginCheckInterval) clearInterval(loginCheckInterval); loginCheckInterval=setInterval(async ()=>{ if(!loginQrCodeData?.ID) return; try { const params=new URLSearchParams({ client_type:'qrcode', grant_type:'client_credentials', client_id:loginQrCodeData.ID }); const res2=await fetch(`${API_BASE}/Dance/token`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params}); if(res2.status===401) return; const data2=await res2.json(); if(data2.access_token){ clearInterval(loginCheckInterval); updateStatus('登录成功'); await saveTokenAndFetchUser(data2.access_token, data2.user_id||data2.userId); setTimeout(()=>closeLoginModal(),1200); } } catch(e){} },2000); } catch(e){ updateStatus('生成失败，请重试'); } }
+    function openLoginChoice(){ document.getElementById('loginChoiceModal').classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeLoginChoice(){ document.getElementById('loginChoiceModal').classList.remove('active'); document.body.style.overflow='auto'; }
+    function openLoginModal(){ closeLoginChoice(); document.getElementById('loginModal').classList.add('active'); document.getElementById('login-qrcode-img').style.display='none'; document.getElementById('loginQrPlaceholder').style.display='flex'; document.getElementById('loginStatus').innerText='点击上方区域生成二维码'; }
+    function closeLoginModal(){ document.getElementById('loginModal').classList.remove('active'); if(loginCheckInterval) clearInterval(loginCheckInterval); document.body.style.overflow='auto'; }
+    function openPhoneModal(){ closeLoginChoice(); document.getElementById('phoneLoginModal').classList.add('active'); loadGraphCodeForPhone(); }
+    function closePhoneModal(){ document.getElementById('phoneLoginModal').classList.remove('active'); if(phoneCountdownInterval) clearInterval(phoneCountdownInterval); document.body.style.overflow='auto'; }
+    async function loadGraphCodeForPhone(){ const phone=document.getElementById('phoneNumber').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)) { showPhoneMsg('正确手机号','error'); return; } const img=document.getElementById('captchaImage'), span=document.getElementById('captchaTextSpan'); span.style.display='flex'; span.innerText='⏳'; img.style.display='none'; try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetGraphCode?phone=${encodeURIComponent(phone)}`); let text=await res.text(); if(text.startsWith('"')) text=text.slice(1,-1); img.src=`data:image/gif;base64,${text}`; img.style.display='block'; span.style.display='none'; } catch(e){ span.innerText='重试'; } }
+    async function requestSmsCode(){ const phone=document.getElementById('phoneNumber').value.trim(), graphCode=document.getElementById('graphCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误','error'); if(!graphCode) return showPhoneMsg('图形码必填','error'); if(phoneCountdown>0) return; const btn=document.getElementById('getSmsCodeBtn'); btn.disabled=true; phoneCountdown=60; btn.innerText=`${phoneCountdown}s`; phoneCountdownInterval=setInterval(()=>{ if(phoneCountdown<=1){ clearInterval(phoneCountdownInterval); btn.disabled=false; btn.innerText='获取验证码'; phoneCountdown=0; }else{ phoneCountdown--; btn.innerText=`${phoneCountdown}s`; } },1000); try{ const res=await fetch(`${API_BASE}/Dance/api/Common/GetSMSCode?phone=${encodeURIComponent(phone)}&graphCode=${encodeURIComponent(graphCode)}`); let text=await res.text(); if(text.startsWith('"')) text=text.slice(1,-1); if(/^\d{4,8}$/.test(text)){ document.getElementById('smsCodeInput').value=text; showPhoneMsg(`验证码: ${text}`,'success'); } else throw new Error(); } catch(e){ showPhoneMsg('获取失败','error'); } }
+    async function phoneLogin(){ const phone=document.getElementById('phoneNumber').value.trim(), smsCode=document.getElementById('smsCodeInput').value.trim(); if(!phone||!/^1[3-9]\d{9}$/.test(phone)) return showPhoneMsg('手机号错误','error'); if(!smsCode) return showPhoneMsg('验证码必填','error'); const btn=document.getElementById('phoneDoLoginBtn'); btn.disabled=true; btn.innerHTML='登录中...'; try{ const params=new URLSearchParams({ client_type:'phone', grant_type:'client_credentials', client_id:phone, client_secret:smsCode }); const res=await fetch(`${API_BASE}/Dance/token`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params}); const data=await res.json(); if(!res.ok) throw new Error(); if(data.access_token){ await saveTokenAndFetchUser(data.access_token, data.user_id||data.userId||phone); showPhoneMsg('登录成功','success'); setTimeout(()=>closePhoneModal(),1200); } else throw new Error(); } catch(e){ showPhoneMsg('登录失败','error'); } finally{ btn.disabled=false; btn.innerHTML='立即登录'; } }
+    function showPhoneMsg(msg,type){ const div=document.getElementById('phoneMessage'); div.innerText=msg; div.style.display='block'; setTimeout(()=>div.style.display='none',3000); }
+    function renderTools() {
+        const term = document.getElementById('pcSearchInput').value.toLowerCase();
+        const filtered = toolsData.filter(t=>t.name.toLowerCase().includes(term)||t.description.toLowerCase().includes(term));
+        const pcGrid = document.getElementById('pcToolsGrid');
+        pcGrid.innerHTML = '';
+        filtered.forEach(t => {
+            const card = document.createElement('div'); card.className = 'tool-card' + (t.featured ? ' featured' : '') + (t.new ? ' new' : '');
+            card.innerHTML = `<div class="tool-header"><div class="tool-icon" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info"><h3>${t.name}</h3><p>${t.category}</p></div>${t.featured ? '<div class="tool-badge featured-badge">实用</div>' : ''}${t.new ? '<div class="tool-badge new-badge">新</div>' : ''}</div><div class="tool-description">${t.description}</div><div class="tool-footer"><a href="${t.url}" class="tool-action" target="_blank"><i class="fas fa-arrow-right"></i> 打开工具</a></div>`;
+            card.addEventListener('click', (e) => { if (!e.target.closest('.tool-action')) openToolModal(t.id); });
+            pcGrid.appendChild(card);
+        });
+        document.getElementById('pcToolCount').innerText = filtered.length;
+        const mobileTerm = document.getElementById('mobileSearchInput').value.toLowerCase();
+        const mobileFiltered = toolsData.filter(t=>t.name.toLowerCase().includes(mobileTerm)||t.description.toLowerCase().includes(mobileTerm));
+        const mobileGrid = document.getElementById('mobileToolsGrid');
+        mobileGrid.innerHTML = '';
+        mobileFiltered.forEach(t => {
+            const card = document.createElement('div'); card.className = 'tool-card-mobile' + (t.featured ? ' featured' : '') + (t.new ? ' new' : '');
+            card.innerHTML = `<div class="tool-icon-mobile" style="background:linear-gradient(135deg,${t.iconColor}99,${t.iconColor});"><i class="${t.icon}"></i></div><div class="tool-info-mobile"><h3>${t.name}</h3><p>${t.category}</p><div style="font-size:0.65rem;color:var(--text-muted);">${t.description.substring(0,40)}</div></div><i class="fas fa-chevron-right open-link-icon"></i>${t.featured?'<div class="tool-badge-mobile featured-badge-mobile">实用</div>':''}${t.new?'<div class="tool-badge-mobile new-badge-mobile">新</div>':''}`;
+            card.addEventListener('click', (e) => { if (!e.target.closest('.tool-action')) openToolModal(t.id); });
+            mobileGrid.appendChild(card);
+        });
+        document.getElementById('mobileToolCount').innerText = mobileFiltered.length;
+    }
+    function openToolModal(id) { const t = toolsData.find(t=>t.id===id); if(!t) return; document.getElementById('modalToolName').innerText = t.name; document.getElementById('modalToolCategory').innerText = t.category; document.getElementById('modalToolDescription').innerText = t.description; document.getElementById('modalIcon').innerHTML = `<i class="${t.icon}"></i>`; document.getElementById('modalFeatures').innerHTML = t.features.map(f=>`<div class="modal-feature"><i class="fas fa-check-circle" style="color:#22c55e;"></i> ${f}</div>`).join(''); document.getElementById('openToolBtn').href = t.url; document.getElementById('toolModal').classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeToolModal(){ document.getElementById('toolModal').classList.remove('active'); document.body.style.overflow='auto'; }
+    function initTheme() { if (localStorage.getItem('dance_theme') === 'dark') { document.body.classList.add('dark'); document.getElementById('pcThemeToggle').innerHTML = '<i class="fas fa-sun"></i> 浅色模式'; document.getElementById('mobileThemeToggle').innerHTML = '<i class="fas fa-sun"></i>'; } else { document.getElementById('mobileThemeToggle').innerHTML = '<i class="fas fa-moon"></i>'; } }
+    function toggleTheme() { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('dance_theme', isDark ? 'dark' : 'light'); document.getElementById('pcThemeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式'; document.getElementById('mobileThemeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; }
+    function directEmail() { window.location.href = 'mailto:miqimiaomiaowushi@163.com'; }
 
     function init() {
         initTheme();
         checkLoginStatus();
-        renderTools(toolsData);
-        document.getElementById('searchInput').addEventListener('input', filterTools);
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.getElementById('directEmailBtn')?.addEventListener('click', directEmailFeedback);
-        document.getElementById('loginBtn').addEventListener('click', openLoginChoice);
+        renderTools();
+        document.getElementById('pcSearchInput').addEventListener('input', renderTools);
+        document.getElementById('pcThemeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('pcEmailBtn').addEventListener('click', directEmail);
+        document.getElementById('pcLoginBtn').addEventListener('click', openLoginChoice);
+        document.getElementById('pcLogoutBtn').addEventListener('click', () => { if(confirm('退出登录？')) clearUserData(); });
+        document.getElementById('pcAnnounceBar').addEventListener('click', () => document.getElementById('announceModal').classList.add('active'));
+        document.getElementById('pcUserAvatar').addEventListener('click', () => showProfileModal());
+        document.getElementById('mobileSearchInput').addEventListener('input', renderTools);
+        document.getElementById('mobileThemeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('mobileEmailBtn').addEventListener('click', directEmail);
+        document.getElementById('mobileLoginBtn').addEventListener('click', openLoginChoice);
+        document.getElementById('mobileLogoutBtn').addEventListener('click', () => { if(confirm('退出登录？')) clearUserData(); });
+        document.getElementById('mobileAnnounceBar').addEventListener('click', () => document.getElementById('announceModal').classList.add('active'));
+        document.getElementById('mobileAvatar').addEventListener('click', () => showProfileModal());
         document.getElementById('choiceClose').addEventListener('click', closeLoginChoice);
-        document.getElementById('loginChoiceModal').addEventListener('click', (e) => { if (e.target === document.getElementById('loginChoiceModal')) closeLoginChoice(); });
         document.getElementById('chooseWechatBtn').addEventListener('click', openLoginModal);
         document.getElementById('choosePhoneBtn').addEventListener('click', openPhoneModal);
         document.getElementById('loginClose').addEventListener('click', closeLoginModal);
         document.getElementById('loginQrPlaceholder').addEventListener('click', generateLoginQRCode);
-        document.getElementById('logoutBtn').addEventListener('click', () => { if (confirm('退出登录？')) clearUserData(); });
-        document.getElementById('announcementBar').addEventListener('click', () => document.getElementById('announceModal').classList.add('active'));
-        document.getElementById('announceModalClose').addEventListener('click', () => document.getElementById('announceModal').classList.remove('active'));
-        document.getElementById('announceModal').addEventListener('click', (e) => { if (e.target === document.getElementById('announceModal')) document.getElementById('announceModal').classList.remove('active'); });
         document.getElementById('phoneModalClose').addEventListener('click', closePhoneModal);
         document.getElementById('refreshCaptchaBtn').addEventListener('click', loadGraphCodeForPhone);
         document.getElementById('captchaImgBox').addEventListener('click', loadGraphCodeForPhone);
         document.getElementById('getSmsCodeBtn').addEventListener('click', requestSmsCode);
         document.getElementById('phoneDoLoginBtn').addEventListener('click', phoneLogin);
-        document.getElementById('userAvatar').addEventListener('click', (e) => { e.stopPropagation(); showProfileModal(); });
-        document.getElementById('profileModalClose').addEventListener('click', () => { document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow = 'auto'; });
-        document.getElementById('profileModal').addEventListener('click', (e) => { if (e.target === document.getElementById('profileModal')) { document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow = 'auto'; } });
-        document.getElementById('ratingsModalClose').addEventListener('click', closeRatingsModal);
-        document.getElementById('ratingsModal').addEventListener('click', (e) => { if (e.target === document.getElementById('ratingsModal')) closeRatingsModal(); });
+        document.getElementById('announceModalClose').addEventListener('click', () => document.getElementById('announceModal').classList.remove('active'));
+        document.getElementById('profileModalClose').addEventListener('click', () => { document.getElementById('profileModal').classList.remove('active'); document.body.style.overflow='auto'; });
+        document.getElementById('ratingsModalClose').addEventListener('click', () => document.getElementById('ratingsModal').classList.remove('active'));
         document.getElementById('modalClose').addEventListener('click', closeToolModal);
-        document.getElementById('toolModal').addEventListener('click', (e) => { if (e.target === document.getElementById('toolModal')) closeToolModal(); });
-        const qrBtn = document.getElementById('mobileQrBtn');
-        if (qrBtn) qrBtn.addEventListener('click', handleMobileQr);
+        document.getElementById('toolModal').addEventListener('click', (e) => { if(e.target === document.getElementById('toolModal')) closeToolModal(); });
+        document.querySelectorAll('.profile-modal, .login-choice-modal, .login-modal, .phone-login-modal, .tool-modal, .announce-modal, .ratings-modal').forEach(overlay => { overlay.addEventListener('click', (e) => { if(e.target === overlay) overlay.classList.remove('active'); }); });
     }
     init();
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) e.preventDefault(); });
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+    document.addEventListener('selectstart', e=>e.preventDefault());
+    document.addEventListener('dragstart', e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&e.key==='u')) e.preventDefault(); });
 </script>
 </body>
-
 </html>

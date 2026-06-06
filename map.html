@@ -544,6 +544,11 @@
         initPcMap();
         initMobileMap();
     });
+
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+    document.addEventListener('selectstart', e=>e.preventDefault());
+    document.addEventListener('dragstart', e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&e.key==='u')) e.preventDefault(); });
 </script>
 <script src="./map.js"></script>
 </body>

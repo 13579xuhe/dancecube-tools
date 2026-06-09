@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>舞立方 · 最近游玩记录查询</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ========== 全局变量 ========== */
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --table-header-bg: #f1f5f9;
+            --record-row-hover: #f8fafc;
+            --stat-card-bg: #ffffff;
+            --error-bg: #fee2e2;
+            --error-text: #dc2626;
+            --color-perfect: #a855f7;
+            --color-great: #22c55e;
+            --color-good: #3b82f6;
+            --color-miss: #ef4444;
+            --badge-ap: #f59e0b;
+            --badge-fc: #22c55e;
+            --rating-sss: #fbbf24;
+            --rating-ss: #fbbf24;
+            --rating-s: #fbbf24;
+            --rating-a: #ef4444;
+            --rating-b: #3b82f6;
+            --rating-c: #22c55e;
+            --rating-d: #6b7280;
+        }
+
+        body.dark {
+            --bg-gradient-start: #0a0a14;
+            --bg-gradient-end: #12121c;
+            --text-primary: #eef2ff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --card-bg: #1e1e2c;
+            --border-light: #2d2d3a;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --table-header-bg: #2a2a38;
+            --record-row-hover: #2a2a38;
+            --stat-card-bg: #1e1e2c;
+            --error-bg: #3b1e1e;
+            --error-text: #f87171;
+            --color-perfect: #c084fc;
+            --color-great: #4ade80;
+            --color-good: #60a5fa;
+            --color-miss: #f87171;
+            --rating-sss: #fcd34d;
+            --rating-ss: #fcd34d;
+            --rating-s: #fcd34d;
+            --rating-a: #f87171;
+            --rating-b: #60a5fa;
+            --rating-c: #4ade80;
+            --rating-d: #9ca3af;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.2s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+        }
+
+        /* ========== 电脑端样式 (宽度 > 768px) ========== */
+        .pc-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: block;
+        }
+
+        .mobile-container {
+            display: none;
+        }
+
+        /* 电脑端头部 */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #39d517, #9dcf0f);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-light);
+        }
+
+        .user-info-card {
+            background: var(--card-bg);
+            border-radius: 60px;
+            padding: 6px 16px 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .user-id {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .logout-icon {
+            background: #f87171;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+
+        .logout-icon:hover {
+            background: #ef4444;
+        }
+
+        .login-prompt {
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+            transition: 0.2s;
+        }
+
+        .login-prompt:hover {
+            background: var(--border-light);
+        }
+
+        /* 电脑端统计卡片 */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--stat-card-bg);
+            border-radius: 1.5rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f59e0b;
+            line-height: 1.2;
+        }
+
+        /* 电脑端查询面板 */
+        .query-panel {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+            justify-content: space-between;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-group {
+            flex: 2;
+            min-width: 200px;
+        }
+
+        .search-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-light);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        /* 电脑端表格 */
+        .records-section {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-md);
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 950px;
+        }
+
+        .records-table th {
+            text-align: left;
+            padding: 1rem 0.8rem;
+            background: var(--table-header-bg);
+            color: var(--text-primary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .records-table td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .records-table tr:hover td {
+            background: var(--record-row-hover);
+        }
+
+        .cover-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1f2a46;
+            display: block;
+        }
+
+        .cover-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2a3a5a, #1a2a4a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            text-align: center;
+        }
+
+        .cover-loading {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2a3a5a, #1a2a4a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .score-highlight {
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        .difficulty-badge {
+            background: #3b82f620;
+            color: #3b82f6;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .ap-badge {
+            background: var(--badge-ap)20;
+            color: var(--badge-ap);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 6px;
+        }
+
+        .fc-badge {
+            background: var(--badge-fc)20;
+            color: var(--badge-fc);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 6px;
+        }
+
+        .rating-sss, .rating-ss, .rating-s, .rating-a, .rating-b, .rating-c, .rating-d {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-left: 6px;
+        }
+        .rating-sss { background: var(--rating-sss)20; color: var(--rating-sss); }
+        .rating-ss { background: var(--rating-ss)20; color: var(--rating-ss); }
+        .rating-s { background: var(--rating-s)20; color: var(--rating-s); }
+        .rating-a { background: var(--rating-a)20; color: var(--rating-a); }
+        .rating-b { background: var(--rating-b)20; color: var(--rating-b); }
+        .rating-c { background: var(--rating-c)20; color: var(--rating-c); }
+        .rating-d { background: var(--rating-d)20; color: var(--rating-d); }
+
+        .judgment-perfect { color: var(--color-perfect); font-weight: 600; }
+        .judgment-great { color: var(--color-great); font-weight: 600; }
+        .judgment-good { color: var(--color-good); font-weight: 600; }
+        .judgment-miss { color: var(--color-miss); font-weight: 600; }
+
+        .empty-row td {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-muted);
+        }
+
+        .footer-note {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            background: var(--error-bg);
+            color: var(--error-text);
+            padding: 12px 20px;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        /* ========== 手机端样式 (宽度 ≤ 768px) ========== */
+        @media (max-width: 768px) {
+            .pc-container {
+                display: none;
+            }
+            .mobile-container {
+                display: block;
+                background: var(--bg-color, #f5f7fb);
+                min-height: 100vh;
+            }
+
+            body {
+                background: var(--bg-color, #f5f7fb);
+                padding: 0;
+            }
+
+            .mobile-container {
+                --bg-color: #f5f7fb;
+                --card-bg: #ffffff;
+                --text-primary: #1e293b;
+                --text-secondary: #64748b;
+                --text-muted: #94a3b8;
+                --border-light: #e2e8f0;
+                --primary: #3b82f6;
+                --primary-dark: #2563eb;
+                --warning: #f59e0b;
+                --success: #22c55e;
+            }
+
+            body.dark .mobile-container {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border-light: #334155;
+            }
+
+            .mobile-container {
+                background: var(--bg-color);
+                color: var(--text-primary);
+                padding-bottom: 20px;
+            }
+
+            .mobile-status-bar {
+                height: env(safe-area-inset-top, 44px);
+                background: transparent;
+            }
+
+            .mobile-header {
+                background: var(--card-bg);
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--border-light);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                backdrop-filter: blur(10px);
+                background: rgba(var(--card-bg-rgb, 30, 41, 59), 0.95);
+            }
+
+            body.dark .mobile-header {
+                background: rgba(30, 41, 59, 0.95);
+            }
+
+            .mobile-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+
+            .mobile-logo-area {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .mobile-logo-icon {
+                width: 36px;
+                height: 36px;
+                background: linear-gradient(135deg, var(--primary), #a855f7);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.2rem;
+            }
+
+            .mobile-logo-text {
+                font-size: 1.1rem;
+                font-weight: 700;
+                background: linear-gradient(135deg, var(--primary), #a855f7);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+
+            .mobile-user-badge {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--bg-color);
+                padding: 6px 12px;
+                border-radius: 30px;
+            }
+
+            .mobile-user-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--primary), #a855f7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 0.8rem;
+                overflow: hidden;
+            }
+
+            .mobile-user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .mobile-user-name {
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+            .mobile-logout-btn {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                cursor: pointer;
+                padding: 4px;
+            }
+
+            .mobile-login-btn {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                border: none;
+                padding: 8px 16px;
+                border-radius: 30px;
+                color: white;
+                font-weight: 600;
+                font-size: 0.8rem;
+                cursor: pointer;
+            }
+
+            .mobile-search-bar {
+                background: var(--bg-color);
+                border-radius: 30px;
+                padding: 10px 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 4px;
+            }
+
+            .mobile-search-bar i {
+                color: var(--text-muted);
+                font-size: 0.9rem;
+            }
+
+            .mobile-search-bar input {
+                flex: 1;
+                background: none;
+                border: none;
+                outline: none;
+                font-size: 0.9rem;
+                color: var(--text-primary);
+            }
+
+            .mobile-search-bar input::placeholder {
+                color: var(--text-muted);
+            }
+
+            .mobile-refresh-icon {
+                color: var(--primary);
+                cursor: pointer;
+                padding: 4px;
+            }
+
+            .mobile-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 16px;
+                background: var(--card-bg);
+                margin: 12px 16px;
+                border-radius: 20px;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .mobile-stat-item {
+                text-align: center;
+            }
+
+            .mobile-stat-value {
+                font-size: 1.3rem;
+                font-weight: 800;
+                color: var(--warning);
+                line-height: 1.3;
+            }
+
+            .mobile-stat-label {
+                font-size: 0.6rem;
+                color: var(--text-muted);
+                margin-top: 4px;
+            }
+
+            .mobile-records-list {
+                padding: 0 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .mobile-record-card {
+                background: var(--card-bg);
+                border-radius: 20px;
+                padding: 14px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                transition: all 0.2s;
+            }
+
+            .mobile-record-card:active {
+                transform: scale(0.98);
+            }
+
+            .mobile-record-header {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .mobile-record-cover {
+                width: 56px;
+                height: 56px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #334155, #1e293b);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                flex-shrink: 0;
+            }
+
+            .mobile-record-cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .mobile-cover-placeholder {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.5rem;
+                color: var(--text-muted);
+                background: linear-gradient(135deg, #334155, #1e293b);
+            }
+
+            .mobile-cover-loading {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #334155, #1e293b);
+            }
+
+            .mobile-record-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .mobile-song-title {
+                font-size: 0.95rem;
+                font-weight: 700;
+                margin-bottom: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .mobile-song-meta {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-bottom: 6px;
+            }
+
+            .mobile-difficulty-tag {
+                background: var(--bg-color);
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 0.6rem;
+                font-weight: 600;
+                color: var(--primary);
+            }
+
+            .mobile-ap-tag, .mobile-fc-tag {
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 0.6rem;
+                font-weight: 600;
+            }
+            .mobile-ap-tag { background: var(--badge-ap)20; color: var(--badge-ap); }
+            .mobile-fc-tag { background: var(--badge-fc)20; color: var(--badge-fc); }
+
+            .mobile-record-details {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border-light);
+            }
+
+            .mobile-detail-item {
+                flex: 1;
+                min-width: 60px;
+            }
+
+            .mobile-detail-label {
+                font-size: 0.6rem;
+                color: var(--text-muted);
+            }
+
+            .mobile-detail-value {
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+
+            .mobile-score-value { color: var(--warning); }
+            .mobile-rate-value { color: var(--success); }
+
+            .mobile-judgment-row {
+                display: flex;
+                gap: 12px;
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border-light);
+            }
+
+            .mobile-judgment-item {
+                flex: 1;
+                text-align: center;
+            }
+
+            .mobile-judgment-perfect { color: var(--color-perfect); font-weight: 700; }
+            .mobile-judgment-great { color: var(--color-great); font-weight: 700; }
+            .mobile-judgment-good { color: var(--color-good); font-weight: 700; }
+            .mobile-judgment-miss { color: var(--color-miss); font-weight: 700; }
+
+            .mobile-rating-tag {
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+                font-weight: 700;
+                margin-left: 6px;
+            }
+
+            .mobile-login-prompt-card {
+                background: var(--card-bg);
+                margin: 40px 16px;
+                padding: 32px 24px;
+                border-radius: 28px;
+                text-align: center;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .mobile-login-prompt-card i {
+                font-size: 3rem;
+                color: var(--text-muted);
+                margin-bottom: 16px;
+            }
+
+            .mobile-login-prompt-card p {
+                color: var(--text-secondary);
+                margin-bottom: 20px;
+            }
+
+            .mobile-login-prompt-btn {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                border: none;
+                padding: 12px 24px;
+                border-radius: 40px;
+                color: white;
+                font-weight: 600;
+                font-size: 0.9rem;
+                cursor: pointer;
+            }
+
+            .mobile-empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--text-muted);
+            }
+
+            .mobile-empty-state i {
+                font-size: 3rem;
+                margin-bottom: 12px;
+            }
+
+            .mobile-loading-state {
+                text-align: center;
+                padding: 40px;
+                color: var(--text-muted);
+            }
+
+            .mobile-footer {
+                text-align: center;
+                padding: 16px;
+                font-size: 0.6rem;
+                color: var(--text-muted);
+                border-top: 1px solid var(--border-light);
+                margin-top: 20px;
+            }
+
+            .mobile-theme-btn {
+                background: var(--bg-color);
+                border: none;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: var(--text-primary);
+                transition: 0.2s;
+            }
+
+            .mobile-theme-btn:hover {
+                background: var(--border-light);
+            }
+
+            .mobile-hidden {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ==================== 电脑端布局 ==================== -->
+<div class="pc-container" id="pcContainer">
+    <div class="nav-header">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="logo-text">
+                <h1>最近游玩记录</h1>
+            </div>
+        </div>
+        <div class="user-area" id="pcUserArea"></div>
+    </div>
+
+    <div id="pcErrorContainer"></div>
+
+    <div class="stats-row" id="pcStatsRow" style="display: none;">
+        <div class="stat-card"><div class="stat-label">总游玩次数</div><div class="stat-value" id="pcTotalPlays">-</div></div>
+        <div class="stat-card"><div class="stat-label">平均达成率</div><div class="stat-value" id="pcAvgRate">-</div></div>
+        <div class="stat-card"><div class="stat-label">最高单曲分</div><div class="stat-value" id="pcMaxScore">-</div></div>
+        <div class="stat-card"><div class="stat-label">FC/AP次数</div><div class="stat-value" id="pcPerfectCount">-</div></div>
+    </div>
+
+    <div class="query-panel" id="pcQueryPanel" style="display: none;">
+        <div class="search-group">
+            <label><i class="fas fa-search"></i> 歌曲名称 / ID 搜索</label>
+            <input type="text" id="pcSearchInput" class="search-input" placeholder="输入歌曲名或歌曲ID...">
+        </div>
+        <div class="filter-group">
+            <button id="pcRefreshBtn" class="refresh-btn"><i class="fas fa-sync-alt"></i> 刷新记录</button>
+        </div>
+    </div>
+
+    <div class="records-section" id="pcRecordsSection" style="display: none;">
+        <table class="records-table" id="pcRecordsTable">
+            <thead>
+            <tr><th>曲绘</th><th>游玩时间</th><th>歌曲名称</th><th>难度</th><th>得分</th><th>达成率</th><th>评分等级</th><th>判定详情</th></tr>
+            </thead>
+            <tbody id="pcTableBody">
+            <tr class="empty-row"><td colspan="8">✨ 等待加载数据... ✨</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pcLoginRequiredMsg" class="records-section" style="padding: 2rem; text-align: center; display: none;">
+        <i class="fas fa-lock" style="font-size: 2rem; color: var(--text-muted);"></i>
+        <p style="margin-top: 12px;">请先登录舞立方账号以查看最近游玩记录</p>
+        <button id="pcJumpToLoginBtn" style="margin-top: 16px; background: linear-gradient(135deg, #6a11cb, #2575fc); border: none; padding: 8px 24px; border-radius: 40px; color: white; cursor: pointer; font-weight: 600;">前往登录</button>
+        <button id="pcRetryCheckBtn" style="margin-top: 12px; background: var(--card-bg); border: 1px solid var(--border-light); padding: 8px 24px; border-radius: 40px; color: var(--text-primary); cursor: pointer; font-weight: 500;">重新检测</button>
+    </div>
+</div>
+
+<!-- ==================== 手机端布局 ==================== -->
+<div class="mobile-container" id="mobileContainer">
+    <div class="mobile-status-bar"></div>
+
+    <div class="mobile-header">
+        <div class="mobile-header-top">
+            <div class="mobile-logo-area">
+                <div class="mobile-logo-icon"><i class="fas fa-chart-line"></i></div>
+                <span class="mobile-logo-text">最近游玩记录</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="mobile-theme-btn" id="mobileThemeToggle"><i class="fas fa-moon"></i></button>
+                <div id="mobileUserWidget"></div>
+            </div>
+        </div>
+        <div class="mobile-search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="mobileSearchInput" placeholder="搜索歌曲名称或ID...">
+            <i class="fas fa-sync-alt mobile-refresh-icon" id="mobileRefreshBtn"></i>
+        </div>
+    </div>
+
+    <div id="mobileStatsContainer" class="mobile-hidden">
+        <div class="mobile-stats-grid">
+            <div class="mobile-stat-item"><div class="mobile-stat-value" id="mobileTotalPlays">-</div><div class="mobile-stat-label">总游玩</div></div>
+            <div class="mobile-stat-item"><div class="mobile-stat-value" id="mobileAvgRate">-</div><div class="mobile-stat-label">平均达成率</div></div>
+            <div class="mobile-stat-item"><div class="mobile-stat-value" id="mobileMaxScore">-</div><div class="mobile-stat-label">最高分</div></div>
+            <div class="mobile-stat-item"><div class="mobile-stat-value" id="mobilePerfectCount">-</div><div class="mobile-stat-label">FC/AP</div></div>
+        </div>
+    </div>
+
+    <div id="mobileRecordsContainer" class="mobile-records-list"></div>
+
+    <div id="mobileLoginContainer" class="mobile-login-prompt-card">
+        <i class="fas fa-lock"></i>
+        <p>请先登录舞立方账号<br>查看最近游玩记录</p>
+        <button class="mobile-login-prompt-btn" id="mobileGotoLoginBtn">前往登录</button>
+        <button class="mobile-login-prompt-btn" id="mobileRetryLoginBtn" style="background: var(--bg-color); color: var(--text-primary); margin-top: 12px; border: 1px solid var(--border-light);">重新检测</button>
+    </div>
+</div>
+
+<script>
+    // ==================== 配置 ====================
+    const API_BASE = 'https://dancedemo.shenghuayule.com';
+    const GET_PLAY_API = `${API_BASE}/Dance/api/User/GetLastPlay`;
+    const GET_GOODS_INFO_API = `${API_BASE}/Dance/api/MusicData/GetGoodsInfo`;
+    const COVER_TIMEOUT_MS = 3000;
+
+    let accessToken = null;
+    let currentUser = null;
+    let rawRecords = [];
+    let filteredRecords = [];
+    let coverCache = new Map();
+    let pendingCoverRequests = new Map();
+    let coverTimeouts = new Map();
+
+    // ==================== 工具函数 ====================
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+
+    function formatDateTime(dateStr) {
+        if (!dateStr) return '未知';
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+        } catch(e) { return dateStr; }
+    }
+
+    function formatMusicLevel(level) {
+        const map = { 1: 'EZ', 2: 'NM', 3: 'HD', 4: 'MA' };
+        return map[level] || `Lv.${level}`;
+    }
+
+    function getRatingGrade(percent) {
+        if (percent >= 98.0) return { grade: 'SSS', className: 'rating-sss' };
+        if (percent >= 95.0) return { grade: 'SS', className: 'rating-ss' };
+        if (percent >= 90.0) return { grade: 'S', className: 'rating-s' };
+        if (percent >= 85.0) return { grade: 'A', className: 'rating-a' };
+        if (percent >= 80.0) return { grade: 'B', className: 'rating-b' };
+        if (percent >= 70.0) return { grade: 'C', className: 'rating-c' };
+        return { grade: 'D', className: 'rating-d' };
+    }
+
+    function parsePlayerPercent(value) {
+        if (value === undefined || value === null) return 0;
+        if (value <= 1 && value > 0) return value * 100;
+        if (value > 100) return value / 100;
+        return value;
+    }
+
+    // ==================== 登录状态管理 ====================
+    function loadUserFromStorage() {
+        const tokenDataStr = localStorage.getItem('dance_user_token');
+        const userDataStr = localStorage.getItem('dance_user_data');
+
+        if (tokenDataStr) {
+            try {
+                const tokenObj = JSON.parse(tokenDataStr);
+                if (tokenObj.token) {
+                    const expireTime = new Date(tokenObj.expireTime);
+                    if (expireTime > new Date()) {
+                        accessToken = tokenObj.token;
+                    } else {
+                        clearUserData();
+                        return false;
+                    }
+                } else if (typeof tokenObj === 'string' && tokenObj.length > 10) {
+                    accessToken = tokenObj;
+                }
+            } catch (e) {
+                if (typeof tokenDataStr === 'string' && tokenDataStr.length > 10) {
+                    accessToken = tokenDataStr;
+                }
+            }
+        }
+
+        if (userDataStr && accessToken) {
+            try {
+                currentUser = JSON.parse(userDataStr);
+                return true;
+            } catch(e) { currentUser = null; }
+        }
+
+        if (accessToken && !currentUser) {
+            currentUser = { UserName: '舞立方玩家', UserID: 'unknown', HeadimgURL: '' };
+            return true;
+        }
+        return false;
+    }
+
+    function clearUserData() {
+        accessToken = null;
+        currentUser = null;
+        rawRecords = [];
+        filteredRecords = [];
+        updateAllUI(false);
+    }
+
+    // ==================== 曲绘管理 ====================
+    function loadCoverCacheFromStorage() {
+        const cached = localStorage.getItem('dance_library_cache');
+        if (!cached) return false;
+        try {
+            const data = JSON.parse(cached);
+            if (data.coverMap && Array.isArray(data.coverMap)) {
+                for (const [id, url] of data.coverMap) {
+                    if (id && url) coverCache.set(Number(id), url);
+                }
+            }
+            return true;
+        } catch(e) { return false; }
+    }
+
+    function saveCoverToCache(musicId, coverUrl) {
+        if (!musicId || !coverUrl) return;
+        coverCache.set(Number(musicId), coverUrl);
+        try {
+            const cached = localStorage.getItem('dance_library_cache');
+            if (cached) {
+                const data = JSON.parse(cached);
+                if (!data.coverMap) data.coverMap = [];
+                const idx = data.coverMap.findIndex(([id]) => Number(id) === Number(musicId));
+                if (idx >= 0) data.coverMap[idx] = [musicId, coverUrl];
+                else data.coverMap.push([musicId, coverUrl]);
+                localStorage.setItem('dance_library_cache', JSON.stringify(data));
+            }
+        } catch(e) {}
+    }
+
+    async function fetchCoverFromAPI(musicId) {
+        if (!musicId) return null;
+        if (pendingCoverRequests.has(musicId)) return pendingCoverRequests.get(musicId);
+
+        const timeoutPromise = new Promise((_, reject) => {
+            const tid = setTimeout(() => reject(new Error('超时')), COVER_TIMEOUT_MS);
+            coverTimeouts.set(musicId, tid);
+        });
+
+        const fetchPromise = (async () => {
+            try {
+                const url = `${GET_GOODS_INFO_API}?musicId=${musicId}`;
+                const headers = accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {};
+                const res = await fetch(url, { headers });
+                if (coverTimeouts.has(musicId)) { clearTimeout(coverTimeouts.get(musicId)); coverTimeouts.delete(musicId); }
+                if (!res.ok) return null;
+                const data = await res.json();
+                let coverUrl = data.PicPath || data.coverUrl || data.Cover;
+                if (coverUrl) {
+                    if (coverUrl.startsWith('//')) coverUrl = 'https:' + coverUrl;
+                    saveCoverToCache(musicId, coverUrl);
+                    return coverUrl;
+                }
+                return null;
+            } catch(e) {
+                if (coverTimeouts.has(musicId)) { clearTimeout(coverTimeouts.get(musicId)); coverTimeouts.delete(musicId); }
+                return null;
+            } finally {
+                pendingCoverRequests.delete(musicId);
+            }
+        })();
+
+        pendingCoverRequests.set(musicId, fetchPromise);
+        try {
+            return await Promise.race([fetchPromise, timeoutPromise]);
+        } catch(e) {
+            pendingCoverRequests.delete(musicId);
+            return null;
+        }
+    }
+
+    async function getCoverUrl(musicId) {
+        if (coverCache.has(Number(musicId))) return coverCache.get(Number(musicId));
+        return await fetchCoverFromAPI(musicId);
+    }
+
+    // ==================== 数据解析 ====================
+    function parseRecordsFromApi(apiData) {
+        if (!apiData || !Array.isArray(apiData)) return [];
+        return apiData.map(item => {
+            const score = item.PlayerScore || 0;
+            const percentRaw = parsePlayerPercent(item.PlayerPercent);
+            const musicId = item.MusicID;
+            const musicName = item.MusicName || item.musicName || '';
+            const displayName = musicName ? `[${musicId}] ${musicName}` : `[${musicId}]`;
+            const difficulty = formatMusicLevel(item.MusicLevel);
+            const playTime = item.RecordTime || item.playTime || new Date().toISOString();
+            const perfect = item.PlayerPerfect ?? 0;
+            const great = item.PlayerGreat ?? 0;
+            const good = item.PlayerGood ?? 0;
+            const miss = item.PlayerMiss ?? 0;
+            const isFullCombo = (miss === 0);
+            const isAllPerfect = (percentRaw >= 99.99);
+            const ratingGrade = getRatingGrade(percentRaw);
+
+            let badges = '';
+            if (isAllPerfect) badges += '<span class="ap-badge"><i class="fas fa-crown"></i> AP</span>';
+            else if (isFullCombo) badges += '<span class="fc-badge"><i class="fas fa-star"></i> FC</span>';
+
+            return {
+                id: musicId,
+                time: playTime,
+                timeStr: formatDateTime(playTime),
+                name: displayName,
+                nameRaw: musicName,
+                difficulty,
+                score,
+                percentRaw,
+                achieveRate: percentRaw.toFixed(2) + '%',
+                perfect, great, good, miss,
+                isFullCombo, isAllPerfect,
+                ratingGrade: ratingGrade.grade,
+                ratingClass: ratingGrade.className,
+                badges
+            };
+        }).sort((a, b) => new Date(b.time) - new Date(a.time));
+    }
+
+    // ==================== 电脑端渲染 ====================
+    function updatePcStats(records) {
+        const total = records.length;
+        if (!total) {
+            document.getElementById('pcTotalPlays').innerText = '0';
+            document.getElementById('pcAvgRate').innerText = '0%';
+            document.getElementById('pcMaxScore').innerText = '0';
+            document.getElementById('pcPerfectCount').innerText = '0';
+            return;
+        }
+        let sumRate = 0, maxSc = 0, special = 0;
+        records.forEach(r => {
+            sumRate += r.percentRaw;
+            if (r.score > maxSc) maxSc = r.score;
+            if (r.isFullCombo || r.isAllPerfect) special++;
+        });
+        document.getElementById('pcTotalPlays').innerText = total;
+        document.getElementById('pcAvgRate').innerText = (sumRate / total).toFixed(2) + '%';
+        document.getElementById('pcMaxScore').innerText = maxSc.toLocaleString();
+        document.getElementById('pcPerfectCount').innerText = special;
+    }
+
+    async function renderPcTable(records) {
+        const tbody = document.getElementById('pcTableBody');
+        if (!records.length) {
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="8">🎧 没有找到匹配的记录，试试调整搜索条件~</td></tr>';
+            updatePcStats([]);
+            return;
+        }
+
+        let html = '';
+        for (const rec of records) {
+            const cachedCover = coverCache.get(Number(rec.id));
+            let coverHtml = '';
+            if (cachedCover) {
+                coverHtml = `<img class="cover-image" src="${cachedCover}" alt="封面" onerror="this.parentElement.innerHTML='<div class=\\'cover-placeholder\\'><i class=\\'fas fa-music\\'></i><div>${rec.id}</div></div>'">`;
+            } else {
+                coverHtml = `<div class="cover-loading" data-pc-mid="${rec.id}"><i class="fas fa-spinner fa-pulse"></i><div style="font-size:8px;">加载中</div></div>`;
+            }
+
+            const scoreDisplay = rec.score.toLocaleString();
+            html += `<tr>
+                <td class="pc-cover-cell" data-pc-mid="${rec.id}" style="padding: 0.5rem 0.8rem;">${coverHtml}</td>
+                <td>${rec.timeStr}</td>
+                <td>${escapeHtml(rec.name)} ${rec.badges}</td>
+                <td><span class="difficulty-badge">${rec.difficulty}</span></td>
+                <td class="score-highlight">${scoreDisplay}</td>
+                <td>${rec.achieveRate}</td>
+                <td><span class="${rec.ratingClass}">${rec.ratingGrade}</span></td>
+                <td>🎯 <span class="judgment-perfect">${rec.perfect}</span> / <span class="judgment-great">${rec.great}</span> / <span class="judgment-good">${rec.good}</span> / <span class="judgment-miss">${rec.miss}</span></td>
+            </tr>`;
+        }
+        tbody.innerHTML = html;
+        updatePcStats(records);
+
+        // 异步加载缺失封面
+        for (const rec of records) {
+            if (!coverCache.has(Number(rec.id))) {
+                const cell = document.querySelector(`.pc-cover-cell[data-pc-mid="${rec.id}"]`);
+                if (cell) {
+                    (async () => {
+                        const url = await getCoverUrl(rec.id);
+                        if (url && cell) {
+                            cell.innerHTML = `<img class="cover-image" src="${url}" alt="封面" onerror="this.parentElement.innerHTML='<div class=\\'cover-placeholder\\'><i class=\\'fas fa-music\\'></i><div>${rec.id}</div></div>'">`;
+                        } else if (cell) {
+                            cell.innerHTML = `<div class="cover-placeholder"><i class="fas fa-headphones"></i><div>测试歌曲</div></div>`;
+                        }
+                    })();
+                }
+            }
+        }
+    }
+
+    // ==================== 手机端渲染 ====================
+    function updateMobileStats(records) {
+        const total = records.length;
+        if (!total) {
+            document.getElementById('mobileTotalPlays').innerText = '0';
+            document.getElementById('mobileAvgRate').innerText = '0%';
+            document.getElementById('mobileMaxScore').innerText = '0';
+            document.getElementById('mobilePerfectCount').innerText = '0';
+            return;
+        }
+        let sumRate = 0, maxSc = 0, special = 0;
+        records.forEach(r => {
+            sumRate += r.percentRaw;
+            if (r.score > maxSc) maxSc = r.score;
+            if (r.isFullCombo || r.isAllPerfect) special++;
+        });
+        document.getElementById('mobileTotalPlays').innerText = total;
+        document.getElementById('mobileAvgRate').innerText = (sumRate / total).toFixed(2) + '%';
+        document.getElementById('mobileMaxScore').innerText = maxSc.toLocaleString();
+        document.getElementById('mobilePerfectCount').innerText = special;
+    }
+
+    async function renderMobileList(records) {
+        const container = document.getElementById('mobileRecordsContainer');
+        if (!records.length) {
+            container.innerHTML = `<div class="mobile-empty-state"><i class="fas fa-music"></i><p>没有找到匹配的记录</p></div>`;
+            updateMobileStats([]);
+            return;
+        }
+
+        let html = '';
+        for (const rec of records) {
+            const cachedCover = coverCache.get(Number(rec.id));
+            let coverHtml = '';
+            if (cachedCover) {
+                coverHtml = `<img src="${cachedCover}" alt="封面" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div class=\\'mobile-cover-placeholder\\'><i class=\\'fas fa-music\\'></i><div>${rec.id}</div></div>'">`;
+            } else {
+                coverHtml = `<div class="mobile-cover-loading" data-mobile-mid="${rec.id}"><i class="fas fa-spinner fa-pulse"></i><div style="font-size:8px;">加载中</div></div>`;
+            }
+
+            let badgesHtml = '';
+            if (rec.isAllPerfect) badgesHtml = '<span class="mobile-ap-tag"><i class="fas fa-crown"></i> AP</span>';
+            else if (rec.isFullCombo) badgesHtml = '<span class="mobile-fc-tag"><i class="fas fa-star"></i> FC</span>';
+
+            html += `
+                <div class="mobile-record-card" data-mobile-music="${rec.id}">
+                    <div class="mobile-record-header">
+                        <div class="mobile-record-cover" data-mobile-cover="${rec.id}">${coverHtml}</div>
+                        <div class="mobile-record-info">
+                            <div class="mobile-song-title">${escapeHtml(rec.name)} ${badgesHtml}</div>
+                            <div class="mobile-song-meta">
+                                <span class="mobile-difficulty-tag">${rec.difficulty}</span>
+                                <span class="${rec.ratingClass} mobile-rating-tag">${rec.ratingGrade}</span>
+                            </div>
+                            <div class="mobile-record-details">
+                                <div class="mobile-detail-item"><div class="mobile-detail-label">得分</div><div class="mobile-detail-value mobile-score-value">${rec.score.toLocaleString()}</div></div>
+                                <div class="mobile-detail-item"><div class="mobile-detail-label">达成率</div><div class="mobile-detail-value mobile-rate-value">${rec.achieveRate}</div></div>
+                                <div class="mobile-detail-item"><div class="mobile-detail-label">时间</div><div class="mobile-detail-value" style="font-size:0.7rem;">${rec.timeStr}</div></div>
+                            </div>
+                            <div class="mobile-judgment-row">
+                                <div class="mobile-judgment-item"><span class="mobile-judgment-perfect">${rec.perfect}</span><div class="mobile-detail-label">Perfect</div></div>
+                                <div class="mobile-judgment-item"><span class="mobile-judgment-great">${rec.great}</span><div class="mobile-detail-label">Great</div></div>
+                                <div class="mobile-judgment-item"><span class="mobile-judgment-good">${rec.good}</span><div class="mobile-detail-label">Good</div></div>
+                                <div class="mobile-judgment-item"><span class="mobile-judgment-miss">${rec.miss}</span><div class="mobile-detail-label">Miss</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        updateMobileStats(records);
+
+        // 异步加载缺失封面
+        for (const rec of records) {
+            if (!coverCache.has(Number(rec.id))) {
+                const cell = document.querySelector(`.mobile-record-cover[data-mobile-cover="${rec.id}"]`);
+                if (cell) {
+                    (async () => {
+                        const url = await getCoverUrl(rec.id);
+                        if (url && cell) {
+                            cell.innerHTML = `<img src="${url}" alt="封面" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div class=\\'mobile-cover-placeholder\\'><i class=\\'fas fa-music\\'></i><div>${rec.id}</div></div>'">`;
+                        } else if (cell) {
+                            cell.innerHTML = `<div class="mobile-cover-placeholder"><i class="fas fa-headphones"></i><div>测试歌曲</div></div>`;
+                        }
+                    })();
+                }
+            }
+        }
+    }
+
+    // ==================== 数据获取 ====================
+    async function fetchAndLoadRecords(isMobile = false) {
+        if (!accessToken) { updateAllUI(false); return; }
+
+        if (isMobile) {
+            document.getElementById('mobileRecordsContainer').innerHTML = `<div class="mobile-loading-state"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div>`;
+        } else {
+            document.getElementById('pcTableBody').innerHTML = '<tr class="empty-row"><td colspan="8"><i class="fas fa-spinner fa-pulse"></i> 加载游玩记录中...</td></tr>';
+        }
+
+        try {
+            const res = await fetch(GET_PLAY_API, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
+            });
+            if (res.status === 401) { clearUserData(); return; }
+            if (!res.ok) throw new Error('请求失败');
+
+            const data = await res.json();
+            let list = [];
+            if (Array.isArray(data)) list = data;
+            else if (data.data && Array.isArray(data.data)) list = data.data;
+            else if (data.records && Array.isArray(data.records)) list = data.records;
+            else if (data.list && Array.isArray(data.list)) list = data.list;
+
+            rawRecords = parseRecordsFromApi(list);
+            filteredRecords = [...rawRecords];
+
+            if (isMobile) {
+                await renderMobileList(filteredRecords);
+            } else {
+                await renderPcTable(filteredRecords);
+            }
+        } catch(err) {
+            console.error(err);
+            if (isMobile) {
+                document.getElementById('mobileRecordsContainer').innerHTML = `<div class="mobile-empty-state"><i class="fas fa-exclamation-triangle"></i><p>加载失败，请重试</p></div>`;
+            } else {
+                document.getElementById('pcTableBody').innerHTML = '<tr class="empty-row"><td colspan="8">❌ 加载失败，请重试</td></tr>';
+            }
+        }
+    }
+
+    function applySearchFilter(isMobile = false) {
+        const term = isMobile ? document.getElementById('mobileSearchInput').value.trim().toLowerCase() : document.getElementById('pcSearchInput').value.trim().toLowerCase();
+        if (!term) {
+            filteredRecords = [...rawRecords];
+        } else {
+            filteredRecords = rawRecords.filter(r => r.nameRaw.toLowerCase().includes(term) || r.id?.toString().includes(term));
+        }
+        if (isMobile) {
+            renderMobileList(filteredRecords);
+        } else {
+            renderPcTable(filteredRecords);
+        }
+    }
+
+    // ==================== 主题切换 ====================
+    function initTheme() {
+        const isDark = localStorage.getItem('dance_theme') === 'dark';
+        if (isDark) document.body.classList.add('dark');
+        updateThemeIcons();
+    }
+
+    function updateThemeIcons() {
+        const isDark = document.body.classList.contains('dark');
+        const pcBtn = document.getElementById('pcThemeToggle');
+        const mobileBtn = document.getElementById('mobileThemeToggle');
+        if (pcBtn) pcBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> 浅色模式' : '<i class="fas fa-moon"></i> 暗色模式';
+        if (mobileBtn) mobileBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('dance_theme', isDark ? 'dark' : 'light');
+        updateThemeIcons();
+    }
+
+    // ==================== UI 状态更新 ====================
+    function updateAllUI(isLoggedIn) {
+        // 电脑端
+        if (isLoggedIn && currentUser) {
+            const avatarHtml = currentUser.HeadimgURL ? `<img src="${currentUser.HeadimgURL}" alt="">` : `<i class="fas fa-user"></i>`;
+            document.getElementById('pcUserArea').innerHTML = `
+                <div class="user-info-card">
+                    <div class="user-avatar">${avatarHtml}</div>
+                    <div class="user-details"><div class="user-name">${escapeHtml(currentUser.UserName || '舞立方玩家')}</div><div class="user-id">ID: ${escapeHtml(currentUser.UserID || '')}</div></div>
+                    <button class="logout-icon" id="pcLogoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</button>
+                </div>
+                <button class="theme-toggle" id="pcThemeToggle"><i class="fas fa-moon"></i> 暗色模式</button>
+            `;
+            document.getElementById('pcLogoutBtn')?.addEventListener('click', (e) => { e.stopPropagation(); if(confirm('退出登录？')) clearUserData(); });
+            document.getElementById('pcLoginRequiredMsg').style.display = 'none';
+            document.getElementById('pcStatsRow').style.display = 'grid';
+            document.getElementById('pcQueryPanel').style.display = 'flex';
+            document.getElementById('pcRecordsSection').style.display = 'block';
+            fetchAndLoadRecords(false);
+        } else {
+            document.getElementById('pcUserArea').innerHTML = `<div class="login-prompt" id="pcLoginPrompt"><i class="fas fa-sign-in-alt"></i> 登录</div><button class="theme-toggle" id="pcThemeToggle"><i class="fas fa-moon"></i> 暗色模式</button>`;
+            document.getElementById('pcLoginPrompt')?.addEventListener('click', () => window.location.href = './index.html');
+            document.getElementById('pcLoginRequiredMsg').style.display = 'flex';
+            document.getElementById('pcStatsRow').style.display = 'none';
+            document.getElementById('pcQueryPanel').style.display = 'none';
+            document.getElementById('pcRecordsSection').style.display = 'none';
+        }
+
+        // 绑定电脑端主题切换按钮事件
+        const pcThemeBtn = document.getElementById('pcThemeToggle');
+        if (pcThemeBtn) {
+            // 移除旧事件避免重复绑定
+            const newBtn = pcThemeBtn.cloneNode(true);
+            pcThemeBtn.parentNode.replaceChild(newBtn, pcThemeBtn);
+            newBtn.addEventListener('click', toggleTheme);
+        }
+
+        // 手机端
+        if (isLoggedIn && currentUser) {
+            const avatarHtml = currentUser.HeadimgURL ? `<img src="${currentUser.HeadimgURL}" alt="">` : `<i class="fas fa-user"></i>`;
+            document.getElementById('mobileUserWidget').innerHTML = `
+                <div class="mobile-user-badge">
+                    <div class="mobile-user-avatar">${avatarHtml}</div>
+                    <span class="mobile-user-name">${escapeHtml(currentUser.UserName?.slice(0, 8) || '玩家')}</span>
+                    <button class="mobile-logout-btn" id="mobileLogoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            `;
+            document.getElementById('mobileLogoutBtn')?.addEventListener('click', (e) => { e.stopPropagation(); if(confirm('退出登录？')) clearUserData(); });
+            document.getElementById('mobileLoginContainer').classList.add('mobile-hidden');
+            document.getElementById('mobileStatsContainer').classList.remove('mobile-hidden');
+            fetchAndLoadRecords(true);
+        } else {
+            document.getElementById('mobileUserWidget').innerHTML = `<button class="mobile-login-btn" id="mobileLoginBtn">登录</button>`;
+            document.getElementById('mobileLoginBtn')?.addEventListener('click', () => window.location.href = './index.html');
+            document.getElementById('mobileLoginContainer').classList.remove('mobile-hidden');
+            document.getElementById('mobileStatsContainer').classList.add('mobile-hidden');
+            document.getElementById('mobileRecordsContainer').innerHTML = '';
+        }
+
+        // 绑定手机端主题切换按钮事件
+        const mobileThemeBtn = document.getElementById('mobileThemeToggle');
+        if (mobileThemeBtn) {
+            const newBtn = mobileThemeBtn.cloneNode(true);
+            mobileThemeBtn.parentNode.replaceChild(newBtn, mobileThemeBtn);
+            newBtn.addEventListener('click', toggleTheme);
+        }
+    }
+
+    // ==================== 事件绑定 ====================
+    function bindEvents() {
+        // 电脑端
+        document.getElementById('pcRefreshBtn')?.addEventListener('click', () => { if (accessToken) fetchAndLoadRecords(false); });
+        document.getElementById('pcJumpToLoginBtn')?.addEventListener('click', () => window.location.href = './index.html');
+        document.getElementById('pcRetryCheckBtn')?.addEventListener('click', () => { const hasUser = loadUserFromStorage(); updateAllUI(hasUser); });
+
+        let pcDebounce;
+        document.getElementById('pcSearchInput')?.addEventListener('input', () => {
+            clearTimeout(pcDebounce);
+            pcDebounce = setTimeout(() => { if (rawRecords.length) applySearchFilter(false); }, 300);
+        });
+
+        // 手机端
+        document.getElementById('mobileRefreshBtn')?.addEventListener('click', () => { if (accessToken) fetchAndLoadRecords(true); });
+        document.getElementById('mobileGotoLoginBtn')?.addEventListener('click', () => window.location.href = './index.html');
+        document.getElementById('mobileRetryLoginBtn')?.addEventListener('click', () => { const hasUser = loadUserFromStorage(); updateAllUI(hasUser); });
+
+        let mobileDebounce;
+        document.getElementById('mobileSearchInput')?.addEventListener('input', () => {
+            clearTimeout(mobileDebounce);
+            mobileDebounce = setTimeout(() => { if (rawRecords.length) applySearchFilter(true); }, 300);
+        });
+    }
+
+    // 监听 storage 变化
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'dance_user_data' || e.key === 'dance_user_token') {
+            const hasUser = loadUserFromStorage();
+            updateAllUI(hasUser);
+        }
+        if (e.key === 'dance_library_cache') loadCoverCacheFromStorage();
+    });
+
+    // ==================== 初始化 ====================
+    function init() {
+        initTheme();
+        bindEvents();
+        loadCoverCacheFromStorage();
+        const hasUser = loadUserFromStorage();
+        updateAllUI(hasUser);
+    }
+    init();
+
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+    document.addEventListener('selectstart', e=>e.preventDefault());
+    document.addEventListener('dragstart', e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&e.key==='u')) e.preventDefault(); });
+</script>
+</body>
+</html>

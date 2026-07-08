@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+    <title>舞萌 · 机台查询 · 省市区</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- CSS 变量：亮色 (默认) ----- */
+        :root {
+            --bg-page: #f0f5fc;
+            --bg-hero: rgba(255, 255, 255, 0.65);
+            --bg-card: #ffffff;
+            --text-primary: #0b1a2a;
+            --text-secondary: #1f3f5e;
+            --text-address: #3a5b7a;
+            --border-light: rgba(185, 210, 235, 0.5);
+            --shadow-card: 0 8px 22px -6px rgba(0, 30, 60, 0.06), 0 2px 6px rgba(0, 0, 0, 0.01);
+            --shadow-hover: 0 20px 40px -12px rgba(20, 60, 120, 0.12), 0 6px 16px rgba(0, 0, 0, 0.02);
+            --province-bg: linear-gradient(145deg, #e1edf9, #d3e3f3);
+            --province-text: #1a446b;
+            --chip-bg: #e3eefb;
+            --chip-text: #1f4466;
+            --footer-border: #e2eefb;
+            --id-bg: #eef5fc;
+            --id-text: #6f8aa3;
+            --empty-bg: rgba(255, 255, 255, 0.7);
+            --empty-border: #b8cee5;
+            --empty-text: #3f6382;
+            --spinner-color: #d3e3f2;
+            --spinner-top: #2a6b9f;
+            --select-bg: white;
+            --select-border: #cbddee;
+            --select-text: #0d253b;
+            --gradient-brand: linear-gradient(135deg, #0c263b, #1d4468);
+            --badge-bg: #dce8f5;
+            --badge-text: #1d3b5a;
+            --toggle-bg: #e3eefb;
+            --toggle-text: #1f4466;
+        }
+
+        /* ----- 暗色变量 (通过 .dark-theme 类启用) ----- */
+        body.dark-theme {
+            --bg-page: #111a26;
+            --bg-hero: rgba(28, 42, 60, 0.75);
+            --bg-card: #1f2d3e;
+            --text-primary: #e4eef9;
+            --text-secondary: #c2d6ec;
+            --text-address: #b0c7df;
+            --border-light: rgba(100, 135, 175, 0.35);
+            --shadow-card: 0 8px 22px -6px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
+            --shadow-hover: 0 20px 40px -12px rgba(0, 0, 0, 0.6), 0 6px 16px rgba(0, 0, 0, 0.3);
+            --province-bg: linear-gradient(145deg, #2b405a, #1e344b);
+            --province-text: #bed8f2;
+            --chip-bg: #2b405a;
+            --chip-text: #c2d8ef;
+            --footer-border: #2f4057;
+            --id-bg: #263b52;
+            --id-text: #9bb3cd;
+            --empty-bg: rgba(30, 45, 65, 0.7);
+            --empty-border: #3f5b7a;
+            --empty-text: #aec4dd;
+            --spinner-color: #2f4a68;
+            --spinner-top: #7bb3e0;
+            --select-bg: #1d2d40;
+            --select-border: #3a5678;
+            --select-text: #e2ecf7;
+            --gradient-brand: linear-gradient(135deg, #bed8f2, #7ba9d4);
+            --badge-bg: #2f4a68;
+            --badge-text: #c8def5;
+            --toggle-bg: #2b405a;
+            --toggle-text: #c2d8ef;
+        }
+
+        /* ----- 全局重置 & 基础 ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 2rem 1.5rem;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.25s ease, color 0.25s;
+        }
+
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ----- 头部 ———— 毛玻璃 + 多彩点缀 ----- */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.2rem;
+            gap: 1.2rem;
+            background: var(--bg-hero);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1rem 2rem 1rem 2rem;
+            border-radius: 60px;
+            box-shadow: 0 8px 24px rgba(0, 20, 40, 0.04);
+            border: 1px solid var(--border-light);
+            transition: background 0.25s, border 0.25s;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .brand h1 {
+            font-weight: 650;
+            font-size: 1.9rem;
+            letter-spacing: -0.4px;
+            background: var(--gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.25s;
+        }
+
+        .brand .badge {
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            -webkit-text-fill-color: var(--badge-text);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 20px;
+            margin-right: 4px;
+        }
+        .dot-1 { background: #f59e7a; }
+        .dot-2 { background: #6fc1b0; }
+        .dot-3 { background: #c9a7eb; }
+
+        .filter-panel {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.25s;
+        }
+
+        .filter-group select {
+            padding: 0.45rem 1.6rem 0.45rem 0.9rem;
+            border-radius: 50px;
+            border: 1px solid var(--select-border);
+            background: var(--select-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b8db0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 0.7rem center;
+            background-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            font-size: 0.9rem;
+            min-width: 110px;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+            color: var(--select-text);
+            font-weight: 450;
+        }
+
+        .filter-group select:focus {
+            border-color: #7ba9d4;
+            box-shadow: 0 0 0 4px rgba(70, 140, 210, 0.12);
+        }
+
+        .filter-group select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stat-chip {
+            background: var(--chip-bg);
+            padding: 0.25rem 1.1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--chip-text);
+            white-space: nowrap;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .theme-toggle {
+            background: var(--toggle-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.25rem 0.8rem;
+            font-size: 1.05rem;
+            cursor: pointer;
+            color: var(--toggle-text);
+            transition: 0.2s;
+            line-height: 1.6;
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover {
+            background: var(--chip-bg);
+            border-color: #7ba9d4;
+            transform: scale(1.02);
+        }
+
+        /* ----- 卡片网格 ----- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.6rem;
+            margin-top: 0.6rem;
+        }
+
+        .location-card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 1.4rem 1.6rem 1.5rem;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.2, 1), box-shadow 0.25s ease, background 0.25s;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .location-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: var(--shadow-hover);
+            border-color: #8bb3d9;
+        }
+
+        .card-province {
+            display: inline-block;
+            background: var(--province-bg);
+            color: var(--province-text);
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            align-self: flex-start;
+            margin-bottom: 0.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .card-name {
+            font-size: 1.15rem;
+            font-weight: 620;
+            line-height: 1.3;
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+            transition: color 0.25s;
+        }
+
+        .card-address {
+            font-size: 0.9rem;
+            color: var(--text-address);
+            line-height: 1.6;
+            margin-top: 0.1rem;
+            flex: 1;
+            word-break: break-word;
+            transition: color 0.25s;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--footer-border);
+            gap: 6px;
+            transition: border 0.25s;
+        }
+
+        .card-id {
+            font-size: 0.65rem;
+            color: var(--id-text);
+            background: var(--id-bg);
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 450;
+            letter-spacing: 0.2px;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        /* 多彩点缀：卡片左侧细条 */
+        .location-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            height: 60%;
+            width: 5px;
+            border-radius: 0 12px 12px 0;
+            background: linear-gradient(180deg, #e9b48a, #8dc0b0, #b595d9);
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .location-card:hover::before {
+            opacity: 0.9;
+        }
+
+        /* ----- 空状态 & 加载 ----- */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 1.5rem;
+            background: var(--empty-bg);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            border: 1px dashed var(--empty-border);
+            color: var(--empty-text);
+            transition: background 0.25s, border 0.25s, color 0.25s;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        .empty-state .sub {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .loading-mask {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            padding: 4rem 0;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 5px solid var(--spinner-color);
+            border-top-color: var(--spinner-top);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            transition: border 0.25s;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ----- 响应式 ----- */
+        @media (max-width: 820px) {
+            .hero {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 36px;
+                padding: 1.2rem 1.5rem;
+            }
+            .filter-panel {
+                justify-content: flex-start;
+            }
+            .filter-group select {
+                min-width: 90px;
+                flex: 1;
+            }
+        }
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .brand h1 { font-size: 1.5rem; }
+            .filter-panel { gap: 8px; }
+            .filter-group { flex: 1; }
+            .stat-chip { font-size: 0.75rem; padding: 0.2rem 0.8rem; }
+            .theme-toggle { padding: 0.2rem 0.6rem; font-size: 0.95rem; }
+        }
+        @media (max-width: 450px) {
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 头部 -->
+    <div class="hero">
+        <div class="brand">
+            <h1>🎵 舞萌 · 机台</h1>
+            <span class="badge">
+        <span class="color-dot dot-1"></span>
+        <span class="color-dot dot-2"></span>
+        <span class="color-dot dot-3"></span>
+        全国
+      </span>
+        </div>
+        <div class="filter-panel">
+            <div class="filter-group">
+                <label for="provinceSelect"><span>📍</span> 省</label>
+                <select id="provinceSelect">
+                    <option value="all">全部</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="citySelect"><span>🏙️</span> 市</label>
+                <select id="citySelect" disabled>
+                    <option value="all">全部</option>
+                </select>
+            </div>
+            <span class="stat-chip" id="countDisplay">加载中…</span>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换暗色/亮色">🌙</button>
+        </div>
+    </div>
+
+    <!-- 卡片容器 -->
+    <div id="cardContainer" class="card-grid">
+        <div class="loading-mask"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const container = document.getElementById('cardContainer');
+        const provinceSelect = document.getElementById('provinceSelect');
+        const citySelect = document.getElementById('citySelect');
+        const countDisplay = document.getElementById('countDisplay');
+        const themeToggle = document.getElementById('themeToggle');
+
+        let allLocations = [];
+        let currentProvince = 'all';
+        let currentCity = 'all';
+
+        // 缓存省份->城市集合的映射
+        let provinceCityMap = new Map();
+
+        // ---------- 主题切换 ----------
+        const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
+        let isDark = darkMedia.matches;
+
+        function applyTheme(dark) {
+            document.body.classList.toggle('dark-theme', dark);
+            themeToggle.textContent = dark ? '☀️' : '🌙';
+            isDark = dark;
+        }
+        applyTheme(isDark);
+        darkMedia.addEventListener('change', (e) => applyTheme(e.matches));
+        themeToggle.addEventListener('click', () => applyTheme(!isDark));
+
+        // ---------- 工具：从地址中提取城市（只提取城市名，不含省份） ----------
+        function extractCity(address) {
+            if (!address) return '未知';
+
+            // 方法1: 匹配 "XX市"（以"市"结尾的词语）—— 这是最准确的
+            // 注意：要匹配"吉林市"而不是"吉林省"
+            // 先尝试匹配 "XX市" 模式
+            const cityMatch = address.match(/([^\s省市自治区]+市)/);
+            if (cityMatch && cityMatch[1].length >= 2) {
+                return cityMatch[1];
+            }
+
+            // 方法2: 匹配 "XX自治州"
+            const prefectureMatch = address.match(/([^\s]+自治州)/);
+            if (prefectureMatch && prefectureMatch[1].length >= 2) {
+                return prefectureMatch[1];
+            }
+
+            // 方法3: 匹配 "XX盟"
+            const leagueMatch = address.match(/([^\s]+盟)/);
+            if (leagueMatch && leagueMatch[1].length >= 2 && !leagueMatch[1].includes('省')) {
+                return leagueMatch[1];
+            }
+
+            // 方法4: 匹配 "XX地区"
+            const regionMatch = address.match(/([^\s]+地区)/);
+            if (regionMatch && regionMatch[1].length >= 2 && !regionMatch[1].includes('省')) {
+                return regionMatch[1];
+            }
+
+            // 方法5: 如果地址中包含"市"字，提取"市"前面的部分
+            const cityIndex = address.indexOf('市');
+            if (cityIndex > 0) {
+                // 从"市"往前找2-6个字符
+                let start = Math.max(0, cityIndex - 6);
+                let candidate = address.substring(start, cityIndex + 1);
+                // 如果候选包含"省"、"自治区"等，尝试截取
+                if (candidate.includes('省') || candidate.includes('自治区')) {
+                    // 尝试从"省"或"自治区"后面开始取
+                    const provIndex = Math.max(candidate.lastIndexOf('省'), candidate.lastIndexOf('自治区'));
+                    if (provIndex > 0) {
+                        candidate = candidate.substring(provIndex + 1);
+                    }
+                }
+                if (candidate.length >= 2 && candidate.includes('市')) {
+                    return candidate;
+                }
+            }
+
+            // 方法6: 如果都没有匹配，尝试取前3个字符作为城市名（排除省、自治区等）
+            let simple = address.replace(/^(北京市|天津市|上海市|重庆市|香港特别行政区|澳门特别行政区)/, '');
+            simple = simple.replace(/^(省|自治区|特别行政区)/, '').trim();
+            if (simple.length >= 2) {
+                const candidate = simple.slice(0, 3);
+                // 如果候选是"吉林"这样的，返回"吉林市"？不，这里只返回提取到的
+                // 但为了准确，如果候选后面跟了"市"，就返回完整
+                if (simple.length > 3 && simple[2] === '市') {
+                    return simple.slice(0, 3);
+                }
+                return candidate.length >= 2 ? candidate : '未知';
+            }
+
+            return '未知';
+        }
+
+        // ---------- 判断地址是否包含指定城市 ----------
+        function addressContainsCity(address, cityName) {
+            if (!address || !cityName || cityName === 'all') return true;
+            return address.includes(cityName);
+        }
+
+        // ---------- 构建省->城市集合 映射 ----------
+        function buildProvinceCityMap(locations) {
+            const map = new Map();
+            locations.forEach(item => {
+                const province = item.province || '未知';
+                const city = extractCity(item.address || '');
+                if (!map.has(province)) {
+                    map.set(province, new Set());
+                }
+                // 如果提取到的城市名包含"省"或"自治区"，说明提取失败了，尝试用更简单的方法
+                let finalCity = city;
+                if (city.includes('省') || city.includes('自治区') || city.includes('特别行政区')) {
+                    // 尝试从地址中直接找"XX市"
+                    const simpleMatch = item.address.match(/([\u4e00-\u9fa5]{2,4}市)/);
+                    if (simpleMatch) {
+                        finalCity = simpleMatch[1];
+                    } else {
+                        // 取地址前3个字符
+                        const short = item.address.slice(0, 3);
+                        if (short.length >= 2) {
+                            finalCity = short;
+                        }
+                    }
+                }
+                map.get(province).add(finalCity);
+            });
+            return map;
+        }
+
+        // ---------- 获取某省份下的所有城市（排序） ----------
+        function getCitiesByProvince(province) {
+            if (province === 'all') {
+                // 全部省份：收集所有城市
+                const allCities = new Set();
+                for (const [_, cities] of provinceCityMap) {
+                    for (const city of cities) {
+                        // 过滤掉包含"省"、"自治区"等不合理的城市名
+                        if (city && !city.includes('省') && !city.includes('自治区') && !city.includes('特别行政区')) {
+                            allCities.add(city);
+                        }
+                    }
+                }
+                return Array.from(allCities).sort((a, b) => a.localeCompare(b, 'zh'));
+            }
+            const cities = provinceCityMap.get(province) || new Set();
+            const filtered = Array.from(cities).filter(city =>
+                city && !city.includes('省') && !city.includes('自治区') && !city.includes('特别行政区')
+            );
+            return filtered.sort((a, b) => a.localeCompare(b, 'zh'));
+        }
+
+        // ---------- 填充省份下拉 ----------
+        function populateProvinceDropdown(locations) {
+            const map = buildProvinceCityMap(locations);
+            provinceCityMap = map;
+            const provinces = Array.from(map.keys()).sort((a, b) => a.localeCompare(b, 'zh'));
+
+            provinceSelect.innerHTML = '<option value="all">全部</option>';
+            provinces.forEach(prov => {
+                const opt = document.createElement('option');
+                opt.value = prov;
+                opt.textContent = prov;
+                provinceSelect.appendChild(opt);
+            });
+            provinceSelect.value = 'all';
+        }
+
+        // ---------- 根据省份更新城市下拉（只显示纯城市名，不拼接省份） ----------
+        function updateCityDropdown(province) {
+            const cities = getCitiesByProvince(province);
+            citySelect.innerHTML = '<option value="all">全部</option>';
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                // ★★★ 关键：只显示纯城市名，不加任何省份前缀 ★★★
+                opt.textContent = city;
+                citySelect.appendChild(opt);
+            });
+
+            // 如果当前选中的城市在新的列表中不存在，重置为 'all'
+            if (!cities.includes(currentCity) && currentCity !== 'all') {
+                currentCity = 'all';
+                citySelect.value = 'all';
+            } else {
+                citySelect.value = currentCity;
+            }
+
+            // 如果有城市可选则启用，否则禁用
+            citySelect.disabled = (cities.length === 0);
+        }
+
+        // ---------- 过滤 & 渲染 ----------
+        function filterAndRender() {
+            let filtered = allLocations.slice();
+
+            // 省份过滤
+            if (currentProvince !== 'all') {
+                filtered = filtered.filter(item => item.province === currentProvince);
+            }
+
+            // 城市过滤：判断地址中是否包含选中的城市名
+            if (currentCity !== 'all') {
+                filtered = filtered.filter(item => {
+                    return addressContainsCity(item.address || '', currentCity);
+                });
+            }
+
+            filtered.sort((a, b) => (a.id || '').localeCompare(b.id || ''));
+            renderCards(filtered);
+        }
+
+        function renderCards(locations) {
+            if (!locations || locations.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <p>📍 当前筛选无门店</p>
+            <div class="sub">试试调整省市选择</div>
+          </div>
+        `;
+                countDisplay.textContent = '0 家';
+                return;
+            }
+
+            let html = '';
+            locations.forEach(item => {
+                const province = item.province || '未知';
+                const arcadeName = item.arcadeName || '未命名门店';
+                const address = item.address || '地址不详';
+                const id = item.id || '';
+
+                html += `
+          <div class="location-card">
+            <span class="card-province">${escapeHtml(province)}</span>
+            <div class="card-name">${escapeHtml(arcadeName)}</div>
+            <div class="card-address">${escapeHtml(address)}</div>
+            <div class="card-footer">
+              <span class="card-id">#${escapeHtml(id)}</span>
+            </div>
+          </div>
+        `;
+            });
+
+            container.innerHTML = html;
+            countDisplay.textContent = `${locations.length} 家`;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ---------- 事件绑定 ----------
+        provinceSelect.addEventListener('change', function(e) {
+            const selectedProvince = e.target.value;
+            currentProvince = selectedProvince;
+            // 更新城市下拉（只包含该省份的城市）
+            updateCityDropdown(selectedProvince);
+            // 城市重置为 all（已在 updateCityDropdown 中处理）
+            filterAndRender();
+        });
+
+        citySelect.addEventListener('change', function(e) {
+            currentCity = e.target.value;
+            filterAndRender();
+        });
+
+        // ---------- 获取数据 ----------
+        async function fetchLocations() {
+            try {
+                const response = await fetch('https://sega-register.wahlap.net/api/sega/maidx/rest/location', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                if (!Array.isArray(data)) throw new Error('数据格式错误');
+                return data;
+            } catch (error) {
+                console.error('请求失败:', error);
+                container.innerHTML = `
+          <div class="empty-state">
+            <p>⚠️ 暂时无法加载机台信息</p>
+            <div class="sub">${error.message || '请检查网络连接'}</div>
+          </div>
+        `;
+                countDisplay.textContent = '加载失败';
+                return null;
+            }
+        }
+
+        // ---------- 启动 ----------
+        async function init() {
+            const data = await fetchLocations();
+            if (!data) return;
+
+            allLocations = data;
+            // 构建省份->城市映射
+            provinceCityMap = buildProvinceCityMap(allLocations);
+            // 填充省份下拉
+            populateProvinceDropdown(allLocations);
+            // 初始化城市下拉（全部省份的城市）
+            updateCityDropdown('all');
+            currentProvince = 'all';
+            currentCity = 'all';
+            // 初始渲染全部
+            filterAndRender();
+        }
+
+        init();
+    })();
+
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+    document.addEventListener('selectstart', e=>e.preventDefault());
+    document.addEventListener('dragstart', e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&e.key==='u')) e.preventDefault(); });
+</script>
+</body>
+</html>

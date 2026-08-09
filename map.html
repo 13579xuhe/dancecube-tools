@@ -536,6 +536,80 @@
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
     function getCityByCoordinates(lng, lat) {
+        // 如果 cityCoordinates 还没加载，等待一下
+        if (typeof window.cityCoordinates === 'undefined') {
+            console.warn('cityCoordinates 未加载，使用简化匹配');
+            return getCityByCoordinatesSimple(lng, lat);
+        }
+
+        const coords = window.cityCoordinates;
+        let nearestCity = null;
+        let minDistance = Infinity;
+
+        // 遍历所有城市，计算距离，找到最近的城市
+        for (const [city, coord] of Object.entries(coords)) {
+            const [cityLng, cityLat] = coord;
+            // 使用球面距离计算（简化版：欧几里得距离，因为中国范围经纬度比例接近）
+            const dx = lng - cityLng;
+            const dy = lat - cityLat;
+            // 纬度每度约111km，经度每度约85km（取中纬度平均值）
+            const distance = Math.sqrt(dx * dx * 85 * 85 + dy * dy * 111 * 111);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestCity = city;
+            }
+        }
+
+        // 如果最近的城市距离超过 200km，认为匹配失败（防止定位到国外）
+        if (minDistance > 200) {
+            console.log(`📍 最近城市 ${nearestCity} 距离 ${minDistance.toFixed(0)}km，超过阈值，返回 null`);
+            return null;
+        }
+
+        console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
+        return nearestCity;
+    }
+
+    // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
+    function getCityByCoordinates(lng, lat) {
+        // 如果 cityCoordinates 还没加载，等待一下
+        if (typeof window.cityCoordinates === 'undefined') {
+            console.warn('cityCoordinates 未加载，使用简化匹配');
+            return getCityByCoordinatesSimple(lng, lat);
+        }
+
+        const coords = window.cityCoordinates;
+        let nearestCity = null;
+        let minDistance = Infinity;
+
+        // 遍历所有城市，计算距离，找到最近的城市
+        for (const [city, coord] of Object.entries(coords)) {
+            const [cityLng, cityLat] = coord;
+            // 使用球面距离计算（简化版：欧几里得距离，因为中国范围经纬度比例接近）
+            const dx = lng - cityLng;
+            const dy = lat - cityLat;
+            // 纬度每度约111km，经度每度约85km（取中纬度平均值）
+            const distance = Math.sqrt(dx * dx * 85 * 85 + dy * dy * 111 * 111);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestCity = city;
+            }
+        }
+
+        // 如果最近的城市距离超过 200km，认为匹配失败（防止定位到国外）
+        if (minDistance > 200) {
+            console.log(`📍 最近城市 ${nearestCity} 距离 ${minDistance.toFixed(0)}km，超过阈值，返回 null`);
+            return null;
+        }
+
+        console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
+        return nearestCity;
+    }
+
+    // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
+    function getCityByCoordinatesSimple(lng, lat) {
         // ==================== 直辖市 ====================
         if (lng >= 116.2 && lng <= 116.5 && lat >= 39.8 && lat <= 40.1) return "北京市";
         if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.4) return "上海市";

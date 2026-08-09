@@ -536,12 +536,368 @@
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
     function getCityByCoordinates(lng, lat) {
-        if (lng >= 126.3 && lng <= 126.9 && lat >= 43.6 && lat <= 44.0) return "吉林市";
-        if (lng >= 125.1 && lng <= 125.5 && lat >= 43.7 && lat <= 44.0) return "长春市";
+        // ==================== 直辖市 ====================
         if (lng >= 116.2 && lng <= 116.5 && lat >= 39.8 && lat <= 40.1) return "北京市";
-        if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.3) return "上海市";
+        if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.4) return "上海市";
+        if (lng >= 117.1 && lng <= 117.3 && lat >= 39.0 && lat <= 39.2) return "天津市";
+        if (lng >= 106.4 && lng <= 106.6 && lat >= 29.5 && lat <= 29.7) return "重庆市";
+
+        // ==================== 吉林省 ====================
+        if (lng >= 125.1 && lng <= 125.5 && lat >= 43.7 && lat <= 44.0) return "长春市";
+        if (lng >= 126.3 && lng <= 126.9 && lat >= 43.6 && lat <= 44.0) return "吉林市";
+        if (lng >= 124.2 && lng <= 124.5 && lat >= 43.1 && lat <= 43.3) return "四平市";
+        if (lng >= 125.0 && lng <= 125.2 && lat >= 42.8 && lat <= 43.0) return "辽源市";
+        if (lng >= 125.8 && lng <= 126.1 && lat >= 41.6 && lat <= 41.9) return "通化市";
+        if (lng >= 126.3 && lng <= 126.6 && lat >= 41.8 && lat <= 42.1) return "白山市";
+        if (lng >= 124.7 && lng <= 125.0 && lat >= 45.0 && lat <= 45.3) return "松原市";
+        if (lng >= 122.7 && lng <= 123.0 && lat >= 45.5 && lat <= 45.8) return "白城市";
+        if (lng >= 129.4 && lng <= 129.6 && lat >= 42.8 && lat <= 43.0) return "延吉市";
+
+        // ==================== 辽宁省 ====================
+        if (lng >= 123.3 && lng <= 123.5 && lat >= 41.7 && lat <= 41.9) return "沈阳市";
+        if (lng >= 121.5 && lng <= 121.7 && lat >= 38.8 && lat <= 39.0) return "大连市";
+        if (lng >= 122.9 && lng <= 123.1 && lat >= 41.0 && lat <= 41.2) return "鞍山市";
+        if (lng >= 123.9 && lng <= 124.0 && lat >= 41.8 && lat <= 41.9) return "抚顺市";
+        if (lng >= 123.7 && lng <= 123.8 && lat >= 41.2 && lat <= 41.3) return "本溪市";
+        if (lng >= 124.3 && lng <= 124.4 && lat >= 40.0 && lat <= 40.1) return "丹东市";
+        if (lng >= 121.1 && lng <= 121.2 && lat >= 41.0 && lat <= 41.2) return "锦州市";
+        if (lng >= 122.2 && lng <= 122.3 && lat >= 40.6 && lat <= 40.7) return "营口市";
+        if (lng >= 121.6 && lng <= 121.7 && lat >= 42.0 && lat <= 42.1) return "阜新市";
+        if (lng >= 123.2 && lng <= 123.3 && lat >= 41.2 && lat <= 41.3) return "辽阳市";
+        if (lng >= 122.0 && lng <= 122.1 && lat >= 41.1 && lat <= 41.2) return "盘锦市";
+        if (lng >= 123.8 && lng <= 123.9 && lat >= 42.2 && lat <= 42.3) return "铁岭市";
+        if (lng >= 120.4 && lng <= 120.5 && lat >= 41.5 && lat <= 41.6) return "朝阳市";
+        if (lng >= 120.8 && lng <= 120.9 && lat >= 40.7 && lat <= 40.8) return "葫芦岛市";
+
+        // ==================== 黑龙江省 ====================
+        if (lng >= 126.5 && lng <= 126.7 && lat >= 45.7 && lat <= 45.9) return "哈尔滨市";
+        if (lng >= 123.9 && lng <= 124.0 && lat >= 47.3 && lat <= 47.4) return "齐齐哈尔市";
+        if (lng >= 130.9 && lng <= 131.0 && lat >= 45.2 && lat <= 45.3) return "鸡西市";
+        if (lng >= 130.2 && lng <= 130.3 && lat >= 47.3 && lat <= 47.4) return "鹤岗市";
+        if (lng >= 131.1 && lng <= 131.2 && lat >= 46.6 && lat <= 46.7) return "双鸭山市";
+        if (lng >= 125.0 && lng <= 125.1 && lat >= 46.5 && lat <= 46.6) return "大庆市";
+        if (lng >= 128.8 && lng <= 128.9 && lat >= 47.7 && lat <= 47.8) return "伊春市";
+        if (lng >= 130.3 && lng <= 130.4 && lat >= 46.8 && lat <= 46.9) return "佳木斯市";
+        if (lng >= 131.0 && lng <= 131.1 && lat >= 45.7 && lat <= 45.8) return "七台河市";
+        if (lng >= 129.6 && lng <= 129.7 && lat >= 44.5 && lat <= 44.6) return "牡丹江市";
+        if (lng >= 127.5 && lng <= 127.6 && lat >= 50.2 && lat <= 50.3) return "黑河市";
+        if (lng >= 126.9 && lng <= 127.0 && lat >= 46.6 && lat <= 46.7) return "绥化市";
+
+        // ==================== 广东省 ====================
         if (lng >= 113.2 && lng <= 113.4 && lat >= 23.1 && lat <= 23.2) return "广州市";
-        if (lng >= 113.8 && lng <= 114.2 && lat >= 22.5 && lat <= 22.6) return "深圳市";
+        if (lng >= 113.9 && lng <= 114.1 && lat >= 22.5 && lat <= 22.6) return "深圳市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 22.9 && lat <= 23.1) return "佛山市";
+        if (lng >= 113.7 && lng <= 113.8 && lat >= 23.0 && lat <= 23.1) return "东莞市";
+        if (lng >= 113.5 && lng <= 113.6 && lat >= 22.2 && lat <= 22.3) return "珠海市";
+        if (lng >= 113.3 && lng <= 113.4 && lat >= 22.5 && lat <= 22.6) return "中山市";
+        if (lng >= 114.4 && lng <= 114.5 && lat >= 23.0 && lat <= 23.1) return "惠州市";
+        if (lng >= 113.0 && lng <= 113.1 && lat >= 22.5 && lat <= 22.6) return "江门市";
+        if (lng >= 116.6 && lng <= 116.7 && lat >= 23.3 && lat <= 23.4) return "汕头市";
+        if (lng >= 110.3 && lng <= 110.4 && lat >= 21.2 && lat <= 21.3) return "湛江市";
+        if (lng >= 110.9 && lng <= 111.0 && lat >= 21.6 && lat <= 21.7) return "茂名市";
+        if (lng >= 112.4 && lng <= 112.5 && lat >= 23.0 && lat <= 23.1) return "肇庆市";
+        if (lng >= 116.1 && lng <= 116.2 && lat >= 24.2 && lat <= 24.3) return "梅州市";
+        if (lng >= 115.3 && lng <= 115.4 && lat >= 22.7 && lat <= 22.8) return "汕尾市";
+        if (lng >= 114.6 && lng <= 114.7 && lat >= 23.7 && lat <= 23.8) return "河源市";
+        if (lng >= 111.9 && lng <= 112.0 && lat >= 21.8 && lat <= 21.9) return "阳江市";
+        if (lng >= 113.0 && lng <= 113.1 && lat >= 23.6 && lat <= 23.7) return "清远市";
+        if (lng >= 116.6 && lng <= 116.7 && lat >= 23.6 && lat <= 23.7) return "潮州市";
+        if (lng >= 116.3 && lng <= 116.4 && lat >= 23.5 && lat <= 23.6) return "揭阳市";
+        if (lng >= 112.0 && lng <= 112.1 && lat >= 22.9 && lat <= 23.0) return "云浮市";
+
+        // ==================== 江苏省 ====================
+        if (lng >= 118.7 && lng <= 118.8 && lat >= 32.0 && lat <= 32.1) return "南京市";
+        if (lng >= 120.5 && lng <= 120.6 && lat >= 31.2 && lat <= 31.3) return "苏州市";
+        if (lng >= 120.2 && lng <= 120.3 && lat >= 31.4 && lat <= 31.5) return "无锡市";
+        if (lng >= 119.9 && lng <= 120.0 && lat >= 31.7 && lat <= 31.8) return "常州市";
+        if (lng >= 117.1 && lng <= 117.2 && lat >= 34.2 && lat <= 34.3) return "徐州市";
+        if (lng >= 120.8 && lng <= 120.9 && lat >= 31.9 && lat <= 32.0) return "南通市";
+        if (lng >= 119.2 && lng <= 119.3 && lat >= 34.5 && lat <= 34.6) return "连云港市";
+        if (lng >= 119.0 && lng <= 119.1 && lat >= 33.5 && lat <= 33.6) return "淮安市";
+        if (lng >= 120.1 && lng <= 120.2 && lat >= 33.3 && lat <= 33.4) return "盐城市";
+        if (lng >= 119.4 && lng <= 119.5 && lat >= 32.3 && lat <= 32.4) return "扬州市";
+        if (lng >= 119.4 && lng <= 119.5 && lat >= 32.2 && lat <= 32.3) return "镇江市";
+        if (lng >= 119.9 && lng <= 120.0 && lat >= 32.4 && lat <= 32.5) return "泰州市";
+        if (lng >= 118.2 && lng <= 118.3 && lat >= 33.9 && lat <= 34.0) return "宿迁市";
+
+        // ==================== 浙江省 ====================
+        if (lng >= 120.1 && lng <= 120.2 && lat >= 30.2 && lat <= 30.3) return "杭州市";
+        if (lng >= 121.5 && lng <= 121.6 && lat >= 29.8 && lat <= 29.9) return "宁波市";
+        if (lng >= 120.6 && lng <= 120.7 && lat >= 27.9 && lat <= 28.0) return "温州市";
+        if (lng >= 120.7 && lng <= 120.8 && lat >= 30.7 && lat <= 30.8) return "嘉兴市";
+        if (lng >= 120.0 && lng <= 120.1 && lat >= 30.8 && lat <= 30.9) return "湖州市";
+        if (lng >= 120.5 && lng <= 120.6 && lat >= 29.9 && lat <= 30.0) return "绍兴市";
+        if (lng >= 119.6 && lng <= 119.7 && lat >= 29.0 && lat <= 29.1) return "金华市";
+        if (lng >= 118.8 && lng <= 118.9 && lat >= 28.9 && lat <= 29.0) return "衢州市";
+        if (lng >= 122.1 && lng <= 122.2 && lat >= 29.9 && lat <= 30.0) return "舟山市";
+        if (lng >= 121.4 && lng <= 121.5 && lat >= 28.6 && lat <= 28.7) return "台州市";
+        if (lng >= 119.9 && lng <= 120.0 && lat >= 28.4 && lat <= 28.5) return "丽水市";
+
+        // ==================== 四川省 ====================
+        if (lng >= 104.0 && lng <= 104.1 && lat >= 30.5 && lat <= 30.6) return "成都市";
+        if (lng >= 104.7 && lng <= 104.8 && lat >= 29.3 && lat <= 29.4) return "自贡市";
+        if (lng >= 101.7 && lng <= 101.8 && lat >= 26.5 && lat <= 26.6) return "攀枝花市";
+        if (lng >= 105.4 && lng <= 105.5 && lat >= 28.8 && lat <= 28.9) return "泸州市";
+        if (lng >= 104.3 && lng <= 104.4 && lat >= 31.1 && lat <= 31.2) return "德阳市";
+        if (lng >= 104.6 && lng <= 104.7 && lat >= 31.4 && lat <= 31.5) return "绵阳市";
+        if (lng >= 105.8 && lng <= 105.9 && lat >= 32.4 && lat <= 32.5) return "广元市";
+        if (lng >= 105.5 && lng <= 105.6 && lat >= 30.5 && lat <= 30.6) return "遂宁市";
+        if (lng >= 105.0 && lng <= 105.1 && lat >= 29.5 && lat <= 29.6) return "内江市";
+        if (lng >= 103.7 && lng <= 103.8 && lat >= 29.5 && lat <= 29.6) return "乐山市";
+        if (lng >= 106.1 && lng <= 106.2 && lat >= 30.8 && lat <= 30.9) return "南充市";
+        if (lng >= 103.8 && lng <= 103.9 && lat >= 30.0 && lat <= 30.1) return "眉山市";
+        if (lng >= 104.6 && lng <= 104.7 && lat >= 28.7 && lat <= 28.8) return "宜宾市";
+        if (lng >= 106.6 && lng <= 106.7 && lat >= 30.4 && lat <= 30.5) return "广安市";
+        if (lng >= 107.4 && lng <= 107.5 && lat >= 31.2 && lat <= 31.3) return "达州市";
+        if (lng >= 103.0 && lng <= 103.1 && lat >= 29.9 && lat <= 30.0) return "雅安市";
+        if (lng >= 106.7 && lng <= 106.8 && lat >= 31.8 && lat <= 31.9) return "巴中市";
+        if (lng >= 104.6 && lng <= 104.7 && lat >= 30.1 && lat <= 30.2) return "资阳市";
+
+        // ==================== 湖北省 ====================
+        if (lng >= 114.2 && lng <= 114.4 && lat >= 30.5 && lat <= 30.6) return "武汉市";
+        if (lng >= 115.0 && lng <= 115.1 && lat >= 30.2 && lat <= 30.3) return "黄石市";
+        if (lng >= 110.7 && lng <= 110.8 && lat >= 32.6 && lat <= 32.7) return "十堰市";
+        if (lng >= 111.2 && lng <= 111.3 && lat >= 30.6 && lat <= 30.7) return "宜昌市";
+        if (lng >= 112.1 && lng <= 112.2 && lat >= 32.0 && lat <= 32.1) return "襄阳市";
+        if (lng >= 114.8 && lng <= 114.9 && lat >= 30.3 && lat <= 30.4) return "鄂州市";
+        if (lng >= 112.1 && lng <= 112.2 && lat >= 31.0 && lat <= 31.1) return "荆门市";
+        if (lng >= 113.9 && lng <= 114.0 && lat >= 30.9 && lat <= 31.0) return "孝感市";
+        if (lng >= 112.2 && lng <= 112.3 && lat >= 30.3 && lat <= 30.4) return "荆州市";
+        if (lng >= 114.8 && lng <= 114.9 && lat >= 30.4 && lat <= 30.5) return "黄冈市";
+        if (lng >= 114.3 && lng <= 114.4 && lat >= 29.8 && lat <= 29.9) return "咸宁市";
+        if (lng >= 113.3 && lng <= 113.4 && lat >= 31.7 && lat <= 31.8) return "随州市";
+
+        // ==================== 湖南省 ====================
+        if (lng >= 112.9 && lng <= 113.0 && lat >= 28.2 && lat <= 28.3) return "长沙市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 27.8 && lat <= 27.9) return "株洲市";
+        if (lng >= 112.9 && lng <= 113.0 && lat >= 27.8 && lat <= 27.9) return "湘潭市";
+        if (lng >= 112.5 && lng <= 112.6 && lat >= 26.8 && lat <= 26.9) return "衡阳市";
+        if (lng >= 111.4 && lng <= 111.5 && lat >= 27.2 && lat <= 27.3) return "邵阳市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 29.3 && lat <= 29.4) return "岳阳市";
+        if (lng >= 111.6 && lng <= 111.7 && lat >= 29.0 && lat <= 29.1) return "常德市";
+        if (lng >= 110.4 && lng <= 110.5 && lat >= 29.1 && lat <= 29.2) return "张家界市";
+        if (lng >= 112.3 && lng <= 112.4 && lat >= 28.5 && lat <= 28.6) return "益阳市";
+        if (lng >= 113.0 && lng <= 113.1 && lat >= 25.7 && lat <= 25.8) return "郴州市";
+        if (lng >= 111.6 && lng <= 111.7 && lat >= 26.4 && lat <= 26.5) return "永州市";
+        if (lng >= 110.0 && lng <= 110.1 && lat >= 27.5 && lat <= 27.6) return "怀化市";
+        if (lng >= 112.0 && lng <= 112.1 && lat >= 27.6 && lat <= 27.7) return "娄底市";
+
+        // ==================== 陕西省 ====================
+        if (lng >= 108.9 && lng <= 109.0 && lat >= 34.3 && lat <= 34.4) return "西安市";
+        if (lng >= 108.9 && lng <= 109.0 && lat >= 34.8 && lat <= 34.9) return "铜川市";
+        if (lng >= 107.2 && lng <= 107.3 && lat >= 34.3 && lat <= 34.4) return "宝鸡市";
+        if (lng >= 108.7 && lng <= 108.8 && lat >= 34.3 && lat <= 34.4) return "咸阳市";
+        if (lng >= 109.5 && lng <= 109.6 && lat >= 34.4 && lat <= 34.5) return "渭南市";
+        if (lng >= 109.4 && lng <= 109.5 && lat >= 36.5 && lat <= 36.6) return "延安市";
+        if (lng >= 107.0 && lng <= 107.1 && lat >= 33.0 && lat <= 33.1) return "汉中市";
+        if (lng >= 109.7 && lng <= 109.8 && lat >= 38.2 && lat <= 38.3) return "榆林市";
+        if (lng >= 109.0 && lng <= 109.1 && lat >= 32.6 && lat <= 32.7) return "安康市";
+        if (lng >= 109.9 && lng <= 110.0 && lat >= 33.8 && lat <= 33.9) return "商洛市";
+
+        // ==================== 山东省 ====================
+        if (lng >= 116.9 && lng <= 117.1 && lat >= 36.6 && lat <= 36.7) return "济南市";
+        if (lng >= 120.3 && lng <= 120.4 && lat >= 36.0 && lat <= 36.1) return "青岛市";
+        if (lng >= 118.0 && lng <= 118.1 && lat >= 36.8 && lat <= 36.9) return "淄博市";
+        if (lng >= 117.3 && lng <= 117.4 && lat >= 34.8 && lat <= 34.9) return "枣庄市";
+        if (lng >= 118.6 && lng <= 118.7 && lat >= 37.4 && lat <= 37.5) return "东营市";
+        if (lng >= 121.4 && lng <= 121.5 && lat >= 37.4 && lat <= 37.5) return "烟台市";
+        if (lng >= 119.1 && lng <= 119.2 && lat >= 36.7 && lat <= 36.8) return "潍坊市";
+        if (lng >= 116.5 && lng <= 116.6 && lat >= 35.4 && lat <= 35.5) return "济宁市";
+        if (lng >= 117.0 && lng <= 117.1 && lat >= 36.2 && lat <= 36.3) return "泰安市";
+        if (lng >= 122.1 && lng <= 122.2 && lat >= 37.5 && lat <= 37.6) return "威海市";
+        if (lng >= 119.5 && lng <= 119.6 && lat >= 35.4 && lat <= 35.5) return "日照市";
+        if (lng >= 118.3 && lng <= 118.4 && lat >= 35.0 && lat <= 35.1) return "临沂市";
+        if (lng >= 116.3 && lng <= 116.4 && lat >= 37.4 && lat <= 37.5) return "德州市";
+        if (lng >= 115.9 && lng <= 116.0 && lat >= 36.4 && lat <= 36.5) return "聊城市";
+        if (lng >= 118.0 && lng <= 118.1 && lat >= 37.3 && lat <= 37.4) return "滨州市";
+        if (lng >= 115.4 && lng <= 115.5 && lat >= 35.2 && lat <= 35.3) return "菏泽市";
+
+        // ==================== 河南省 ====================
+        if (lng >= 113.6 && lng <= 113.7 && lat >= 34.7 && lat <= 34.8) return "郑州市";
+        if (lng >= 114.3 && lng <= 114.4 && lat >= 34.7 && lat <= 34.8) return "开封市";
+        if (lng >= 112.4 && lng <= 112.5 && lat >= 34.6 && lat <= 34.7) return "洛阳市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 33.7 && lat <= 33.8) return "平顶山市";
+        if (lng >= 114.3 && lng <= 114.4 && lat >= 36.0 && lat <= 36.1) return "安阳市";
+        if (lng >= 114.2 && lng <= 114.3 && lat >= 35.7 && lat <= 35.8) return "鹤壁市";
+        if (lng >= 113.9 && lng <= 114.0 && lat >= 35.3 && lat <= 35.4) return "新乡市";
+        if (lng >= 113.2 && lng <= 113.3 && lat >= 35.2 && lat <= 35.3) return "焦作市";
+        if (lng >= 115.0 && lng <= 115.1 && lat >= 35.7 && lat <= 35.8) return "濮阳市";
+        if (lng >= 113.8 && lng <= 113.9 && lat >= 34.0 && lat <= 34.1) return "许昌市";
+        if (lng >= 114.0 && lng <= 114.1 && lat >= 33.5 && lat <= 33.6) return "漯河市";
+        if (lng >= 111.1 && lng <= 111.2 && lat >= 34.7 && lat <= 34.8) return "三门峡市";
+        if (lng >= 112.5 && lng <= 112.6 && lat >= 32.9 && lat <= 33.0) return "南阳市";
+        if (lng >= 115.6 && lng <= 115.7 && lat >= 34.4 && lat <= 34.5) return "商丘市";
+        if (lng >= 114.0 && lng <= 114.1 && lat >= 32.1 && lat <= 32.2) return "信阳市";
+        if (lng >= 114.6 && lng <= 114.7 && lat >= 33.6 && lat <= 33.7) return "周口市";
+        if (lng >= 114.0 && lng <= 114.1 && lat >= 33.0 && lat <= 33.1) return "驻马店市";
+
+        // ==================== 安徽省 ====================
+        if (lng >= 117.2 && lng <= 117.3 && lat >= 31.8 && lat <= 31.9) return "合肥市";
+        if (lng >= 118.3 && lng <= 118.4 && lat >= 31.3 && lat <= 31.4) return "芜湖市";
+        if (lng >= 117.3 && lng <= 117.4 && lat >= 32.9 && lat <= 33.0) return "蚌埠市";
+        if (lng >= 116.9 && lng <= 117.0 && lat >= 32.5 && lat <= 32.6) return "淮南市";
+        if (lng >= 118.5 && lng <= 118.6 && lat >= 31.6 && lat <= 31.7) return "马鞍山市";
+        if (lng >= 116.7 && lng <= 116.8 && lat >= 33.9 && lat <= 34.0) return "淮北市";
+        if (lng >= 117.8 && lng <= 117.9 && lat >= 30.9 && lat <= 31.0) return "铜陵市";
+        if (lng >= 117.0 && lng <= 117.1 && lat >= 30.5 && lat <= 30.6) return "安庆市";
+        if (lng >= 118.3 && lng <= 118.4 && lat >= 29.7 && lat <= 29.8) return "黄山市";
+        if (lng >= 115.8 && lng <= 115.9 && lat >= 32.8 && lat <= 32.9) return "阜阳市";
+        if (lng >= 116.9 && lng <= 117.0 && lat >= 33.6 && lat <= 33.7) return "宿州市";
+        if (lng >= 118.3 && lng <= 118.4 && lat >= 32.3 && lat <= 32.4) return "滁州市";
+        if (lng >= 116.5 && lng <= 116.6 && lat >= 31.7 && lat <= 31.8) return "六安市";
+        if (lng >= 118.7 && lng <= 118.8 && lat >= 30.9 && lat <= 31.0) return "宣城市";
+        if (lng >= 117.4 && lng <= 117.5 && lat >= 30.6 && lat <= 30.7) return "池州市";
+        if (lng >= 115.7 && lng <= 115.8 && lat >= 33.8 && lat <= 33.9) return "亳州市";
+
+        // ==================== 福建省 ====================
+        if (lng >= 119.2 && lng <= 119.3 && lat >= 26.0 && lat <= 26.1) return "福州市";
+        if (lng >= 118.0 && lng <= 118.1 && lat >= 24.4 && lat <= 24.5) return "厦门市";
+        if (lng >= 119.0 && lng <= 119.1 && lat >= 25.4 && lat <= 25.5) return "莆田市";
+        if (lng >= 117.6 && lng <= 117.7 && lat >= 26.2 && lat <= 26.3) return "三明市";
+        if (lng >= 118.6 && lng <= 118.7 && lat >= 24.8 && lat <= 24.9) return "泉州市";
+        if (lng >= 117.6 && lng <= 117.7 && lat >= 24.5 && lat <= 24.6) return "漳州市";
+        if (lng >= 118.1 && lng <= 118.2 && lat >= 26.6 && lat <= 26.7) return "南平市";
+        if (lng >= 117.0 && lng <= 117.1 && lat >= 25.0 && lat <= 25.1) return "龙岩市";
+        if (lng >= 119.5 && lng <= 119.6 && lat >= 26.6 && lat <= 26.7) return "宁德市";
+
+        // ==================== 江西省 ====================
+        if (lng >= 115.8 && lng <= 115.9 && lat >= 28.6 && lat <= 28.7) return "南昌市";
+        if (lng >= 117.1 && lng <= 117.2 && lat >= 29.2 && lat <= 29.3) return "景德镇市";
+        if (lng >= 113.8 && lng <= 113.9 && lat >= 27.6 && lat <= 27.7) return "萍乡市";
+        if (lng >= 115.9 && lng <= 116.0 && lat >= 29.7 && lat <= 29.8) return "九江市";
+        if (lng >= 114.9 && lng <= 115.0 && lat >= 27.8 && lat <= 27.9) return "新余市";
+        if (lng >= 117.0 && lng <= 117.1 && lat >= 28.2 && lat <= 28.3) return "鹰潭市";
+        if (lng >= 114.9 && lng <= 115.0 && lat >= 25.8 && lat <= 25.9) return "赣州市";
+        if (lng >= 114.9 && lng <= 115.0 && lat >= 27.1 && lat <= 27.2) return "吉安市";
+        if (lng >= 114.4 && lng <= 114.5 && lat >= 27.8 && lat <= 27.9) return "宜春市";
+        if (lng >= 116.3 && lng <= 116.4 && lat >= 27.9 && lat <= 28.0) return "抚州市";
+        if (lng >= 117.9 && lng <= 118.0 && lat >= 28.4 && lat <= 28.5) return "上饶市";
+
+        // ==================== 河北省 ====================
+        if (lng >= 114.5 && lng <= 114.6 && lat >= 38.0 && lat <= 38.1) return "石家庄市";
+        if (lng >= 118.1 && lng <= 118.2 && lat >= 39.6 && lat <= 39.7) return "唐山市";
+        if (lng >= 119.5 && lng <= 119.6 && lat >= 39.9 && lat <= 40.0) return "秦皇岛市";
+        if (lng >= 114.4 && lng <= 114.5 && lat >= 36.6 && lat <= 36.7) return "邯郸市";
+        if (lng >= 114.5 && lng <= 114.6 && lat >= 37.0 && lat <= 37.1) return "邢台市";
+        if (lng >= 115.4 && lng <= 115.5 && lat >= 38.8 && lat <= 38.9) return "保定市";
+        if (lng >= 114.8 && lng <= 114.9 && lat >= 40.8 && lat <= 40.9) return "张家口市";
+        if (lng >= 117.9 && lng <= 118.0 && lat >= 40.9 && lat <= 41.0) return "承德市";
+        if (lng >= 116.8 && lng <= 116.9 && lat >= 38.3 && lat <= 38.4) return "沧州市";
+        if (lng >= 116.7 && lng <= 116.8 && lat >= 39.5 && lat <= 39.6) return "廊坊市";
+        if (lng >= 115.6 && lng <= 115.7 && lat >= 37.7 && lat <= 37.8) return "衡水市";
+
+        // ==================== 山西省 ====================
+        if (lng >= 112.5 && lng <= 112.6 && lat >= 37.8 && lat <= 37.9) return "太原市";
+        if (lng >= 113.2 && lng <= 113.3 && lat >= 40.0 && lat <= 40.1) return "大同市";
+        if (lng >= 113.5 && lng <= 113.6 && lat >= 37.8 && lat <= 37.9) return "阳泉市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 36.1 && lat <= 36.2) return "长治市";
+        if (lng >= 112.8 && lng <= 112.9 && lat >= 35.4 && lat <= 35.5) return "晋城市";
+        if (lng >= 112.4 && lng <= 112.5 && lat >= 39.3 && lat <= 39.4) return "朔州市";
+        if (lng >= 112.7 && lng <= 112.8 && lat >= 37.6 && lat <= 37.7) return "晋中市";
+        if (lng >= 111.0 && lng <= 111.1 && lat >= 35.0 && lat <= 35.1) return "运城市";
+        if (lng >= 112.7 && lng <= 112.8 && lat >= 38.4 && lat <= 38.5) return "忻州市";
+        if (lng >= 111.5 && lng <= 111.6 && lat >= 36.0 && lat <= 36.1) return "临汾市";
+        if (lng >= 111.1 && lng <= 111.2 && lat >= 37.5 && lat <= 37.6) return "吕梁市";
+
+        // ==================== 广西 ====================
+        if (lng >= 108.3 && lng <= 108.4 && lat >= 22.8 && lat <= 22.9) return "南宁市";
+        if (lng >= 109.4 && lng <= 109.5 && lat >= 24.3 && lat <= 24.4) return "柳州市";
+        if (lng >= 110.2 && lng <= 110.3 && lat >= 25.2 && lat <= 25.3) return "桂林市";
+        if (lng >= 111.2 && lng <= 111.3 && lat >= 23.4 && lat <= 23.5) return "梧州市";
+        if (lng >= 109.1 && lng <= 109.2 && lat >= 21.4 && lat <= 21.5) return "北海市";
+        if (lng >= 108.3 && lng <= 108.4 && lat >= 21.6 && lat <= 21.7) return "防城港市";
+        if (lng >= 108.6 && lng <= 108.7 && lat >= 21.9 && lat <= 22.0) return "钦州市";
+        if (lng >= 109.5 && lng <= 109.6 && lat >= 23.1 && lat <= 23.2) return "贵港市";
+        if (lng >= 110.1 && lng <= 110.2 && lat >= 22.6 && lat <= 22.7) return "玉林市";
+        if (lng >= 106.6 && lng <= 106.7 && lat >= 23.9 && lat <= 24.0) return "百色市";
+        if (lng >= 111.5 && lng <= 111.6 && lat >= 24.4 && lat <= 24.5) return "贺州市";
+        if (lng >= 108.0 && lng <= 108.1 && lat >= 24.6 && lat <= 24.7) return "河池市";
+        if (lng >= 109.2 && lng <= 109.3 && lat >= 23.7 && lat <= 23.8) return "来宾市";
+        if (lng >= 107.3 && lng <= 107.4 && lat >= 22.3 && lat <= 22.4) return "崇左市";
+
+        // ==================== 云南省 ====================
+        if (lng >= 102.7 && lng <= 102.8 && lat >= 25.0 && lat <= 25.1) return "昆明市";
+        if (lng >= 103.7 && lng <= 103.8 && lat >= 25.4 && lat <= 25.5) return "曲靖市";
+        if (lng >= 102.5 && lng <= 102.6 && lat >= 24.3 && lat <= 24.4) return "玉溪市";
+        if (lng >= 99.1 && lng <= 99.2 && lat >= 25.1 && lat <= 25.2) return "保山市";
+        if (lng >= 103.7 && lng <= 103.8 && lat >= 27.3 && lat <= 27.4) return "昭通市";
+        if (lng >= 100.2 && lng <= 100.3 && lat >= 26.8 && lat <= 26.9) return "丽江市";
+        if (lng >= 100.9 && lng <= 101.0 && lat >= 22.8 && lat <= 22.9) return "普洱市";
+        if (lng >= 100.0 && lng <= 100.1 && lat >= 23.8 && lat <= 23.9) return "临沧市";
+
+        // ==================== 贵州省 ====================
+        if (lng >= 106.6 && lng <= 106.7 && lat >= 26.6 && lat <= 26.7) return "贵阳市";
+        if (lng >= 104.8 && lng <= 104.9 && lat >= 26.5 && lat <= 26.6) return "六盘水市";
+        if (lng >= 106.9 && lng <= 107.0 && lat >= 27.7 && lat <= 27.8) return "遵义市";
+        if (lng >= 105.9 && lng <= 106.0 && lat >= 26.2 && lat <= 26.3) return "安顺市";
+        if (lng >= 105.2 && lng <= 105.3 && lat >= 27.2 && lat <= 27.3) return "毕节市";
+        if (lng >= 109.1 && lng <= 109.2 && lat >= 27.7 && lat <= 27.8) return "铜仁市";
+
+        // ==================== 甘肃省 ====================
+        if (lng >= 103.8 && lng <= 103.9 && lat >= 36.0 && lat <= 36.1) return "兰州市";
+        if (lng >= 98.2 && lng <= 98.3 && lat >= 39.7 && lat <= 39.8) return "嘉峪关市";
+        if (lng >= 102.1 && lng <= 102.2 && lat >= 38.5 && lat <= 38.6) return "金昌市";
+        if (lng >= 104.1 && lng <= 104.2 && lat >= 36.5 && lat <= 36.6) return "白银市";
+        if (lng >= 105.7 && lng <= 105.8 && lat >= 34.5 && lat <= 34.6) return "天水市";
+        if (lng >= 102.6 && lng <= 102.7 && lat >= 37.9 && lat <= 38.0) return "武威市";
+        if (lng >= 100.4 && lng <= 100.5 && lat >= 38.9 && lat <= 39.0) return "张掖市";
+        if (lng >= 106.6 && lng <= 106.7 && lat >= 35.5 && lat <= 35.6) return "平凉市";
+        if (lng >= 98.4 && lng <= 98.5 && lat >= 39.7 && lat <= 39.8) return "酒泉市";
+        if (lng >= 107.6 && lng <= 107.7 && lat >= 35.7 && lat <= 35.8) return "庆阳市";
+        if (lng >= 104.6 && lng <= 104.7 && lat >= 35.5 && lat <= 35.6) return "定西市";
+        if (lng >= 104.9 && lng <= 105.0 && lat >= 33.3 && lat <= 33.4) return "陇南市";
+
+        // ==================== 内蒙古 ====================
+        if (lng >= 111.6 && lng <= 111.7 && lat >= 40.8 && lat <= 40.9) return "呼和浩特市";
+        if (lng >= 109.8 && lng <= 109.9 && lat >= 40.6 && lat <= 40.7) return "包头市";
+        if (lng >= 106.7 && lng <= 106.8 && lat >= 39.6 && lat <= 39.7) return "乌海市";
+        if (lng >= 118.8 && lng <= 118.9 && lat >= 42.2 && lat <= 42.3) return "赤峰市";
+        if (lng >= 122.2 && lng <= 122.3 && lat >= 43.6 && lat <= 43.7) return "通辽市";
+        if (lng >= 109.7 && lng <= 109.8 && lat >= 39.6 && lat <= 39.7) return "鄂尔多斯市";
+        if (lng >= 119.7 && lng <= 119.8 && lat >= 49.2 && lat <= 49.3) return "呼伦贝尔市";
+        if (lng >= 107.3 && lng <= 107.4 && lat >= 40.7 && lat <= 40.8) return "巴彦淖尔市";
+        if (lng >= 113.1 && lng <= 113.2 && lat >= 40.9 && lat <= 41.0) return "乌兰察布市";
+
+        // ==================== 新疆 ====================
+        if (lng >= 87.6 && lng <= 87.7 && lat >= 43.8 && lat <= 43.9) return "乌鲁木齐市";
+        if (lng >= 84.8 && lng <= 84.9 && lat >= 45.5 && lat <= 45.6) return "克拉玛依市";
+        if (lng >= 89.1 && lng <= 89.2 && lat >= 42.9 && lat <= 43.0) return "吐鲁番市";
+        if (lng >= 93.5 && lng <= 93.6 && lat >= 42.8 && lat <= 42.9) return "哈密市";
+
+        // ==================== 海南省 ====================
+        if (lng >= 110.1 && lng <= 110.2 && lat >= 20.0 && lat <= 20.1) return "海口市";
+        if (lng >= 109.5 && lng <= 109.6 && lat >= 18.2 && lat <= 18.3) return "三亚市";
+        if (lng >= 112.3 && lng <= 112.4 && lat >= 16.8 && lat <= 16.9) return "三沙市";
+        if (lng >= 109.5 && lng <= 109.6 && lat >= 19.5 && lat <= 19.6) return "儋州市";
+
+        // ==================== 宁夏 ====================
+        if (lng >= 106.2 && lng <= 106.3 && lat >= 38.4 && lat <= 38.5) return "银川市";
+        if (lng >= 106.3 && lng <= 106.4 && lat >= 39.0 && lat <= 39.1) return "石嘴山市";
+        if (lng >= 106.1 && lng <= 106.2 && lat >= 37.9 && lat <= 38.0) return "吴忠市";
+        if (lng >= 106.2 && lng <= 106.3 && lat >= 36.0 && lat <= 36.1) return "固原市";
+        if (lng >= 105.1 && lng <= 105.2 && lat >= 37.4 && lat <= 37.5) return "中卫市";
+
+        // ==================== 青海省 ====================
+        if (lng >= 101.7 && lng <= 101.8 && lat >= 36.6 && lat <= 36.7) return "西宁市";
+        if (lng >= 102.1 && lng <= 102.2 && lat >= 36.5 && lat <= 36.6) return "海东市";
+
+        // ==================== 西藏 ====================
+        if (lng >= 91.1 && lng <= 91.2 && lat >= 29.6 && lat <= 29.7) return "拉萨市";
+        if (lng >= 88.8 && lng <= 88.9 && lat >= 29.2 && lat <= 29.3) return "日喀则市";
+        if (lng >= 97.1 && lng <= 97.2 && lat >= 31.1 && lat <= 31.2) return "昌都市";
+        if (lng >= 94.3 && lng <= 94.4 && lat >= 29.6 && lat <= 29.7) return "林芝市";
+        if (lng >= 91.7 && lng <= 91.8 && lat >= 29.2 && lat <= 29.3) return "山南市";
+        if (lng >= 92.0 && lng <= 92.1 && lat >= 31.4 && lat <= 31.5) return "那曲市";
+
+        // ==================== 台湾省 ====================
+        if (lng >= 121.5 && lng <= 121.6 && lat >= 25.0 && lat <= 25.1) return "台北市";
+        if (lng >= 120.3 && lng <= 120.4 && lat >= 22.6 && lat <= 22.7) return "高雄市";
+        if (lng >= 120.6 && lng <= 120.7 && lat >= 24.1 && lat <= 24.2) return "台中市";
+
+        // ==================== 香港澳门 ====================
+        if (lng >= 114.1 && lng <= 114.2 && lat >= 22.2 && lat <= 22.3) return "香港";
+        if (lng >= 113.5 && lng <= 113.6 && lat >= 22.1 && lat <= 22.2) return "澳门";
+
         return null;
     }
 
@@ -570,82 +926,31 @@
                 return;
             }
 
-            // 显示loading
             const loadingDiv = document.getElementById('loadingOverlay');
             if(loadingDiv) loadingDiv.style.display = 'flex';
             document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
             document.querySelector('.loading-sub').innerHTML = '请在弹出的浏览器窗口中点击"允许"';
 
-            // 直接调用浏览器原生定位API - 这会触发浏览器原生权限弹窗
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     const { longitude, latitude } = pos.coords;
                     console.log('✅ GPS获取坐标成功:', longitude, latitude);
-
-                    // 隐藏loading
                     if(loadingDiv) loadingDiv.style.display = 'none';
 
-                    // 方法1：根据坐标范围直接匹配城市
+                    // 直接使用坐标匹配函数
                     const coordCity = getCityByCoordinates(longitude, latitude);
                     if (coordCity) {
                         console.log('🎯 坐标匹配城市成功:', coordCity);
                         resolve(coordCity);
-                        return;
-                    }
-
-                    // 方法2：高德逆地理编码
-                    try {
-                        const url = `https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=${longitude},${latitude}&key=${AMAP_KEY}&radius=200&extensions=base`;
-                        const resp = await fetch(url);
-                        const data = await resp.json();
-                        console.log('逆地理编码返回:', data);
-
-                        if (data.status === '1' && data.regeocode) {
-                            const addr = data.regeocode.addressComponent;
-                            let city = addr.city;
-                            if (!city || city === '[]') city = addr.district;
-                            if (!city || city === '[]') city = addr.province;
-
-                            if (city && city !== '[]') {
-                                if (city === '吉林省' || city === '吉林') {
-                                    if (longitude >= 126.3 && longitude <= 126.9 && latitude >= 43.6 && latitude <= 44.0) {
-                                        resolve("吉林市");
-                                        return;
-                                    } else {
-                                        resolve("长春市");
-                                        return;
-                                    }
-                                }
-                                const normalized = normalizeCityName(city);
-                                if (normalized) {
-                                    resolve(normalized);
-                                    return;
-                                }
-                            }
-                        }
-                        resolve(null);
-                    } catch(e) {
-                        console.error('逆地理编码错误:', e);
+                    } else {
+                        console.log('⚠️ 坐标未匹配到任何城市');
                         resolve(null);
                     }
                 },
                 (err) => {
                     console.error('GPS定位失败:', err.code, err.message);
                     if(loadingDiv) loadingDiv.style.display = 'none';
-
-                    // 用户拒绝权限时显示友好提示
-                    if (err.code === 1) {
-                        showPermissionDeniedTip();
-                    }
-
-                    let errorMsg = '';
-                    switch(err.code) {
-                        case 1: errorMsg = '您拒绝了地理位置权限'; break;
-                        case 2: errorMsg = '无法获取位置，请检查GPS开关'; break;
-                        case 3: errorMsg = '定位超时，请检查网络后重试'; break;
-                        default: errorMsg = err.message;
-                    }
-                    document.querySelector('.loading-sub').innerHTML = `定位失败：${errorMsg}`;
+                    if (err.code === 1) showPermissionDeniedTip();
                     resolve(null);
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }

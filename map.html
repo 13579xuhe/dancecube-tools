@@ -602,7 +602,12 @@
     function getCityByCoordinates(lng, lat) {
         if (typeof window.cityCoordinates === 'undefined') {
             console.warn('cityCoordinates 未加载，使用简化匹配');
-            return getCityByCoordinatesSimple(lng, lat);
+            const simpleCity = getCityByCoordinatesSimple(lng, lat);
+            // 简化匹配也返回对象格式
+            if (simpleCity) {
+                return { city: simpleCity, lng: lng, lat: lat };
+            }
+            return null;
         }
 
         const coords = window.cityCoordinates;
@@ -627,7 +632,7 @@
         }
 
         console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
-        // 返回城市名和原始GPS坐标（用于精确定位）
+        // 返回对象，包含城市名和原始GPS坐标
         return { city: nearestCity, lng: lng, lat: lat };
     }
 
@@ -1338,11 +1343,10 @@
 
             // 用户标记使用原始GPS坐标
             if (userLng && userLat) {
-                createPcUserMarker(userLng, userLat);
-                pcMap.setCenter([userLng, userLat]);
+                createMobileUserMarker(userLng, userLat);
+                mobileMap.setCenter([userLng, userLat]);
             }
-// 加载机台数据使用匹配到的城市名
-            await pcLoadCityMachines(city, userLng, userLat);
+            await mobileLoadCityMachines(city, userLng, userLat);
             setTimeout(() => { const tip = document.getElementById('mobileLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 

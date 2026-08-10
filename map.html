@@ -34,6 +34,7 @@
         .pc-dot-offline { width: 16px; height: 16px; background: #8a8a8a; border-radius: 50%; }
         .pc-dot-show { width: 16px; height: 16px; background: #a855f7; border-radius: 50%; box-shadow: 0 0 8px #a855f7; }
         .pc-dot-normal { width: 16px; height: 16px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px #3b82f6; }
+        .pc-dot-user { width: 16px; height: 16px; background: #f97316; border-radius: 50%; box-shadow: 0 0 12px #f97316; border: 2px solid white; }
         .pc-status-msg { margin-top: 12px; font-size: 0.65rem; background: #0a0e1c; padding: 8px; text-align: center; border-radius: 8px; }
         .pc-footer { background: #070a17; text-align: center; font-size: 0.55rem; padding: 4px; color: #5f6d9e; flex-shrink: 0; }
         .pc-location-tip { position: absolute; top: 80px; left: 20px; background: #0f1225cc; backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 20px; font-size: 11px; z-index: 100; border-left: 3px solid #52c41a; }
@@ -60,6 +61,7 @@
         .mobile-dot-gray { background: #8a8a8a; }
         .mobile-dot-purple { background: #a855f7; box-shadow: 0 0 4px #a855f7; }
         .mobile-dot-blue { background: #3b82f6; box-shadow: 0 0 4px #3b82f6; }
+        .mobile-dot-orange { background: #f97316; box-shadow: 0 0 6px #f97316; border: 1px solid white; }
         .mobile-status-msg { font-size: 0.7rem; color: #b4c4ff; }
 
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
@@ -85,6 +87,55 @@
         .amap-info-content { background: transparent !important; border: none !important; box-shadow: none !important; }
         .amap-info-sharp { display: none !important; }
         .amap-info-close { display: none !important; }
+
+        /* 用户位置标记样式 */
+        .user-location-marker {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 30% 30%, #f97316, #dc2626);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5);
+            cursor: default;
+            animation: pulse-location 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-location-marker::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        @keyframes pulse-location {
+            0%, 100% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5); }
+            50% { box-shadow: 0 0 0 16px rgba(249, 115, 22, 0.1), 0 0 30px rgba(249, 115, 22, 0.7); }
+        }
+
+        .user-location-marker-small {
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle at 30% 30%, #f97316, #dc2626);
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.3), 0 0 16px rgba(249, 115, 22, 0.5);
+            cursor: default;
+            animation: pulse-location 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-location-marker-small::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
 
         /* 权限被拒绝后的提示条 */
         .permission-denied-tip {
@@ -140,7 +191,13 @@
     <div class="pc-map-container">
         <div id="pc-map"></div>
         <div id="pcLocationTip" class="pc-location-tip" style="display: none;"><i class="fas fa-location-dot"></i> <span id="pcCurrentCity">定位中...</span></div>
-        <div class="pc-info-panel"><h4><i class="fas fa-chart-line"></i> 机台状态</h4><div class="pc-legend"><div class="pc-legend-item"><div class="pc-dot-active"></div><span>在线运营</span></div><div class="pc-legend-item"><div class="pc-dot-offline"></div><span>离线/维护中</span></div><div class="pc-legend-item"><div class="pc-dot-show"></div><span>秀机/Show机</span></div><div class="pc-legend-item"><div class="pc-dot-normal"></div><span>一代/二代机</span></div></div><div class="pc-status-msg" id="pcPanelMsg"><i class="fas fa-spinner fa-pulse"></i> 正在获取你的位置...</div></div>
+        <div class="pc-info-panel"><h4><i class="fas fa-chart-line"></i> 机台状态</h4><div class="pc-legend">
+            <div class="pc-legend-item"><div class="pc-dot-active"></div><span>在线运营</span></div>
+            <div class="pc-legend-item"><div class="pc-dot-offline"></div><span>离线/维护中</span></div>
+            <div class="pc-legend-item"><div class="pc-dot-show"></div><span>秀机/Show机</span></div>
+            <div class="pc-legend-item"><div class="pc-dot-normal"></div><span>一代/二代机</span></div>
+            <div class="pc-legend-item"><div class="pc-dot-user"></div><span>📍 我的位置</span></div>
+        </div><div class="pc-status-msg" id="pcPanelMsg"><i class="fas fa-spinner fa-pulse"></i> 正在获取你的位置...</div></div>
     </div>
     <div class="pc-footer">📍 正在获取您的位置，请允许浏览器获取地理位置权限 | 紫色标记为秀机/Show机</div>
 </div>
@@ -150,7 +207,13 @@
     <div class="mobile-map-container"><div id="mobile-map"></div><div id="mobileLocationTip" class="mobile-location-tip" style="display: none;"><i class="fas fa-location-dot"></i> <span id="mobileCurrentCity">定位中...</span></div></div>
     <div class="mobile-city-picker"><select id="mobileProvinceSelect"><option value="">省份</option></select><select id="mobileCitySelect" disabled><option value="">城市</option></select></div>
     <div class="mobile-bottom-bar"><button class="mobile-btn" id="mobileMyLocationBtn"><i class="fas fa-location-dot"></i> 定位</button><button class="mobile-btn" id="mobileResetViewBtn"><i class="fas fa-globe"></i> 重置</button></div>
-    <div class="mobile-status-card"><div class="mobile-stats-badge"><span><div class="mobile-dot mobile-dot-green"></div>在线</span><span><div class="mobile-dot mobile-dot-gray"></div>离线</span><span><div class="mobile-dot mobile-dot-purple"></div>秀机</span><span><div class="mobile-dot mobile-dot-blue"></div>普通</span></div><div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div></div>
+    <div class="mobile-status-card"><div class="mobile-stats-badge">
+        <span><div class="mobile-dot mobile-dot-green"></div>在线</span>
+        <span><div class="mobile-dot mobile-dot-gray"></div>离线</span>
+        <span><div class="mobile-dot mobile-dot-purple"></div>秀机</span>
+        <span><div class="mobile-dot mobile-dot-blue"></div>普通</span>
+        <span><div class="mobile-dot mobile-dot-orange"></div>我</span>
+    </div><div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div></div>
 </div>
 
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
@@ -535,45 +598,8 @@
 
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
-    function getCityByCoordinates(lng, lat) {
-        // 如果 cityCoordinates 还没加载，等待一下
-        if (typeof window.cityCoordinates === 'undefined') {
-            console.warn('cityCoordinates 未加载，使用简化匹配');
-            return getCityByCoordinatesSimple(lng, lat);
-        }
-
-        const coords = window.cityCoordinates;
-        let nearestCity = null;
-        let minDistance = Infinity;
-
-        // 遍历所有城市，计算距离，找到最近的城市
-        for (const [city, coord] of Object.entries(coords)) {
-            const [cityLng, cityLat] = coord;
-            // 使用球面距离计算（简化版：欧几里得距离，因为中国范围经纬度比例接近）
-            const dx = lng - cityLng;
-            const dy = lat - cityLat;
-            // 纬度每度约111km，经度每度约85km（取中纬度平均值）
-            const distance = Math.sqrt(dx * dx * 85 * 85 + dy * dy * 111 * 111);
-
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearestCity = city;
-            }
-        }
-
-        // 如果最近的城市距离超过 200km，认为匹配失败（防止定位到国外）
-        if (minDistance > 200) {
-            console.log(`📍 最近城市 ${nearestCity} 距离 ${minDistance.toFixed(0)}km，超过阈值，返回 null`);
-            return null;
-        }
-
-        console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
-        return nearestCity;
-    }
-
     // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
     function getCityByCoordinates(lng, lat) {
-        // 如果 cityCoordinates 还没加载，等待一下
         if (typeof window.cityCoordinates === 'undefined') {
             console.warn('cityCoordinates 未加载，使用简化匹配');
             return getCityByCoordinatesSimple(lng, lat);
@@ -583,13 +609,10 @@
         let nearestCity = null;
         let minDistance = Infinity;
 
-        // 遍历所有城市，计算距离，找到最近的城市
         for (const [city, coord] of Object.entries(coords)) {
             const [cityLng, cityLat] = coord;
-            // 使用球面距离计算（简化版：欧几里得距离，因为中国范围经纬度比例接近）
             const dx = lng - cityLng;
             const dy = lat - cityLat;
-            // 纬度每度约111km，经度每度约85km（取中纬度平均值）
             const distance = Math.sqrt(dx * dx * 85 * 85 + dy * dy * 111 * 111);
 
             if (distance < minDistance) {
@@ -598,14 +621,14 @@
             }
         }
 
-        // 如果最近的城市距离超过 200km，认为匹配失败（防止定位到国外）
         if (minDistance > 200) {
             console.log(`📍 最近城市 ${nearestCity} 距离 ${minDistance.toFixed(0)}km，超过阈值，返回 null`);
             return null;
         }
 
         console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
-        return nearestCity;
+        // 返回城市名和原始GPS坐标（用于精确定位）
+        return { city: nearestCity, lng: lng, lat: lat };
     }
 
     // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
@@ -1014,8 +1037,8 @@
                     // 直接使用坐标匹配函数
                     const coordCity = getCityByCoordinates(longitude, latitude);
                     if (coordCity) {
-                        console.log('🎯 坐标匹配城市成功:', coordCity);
-                        resolve(coordCity);
+                        console.log('🎯 坐标匹配城市成功:', coordCity.city);
+                        resolve({ city: coordCity.city, lng: longitude, lat: latitude });
                     } else {
                         console.log('⚠️ 坐标未匹配到任何城市');
                         resolve(null);
@@ -1040,12 +1063,15 @@
             console.log('IP定位结果:', ipData);
             if (ipData.status === '1' && ipData.city && ipData.city !== '[]') {
                 const mappedCity = normalizeCityName(ipData.city);
-                if (mappedCity) return mappedCity;
+                if (mappedCity) {
+                    const coords = window.cityCoordinates ? window.cityCoordinates[mappedCity] : null;
+                    return { city: mappedCity, lng: coords ? coords[0] : null, lat: coords ? coords[1] : null };
+                }
             }
         } catch (e) {
             console.log('IP定位失败:', e);
         }
-        return "北京市";
+        return { city: "北京市", lng: 116.4074, lat: 39.9042 };
     }
 
     // 主定位函数：优先GPS，失败则IP备用
@@ -1055,20 +1081,20 @@
         document.querySelector('.loading-text').innerHTML = '正在获取您的位置...';
         document.querySelector('.loading-sub').innerHTML = '请在弹出的浏览器窗口中点击"允许"';
 
-        const gpsCity = await getCityByGPS();
-        if (gpsCity) {
-            console.log('🎯 GPS定位成功:', gpsCity);
+        const gpsResult = await getCityByGPS();
+        if (gpsResult) {
+            console.log('🎯 GPS定位成功:', gpsResult.city);
             if(loadingDiv) loadingDiv.style.display = 'none';
-            return gpsCity;
+            return gpsResult;
         }
 
         // GPS失败或用户拒绝，使用IP定位作为备用
         console.log('⚠️ GPS定位失败，使用IP备用定位');
         document.querySelector('.loading-text').innerHTML = 'GPS定位未成功，使用网络定位...';
-        const ipCity = await getCityByIP();
-        console.log('📍 IP备用定位:', ipCity);
+        const ipResult = await getCityByIP();
+        console.log('📍 IP备用定位:', ipResult.city);
         if(loadingDiv) loadingDiv.style.display = 'none';
-        return ipCity;
+        return ipResult;
     }
 
     document.addEventListener('DOMContentLoaded', async function() {
@@ -1088,6 +1114,10 @@
         const loadCabinetsDataByCity = window.loadCabinetsDataByCity;
         const provinceList = Object.keys(provincesCities).sort();
 
+        // 存储用户位置标记
+        let pcUserMarker = null;
+        let mobileUserMarker = null;
+
         async function setDropdownByCity(cityName, type) {
             for (let [province, cities] of Object.entries(provincesCities)) {
                 if (cities.includes(cityName)) {
@@ -1105,8 +1135,31 @@
             return false;
         }
 
+        // ==================== PC端 ====================
         let pcMap, pcMarkers = [], pcInfoWindow = null;
-        async function pcLoadCityMachines(cityName) {
+
+        // 创建用户位置标记
+        function createPcUserMarker(lng, lat) {
+            if (pcUserMarker) {
+                pcUserMarker.setMap(null);
+                pcUserMarker = null;
+            }
+            // 使用自定义DOM元素作为标记
+            const markerContent = document.createElement('div');
+            markerContent.className = 'user-location-marker';
+            markerContent.title = '我的位置';
+
+            pcUserMarker = new AMap.Marker({
+                position: [lng, lat],
+                content: markerContent,
+                offset: new AMap.Pixel(0, -14),
+                zIndex: 999
+            });
+            pcUserMarker.setMap(pcMap);
+            return pcUserMarker;
+        }
+
+        async function pcLoadCityMachines(cityName, userLng, userLat) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
@@ -1116,6 +1169,12 @@
                 const machines = await loadCabinetsDataByCity(finalCity);
                 pcMarkers.forEach(m => m.setMap(null));
                 pcMarkers = [];
+
+                // 如果有用户坐标，先添加用户位置标记
+                if (userLng && userLat) {
+                    createPcUserMarker(userLng, userLat);
+                }
+
                 machines.forEach(cab => {
                     if (!cab.lat || !cab.lng) return;
                     const isOnline = cab.status === 'active';
@@ -1151,10 +1210,24 @@
 
         async function pcDoLocate() {
             pcInfoWindow?.close();
-            const city = await getAccurateCity();
+            // 清除旧用户标记
+            if (pcUserMarker) { pcUserMarker.setMap(null); pcUserMarker = null; }
+
+            const result = await getAccurateCity();
+            const city = result.city;
+            const userLng = result.lng;
+            const userLat = result.lat;
+
             document.getElementById('pcCurrentCity').innerText = city;
             document.getElementById('pcLocationTip').style.display = 'block';
-            await pcLoadCityMachines(city);
+
+            // 用户标记使用原始GPS坐标
+            if (userLng && userLat) {
+                createPcUserMarker(userLng, userLat);
+                pcMap.setCenter([userLng, userLat]);
+            }
+// 加载机台数据使用匹配到的城市名
+            await pcLoadCityMachines(city, userLng, userLat);
             setTimeout(() => { const tip = document.getElementById('pcLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
@@ -1172,15 +1245,42 @@
                 citySelect.innerHTML = '<option value="">请选择城市</option>';
                 (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
             });
-            document.getElementById('pcCitySelect').addEventListener('change', () => { const city = document.getElementById('pcCitySelect').value; if (city) pcLoadCityMachines(city); });
+            document.getElementById('pcCitySelect').addEventListener('change', () => { const city = document.getElementById('pcCitySelect').value; if (city) pcLoadCityMachines(city, null, null); });
             document.getElementById('pcMyLocationBtn').addEventListener('click', pcDoLocate);
-            document.getElementById('pcResetViewBtn').addEventListener('click', () => { pcMap.setZoomAndCenter(5, [116.4074, 39.9042]); document.getElementById('pcProvinceSelect').value = ""; document.getElementById('pcCitySelect').disabled = true; pcInfoWindow?.close(); });
+            document.getElementById('pcResetViewBtn').addEventListener('click', () => {
+                pcMap.setZoomAndCenter(5, [116.4074, 39.9042]);
+                document.getElementById('pcProvinceSelect').value = "";
+                document.getElementById('pcCitySelect').disabled = true;
+                pcInfoWindow?.close();
+                if (pcUserMarker) { pcUserMarker.setMap(null); pcUserMarker = null; }
+            });
             pcMap.on('click', () => pcInfoWindow.close());
             pcMap.on('complete', () => pcDoLocate());
         }
 
+        // ==================== 移动端 ====================
         let mobileMap, mobileMarkers = [], mobileInfoWindow = null;
-        async function mobileLoadCityMachines(cityName) {
+
+        function createMobileUserMarker(lng, lat) {
+            if (mobileUserMarker) {
+                mobileUserMarker.setMap(null);
+                mobileUserMarker = null;
+            }
+            const markerContent = document.createElement('div');
+            markerContent.className = 'user-location-marker-small';
+            markerContent.title = '我的位置';
+
+            mobileUserMarker = new AMap.Marker({
+                position: [lng, lat],
+                content: markerContent,
+                offset: new AMap.Pixel(0, -11),
+                zIndex: 999
+            });
+            mobileUserMarker.setMap(mobileMap);
+            return mobileUserMarker;
+        }
+
+        async function mobileLoadCityMachines(cityName, userLng, userLat) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
@@ -1190,6 +1290,11 @@
                 const machines = await loadCabinetsDataByCity(finalCity);
                 mobileMarkers.forEach(m => m.setMap(null));
                 mobileMarkers = [];
+
+                if (userLng && userLat) {
+                    createMobileUserMarker(userLng, userLat);
+                }
+
                 machines.forEach(cab => {
                     if (!cab.lat || !cab.lng) return;
                     const isOnline = cab.status === 'active';
@@ -1221,10 +1326,23 @@
 
         async function mobileDoLocate() {
             mobileInfoWindow?.close();
-            const city = await getAccurateCity();
+            if (mobileUserMarker) { mobileUserMarker.setMap(null); mobileUserMarker = null; }
+
+            const result = await getAccurateCity();
+            const city = result.city;
+            const userLng = result.lng;
+            const userLat = result.lat;
+
             document.getElementById('mobileCurrentCity').innerText = city;
             document.getElementById('mobileLocationTip').style.display = 'block';
-            await mobileLoadCityMachines(city);
+
+            // 用户标记使用原始GPS坐标
+            if (userLng && userLat) {
+                createPcUserMarker(userLng, userLat);
+                pcMap.setCenter([userLng, userLat]);
+            }
+// 加载机台数据使用匹配到的城市名
+            await pcLoadCityMachines(city, userLng, userLat);
             setTimeout(() => { const tip = document.getElementById('mobileLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
@@ -1242,9 +1360,15 @@
                 citySelect.innerHTML = '<option value="">城市</option>';
                 (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
             });
-            document.getElementById('mobileCitySelect').addEventListener('change', () => { const city = document.getElementById('mobileCitySelect').value; if (city) mobileLoadCityMachines(city); });
+            document.getElementById('mobileCitySelect').addEventListener('change', () => { const city = document.getElementById('mobileCitySelect').value; if (city) mobileLoadCityMachines(city, null, null); });
             document.getElementById('mobileMyLocationBtn').addEventListener('click', mobileDoLocate);
-            document.getElementById('mobileResetViewBtn').addEventListener('click', () => { mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]); document.getElementById('mobileProvinceSelect').value = ""; document.getElementById('mobileCitySelect').disabled = true; mobileInfoWindow?.close(); });
+            document.getElementById('mobileResetViewBtn').addEventListener('click', () => {
+                mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]);
+                document.getElementById('mobileProvinceSelect').value = "";
+                document.getElementById('mobileCitySelect').disabled = true;
+                mobileInfoWindow?.close();
+                if (mobileUserMarker) { mobileUserMarker.setMap(null); mobileUserMarker = null; }
+            });
             mobileMap.on('click', () => mobileInfoWindow.close());
             mobileMap.on('complete', () => mobileDoLocate());
         }

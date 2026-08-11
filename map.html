@@ -47,22 +47,24 @@
         .mobile-stats { background: rgba(18, 22, 43, 0.8); padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; }
         .mobile-map-container { flex: 1; position: relative; width: 100%; }
         #mobile-map { width: 100%; height: 100%; }
-        .mobile-city-picker { position: absolute; top: 70px; left: 16px; right: 16px; z-index: 20; background: rgba(15, 18, 37, 0.95); backdrop-filter: blur(12px); border-radius: 30px; padding: 6px 12px; border: 1px solid rgba(59, 75, 158, 0.5); display: flex; gap: 10px; pointer-events: auto; }
-        .mobile-city-picker select { flex: 1; background: rgba(10, 14, 28, 0.8); border: none; color: #eef2ff; padding: 10px 12px; font-size: 0.85rem; border-radius: 25px; cursor: pointer; outline: none; text-align: center; font-weight: 500; appearance: none; }
+        .mobile-city-picker { position: absolute; top: 15px; left: 16px; right: 16px; z-index: 20; background: rgba(15, 18, 37, 0.95); backdrop-filter: blur(12px); border-radius: 30px; padding: 6px 12px; border: 1px solid rgba(59, 75, 158, 0.5); display: flex; gap: 6px; pointer-events: auto; flex-wrap: wrap; }
+        .mobile-city-picker select { flex: 1; min-width: 60px; background: rgba(10, 14, 28, 0.8); border: none; color: #eef2ff; padding: 8px 6px; font-size: 0.7rem; border-radius: 20px; cursor: pointer; outline: none; text-align: center; font-weight: 500; appearance: none; }
+        .mobile-city-picker select option { background: #0f1229; color: #eef2ff; }
+        .mobile-city-picker select:disabled { opacity: 0.4; cursor: not-allowed; }
         .mobile-bottom-bar { position: absolute; bottom: 16px; left: 16px; right: 16px; z-index: 20; display: flex; gap: 10px; pointer-events: none; }
         .mobile-btn { pointer-events: auto; background: rgba(15, 18, 37, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(59, 75, 158, 0.5); color: #eef2ff; padding: 10px 0; border-radius: 30px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; transition: 0.15s; }
         .mobile-btn:active { background: #25306b; transform: scale(0.97); }
-        .mobile-location-tip { position: absolute; top: 130px; left: 16px; background: rgba(15, 18, 37, 0.9); backdrop-filter: blur(10px); padding: 6px 14px; border-radius: 30px; font-size: 11px; z-index: 20; border-left: 3px solid #52c41a; pointer-events: none; }
+        .mobile-location-tip { position: absolute; top: 140px; left: 16px; background: rgba(15, 18, 37, 0.9); backdrop-filter: blur(10px); padding: 6px 14px; border-radius: 30px; font-size: 11px; z-index: 20; border-left: 3px solid #52c41a; pointer-events: none; }
         .mobile-status-card { position: absolute; bottom: 80px; left: 16px; right: 16px; z-index: 20; background: rgba(11, 14, 33, 0.92); backdrop-filter: blur(12px); border-radius: 20px; padding: 10px 16px; border: 1px solid rgba(59, 75, 158, 0.3); pointer-events: auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-        .mobile-stats-badge { display: flex; gap: 12px; }
-        .mobile-stats-badge span { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; }
+        .mobile-stats-badge { display: flex; gap: 12px; flex-wrap: wrap; }
+        .mobile-stats-badge span { display: flex; align-items: center; gap: 5px; font-size: 0.65rem; }
         .mobile-dot { width: 10px; height: 10px; border-radius: 50%; }
         .mobile-dot-green { background: #52c41a; box-shadow: 0 0 4px #52c41a; }
         .mobile-dot-gray { background: #8a8a8a; }
         .mobile-dot-purple { background: #a855f7; box-shadow: 0 0 4px #a855f7; }
         .mobile-dot-blue { background: #3b82f6; box-shadow: 0 0 4px #3b82f6; }
         .mobile-dot-orange { background: #f97316; box-shadow: 0 0 6px #f97316; border: 1px solid white; }
-        .mobile-status-msg { font-size: 0.7rem; color: #b4c4ff; }
+        .mobile-status-msg { font-size: 0.65rem; color: #b4c4ff; }
 
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
         .loading-spinner { width: 44px; height: 44px; border: 3px solid #3b4b9e; border-top-color: #7c8ee0; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -83,56 +85,13 @@
             min-width: 280px;
             max-width: 600px;
         }
-        .custom-infowindow-left {
-            flex: 1;
-            min-width: 180px;
-        }
-        .custom-infowindow-right {
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            justify-content: center;
-            border-left: 1px solid rgba(124, 142, 224, 0.3);
-            padding-left: 12px;
-            min-width: 80px;
-            max-width: 150px;
-        }
-        .custom-infowindow-right img {
-            width: 120px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid rgba(124, 142, 224, 0.3);
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: block;
-        }
-        .custom-infowindow-right img:hover {
-            transform: scale(1.05);
-        }
-        .custom-infowindow-right .no-image {
-            color: #666;
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 20px 0;
-        }
-        .img-expand-btn {
-            background: rgba(124, 142, 224, 0.2);
-            border: 1px solid #7c8ee0;
-            color: #b4c4ff;
-            padding: 3px 10px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.6rem;
-            transition: all 0.3s;
-            white-space: nowrap;
-            width: 100%;
-            text-align: center;
-        }
-        .img-expand-btn:hover {
-            background: rgba(124, 142, 224, 0.4);
-        }
+        .custom-infowindow-left { flex: 1; min-width: 180px; }
+        .custom-infowindow-right { flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px; justify-content: center; border-left: 1px solid rgba(124, 142, 224, 0.3); padding-left: 12px; min-width: 80px; max-width: 150px; }
+        .custom-infowindow-right img { width: 120px; height: 90px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(124, 142, 224, 0.3); cursor: pointer; transition: transform 0.2s; display: block; }
+        .custom-infowindow-right img:hover { transform: scale(1.05); }
+        .custom-infowindow-right .no-image { color: #666; font-size: 0.6rem; text-align: center; padding: 20px 0; }
+        .img-expand-btn { background: rgba(124, 142, 224, 0.2); border: 1px solid #7c8ee0; color: #b4c4ff; padding: 3px 10px; border-radius: 15px; cursor: pointer; font-size: 0.6rem; transition: all 0.3s; white-space: nowrap; width: 100%; text-align: center; }
+        .img-expand-btn:hover { background: rgba(124, 142, 224, 0.4); }
 
         /* 移动端信息窗口 */
         .mobile-infowindow-wrapper {
@@ -147,53 +106,12 @@
             min-width: 240px;
             max-width: 400px;
         }
-        .mobile-infowindow-left {
-            flex: 1;
-            min-width: 120px;
-        }
-        .mobile-infowindow-right {
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            justify-content: center;
-            border-left: 1px solid rgba(124, 142, 224, 0.3);
-            padding-left: 8px;
-            min-width: 60px;
-            max-width: 100px;
-        }
-        .mobile-infowindow-right img {
-            width: 90px;
-            height: 68px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid rgba(124, 142, 224, 0.3);
-            cursor: pointer;
-            display: block;
-        }
+        .mobile-infowindow-left { flex: 1; min-width: 120px; }
+        .mobile-infowindow-right { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; justify-content: center; border-left: 1px solid rgba(124, 142, 224, 0.3); padding-left: 8px; min-width: 60px; max-width: 100px; }
+        .mobile-infowindow-right img { width: 90px; height: 68px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(124, 142, 224, 0.3); cursor: pointer; display: block; }
 
-        .info-close-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 11px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 10;
-        }
-        .info-close-btn:hover {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
+        .info-close-btn { background: rgba(255,255,255,0.1); border: none; color: #aaa; cursor: pointer; font-size: 11px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; position: absolute; top: 8px; right: 8px; z-index: 10; }
+        .info-close-btn:hover { background: rgba(255,255,255,0.2); color: white; }
 
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; font-weight: bold; }
         .status-online { background: rgba(82, 196, 26, 0.2); color: #52c41a; border: 1px solid rgba(82, 196, 26, 0.5); }
@@ -212,82 +130,14 @@
         .amap-info-close { display: none !important; }
 
         /* 用户位置标记 */
-        .user-location-marker {
-            width: 28px;
-            height: 28px;
-            background: radial-gradient(circle at 30% 30%, #f97316, #dc2626);
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5);
-            cursor: default;
-            animation: pulse-location 2s ease-in-out infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .user-location-marker::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-        }
-        @keyframes pulse-location {
-            0%, 100% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5); }
-            50% { box-shadow: 0 0 0 16px rgba(249, 115, 22, 0.1), 0 0 30px rgba(249, 115, 22, 0.7); }
-        }
-        .user-location-marker-small {
-            width: 22px;
-            height: 22px;
-            background: radial-gradient(circle at 30% 30%, #f97316, #dc2626);
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.3), 0 0 16px rgba(249, 115, 22, 0.5);
-            cursor: default;
-            animation: pulse-location 2s ease-in-out infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .user-location-marker-small::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-        }
+        .user-location-marker { width: 28px; height: 28px; background: radial-gradient(circle at 30% 30%, #f97316, #dc2626); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5); cursor: default; animation: pulse-location 2s ease-in-out infinite; display: flex; align-items: center; justify-content: center; }
+        .user-location-marker::after { content: ''; width: 10px; height: 10px; background: white; border-radius: 50%; opacity: 0.8; }
+        @keyframes pulse-location { 0%, 100% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5); } 50% { box-shadow: 0 0 0 16px rgba(249, 115, 22, 0.1), 0 0 30px rgba(249, 115, 22, 0.7); } }
+        .user-location-marker-small { width: 22px; height: 22px; background: radial-gradient(circle at 30% 30%, #f97316, #dc2626); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.3), 0 0 16px rgba(249, 115, 22, 0.5); cursor: default; animation: pulse-location 2s ease-in-out infinite; display: flex; align-items: center; justify-content: center; }
+        .user-location-marker-small::after { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; opacity: 0.8; }
 
-        .permission-denied-tip {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            right: 20px;
-            background: rgba(220, 38, 38, 0.9);
-            backdrop-filter: blur(12px);
-            padding: 12px 16px;
-            border-radius: 12px;
-            color: white;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            z-index: 200;
-            border-left: 4px solid #ff6b6b;
-            font-weight: 500;
-        }
-        .permission-denied-tip button {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            white-space: nowrap;
-        }
+        .permission-denied-tip { position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(220, 38, 38, 0.9); backdrop-filter: blur(12px); padding: 12px 16px; border-radius: 12px; color: white; font-size: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 200; border-left: 4px solid #ff6b6b; font-weight: 500; }
+        .permission-denied-tip button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 14px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; white-space: nowrap; }
         .permission-denied-tip button:hover { background: rgba(255,255,255,0.3); }
 
         @media (max-width: 768px) {
@@ -300,6 +150,7 @@
             .mobile-infowindow-wrapper { min-width: 200px; max-width: 300px; flex-wrap: wrap; }
             .mobile-infowindow-right { border-left: none; border-top: 1px solid rgba(124,142,224,0.3); padding-left: 0; padding-top: 6px; flex-direction: row; flex-wrap: wrap; justify-content: center; min-width: unset; max-width: unset; }
             .mobile-infowindow-right img { width: 70px; height: 52px; }
+            .mobile-city-picker select { font-size: 0.6rem; padding: 6px 4px; min-width: 50px; }
         }
     </style>
 </head>
@@ -313,6 +164,7 @@
     <div class="pc-control-bar">
         <div class="pc-select-group"><label><i class="fas fa-map"></i> 省份</label><select id="pcProvinceSelect"><option value="">请选择省份</option></select></div>
         <div class="pc-select-group"><label><i class="fas fa-city"></i> 城市</label><select id="pcCitySelect" disabled><option value="">请先选择省份</option></select></div>
+        <div class="pc-select-group"><label><i class="fas fa-map-pin"></i> 区县</label><select id="pcDistrictSelect" disabled><option value="">请先选择城市</option></select></div>
         <div class="pc-quick-buttons"><button class="pc-btn" id="pcMyLocationBtn"><i class="fas fa-crosshairs"></i> 重新定位</button><button class="pc-btn" id="pcResetViewBtn"><i class="fas fa-globe"></i> 重置视图</button></div>
     </div>
     <div class="pc-map-container">
@@ -331,16 +183,23 @@
 
 <div class="mobile-layout">
     <div class="mobile-header"><div class="mobile-logo-area"><i class="fas fa-dice-d6 mobile-logo-icon"></i><h1>舞立方·机台地图</h1></div><div class="mobile-stats"><i class="fas fa-gamepad"></i> <span id="mobileTotalCount">0</span></div></div>
-    <div class="mobile-map-container"><div id="mobile-map"></div><div id="mobileLocationTip" class="mobile-location-tip" style="display: none;"><i class="fas fa-location-dot"></i> <span id="mobileCurrentCity">定位中...</span></div></div>
-    <div class="mobile-city-picker"><select id="mobileProvinceSelect"><option value="">省份</option></select><select id="mobileCitySelect" disabled><option value="">城市</option></select></div>
-    <div class="mobile-bottom-bar"><button class="mobile-btn" id="mobileMyLocationBtn"><i class="fas fa-location-dot"></i> 定位</button><button class="mobile-btn" id="mobileResetViewBtn"><i class="fas fa-globe"></i> 重置</button></div>
-    <div class="mobile-status-card"><div class="mobile-stats-badge">
-        <span><div class="mobile-dot mobile-dot-green"></div>在线</span>
-        <span><div class="mobile-dot mobile-dot-gray"></div>离线</span>
-        <span><div class="mobile-dot mobile-dot-purple"></div>秀机</span>
-        <span><div class="mobile-dot mobile-dot-blue"></div>普通</span>
-        <span><div class="mobile-dot mobile-dot-orange"></div>我</span>
-    </div><div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div></div>
+    <div class="mobile-map-container">
+        <div id="mobile-map"></div>
+        <div id="mobileLocationTip" class="mobile-location-tip" style="display: none;"><i class="fas fa-location-dot"></i> <span id="mobileCurrentCity">定位中...</span></div>
+        <div class="mobile-city-picker">
+            <select id="mobileProvinceSelect"><option value="">省份</option></select>
+            <select id="mobileCitySelect" disabled><option value="">城市</option></select>
+            <select id="mobileDistrictSelect" disabled><option value="">区县</option></select>
+        </div>
+        <div class="mobile-bottom-bar"><button class="mobile-btn" id="mobileMyLocationBtn"><i class="fas fa-location-dot"></i> 定位</button><button class="mobile-btn" id="mobileResetViewBtn"><i class="fas fa-globe"></i> 重置</button></div>
+        <div class="mobile-status-card"><div class="mobile-stats-badge">
+            <span><div class="mobile-dot mobile-dot-green"></div>在线</span>
+            <span><div class="mobile-dot mobile-dot-gray"></div>离线</span>
+            <span><div class="mobile-dot mobile-dot-purple"></div>秀机</span>
+            <span><div class="mobile-dot mobile-dot-blue"></div>普通</span>
+            <span><div class="mobile-dot mobile-dot-orange"></div>我</span>
+        </div><div class="mobile-status-msg" id="mobilePanelMsg"><i class="fas fa-spinner fa-pulse"></i> 定位中...</div></div>
+    </div>
 </div>
 
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
@@ -665,6 +524,34 @@
     }
 
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
+
+    // ======================= 获取区县列表 =======================
+    function getDistrictsByCity(cityName) {
+        const directMap = {
+            '北京市': ['东城区', '西城区', '朝阳区', '海淀区', '丰台区', '石景山区', '通州区', '顺义区', '房山区', '大兴区', '昌平区', '怀柔区', '密云区', '延庆区', '门头沟区', '平谷区'],
+            '上海市': ['浦东新区', '黄浦区', '徐汇区', '长宁区', '静安区', '普陀区', '虹口区', '杨浦区', '闵行区', '宝山区', '嘉定区', '金山区', '松江区', '青浦区', '奉贤区', '崇明区'],
+            '天津市': ['和平区', '河东区', '河西区', '南开区', '河北区', '红桥区', '东丽区', '西青区', '津南区', '北辰区', '武清区', '宝坻区', '滨海新区', '宁河区', '静海区', '蓟州区'],
+            '重庆市': ['渝中区', '江北区', '沙坪坝区', '九龙坡区', '南岸区', '北碚区', '綦江区', '大足区', '渝北区', '巴南区', '黔江区', '长寿区', '江津区', '合川区', '永川区', '南川区', '璧山区', '铜梁区', '潼南区', '荣昌区', '开州区', '梁平区', '武隆区']
+        };
+
+        if (directMap[cityName]) {
+            return directMap[cityName];
+        }
+
+        const coords = window.cityCoordinates || {};
+        const districts = [];
+        const cityBase = cityName.replace('市', '');
+
+        for (const key of Object.keys(coords)) {
+            if (key.endsWith('区') || key.endsWith('县')) {
+                if (key.includes(cityBase) || key.replace(/区$|县$/, '') === cityBase) {
+                    districts.push(key);
+                }
+            }
+        }
+
+        return [...new Set(districts)].sort();
+    }
 
     function getCityByCoordinates(lng, lat) {
         if (typeof window.cityCoordinates === 'undefined') {
@@ -1115,22 +1002,106 @@
         const provincesCities = window.provincesCities;
         const cityCoordinates = window.cityCoordinates;
         const loadCabinetsDataByCity = window.loadCabinetsDataByCity;
+        const getCitiesByProvince = window.getCitiesByProvince || function(prov) {
+            const data = provincesCities[prov];
+            if (!data) return [];
+            if (Array.isArray(data)) return data;
+            return Object.keys(data);
+        };
+        const getDistrictsByCity = window.getDistrictsByCity || function(prov, city) {
+            const data = provincesCities[prov];
+            if (!data || Array.isArray(data)) return [];
+            return data[city] || [];
+        };
         const provinceList = Object.keys(provincesCities).sort();
 
         let pcUserMarker = null;
         let mobileUserMarker = null;
+        let pcSelectedCity = null;
+        let pcSelectedDistrict = null;
+        let mobileSelectedCity = null;
+        let mobileSelectedDistrict = null;
 
+        // ========== 辅助函数：根据城市名设置下拉框 ==========
         async function setDropdownByCity(cityName, type) {
-            for (let [province, cities] of Object.entries(provincesCities)) {
-                if (cities.includes(cityName)) {
+            for (const [province, data] of Object.entries(provincesCities)) {
+                let foundCity = null;
+                let foundDistricts = [];
+
+                if (Array.isArray(data)) {
+                    if (data.includes(cityName)) {
+                        foundCity = cityName;
+                        foundDistricts = [];
+                    }
+                } else {
+                    for (const [city, districts] of Object.entries(data)) {
+                        if (city === cityName) {
+                            foundCity = city;
+                            foundDistricts = districts || [];
+                            break;
+                        }
+                        if (Array.isArray(districts) && districts.includes(cityName)) {
+                            foundCity = cityName;
+                            foundDistricts = [];
+                            break;
+                        }
+                    }
+                }
+
+                if (foundCity) {
                     const provinceSelect = type === 'pc' ? document.getElementById('pcProvinceSelect') : document.getElementById('mobileProvinceSelect');
                     const citySelect = type === 'pc' ? document.getElementById('pcCitySelect') : document.getElementById('mobileCitySelect');
+                    const districtSelect = type === 'pc' ? document.getElementById('pcDistrictSelect') : document.getElementById('mobileDistrictSelect');
+
                     provinceSelect.value = province;
+
+                    const cities = getCitiesByProvince(province);
                     citySelect.disabled = false;
-                    citySelect.innerHTML = '<option value="">请选择城市</option>';
-                    (provincesCities[province] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+                    citySelect.innerHTML = '<option value="">' + (type === 'pc' ? '请选择城市' : '城市') + '</option>';
+                    cities.forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
                     await new Promise(r => setTimeout(r, 50));
-                    citySelect.value = cityName;
+                    citySelect.value = foundCity;
+
+                    if (type === 'pc') {
+                        pcSelectedCity = foundCity;
+                    } else {
+                        mobileSelectedCity = foundCity;
+                    }
+
+                    if (foundDistricts && foundDistricts.length > 0) {
+                        districtSelect.disabled = false;
+                        districtSelect.innerHTML = '<option value="">' + (type === 'pc' ? '请选择区县' : '区县') + '</option>';
+                        foundDistricts.forEach(d => districtSelect.innerHTML += `<option value="${d}">${d}</option>`);
+                        if (cityName.endsWith('区') || cityName.endsWith('县')) {
+                            districtSelect.value = cityName;
+                            if (type === 'pc') {
+                                pcSelectedDistrict = cityName;
+                            } else {
+                                mobileSelectedDistrict = cityName;
+                            }
+                        } else {
+                            if (type === 'pc') {
+                                pcSelectedDistrict = null;
+                            } else {
+                                mobileSelectedDistrict = null;
+                            }
+                        }
+                    } else {
+                        const districts = getDistrictsByCity(province, foundCity);
+                        if (districts && districts.length > 0) {
+                            districtSelect.disabled = false;
+                            districtSelect.innerHTML = '<option value="">' + (type === 'pc' ? '请选择区县' : '区县') + '</option>';
+                            districts.forEach(d => districtSelect.innerHTML += `<option value="${d}">${d}</option>`);
+                        } else {
+                            districtSelect.disabled = true;
+                            districtSelect.innerHTML = '<option value="">无区县数据</option>';
+                        }
+                        if (type === 'pc') {
+                            pcSelectedDistrict = null;
+                        } else {
+                            mobileSelectedDistrict = null;
+                        }
+                    }
                     return true;
                 }
             }
@@ -1141,14 +1112,10 @@
         let pcMap, pcMarkers = [], pcInfoWindow = null;
 
         function createPcUserMarker(lng, lat) {
-            if (pcUserMarker) {
-                pcUserMarker.setMap(null);
-                pcUserMarker = null;
-            }
+            if (pcUserMarker) { pcUserMarker.setMap(null); pcUserMarker = null; }
             const markerContent = document.createElement('div');
             markerContent.className = 'user-location-marker';
             markerContent.title = '我的位置';
-
             pcUserMarker = new AMap.Marker({
                 position: [lng, lat],
                 content: markerContent,
@@ -1159,7 +1126,7 @@
             return pcUserMarker;
         }
 
-        async function pcLoadCityMachines(cityName, userLng, userLat) {
+        async function pcLoadCityMachines(cityName, userLng, userLat, keepSelection) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
@@ -1167,7 +1134,6 @@
             document.getElementById('pcPanelMsg').innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载 ${finalCity}...`;
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
-                // 清除旧标记
                 pcMarkers.forEach(m => m.setMap(null));
                 pcMarkers = [];
 
@@ -1194,50 +1160,49 @@
                         const machineTypeText = isShow2 ? '🎭 秀机' : '🎮 普通机';
                         const machineTypeClass = isShow2 ? 'machine-type-show' : 'machine-type-normal';
 
-                        // 构建右侧图片区域
                         let rightContent = '';
                         if (cab.img1 || cab.img2) {
                             rightContent = `
-                                <div class="custom-infowindow-right">
-                                    ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
-                                    ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
-                                    <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')">
-                                        <i class="fas fa-expand"></i> 查看大图
-                                    </button>
-                                </div>
-                            `;
+                            <div class="custom-infowindow-right">
+                                ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
+                                ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
+                                <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')">
+                                    <i class="fas fa-expand"></i> 查看大图
+                                </button>
+                            </div>
+                        `;
                         } else {
                             rightContent = `<div class="custom-infowindow-right"><div class="no-image">暂无图片</div></div>`;
                         }
 
                         pcInfoWindow.setContent(`
-                            <div class="custom-infowindow-wrapper">
-                                <button class="info-close-btn" onclick="window.closePcInfoWindow()">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <div class="custom-infowindow-left">
-                                    <h3 style="margin:0 0 6px 0;color:#b4c4ff;font-size:0.85rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:6px;padding-right:20px;">
-                                        <i class="fas fa-dice-d6"></i> ${cab.name}
-                                        <span class="status-badge ${statusClass}" style="font-size:0.6rem;">${statusText}</span>
-                                    </h3>
-                                    <div class="detail">
-                                        <span class="status-badge ${machineTypeClass}" style="font-size:0.6rem;">${machineTypeText}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <i class="fas fa-location-dot"></i>
-                                        <span>${cab.province} · ${cab.city}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <i class="fas fa-map-pin"></i>
-                                        <span>${cab.address || '地址待补充'}</span>
-                                    </div>
-                                    <div class="badge-custom">
-                                        <i class="fas fa-clock"></i> 实时数据
-                                    </div>
+                        <div class="custom-infowindow-wrapper">
+                            <button class="info-close-btn" onclick="window.closePcInfoWindow()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="custom-infowindow-left">
+                                <h3 style="margin:0 0 6px 0;color:#b4c4ff;font-size:0.85rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:6px;padding-right:20px;">
+                                    <i class="fas fa-dice-d6"></i> ${cab.name}
+                                    <span class="status-badge ${statusClass}" style="font-size:0.6rem;">${statusText}</span>
+                                </h3>
+                                <div class="detail">
+                                    <span class="status-badge ${machineTypeClass}" style="font-size:0.6rem;">${machineTypeText}</span>
                                 </div>
-                                ${rightContent}
+                                <div class="detail">
+                                    <i class="fas fa-location-dot"></i>
+                                    <span>${cab.province} · ${cab.city}</span>
+                                </div>
+                                <div class="detail">
+                                    <i class="fas fa-map-pin"></i>
+                                    <span>${cab.address || '地址待补充'}</span>
+                                </div>
+                                <div class="badge-custom">
+                                    <i class="fas fa-clock"></i> 实时数据
+                                </div>
                             </div>
-                        `);
+                            ${rightContent}
+                        </div>
+                    `);
                         pcInfoWindow.open(pcMap, [cab.lng, cab.lat]);
                     });
                     marker.setMap(pcMap);
@@ -1245,7 +1210,11 @@
                 });
                 document.getElementById('pcTotalCount').innerText = machines.length;
                 pcMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
-                await setDropdownByCity(finalCity, 'pc');
+
+                if (!keepSelection) {
+                    await setDropdownByCity(finalCity, 'pc');
+                }
+
                 const showCount = machines.filter(m => m.machineType === 1).length;
                 document.getElementById('pcPanelMsg').innerHTML = `${finalCity} ${machines.length}台 (秀机${showCount})`;
             } catch(e) { document.getElementById('pcPanelMsg').innerHTML = '加载失败'; }
@@ -1268,7 +1237,7 @@
                 createPcUserMarker(userLng, userLat);
                 pcMap.setCenter([userLng, userLat]);
             }
-            await pcLoadCityMachines(city, userLng, userLat);
+            await pcLoadCityMachines(city, userLng, userLat, false);
             setTimeout(() => { const tip = document.getElementById('pcLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
@@ -1278,22 +1247,95 @@
             const ps = document.getElementById('pcProvinceSelect');
             ps.innerHTML = '<option value="">请选择省份</option>';
             provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
-            document.getElementById('pcProvinceSelect').addEventListener('change', () => {
-                const prov = document.getElementById('pcProvinceSelect').value;
+
+            document.getElementById('pcProvinceSelect').addEventListener('change', function() {
+                const prov = this.value;
                 const citySelect = document.getElementById('pcCitySelect');
-                if (!prov) { citySelect.disabled = true; citySelect.innerHTML = '<option value="">请选择城市</option>'; return; }
+                const districtSelect = document.getElementById('pcDistrictSelect');
+                if (!prov) {
+                    citySelect.disabled = true;
+                    citySelect.innerHTML = '<option value="">请选择城市</option>';
+                    districtSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+                    pcSelectedCity = null;
+                    pcSelectedDistrict = null;
+                    return;
+                }
+                const cities = getCitiesByProvince(prov);
                 citySelect.disabled = false;
                 citySelect.innerHTML = '<option value="">请选择城市</option>';
-                (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+                cities.forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+                pcSelectedCity = null;
+                pcSelectedDistrict = null;
             });
-            document.getElementById('pcCitySelect').addEventListener('change', () => { const city = document.getElementById('pcCitySelect').value; if (city) pcLoadCityMachines(city, null, null); });
+
+            document.getElementById('pcCitySelect').addEventListener('change', function() {
+                const prov = document.getElementById('pcProvinceSelect').value;
+                const city = this.value;
+                const districtSelect = document.getElementById('pcDistrictSelect');
+
+                if (!prov) {
+                    this.value = '';
+                    alert('请先选择省份');
+                    return;
+                }
+
+                if (!city) {
+                    districtSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+                    pcSelectedCity = null;
+                    pcSelectedDistrict = null;
+                    return;
+                }
+
+                pcSelectedCity = city;
+                pcSelectedDistrict = null;
+
+                const districts = getDistrictsByCity(prov, city);
+                districtSelect.disabled = false;
+                districtSelect.innerHTML = '<option value="">请选择区县</option>';
+                if (districts && districts.length > 0) {
+                    districts.forEach(d => districtSelect.innerHTML += `<option value="${d}">${d}</option>`);
+                } else {
+                    districtSelect.innerHTML = '<option value="">无区县数据</option>';
+                    districtSelect.disabled = true;
+                }
+                pcLoadCityMachines(city, null, null, true);
+            });
+
+            document.getElementById('pcDistrictSelect').addEventListener('change', function() {
+                const prov = document.getElementById('pcProvinceSelect').value;
+                const city = document.getElementById('pcCitySelect').value;
+                const district = this.value;
+
+                if (!prov || !city) {
+                    this.value = '';
+                    alert('请先选择省份和城市');
+                    return;
+                }
+
+                if (district) {
+                    pcSelectedDistrict = district;
+                    pcLoadCityMachines(district, null, null, true);
+                } else {
+                    pcSelectedDistrict = null;
+                }
+            });
+
             document.getElementById('pcMyLocationBtn').addEventListener('click', pcDoLocate);
             document.getElementById('pcResetViewBtn').addEventListener('click', () => {
                 pcMap.setZoomAndCenter(5, [116.4074, 39.9042]);
                 document.getElementById('pcProvinceSelect').value = "";
                 document.getElementById('pcCitySelect').disabled = true;
+                document.getElementById('pcCitySelect').innerHTML = '<option value="">请选择城市</option>';
+                document.getElementById('pcDistrictSelect').disabled = true;
+                document.getElementById('pcDistrictSelect').innerHTML = '<option value="">请先选择城市</option>';
                 pcInfoWindow?.close();
                 if (pcUserMarker) { pcUserMarker.setMap(null); pcUserMarker = null; }
+                pcSelectedCity = null;
+                pcSelectedDistrict = null;
             });
             pcMap.on('click', () => pcInfoWindow.close());
             pcMap.on('complete', () => pcDoLocate());
@@ -1303,14 +1345,10 @@
         let mobileMap, mobileMarkers = [], mobileInfoWindow = null;
 
         function createMobileUserMarker(lng, lat) {
-            if (mobileUserMarker) {
-                mobileUserMarker.setMap(null);
-                mobileUserMarker = null;
-            }
+            if (mobileUserMarker) { mobileUserMarker.setMap(null); mobileUserMarker = null; }
             const markerContent = document.createElement('div');
             markerContent.className = 'user-location-marker-small';
             markerContent.title = '我的位置';
-
             mobileUserMarker = new AMap.Marker({
                 position: [lng, lat],
                 content: markerContent,
@@ -1321,7 +1359,7 @@
             return mobileUserMarker;
         }
 
-        async function mobileLoadCityMachines(cityName, userLng, userLat) {
+        async function mobileLoadCityMachines(cityName, userLng, userLat, keepSelection) {
             if (!cityName) return;
             const finalCity = normalizeCityName(cityName) || cityName;
             const coords = cityCoordinates[finalCity];
@@ -1354,46 +1392,46 @@
                         let rightContent = '';
                         if (cab.img1 || cab.img2) {
                             rightContent = `
-                                <div class="mobile-infowindow-right">
-                                    ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
-                                    ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
-                                    <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')" style="font-size:0.55rem;padding:2px 8px;">
-                                        <i class="fas fa-expand"></i> 大图
-                                    </button>
-                                </div>
-                            `;
+                            <div class="mobile-infowindow-right">
+                                ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
+                                ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
+                                <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')" style="font-size:0.55rem;padding:2px 8px;">
+                                    <i class="fas fa-expand"></i> 大图
+                                </button>
+                            </div>
+                        `;
                         } else {
                             rightContent = `<div class="mobile-infowindow-right"><div class="no-image" style="font-size:0.5rem;padding:10px 0;">无图</div></div>`;
                         }
 
                         mobileInfoWindow.setContent(`
-                            <div class="mobile-infowindow-wrapper">
-                                <button class="info-close-btn" onclick="window.closeMobileInfoWindow()" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.1);border:none;color:#aaa;cursor:pointer;font-size:10px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:10;">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <div class="mobile-infowindow-left">
-                                    <h3 style="margin:0 0 4px 0;color:#b4c4ff;font-size:0.75rem;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:4px;padding-right:16px;">
-                                        <i class="fas fa-dice-d6"></i> ${cab.name.length > 12 ? cab.name.slice(0,12)+'..' : cab.name}
-                                        <span class="status-badge ${isOnline2?'status-online':'status-offline'}" style="font-size:0.5rem;">${isOnline2?'在线':'离线'}</span>
-                                    </h3>
-                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
-                                        <span class="status-badge ${isShow2?'machine-type-show':'machine-type-normal'}" style="font-size:0.5rem;">${isShow2?'秀机':'普通'}</span>
-                                    </div>
-                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
-                                        <i class="fas fa-location-dot" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
-                                        <span>${cab.city}</span>
-                                    </div>
-                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
-                                        <i class="fas fa-map-pin" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
-                                        <span>${cab.address ? (cab.address.length > 10 ? cab.address.slice(0,10)+'..' : cab.address) : '地址待补'}</span>
-                                    </div>
-                                    <div class="badge-custom" style="background:rgba(44,59,114,0.8);display:inline-block;padding:1px 8px;font-size:0.5rem;margin-top:4px;border-radius:12px;">
-                                        <i class="fas fa-clock"></i> 实时
-                                    </div>
+                        <div class="mobile-infowindow-wrapper">
+                            <button class="info-close-btn" onclick="window.closeMobileInfoWindow()" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.1);border:none;color:#aaa;cursor:pointer;font-size:10px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:10;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="mobile-infowindow-left">
+                                <h3 style="margin:0 0 4px 0;color:#b4c4ff;font-size:0.75rem;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:4px;padding-right:16px;">
+                                    <i class="fas fa-dice-d6"></i> ${cab.name.length > 12 ? cab.name.slice(0,12)+'..' : cab.name}
+                                    <span class="status-badge ${isOnline2?'status-online':'status-offline'}" style="font-size:0.5rem;">${isOnline2?'在线':'离线'}</span>
+                                </h3>
+                                <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                    <span class="status-badge ${isShow2?'machine-type-show':'machine-type-normal'}" style="font-size:0.5rem;">${isShow2?'秀机':'普通'}</span>
                                 </div>
-                                ${rightContent}
+                                <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                    <i class="fas fa-location-dot" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
+                                    <span>${cab.city}</span>
+                                </div>
+                                <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                    <i class="fas fa-map-pin" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
+                                    <span>${cab.address ? (cab.address.length > 10 ? cab.address.slice(0,10)+'..' : cab.address) : '地址待补'}</span>
+                                </div>
+                                <div class="badge-custom" style="background:rgba(44,59,114,0.8);display:inline-block;padding:1px 8px;font-size:0.5rem;margin-top:4px;border-radius:12px;">
+                                    <i class="fas fa-clock"></i> 实时
+                                </div>
                             </div>
-                        `);
+                            ${rightContent}
+                        </div>
+                    `);
                         mobileInfoWindow.open(mobileMap, [cab.lng, cab.lat]);
                     });
                     marker.setMap(mobileMap);
@@ -1401,7 +1439,11 @@
                 });
                 document.getElementById('mobileTotalCount').innerText = machines.length;
                 mobileMap.setZoomAndCenter(machines.length > 0 ? 13 : 12, coords);
-                await setDropdownByCity(finalCity, 'mobile');
+
+                if (!keepSelection) {
+                    await setDropdownByCity(finalCity, 'mobile');
+                }
+
                 const showCount = machines.filter(m => m.machineType === 1).length;
                 document.getElementById('mobilePanelMsg').innerHTML = `${finalCity} ${machines.length}台 (秀机${showCount})`;
             } catch(e) { document.getElementById('mobilePanelMsg').innerHTML = '加载失败'; }
@@ -1424,7 +1466,7 @@
                 createMobileUserMarker(userLng, userLat);
                 mobileMap.setCenter([userLng, userLat]);
             }
-            await mobileLoadCityMachines(city, userLng, userLat);
+            await mobileLoadCityMachines(city, userLng, userLat, false);
             setTimeout(() => { const tip = document.getElementById('mobileLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
 
@@ -1434,22 +1476,95 @@
             const ps = document.getElementById('mobileProvinceSelect');
             ps.innerHTML = '<option value="">省份</option>';
             provinceList.forEach(p => ps.innerHTML += `<option value="${p}">${p}</option>`);
-            document.getElementById('mobileProvinceSelect').addEventListener('change', () => {
-                const prov = document.getElementById('mobileProvinceSelect').value;
+
+            document.getElementById('mobileProvinceSelect').addEventListener('change', function() {
+                const prov = this.value;
                 const citySelect = document.getElementById('mobileCitySelect');
-                if (!prov) { citySelect.disabled = true; citySelect.innerHTML = '<option value="">城市</option>'; return; }
+                const districtSelect = document.getElementById('mobileDistrictSelect');
+                if (!prov) {
+                    citySelect.disabled = true;
+                    citySelect.innerHTML = '<option value="">城市</option>';
+                    districtSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">区县</option>';
+                    mobileSelectedCity = null;
+                    mobileSelectedDistrict = null;
+                    return;
+                }
+                const cities = getCitiesByProvince(prov);
                 citySelect.disabled = false;
                 citySelect.innerHTML = '<option value="">城市</option>';
-                (provincesCities[prov] || []).forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+                cities.forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">区县</option>';
+                mobileSelectedCity = null;
+                mobileSelectedDistrict = null;
             });
-            document.getElementById('mobileCitySelect').addEventListener('change', () => { const city = document.getElementById('mobileCitySelect').value; if (city) mobileLoadCityMachines(city, null, null); });
+
+            document.getElementById('mobileCitySelect').addEventListener('change', function() {
+                const prov = document.getElementById('mobileProvinceSelect').value;
+                const city = this.value;
+                const districtSelect = document.getElementById('mobileDistrictSelect');
+
+                if (!prov) {
+                    this.value = '';
+                    alert('请先选择省份');
+                    return;
+                }
+
+                if (!city) {
+                    districtSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">区县</option>';
+                    mobileSelectedCity = null;
+                    mobileSelectedDistrict = null;
+                    return;
+                }
+
+                mobileSelectedCity = city;
+                mobileSelectedDistrict = null;
+
+                const districts = getDistrictsByCity(prov, city);
+                districtSelect.disabled = false;
+                districtSelect.innerHTML = '<option value="">区县</option>';
+                if (districts && districts.length > 0) {
+                    districts.forEach(d => districtSelect.innerHTML += `<option value="${d}">${d}</option>`);
+                } else {
+                    districtSelect.innerHTML = '<option value="">无区县数据</option>';
+                    districtSelect.disabled = true;
+                }
+                mobileLoadCityMachines(city, null, null, true);
+            });
+
+            document.getElementById('mobileDistrictSelect').addEventListener('change', function() {
+                const prov = document.getElementById('mobileProvinceSelect').value;
+                const city = document.getElementById('mobileCitySelect').value;
+                const district = this.value;
+
+                if (!prov || !city) {
+                    this.value = '';
+                    alert('请先选择省份和城市');
+                    return;
+                }
+
+                if (district) {
+                    mobileSelectedDistrict = district;
+                    mobileLoadCityMachines(district, null, null, true);
+                } else {
+                    mobileSelectedDistrict = null;
+                }
+            });
+
             document.getElementById('mobileMyLocationBtn').addEventListener('click', mobileDoLocate);
             document.getElementById('mobileResetViewBtn').addEventListener('click', () => {
                 mobileMap.setZoomAndCenter(5, [116.4074, 39.9042]);
                 document.getElementById('mobileProvinceSelect').value = "";
                 document.getElementById('mobileCitySelect').disabled = true;
+                document.getElementById('mobileCitySelect').innerHTML = '<option value="">城市</option>';
+                document.getElementById('mobileDistrictSelect').disabled = true;
+                document.getElementById('mobileDistrictSelect').innerHTML = '<option value="">区县</option>';
                 mobileInfoWindow?.close();
                 if (mobileUserMarker) { mobileUserMarker.setMap(null); mobileUserMarker = null; }
+                mobileSelectedCity = null;
+                mobileSelectedDistrict = null;
             });
             mobileMap.on('click', () => mobileInfoWindow.close());
             mobileMap.on('complete', () => mobileDoLocate());

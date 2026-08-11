@@ -70,25 +70,148 @@
         .loading-text { color: white; font-size: 13px; }
         .loading-sub { color: #aaa; font-size: 11px; margin-top: 5px; }
 
-        .custom-infowindow { background: linear-gradient(135deg, #1a1f3a 0%, #0f1229 100%); border: none; padding: 14px 18px; min-width: 260px; color: #eef2ff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124, 142, 224, 0.3); position: relative; }
-        .custom-infowindow h3 { margin: 0 0 10px 0; color: #b4c4ff; font-size: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid rgba(124, 142, 224, 0.3); padding-bottom: 8px; }
-        .custom-infowindow .detail { margin: 8px 0; font-size: 0.75rem; display: flex; align-items: center; gap: 10px; line-height: 1.4; }
-        .custom-infowindow .detail i { width: 18px; color: #7c8ee0; font-size: 12px; text-align: center; }
-        .badge-custom { background: rgba(44, 59, 114, 0.8); display: inline-block; padding: 4px 12px; font-size: 0.6rem; margin-top: 10px; border-radius: 20px; }
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: bold; }
+        /* ===== 自定义信息窗口 - 左右布局 ===== */
+        .custom-infowindow-wrapper {
+            display: flex;
+            gap: 12px;
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1229 100%);
+            border-radius: 16px;
+            padding: 14px 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124, 142, 224, 0.3);
+            color: #eef2ff;
+            position: relative;
+            min-width: 280px;
+            max-width: 600px;
+        }
+        .custom-infowindow-left {
+            flex: 1;
+            min-width: 180px;
+        }
+        .custom-infowindow-right {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+            border-left: 1px solid rgba(124, 142, 224, 0.3);
+            padding-left: 12px;
+            min-width: 80px;
+            max-width: 150px;
+        }
+        .custom-infowindow-right img {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(124, 142, 224, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: block;
+        }
+        .custom-infowindow-right img:hover {
+            transform: scale(1.05);
+        }
+        .custom-infowindow-right .no-image {
+            color: #666;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .img-expand-btn {
+            background: rgba(124, 142, 224, 0.2);
+            border: 1px solid #7c8ee0;
+            color: #b4c4ff;
+            padding: 3px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+            width: 100%;
+            text-align: center;
+        }
+        .img-expand-btn:hover {
+            background: rgba(124, 142, 224, 0.4);
+        }
+
+        /* 移动端信息窗口 */
+        .mobile-infowindow-wrapper {
+            display: flex;
+            gap: 8px;
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1229 100%);
+            border-radius: 14px;
+            padding: 10px 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124, 142, 224, 0.3);
+            color: #eef2ff;
+            position: relative;
+            min-width: 240px;
+            max-width: 400px;
+        }
+        .mobile-infowindow-left {
+            flex: 1;
+            min-width: 120px;
+        }
+        .mobile-infowindow-right {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            justify-content: center;
+            border-left: 1px solid rgba(124, 142, 224, 0.3);
+            padding-left: 8px;
+            min-width: 60px;
+            max-width: 100px;
+        }
+        .mobile-infowindow-right img {
+            width: 90px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid rgba(124, 142, 224, 0.3);
+            cursor: pointer;
+            display: block;
+        }
+
+        .info-close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 11px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+        }
+        .info-close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; font-weight: bold; }
         .status-online { background: rgba(82, 196, 26, 0.2); color: #52c41a; border: 1px solid rgba(82, 196, 26, 0.5); }
         .status-offline { background: rgba(138, 138, 138, 0.2); color: #aaa; border: 1px solid rgba(138, 138, 138, 0.5); }
         .machine-type-show { color: #a855f7; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); }
         .machine-type-normal { color: #3b82f6; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); }
-        .info-close-btn { position: absolute; top: 10px; right: 12px; background: rgba(255,255,255,0.1); border: none; color: #aaa; cursor: pointer; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .info-close-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .badge-custom { background: rgba(44, 59, 114, 0.8); display: inline-block; padding: 2px 10px; font-size: 0.55rem; margin-top: 6px; border-radius: 15px; }
+        .detail { margin: 4px 0; font-size: 0.7rem; display: flex; align-items: center; gap: 8px; }
+        .detail i { width: 14px; color: #7c8ee0; font-size: 10px; text-align: center; }
+
+        /* 地图标记样式 */
         .custom-marker { transition: transform 0.2s ease; cursor: pointer; white-space: nowrap; }
         .custom-marker:hover { transform: scale(1.08); }
         .amap-info-content { background: transparent !important; border: none !important; box-shadow: none !important; }
         .amap-info-sharp { display: none !important; }
         .amap-info-close { display: none !important; }
 
-        /* 用户位置标记样式 */
+        /* 用户位置标记 */
         .user-location-marker {
             width: 28px;
             height: 28px;
@@ -114,7 +237,6 @@
             0%, 100% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.5); }
             50% { box-shadow: 0 0 0 16px rgba(249, 115, 22, 0.1), 0 0 30px rgba(249, 115, 22, 0.7); }
         }
-
         .user-location-marker-small {
             width: 22px;
             height: 22px;
@@ -137,7 +259,6 @@
             opacity: 0.8;
         }
 
-        /* 权限被拒绝后的提示条 */
         .permission-denied-tip {
             position: fixed;
             bottom: 80px;
@@ -173,6 +294,12 @@
             .pc-layout { display: none; }
             .mobile-layout { display: flex; }
             .permission-denied-tip { bottom: 100px; left: 16px; right: 16px; }
+            .custom-infowindow-wrapper { min-width: 220px; max-width: 340px; padding: 10px 12px; flex-wrap: wrap; }
+            .custom-infowindow-right { border-left: none; border-top: 1px solid rgba(124,142,224,0.3); padding-left: 0; padding-top: 8px; flex-direction: row; flex-wrap: wrap; justify-content: center; min-width: unset; max-width: unset; }
+            .custom-infowindow-right img { width: 80px; height: 60px; }
+            .mobile-infowindow-wrapper { min-width: 200px; max-width: 300px; flex-wrap: wrap; }
+            .mobile-infowindow-right { border-left: none; border-top: 1px solid rgba(124,142,224,0.3); padding-left: 0; padding-top: 6px; flex-direction: row; flex-wrap: wrap; justify-content: center; min-width: unset; max-width: unset; }
+            .mobile-infowindow-right img { width: 70px; height: 52px; }
         }
     </style>
 </head>
@@ -225,7 +352,6 @@
 <script>
     // ======================= 城市名映射表 =======================
     const CITY_NAME_MAPPING = {
-        // 吉林省
         "吉林市": "吉林市", "吉林": "吉林市", "Jilin": "吉林市", "jilin": "吉林市",
         "长春市": "长春市", "长春": "长春市", "Changchun": "长春市", "changchun": "长春市",
         "四平市": "四平市", "四平": "四平市", "Siping": "四平市", "siping": "四平市",
@@ -235,14 +361,10 @@
         "松原市": "松原市", "松原": "松原市", "Songyuan": "松原市", "songyuan": "松原市",
         "白城市": "白城市", "白城": "白城市", "Baicheng": "白城市", "baicheng": "白城市",
         "延边朝鲜族自治州": "延吉市", "延吉市": "延吉市", "延吉": "延吉市", "Yanji": "延吉市", "yanji": "延吉市",
-
-        // 直辖市
         "北京市": "北京市", "北京": "北京市", "Beijing": "北京市", "beijing": "北京市",
         "上海市": "上海市", "上海": "上海市", "Shanghai": "上海市", "shanghai": "上海市",
         "天津市": "天津市", "天津": "天津市", "Tianjin": "天津市", "tianjin": "天津市",
         "重庆市": "重庆市", "重庆": "重庆市", "Chongqing": "重庆市", "chongqing": "重庆市",
-
-        // 广东省
         "广州市": "广州市", "广州": "广州市", "Guangzhou": "广州市", "guangzhou": "广州市",
         "深圳市": "深圳市", "深圳": "深圳市", "Shenzhen": "深圳市", "shenzhen": "深圳市",
         "佛山市": "佛山市", "佛山": "佛山市", "Foshan": "佛山市", "foshan": "佛山市",
@@ -263,8 +385,6 @@
         "潮州市": "潮州市", "潮州": "潮州市", "Chaozhou": "潮州市", "chaozhou": "潮州市",
         "揭阳市": "揭阳市", "揭阳": "揭阳市", "Jieyang": "揭阳市", "jieyang": "揭阳市",
         "云浮市": "云浮市", "云浮": "云浮市", "Yunfu": "云浮市", "yunfu": "云浮市",
-
-        // 江苏省
         "南京市": "南京市", "南京": "南京市", "Nanjing": "南京市", "nanjing": "南京市",
         "苏州市": "苏州市", "苏州": "苏州市", "Suzhou": "苏州市", "suzhou": "苏州市",
         "无锡市": "无锡市", "无锡": "无锡市", "Wuxi": "无锡市", "wuxi": "无锡市",
@@ -278,8 +398,6 @@
         "镇江市": "镇江市", "镇江": "镇江市", "Zhenjiang": "镇江市", "zhenjiang": "镇江市",
         "泰州市": "泰州市", "泰州": "泰州市", "Taizhou": "泰州市", "taizhou": "泰州市",
         "宿迁市": "宿迁市", "宿迁": "宿迁市", "Suqian": "宿迁市", "suqian": "宿迁市",
-
-        // 浙江省
         "杭州市": "杭州市", "杭州": "杭州市", "Hangzhou": "杭州市", "hangzhou": "杭州市",
         "宁波市": "宁波市", "宁波": "宁波市", "Ningbo": "宁波市", "ningbo": "宁波市",
         "温州市": "温州市", "温州": "温州市", "Wenzhou": "温州市", "wenzhou": "温州市",
@@ -291,8 +409,6 @@
         "舟山市": "舟山市", "舟山": "舟山市", "Zhoushan": "舟山市", "zhoushan": "舟山市",
         "台州市": "台州市", "台州": "台州市", "Taizhou": "台州市", "taizhou": "台州市",
         "丽水市": "丽水市", "丽水": "丽水市", "Lishui": "丽水市", "lishui": "丽水市",
-
-        // 四川省
         "成都市": "成都市", "成都": "成都市", "Chengdu": "成都市", "chengdu": "成都市",
         "自贡市": "自贡市", "自贡": "自贡市", "Zigong": "自贡市", "zigong": "自贡市",
         "攀枝花市": "攀枝花市", "攀枝花": "攀枝花市", "Panzhihua": "攀枝花市", "panzhihua": "攀枝花市",
@@ -311,8 +427,6 @@
         "雅安市": "雅安市", "雅安": "雅安市", "Ya'an": "雅安市", "yaan": "雅安市",
         "巴中市": "巴中市", "巴中": "巴中市", "Bazhong": "巴中市", "bazhong": "巴中市",
         "资阳市": "资阳市", "资阳": "资阳市", "Ziyang": "资阳市", "ziyang": "资阳市",
-
-        // 湖北省
         "武汉市": "武汉市", "武汉": "武汉市", "Wuhan": "武汉市", "wuhan": "武汉市",
         "黄石市": "黄石市", "黄石": "黄石市", "Huangshi": "黄石市", "huangshi": "黄石市",
         "十堰市": "十堰市", "十堰": "十堰市", "Shiyan": "十堰市", "shiyan": "十堰市",
@@ -325,8 +439,6 @@
         "黄冈市": "黄冈市", "黄冈": "黄冈市", "Huanggang": "黄冈市", "huanggang": "黄冈市",
         "咸宁市": "咸宁市", "咸宁": "咸宁市", "Xianning": "咸宁市", "xianning": "咸宁市",
         "随州市": "随州市", "随州": "随州市", "Suizhou": "随州市", "suizhou": "随州市",
-
-        // 陕西省
         "西安市": "西安市", "西安": "西安市", "Xi'an": "西安市", "xian": "西安市",
         "铜川市": "铜川市", "铜川": "铜川市", "Tongchuan": "铜川市", "tongchuan": "铜川市",
         "宝鸡市": "宝鸡市", "宝鸡": "宝鸡市", "Baoji": "宝鸡市", "baoji": "宝鸡市",
@@ -337,8 +449,6 @@
         "榆林市": "榆林市", "榆林": "榆林市", "Yulin": "榆林市", "yulin": "榆林市",
         "安康市": "安康市", "安康": "安康市", "Ankang": "安康市", "ankang": "安康市",
         "商洛市": "商洛市", "商洛": "商洛市", "Shangluo": "商洛市", "shangluo": "商洛市",
-
-        // 辽宁省
         "沈阳市": "沈阳市", "沈阳": "沈阳市", "Shenyang": "沈阳市", "shenyang": "沈阳市",
         "大连市": "大连市", "大连": "大连市", "Dalian": "大连市", "dalian": "大连市",
         "鞍山市": "鞍山市", "鞍山": "鞍山市", "Anshan": "鞍山市", "anshan": "鞍山市",
@@ -353,8 +463,6 @@
         "铁岭市": "铁岭市", "铁岭": "铁岭市", "Tieling": "铁岭市", "tieling": "铁岭市",
         "朝阳市": "朝阳市", "朝阳": "朝阳市", "Chaoyang": "朝阳市", "chaoyang": "朝阳市",
         "葫芦岛市": "葫芦岛市", "葫芦岛": "葫芦岛市", "Huludao": "葫芦岛市", "huludao": "葫芦岛市",
-
-        // 山东省
         "济南市": "济南市", "济南": "济南市", "Jinan": "济南市", "jinan": "济南市",
         "青岛市": "青岛市", "青岛": "青岛市", "Qingdao": "青岛市", "qingdao": "青岛市",
         "淄博市": "淄博市", "淄博": "淄博市", "Zibo": "淄博市", "zibo": "淄博市",
@@ -371,8 +479,6 @@
         "聊城市": "聊城市", "聊城": "聊城市", "Liaocheng": "聊城市", "liaocheng": "聊城市",
         "滨州市": "滨州市", "滨州": "滨州市", "Binzhou": "滨州市", "binzhou": "滨州市",
         "菏泽市": "菏泽市", "菏泽": "菏泽市", "Heze": "菏泽市", "heze": "菏泽市",
-
-        // 福建省
         "福州市": "福州市", "福州": "福州市", "Fuzhou": "福州市", "fuzhou": "福州市",
         "厦门市": "厦门市", "厦门": "厦门市", "Xiamen": "厦门市", "xiamen": "厦门市",
         "莆田市": "莆田市", "莆田": "莆田市", "Putian": "莆田市", "putian": "莆田市",
@@ -382,8 +488,6 @@
         "南平市": "南平市", "南平": "南平市", "Nanping": "南平市", "nanping": "南平市",
         "龙岩市": "龙岩市", "龙岩": "龙岩市", "Longyan": "龙岩市", "longyan": "龙岩市",
         "宁德市": "宁德市", "宁德": "宁德市", "Ningde": "宁德市", "ningde": "宁德市",
-
-        // 湖南省
         "长沙市": "长沙市", "长沙": "长沙市", "Changsha": "长沙市", "changsha": "长沙市",
         "株洲市": "株洲市", "株洲": "株洲市", "Zhuzhou": "株洲市", "zhuzhou": "株洲市",
         "湘潭市": "湘潭市", "湘潭": "湘潭市", "Xiangtan": "湘潭市", "xiangtan": "湘潭市",
@@ -397,8 +501,6 @@
         "永州市": "永州市", "永州": "永州市", "Yongzhou": "永州市", "yongzhou": "永州市",
         "怀化市": "怀化市", "怀化": "怀化市", "Huaihua": "怀化市", "huaihua": "怀化市",
         "娄底市": "娄底市", "娄底": "娄底市", "Loudi": "娄底市", "loudi": "娄底市",
-
-        // 安徽省
         "合肥市": "合肥市", "合肥": "合肥市", "Hefei": "合肥市", "hefei": "合肥市",
         "芜湖市": "芜湖市", "芜湖": "芜湖市", "Wuhu": "芜湖市", "wuhu": "芜湖市",
         "蚌埠市": "蚌埠市", "蚌埠": "蚌埠市", "Bengbu": "蚌埠市", "bengbu": "蚌埠市",
@@ -415,8 +517,6 @@
         "亳州市": "亳州市", "亳州": "亳州市", "Bozhou": "亳州市", "bozhou": "亳州市",
         "池州市": "池州市", "池州": "池州市", "Chizhou": "池州市", "chizhou": "池州市",
         "宣城市": "宣城市", "宣城": "宣城市", "Xuancheng": "宣城市", "xuancheng": "宣城市",
-
-        // 黑龙江省
         "哈尔滨市": "哈尔滨市", "哈尔滨": "哈尔滨市", "Harbin": "哈尔滨市", "harbin": "哈尔滨市",
         "齐齐哈尔市": "齐齐哈尔市", "齐齐哈尔": "齐齐哈尔市", "Qiqihar": "齐齐哈尔市", "qiqihar": "齐齐哈尔市",
         "鸡西市": "鸡西市", "鸡西": "鸡西市", "Jixi": "鸡西市", "jixi": "鸡西市",
@@ -429,8 +529,6 @@
         "牡丹江市": "牡丹江市", "牡丹江": "牡丹江市", "Mudanjiang": "牡丹江市", "mudanjiang": "牡丹江市",
         "黑河市": "黑河市", "黑河": "黑河市", "Heihe": "黑河市", "heihe": "黑河市",
         "绥化市": "绥化市", "绥化": "绥化市", "Suihua": "绥化市", "suihua": "绥化市",
-
-        // 河南省
         "郑州市": "郑州市", "郑州": "郑州市", "Zhengzhou": "郑州市", "zhengzhou": "郑州市",
         "开封市": "开封市", "开封": "开封市", "Kaifeng": "开封市", "kaifeng": "开封市",
         "洛阳市": "洛阳市", "洛阳": "洛阳市", "Luoyang": "洛阳市", "luoyang": "洛阳市",
@@ -448,8 +546,6 @@
         "信阳市": "信阳市", "信阳": "信阳市", "Xinyang": "信阳市", "xinyang": "信阳市",
         "周口市": "周口市", "周口": "周口市", "Zhoukou": "周口市", "zhoukou": "周口市",
         "驻马店市": "驻马店市", "驻马店": "驻马店市", "Zhumadian": "驻马店市", "zhumadian": "驻马店市",
-
-        // 云南省
         "昆明市": "昆明市", "昆明": "昆明市", "Kunming": "昆明市", "kunming": "昆明市",
         "曲靖市": "曲靖市", "曲靖": "曲靖市", "Qujing": "曲靖市", "qujing": "曲靖市",
         "玉溪市": "玉溪市", "玉溪": "玉溪市", "Yuxi": "玉溪市", "yuxi": "玉溪市",
@@ -458,16 +554,12 @@
         "丽江市": "丽江市", "丽江": "丽江市", "Lijiang": "丽江市", "lijiang": "丽江市",
         "普洱市": "普洱市", "普洱": "普洱市", "Pu'er": "普洱市", "puer": "普洱市",
         "临沧市": "临沧市", "临沧": "临沧市", "Lincang": "临沧市", "lincang": "临沧市",
-
-        // 贵州省
         "贵阳市": "贵阳市", "贵阳": "贵阳市", "Guiyang": "贵阳市", "guiyang": "贵阳市",
         "六盘水市": "六盘水市", "六盘水": "六盘水市", "Liupanshui": "六盘水市", "liupanshui": "六盘水市",
         "遵义市": "遵义市", "遵义": "遵义市", "Zunyi": "遵义市", "zunyi": "遵义市",
         "安顺市": "安顺市", "安顺": "安顺市", "Anshun": "安顺市", "anshun": "安顺市",
         "毕节市": "毕节市", "毕节": "毕节市", "Bijie": "毕节市", "bijie": "毕节市",
         "铜仁市": "铜仁市", "铜仁": "铜仁市", "Tongren": "铜仁市", "tongren": "铜仁市",
-
-        // 广西
         "南宁市": "南宁市", "南宁": "南宁市", "Nanning": "南宁市", "nanning": "南宁市",
         "柳州市": "柳州市", "柳州": "柳州市", "Liuzhou": "柳州市", "liuzhou": "柳州市",
         "桂林市": "桂林市", "桂林": "桂林市", "Guilin": "桂林市", "guilin": "桂林市",
@@ -482,8 +574,6 @@
         "河池市": "河池市", "河池": "河池市", "Hechi": "河池市", "hechi": "河池市",
         "来宾市": "来宾市", "来宾": "来宾市", "Laibin": "来宾市", "laibin": "来宾市",
         "崇左市": "崇左市", "崇左": "崇左市", "Chongzuo": "崇左市", "chongzuo": "崇左市",
-
-        // 江西省
         "南昌市": "南昌市", "南昌": "南昌市", "Nanchang": "南昌市", "nanchang": "南昌市",
         "景德镇市": "景德镇市", "景德镇": "景德镇市", "Jingdezhen": "景德镇市", "jingdezhen": "景德镇市",
         "萍乡市": "萍乡市", "萍乡": "萍乡市", "Pingxiang": "萍乡市", "pingxiang": "萍乡市",
@@ -495,8 +585,6 @@
         "宜春市": "宜春市", "宜春": "宜春市", "Yichun": "宜春市", "yichun": "宜春市",
         "抚州市": "抚州市", "抚州": "抚州市", "Fuzhou": "抚州市", "fuzhou": "抚州市",
         "上饶市": "上饶市", "上饶": "上饶市", "Shangrao": "上饶市", "shangrao": "上饶市",
-
-        // 河北省
         "石家庄市": "石家庄市", "石家庄": "石家庄市", "Shijiazhuang": "石家庄市", "shijiazhuang": "石家庄市",
         "唐山市": "唐山市", "唐山": "唐山市", "Tangshan": "唐山市", "tangshan": "唐山市",
         "秦皇岛市": "秦皇岛市", "秦皇岛": "秦皇岛市", "Qinhuangdao": "秦皇岛市", "qinhuangdao": "秦皇岛市",
@@ -508,8 +596,6 @@
         "沧州市": "沧州市", "沧州": "沧州市", "Cangzhou": "沧州市", "cangzhou": "沧州市",
         "廊坊市": "廊坊市", "廊坊": "廊坊市", "Langfang": "廊坊市", "langfang": "廊坊市",
         "衡水市": "衡水市", "衡水": "衡水市", "Hengshui": "衡水市", "hengshui": "衡水市",
-
-        // 山西省
         "太原市": "太原市", "太原": "太原市", "Taiyuan": "太原市", "taiyuan": "太原市",
         "大同市": "大同市", "大同": "大同市", "Datong": "大同市", "datong": "大同市",
         "阳泉市": "阳泉市", "阳泉": "阳泉市", "Yangquan": "阳泉市", "yangquan": "阳泉市",
@@ -521,8 +607,6 @@
         "忻州市": "忻州市", "忻州": "忻州市", "Xinzhou": "忻州市", "xinzhou": "忻州市",
         "临汾市": "临汾市", "临汾": "临汾市", "Linfen": "临汾市", "linfen": "临汾市",
         "吕梁市": "吕梁市", "吕梁": "吕梁市", "Lvliang": "吕梁市", "lvliang": "吕梁市",
-
-        // 内蒙古
         "呼和浩特市": "呼和浩特市", "呼和浩特": "呼和浩特市", "Hohhot": "呼和浩特市", "hohhot": "呼和浩特市",
         "包头市": "包头市", "包头": "包头市", "Baotou": "包头市", "baotou": "包头市",
         "乌海市": "乌海市", "乌海": "乌海市", "Wuhai": "乌海市", "wuhai": "乌海市",
@@ -532,14 +616,10 @@
         "呼伦贝尔市": "呼伦贝尔市", "呼伦贝尔": "呼伦贝尔市", "Hulunbuir": "呼伦贝尔市", "hulunbuir": "呼伦贝尔市",
         "巴彦淖尔市": "巴彦淖尔市", "巴彦淖尔": "巴彦淖尔市", "Bayannur": "巴彦淖尔市", "bayannur": "巴彦淖尔市",
         "乌兰察布市": "乌兰察布市", "乌兰察布": "乌兰察布市", "Ulanqab": "乌兰察布市", "ulanqab": "乌兰察布市",
-
-        // 新疆
         "乌鲁木齐市": "乌鲁木齐市", "乌鲁木齐": "乌鲁木齐市", "Urumqi": "乌鲁木齐市", "urumqi": "乌鲁木齐市",
         "克拉玛依市": "克拉玛依市", "克拉玛依": "克拉玛依市", "Karamay": "克拉玛依市", "karamay": "克拉玛依市",
         "吐鲁番市": "吐鲁番市", "吐鲁番": "吐鲁番市", "Turpan": "吐鲁番市", "turpan": "吐鲁番市",
         "哈密市": "哈密市", "哈密": "哈密市", "Hami": "哈密市", "hami": "哈密市",
-
-        // 甘肃省
         "兰州市": "兰州市", "兰州": "兰州市", "Lanzhou": "兰州市", "lanzhou": "兰州市",
         "嘉峪关市": "嘉峪关市", "嘉峪关": "嘉峪关市", "Jiayuguan": "嘉峪关市", "jiayuguan": "嘉峪关市",
         "金昌市": "金昌市", "金昌": "金昌市", "Jinchang": "金昌市", "jinchang": "金昌市",
@@ -552,38 +632,26 @@
         "庆阳市": "庆阳市", "庆阳": "庆阳市", "Qingyang": "庆阳市", "qingyang": "庆阳市",
         "定西市": "定西市", "定西": "定西市", "Dingxi": "定西市", "dingxi": "定西市",
         "陇南市": "陇南市", "陇南": "陇南市", "Longnan": "陇南市", "longnan": "陇南市",
-
-        // 青海省
         "西宁市": "西宁市", "西宁": "西宁市", "Xining": "西宁市", "xining": "西宁市",
         "海东市": "海东市", "海东": "海东市", "Haidong": "海东市", "haidong": "海东市",
-
-        // 宁夏
         "银川市": "银川市", "银川": "银川市", "Yinchuan": "银川市", "yinchuan": "银川市",
         "石嘴山市": "石嘴山市", "石嘴山": "石嘴山市", "Shizuishan": "石嘴山市", "shizuishan": "石嘴山市",
         "吴忠市": "吴忠市", "吴忠": "吴忠市", "Wuzhong": "吴忠市", "wuzhong": "吴忠市",
         "固原市": "固原市", "固原": "固原市", "Guyuan": "固原市", "guyuan": "固原市",
         "中卫市": "中卫市", "中卫": "中卫市", "Zhongwei": "中卫市", "zhongwei": "中卫市",
-
-        // 西藏
         "拉萨市": "拉萨市", "拉萨": "拉萨市", "Lhasa": "拉萨市", "lhasa": "拉萨市",
         "日喀则市": "日喀则市", "日喀则": "日喀则市", "Shigatse": "日喀则市", "shigatse": "日喀则市",
         "昌都市": "昌都市", "昌都": "昌都市", "Qamdo": "昌都市", "qamdo": "昌都市",
         "林芝市": "林芝市", "林芝": "林芝市", "Nyingchi": "林芝市", "nyingchi": "林芝市",
         "山南市": "山南市", "山南": "山南市", "Shannan": "山南市", "shannan": "山南市",
         "那曲市": "那曲市", "那曲": "那曲市", "Nagqu": "那曲市", "nagqu": "那曲市",
-
-        // 海南省
         "海口市": "海口市", "海口": "海口市", "Haikou": "海口市", "haikou": "海口市",
         "三亚市": "三亚市", "三亚": "三亚市", "Sanya": "三亚市", "sanya": "三亚市",
         "三沙市": "三沙市", "三沙": "三沙市", "Sansha": "三沙市", "sansha": "三沙市",
         "儋州市": "儋州市", "儋州": "儋州市", "Danzhou": "儋州市", "danzhou": "儋州市",
-
-        // 台湾省
         "台北市": "台北市", "台北": "台北市", "Taipei": "台北市", "taipei": "台北市",
         "高雄市": "高雄市", "高雄": "高雄市", "Kaohsiung": "高雄市", "kaohsiung": "高雄市",
         "台中市": "台中市", "台中": "台中市", "Taichung": "台中市", "taichung": "台中市",
-
-        // 香港澳门
         "香港": "香港", "香港特别行政区": "香港", "Hong Kong": "香港", "hong kong": "香港",
         "澳门": "澳门", "澳门特别行政区": "澳门", "Macau": "澳门", "macau": "澳门"
     };
@@ -598,12 +666,10 @@
 
     const AMAP_KEY = '9364b5b6f74ae2d99320c91c6928b631';
 
-    // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
     function getCityByCoordinates(lng, lat) {
         if (typeof window.cityCoordinates === 'undefined') {
             console.warn('cityCoordinates 未加载，使用简化匹配');
             const simpleCity = getCityByCoordinatesSimple(lng, lat);
-            // 简化匹配也返回对象格式
             if (simpleCity) {
                 return { city: simpleCity, lng: lng, lat: lat };
             }
@@ -632,19 +698,14 @@
         }
 
         console.log(`📍 坐标匹配到最近城市: ${nearestCity}，距离 ${minDistance.toFixed(0)}km`);
-        // 返回对象，包含城市名和原始GPS坐标
         return { city: nearestCity, lng: lng, lat: lat };
     }
 
-    // 备用函数：当 cityCoordinates 未加载时使用（保持原有的硬编码匹配作为 fallback）
     function getCityByCoordinatesSimple(lng, lat) {
-        // ==================== 直辖市 ====================
         if (lng >= 116.2 && lng <= 116.5 && lat >= 39.8 && lat <= 40.1) return "北京市";
         if (lng >= 121.4 && lng <= 121.5 && lat >= 31.2 && lat <= 31.4) return "上海市";
         if (lng >= 117.1 && lng <= 117.3 && lat >= 39.0 && lat <= 39.2) return "天津市";
         if (lng >= 106.4 && lng <= 106.6 && lat >= 29.5 && lat <= 29.7) return "重庆市";
-
-        // ==================== 吉林省 ====================
         if (lng >= 125.1 && lng <= 125.5 && lat >= 43.7 && lat <= 44.0) return "长春市";
         if (lng >= 126.3 && lng <= 126.9 && lat >= 43.6 && lat <= 44.0) return "吉林市";
         if (lng >= 124.2 && lng <= 124.5 && lat >= 43.1 && lat <= 43.3) return "四平市";
@@ -654,8 +715,6 @@
         if (lng >= 124.7 && lng <= 125.0 && lat >= 45.0 && lat <= 45.3) return "松原市";
         if (lng >= 122.7 && lng <= 123.0 && lat >= 45.5 && lat <= 45.8) return "白城市";
         if (lng >= 129.4 && lng <= 129.6 && lat >= 42.8 && lat <= 43.0) return "延吉市";
-
-        // ==================== 辽宁省 ====================
         if (lng >= 123.3 && lng <= 123.5 && lat >= 41.7 && lat <= 41.9) return "沈阳市";
         if (lng >= 121.5 && lng <= 121.7 && lat >= 38.8 && lat <= 39.0) return "大连市";
         if (lng >= 122.9 && lng <= 123.1 && lat >= 41.0 && lat <= 41.2) return "鞍山市";
@@ -670,8 +729,6 @@
         if (lng >= 123.8 && lng <= 123.9 && lat >= 42.2 && lat <= 42.3) return "铁岭市";
         if (lng >= 120.4 && lng <= 120.5 && lat >= 41.5 && lat <= 41.6) return "朝阳市";
         if (lng >= 120.8 && lng <= 120.9 && lat >= 40.7 && lat <= 40.8) return "葫芦岛市";
-
-        // ==================== 黑龙江省 ====================
         if (lng >= 126.5 && lng <= 126.7 && lat >= 45.7 && lat <= 45.9) return "哈尔滨市";
         if (lng >= 123.9 && lng <= 124.0 && lat >= 47.3 && lat <= 47.4) return "齐齐哈尔市";
         if (lng >= 130.9 && lng <= 131.0 && lat >= 45.2 && lat <= 45.3) return "鸡西市";
@@ -684,8 +741,6 @@
         if (lng >= 129.6 && lng <= 129.7 && lat >= 44.5 && lat <= 44.6) return "牡丹江市";
         if (lng >= 127.5 && lng <= 127.6 && lat >= 50.2 && lat <= 50.3) return "黑河市";
         if (lng >= 126.9 && lng <= 127.0 && lat >= 46.6 && lat <= 46.7) return "绥化市";
-
-        // ==================== 广东省 ====================
         if (lng >= 113.2 && lng <= 113.4 && lat >= 23.1 && lat <= 23.2) return "广州市";
         if (lng >= 113.9 && lng <= 114.1 && lat >= 22.5 && lat <= 22.6) return "深圳市";
         if (lng >= 113.1 && lng <= 113.2 && lat >= 22.9 && lat <= 23.1) return "佛山市";
@@ -706,8 +761,6 @@
         if (lng >= 116.6 && lng <= 116.7 && lat >= 23.6 && lat <= 23.7) return "潮州市";
         if (lng >= 116.3 && lng <= 116.4 && lat >= 23.5 && lat <= 23.6) return "揭阳市";
         if (lng >= 112.0 && lng <= 112.1 && lat >= 22.9 && lat <= 23.0) return "云浮市";
-
-        // ==================== 江苏省 ====================
         if (lng >= 118.7 && lng <= 118.8 && lat >= 32.0 && lat <= 32.1) return "南京市";
         if (lng >= 120.5 && lng <= 120.6 && lat >= 31.2 && lat <= 31.3) return "苏州市";
         if (lng >= 120.2 && lng <= 120.3 && lat >= 31.4 && lat <= 31.5) return "无锡市";
@@ -721,8 +774,6 @@
         if (lng >= 119.4 && lng <= 119.5 && lat >= 32.2 && lat <= 32.3) return "镇江市";
         if (lng >= 119.9 && lng <= 120.0 && lat >= 32.4 && lat <= 32.5) return "泰州市";
         if (lng >= 118.2 && lng <= 118.3 && lat >= 33.9 && lat <= 34.0) return "宿迁市";
-
-        // ==================== 浙江省 ====================
         if (lng >= 120.1 && lng <= 120.2 && lat >= 30.2 && lat <= 30.3) return "杭州市";
         if (lng >= 121.5 && lng <= 121.6 && lat >= 29.8 && lat <= 29.9) return "宁波市";
         if (lng >= 120.6 && lng <= 120.7 && lat >= 27.9 && lat <= 28.0) return "温州市";
@@ -734,8 +785,6 @@
         if (lng >= 122.1 && lng <= 122.2 && lat >= 29.9 && lat <= 30.0) return "舟山市";
         if (lng >= 121.4 && lng <= 121.5 && lat >= 28.6 && lat <= 28.7) return "台州市";
         if (lng >= 119.9 && lng <= 120.0 && lat >= 28.4 && lat <= 28.5) return "丽水市";
-
-        // ==================== 四川省 ====================
         if (lng >= 104.0 && lng <= 104.1 && lat >= 30.5 && lat <= 30.6) return "成都市";
         if (lng >= 104.7 && lng <= 104.8 && lat >= 29.3 && lat <= 29.4) return "自贡市";
         if (lng >= 101.7 && lng <= 101.8 && lat >= 26.5 && lat <= 26.6) return "攀枝花市";
@@ -754,8 +803,6 @@
         if (lng >= 103.0 && lng <= 103.1 && lat >= 29.9 && lat <= 30.0) return "雅安市";
         if (lng >= 106.7 && lng <= 106.8 && lat >= 31.8 && lat <= 31.9) return "巴中市";
         if (lng >= 104.6 && lng <= 104.7 && lat >= 30.1 && lat <= 30.2) return "资阳市";
-
-        // ==================== 湖北省 ====================
         if (lng >= 114.2 && lng <= 114.4 && lat >= 30.5 && lat <= 30.6) return "武汉市";
         if (lng >= 115.0 && lng <= 115.1 && lat >= 30.2 && lat <= 30.3) return "黄石市";
         if (lng >= 110.7 && lng <= 110.8 && lat >= 32.6 && lat <= 32.7) return "十堰市";
@@ -768,8 +815,6 @@
         if (lng >= 114.8 && lng <= 114.9 && lat >= 30.4 && lat <= 30.5) return "黄冈市";
         if (lng >= 114.3 && lng <= 114.4 && lat >= 29.8 && lat <= 29.9) return "咸宁市";
         if (lng >= 113.3 && lng <= 113.4 && lat >= 31.7 && lat <= 31.8) return "随州市";
-
-        // ==================== 湖南省 ====================
         if (lng >= 112.9 && lng <= 113.0 && lat >= 28.2 && lat <= 28.3) return "长沙市";
         if (lng >= 113.1 && lng <= 113.2 && lat >= 27.8 && lat <= 27.9) return "株洲市";
         if (lng >= 112.9 && lng <= 113.0 && lat >= 27.8 && lat <= 27.9) return "湘潭市";
@@ -783,8 +828,6 @@
         if (lng >= 111.6 && lng <= 111.7 && lat >= 26.4 && lat <= 26.5) return "永州市";
         if (lng >= 110.0 && lng <= 110.1 && lat >= 27.5 && lat <= 27.6) return "怀化市";
         if (lng >= 112.0 && lng <= 112.1 && lat >= 27.6 && lat <= 27.7) return "娄底市";
-
-        // ==================== 陕西省 ====================
         if (lng >= 108.9 && lng <= 109.0 && lat >= 34.3 && lat <= 34.4) return "西安市";
         if (lng >= 108.9 && lng <= 109.0 && lat >= 34.8 && lat <= 34.9) return "铜川市";
         if (lng >= 107.2 && lng <= 107.3 && lat >= 34.3 && lat <= 34.4) return "宝鸡市";
@@ -795,8 +838,6 @@
         if (lng >= 109.7 && lng <= 109.8 && lat >= 38.2 && lat <= 38.3) return "榆林市";
         if (lng >= 109.0 && lng <= 109.1 && lat >= 32.6 && lat <= 32.7) return "安康市";
         if (lng >= 109.9 && lng <= 110.0 && lat >= 33.8 && lat <= 33.9) return "商洛市";
-
-        // ==================== 山东省 ====================
         if (lng >= 116.9 && lng <= 117.1 && lat >= 36.6 && lat <= 36.7) return "济南市";
         if (lng >= 120.3 && lng <= 120.4 && lat >= 36.0 && lat <= 36.1) return "青岛市";
         if (lng >= 118.0 && lng <= 118.1 && lat >= 36.8 && lat <= 36.9) return "淄博市";
@@ -813,8 +854,6 @@
         if (lng >= 115.9 && lng <= 116.0 && lat >= 36.4 && lat <= 36.5) return "聊城市";
         if (lng >= 118.0 && lng <= 118.1 && lat >= 37.3 && lat <= 37.4) return "滨州市";
         if (lng >= 115.4 && lng <= 115.5 && lat >= 35.2 && lat <= 35.3) return "菏泽市";
-
-        // ==================== 河南省 ====================
         if (lng >= 113.6 && lng <= 113.7 && lat >= 34.7 && lat <= 34.8) return "郑州市";
         if (lng >= 114.3 && lng <= 114.4 && lat >= 34.7 && lat <= 34.8) return "开封市";
         if (lng >= 112.4 && lng <= 112.5 && lat >= 34.6 && lat <= 34.7) return "洛阳市";
@@ -832,8 +871,6 @@
         if (lng >= 114.0 && lng <= 114.1 && lat >= 32.1 && lat <= 32.2) return "信阳市";
         if (lng >= 114.6 && lng <= 114.7 && lat >= 33.6 && lat <= 33.7) return "周口市";
         if (lng >= 114.0 && lng <= 114.1 && lat >= 33.0 && lat <= 33.1) return "驻马店市";
-
-        // ==================== 安徽省 ====================
         if (lng >= 117.2 && lng <= 117.3 && lat >= 31.8 && lat <= 31.9) return "合肥市";
         if (lng >= 118.3 && lng <= 118.4 && lat >= 31.3 && lat <= 31.4) return "芜湖市";
         if (lng >= 117.3 && lng <= 117.4 && lat >= 32.9 && lat <= 33.0) return "蚌埠市";
@@ -850,8 +887,6 @@
         if (lng >= 118.7 && lng <= 118.8 && lat >= 30.9 && lat <= 31.0) return "宣城市";
         if (lng >= 117.4 && lng <= 117.5 && lat >= 30.6 && lat <= 30.7) return "池州市";
         if (lng >= 115.7 && lng <= 115.8 && lat >= 33.8 && lat <= 33.9) return "亳州市";
-
-        // ==================== 福建省 ====================
         if (lng >= 119.2 && lng <= 119.3 && lat >= 26.0 && lat <= 26.1) return "福州市";
         if (lng >= 118.0 && lng <= 118.1 && lat >= 24.4 && lat <= 24.5) return "厦门市";
         if (lng >= 119.0 && lng <= 119.1 && lat >= 25.4 && lat <= 25.5) return "莆田市";
@@ -861,8 +896,6 @@
         if (lng >= 118.1 && lng <= 118.2 && lat >= 26.6 && lat <= 26.7) return "南平市";
         if (lng >= 117.0 && lng <= 117.1 && lat >= 25.0 && lat <= 25.1) return "龙岩市";
         if (lng >= 119.5 && lng <= 119.6 && lat >= 26.6 && lat <= 26.7) return "宁德市";
-
-        // ==================== 江西省 ====================
         if (lng >= 115.8 && lng <= 115.9 && lat >= 28.6 && lat <= 28.7) return "南昌市";
         if (lng >= 117.1 && lng <= 117.2 && lat >= 29.2 && lat <= 29.3) return "景德镇市";
         if (lng >= 113.8 && lng <= 113.9 && lat >= 27.6 && lat <= 27.7) return "萍乡市";
@@ -874,8 +907,6 @@
         if (lng >= 114.4 && lng <= 114.5 && lat >= 27.8 && lat <= 27.9) return "宜春市";
         if (lng >= 116.3 && lng <= 116.4 && lat >= 27.9 && lat <= 28.0) return "抚州市";
         if (lng >= 117.9 && lng <= 118.0 && lat >= 28.4 && lat <= 28.5) return "上饶市";
-
-        // ==================== 河北省 ====================
         if (lng >= 114.5 && lng <= 114.6 && lat >= 38.0 && lat <= 38.1) return "石家庄市";
         if (lng >= 118.1 && lng <= 118.2 && lat >= 39.6 && lat <= 39.7) return "唐山市";
         if (lng >= 119.5 && lng <= 119.6 && lat >= 39.9 && lat <= 40.0) return "秦皇岛市";
@@ -887,8 +918,6 @@
         if (lng >= 116.8 && lng <= 116.9 && lat >= 38.3 && lat <= 38.4) return "沧州市";
         if (lng >= 116.7 && lng <= 116.8 && lat >= 39.5 && lat <= 39.6) return "廊坊市";
         if (lng >= 115.6 && lng <= 115.7 && lat >= 37.7 && lat <= 37.8) return "衡水市";
-
-        // ==================== 山西省 ====================
         if (lng >= 112.5 && lng <= 112.6 && lat >= 37.8 && lat <= 37.9) return "太原市";
         if (lng >= 113.2 && lng <= 113.3 && lat >= 40.0 && lat <= 40.1) return "大同市";
         if (lng >= 113.5 && lng <= 113.6 && lat >= 37.8 && lat <= 37.9) return "阳泉市";
@@ -900,8 +929,6 @@
         if (lng >= 112.7 && lng <= 112.8 && lat >= 38.4 && lat <= 38.5) return "忻州市";
         if (lng >= 111.5 && lng <= 111.6 && lat >= 36.0 && lat <= 36.1) return "临汾市";
         if (lng >= 111.1 && lng <= 111.2 && lat >= 37.5 && lat <= 37.6) return "吕梁市";
-
-        // ==================== 广西 ====================
         if (lng >= 108.3 && lng <= 108.4 && lat >= 22.8 && lat <= 22.9) return "南宁市";
         if (lng >= 109.4 && lng <= 109.5 && lat >= 24.3 && lat <= 24.4) return "柳州市";
         if (lng >= 110.2 && lng <= 110.3 && lat >= 25.2 && lat <= 25.3) return "桂林市";
@@ -916,8 +943,6 @@
         if (lng >= 108.0 && lng <= 108.1 && lat >= 24.6 && lat <= 24.7) return "河池市";
         if (lng >= 109.2 && lng <= 109.3 && lat >= 23.7 && lat <= 23.8) return "来宾市";
         if (lng >= 107.3 && lng <= 107.4 && lat >= 22.3 && lat <= 22.4) return "崇左市";
-
-        // ==================== 云南省 ====================
         if (lng >= 102.7 && lng <= 102.8 && lat >= 25.0 && lat <= 25.1) return "昆明市";
         if (lng >= 103.7 && lng <= 103.8 && lat >= 25.4 && lat <= 25.5) return "曲靖市";
         if (lng >= 102.5 && lng <= 102.6 && lat >= 24.3 && lat <= 24.4) return "玉溪市";
@@ -926,16 +951,12 @@
         if (lng >= 100.2 && lng <= 100.3 && lat >= 26.8 && lat <= 26.9) return "丽江市";
         if (lng >= 100.9 && lng <= 101.0 && lat >= 22.8 && lat <= 22.9) return "普洱市";
         if (lng >= 100.0 && lng <= 100.1 && lat >= 23.8 && lat <= 23.9) return "临沧市";
-
-        // ==================== 贵州省 ====================
         if (lng >= 106.6 && lng <= 106.7 && lat >= 26.6 && lat <= 26.7) return "贵阳市";
         if (lng >= 104.8 && lng <= 104.9 && lat >= 26.5 && lat <= 26.6) return "六盘水市";
         if (lng >= 106.9 && lng <= 107.0 && lat >= 27.7 && lat <= 27.8) return "遵义市";
         if (lng >= 105.9 && lng <= 106.0 && lat >= 26.2 && lat <= 26.3) return "安顺市";
         if (lng >= 105.2 && lng <= 105.3 && lat >= 27.2 && lat <= 27.3) return "毕节市";
         if (lng >= 109.1 && lng <= 109.2 && lat >= 27.7 && lat <= 27.8) return "铜仁市";
-
-        // ==================== 甘肃省 ====================
         if (lng >= 103.8 && lng <= 103.9 && lat >= 36.0 && lat <= 36.1) return "兰州市";
         if (lng >= 98.2 && lng <= 98.3 && lat >= 39.7 && lat <= 39.8) return "嘉峪关市";
         if (lng >= 102.1 && lng <= 102.2 && lat >= 38.5 && lat <= 38.6) return "金昌市";
@@ -948,8 +969,6 @@
         if (lng >= 107.6 && lng <= 107.7 && lat >= 35.7 && lat <= 35.8) return "庆阳市";
         if (lng >= 104.6 && lng <= 104.7 && lat >= 35.5 && lat <= 35.6) return "定西市";
         if (lng >= 104.9 && lng <= 105.0 && lat >= 33.3 && lat <= 33.4) return "陇南市";
-
-        // ==================== 内蒙古 ====================
         if (lng >= 111.6 && lng <= 111.7 && lat >= 40.8 && lat <= 40.9) return "呼和浩特市";
         if (lng >= 109.8 && lng <= 109.9 && lat >= 40.6 && lat <= 40.7) return "包头市";
         if (lng >= 106.7 && lng <= 106.8 && lat >= 39.6 && lat <= 39.7) return "乌海市";
@@ -959,51 +978,35 @@
         if (lng >= 119.7 && lng <= 119.8 && lat >= 49.2 && lat <= 49.3) return "呼伦贝尔市";
         if (lng >= 107.3 && lng <= 107.4 && lat >= 40.7 && lat <= 40.8) return "巴彦淖尔市";
         if (lng >= 113.1 && lng <= 113.2 && lat >= 40.9 && lat <= 41.0) return "乌兰察布市";
-
-        // ==================== 新疆 ====================
         if (lng >= 87.6 && lng <= 87.7 && lat >= 43.8 && lat <= 43.9) return "乌鲁木齐市";
         if (lng >= 84.8 && lng <= 84.9 && lat >= 45.5 && lat <= 45.6) return "克拉玛依市";
         if (lng >= 89.1 && lng <= 89.2 && lat >= 42.9 && lat <= 43.0) return "吐鲁番市";
         if (lng >= 93.5 && lng <= 93.6 && lat >= 42.8 && lat <= 42.9) return "哈密市";
-
-        // ==================== 海南省 ====================
         if (lng >= 110.1 && lng <= 110.2 && lat >= 20.0 && lat <= 20.1) return "海口市";
         if (lng >= 109.5 && lng <= 109.6 && lat >= 18.2 && lat <= 18.3) return "三亚市";
         if (lng >= 112.3 && lng <= 112.4 && lat >= 16.8 && lat <= 16.9) return "三沙市";
         if (lng >= 109.5 && lng <= 109.6 && lat >= 19.5 && lat <= 19.6) return "儋州市";
-
-        // ==================== 宁夏 ====================
         if (lng >= 106.2 && lng <= 106.3 && lat >= 38.4 && lat <= 38.5) return "银川市";
         if (lng >= 106.3 && lng <= 106.4 && lat >= 39.0 && lat <= 39.1) return "石嘴山市";
         if (lng >= 106.1 && lng <= 106.2 && lat >= 37.9 && lat <= 38.0) return "吴忠市";
         if (lng >= 106.2 && lng <= 106.3 && lat >= 36.0 && lat <= 36.1) return "固原市";
         if (lng >= 105.1 && lng <= 105.2 && lat >= 37.4 && lat <= 37.5) return "中卫市";
-
-        // ==================== 青海省 ====================
         if (lng >= 101.7 && lng <= 101.8 && lat >= 36.6 && lat <= 36.7) return "西宁市";
         if (lng >= 102.1 && lng <= 102.2 && lat >= 36.5 && lat <= 36.6) return "海东市";
-
-        // ==================== 西藏 ====================
         if (lng >= 91.1 && lng <= 91.2 && lat >= 29.6 && lat <= 29.7) return "拉萨市";
         if (lng >= 88.8 && lng <= 88.9 && lat >= 29.2 && lat <= 29.3) return "日喀则市";
         if (lng >= 97.1 && lng <= 97.2 && lat >= 31.1 && lat <= 31.2) return "昌都市";
         if (lng >= 94.3 && lng <= 94.4 && lat >= 29.6 && lat <= 29.7) return "林芝市";
         if (lng >= 91.7 && lng <= 91.8 && lat >= 29.2 && lat <= 29.3) return "山南市";
         if (lng >= 92.0 && lng <= 92.1 && lat >= 31.4 && lat <= 31.5) return "那曲市";
-
-        // ==================== 台湾省 ====================
         if (lng >= 121.5 && lng <= 121.6 && lat >= 25.0 && lat <= 25.1) return "台北市";
         if (lng >= 120.3 && lng <= 120.4 && lat >= 22.6 && lat <= 22.7) return "高雄市";
         if (lng >= 120.6 && lng <= 120.7 && lat >= 24.1 && lat <= 24.2) return "台中市";
-
-        // ==================== 香港澳门 ====================
         if (lng >= 114.1 && lng <= 114.2 && lat >= 22.2 && lat <= 22.3) return "香港";
         if (lng >= 113.5 && lng <= 113.6 && lat >= 22.1 && lat <= 22.2) return "澳门";
-
         return null;
     }
 
-    // 显示权限被拒绝的提示（引导用户手动开启）
     function showPermissionDeniedTip(type) {
         const existingTip = document.querySelector('.permission-denied-tip');
         if (existingTip) existingTip.remove();
@@ -1019,7 +1022,6 @@
         setTimeout(() => { if(tip) tip.remove(); }, 8000);
     }
 
-    // 通过GPS获取城市（直接调用浏览器原生定位）
     async function getCityByGPS() {
         return new Promise((resolve) => {
             if (!navigator.geolocation) {
@@ -1039,7 +1041,6 @@
                     console.log('✅ GPS获取坐标成功:', longitude, latitude);
                     if(loadingDiv) loadingDiv.style.display = 'none';
 
-                    // 直接使用坐标匹配函数
                     const coordCity = getCityByCoordinates(longitude, latitude);
                     if (coordCity) {
                         console.log('🎯 坐标匹配城市成功:', coordCity.city);
@@ -1060,7 +1061,6 @@
         });
     }
 
-    // IP定位（备用）
     async function getCityByIP() {
         try {
             const ipResponse = await fetch('https://restapi.amap.com/v3/ip?key=' + AMAP_KEY);
@@ -1079,7 +1079,6 @@
         return { city: "北京市", lng: 116.4074, lat: 39.9042 };
     }
 
-    // 主定位函数：优先GPS，失败则IP备用
     async function getAccurateCity() {
         const loadingDiv = document.getElementById('loadingOverlay');
         if(loadingDiv) loadingDiv.style.display = 'flex';
@@ -1093,7 +1092,6 @@
             return gpsResult;
         }
 
-        // GPS失败或用户拒绝，使用IP定位作为备用
         console.log('⚠️ GPS定位失败，使用IP备用定位');
         document.querySelector('.loading-text').innerHTML = 'GPS定位未成功，使用网络定位...';
         const ipResult = await getCityByIP();
@@ -1119,7 +1117,6 @@
         const loadCabinetsDataByCity = window.loadCabinetsDataByCity;
         const provinceList = Object.keys(provincesCities).sort();
 
-        // 存储用户位置标记
         let pcUserMarker = null;
         let mobileUserMarker = null;
 
@@ -1143,13 +1140,11 @@
         // ==================== PC端 ====================
         let pcMap, pcMarkers = [], pcInfoWindow = null;
 
-        // 创建用户位置标记
         function createPcUserMarker(lng, lat) {
             if (pcUserMarker) {
                 pcUserMarker.setMap(null);
                 pcUserMarker = null;
             }
-            // 使用自定义DOM元素作为标记
             const markerContent = document.createElement('div');
             markerContent.className = 'user-location-marker';
             markerContent.title = '我的位置';
@@ -1172,10 +1167,10 @@
             document.getElementById('pcPanelMsg').innerHTML = `<i class="fas fa-spinner fa-pulse"></i> 加载 ${finalCity}...`;
             try {
                 const machines = await loadCabinetsDataByCity(finalCity);
+                // 清除旧标记
                 pcMarkers.forEach(m => m.setMap(null));
                 pcMarkers = [];
 
-                // 如果有用户坐标，先添加用户位置标记
                 if (userLng && userLat) {
                     createPcUserMarker(userLng, userLat);
                 }
@@ -1196,9 +1191,53 @@
                         const isShow2 = cab.machineType === 1;
                         const statusClass = isOnline2 ? 'status-online' : 'status-offline';
                         const statusText = isOnline2 ? '● 在线运营' : '○ 维护中';
-                        const machineTypeText = isShow2 ? '🎭 秀机/Show机' : '🎮 一代/二代机';
+                        const machineTypeText = isShow2 ? '🎭 秀机' : '🎮 普通机';
                         const machineTypeClass = isShow2 ? 'machine-type-show' : 'machine-type-normal';
-                        pcInfoWindow.setContent(`<div class="custom-infowindow"><button class="info-close-btn" onclick="window.closePcInfoWindow()"><i class="fas fa-times"></i></button><h3><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${statusClass}" style="margin-left:8px;">${statusText}</span></h3><div class="detail"><span class="status-badge ${machineTypeClass}">${machineTypeText}</span></div><div class="detail"><i class="fas fa-location-dot"></i><span>${cab.province} · ${cab.city}</span></div><div class="detail"><i class="fas fa-map-pin"></i><span>${cab.address || '地址待补充'}</span></div><div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div></div>`);
+
+                        // 构建右侧图片区域
+                        let rightContent = '';
+                        if (cab.img1 || cab.img2) {
+                            rightContent = `
+                                <div class="custom-infowindow-right">
+                                    ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
+                                    ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
+                                    <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')">
+                                        <i class="fas fa-expand"></i> 查看大图
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            rightContent = `<div class="custom-infowindow-right"><div class="no-image">暂无图片</div></div>`;
+                        }
+
+                        pcInfoWindow.setContent(`
+                            <div class="custom-infowindow-wrapper">
+                                <button class="info-close-btn" onclick="window.closePcInfoWindow()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="custom-infowindow-left">
+                                    <h3 style="margin:0 0 6px 0;color:#b4c4ff;font-size:0.85rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:6px;padding-right:20px;">
+                                        <i class="fas fa-dice-d6"></i> ${cab.name}
+                                        <span class="status-badge ${statusClass}" style="font-size:0.6rem;">${statusText}</span>
+                                    </h3>
+                                    <div class="detail">
+                                        <span class="status-badge ${machineTypeClass}" style="font-size:0.6rem;">${machineTypeText}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <i class="fas fa-location-dot"></i>
+                                        <span>${cab.province} · ${cab.city}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <i class="fas fa-map-pin"></i>
+                                        <span>${cab.address || '地址待补充'}</span>
+                                    </div>
+                                    <div class="badge-custom">
+                                        <i class="fas fa-clock"></i> 实时数据
+                                    </div>
+                                </div>
+                                ${rightContent}
+                            </div>
+                        `);
                         pcInfoWindow.open(pcMap, [cab.lng, cab.lat]);
                     });
                     marker.setMap(pcMap);
@@ -1215,7 +1254,6 @@
 
         async function pcDoLocate() {
             pcInfoWindow?.close();
-            // 清除旧用户标记
             if (pcUserMarker) { pcUserMarker.setMap(null); pcUserMarker = null; }
 
             const result = await getAccurateCity();
@@ -1226,12 +1264,10 @@
             document.getElementById('pcCurrentCity').innerText = city;
             document.getElementById('pcLocationTip').style.display = 'block';
 
-            // 用户标记使用原始GPS坐标
             if (userLng && userLat) {
                 createPcUserMarker(userLng, userLat);
                 pcMap.setCenter([userLng, userLat]);
             }
-// 加载机台数据使用匹配到的城市名
             await pcLoadCityMachines(city, userLng, userLat);
             setTimeout(() => { const tip = document.getElementById('pcLocationTip'); tip.style.opacity = '0'; setTimeout(() => { tip.style.display = 'none'; tip.style.opacity = '1'; }, 4000); }, 4000);
         }
@@ -1314,7 +1350,50 @@
                     marker.on('click', () => {
                         const isOnline2 = cab.status === 'active';
                         const isShow2 = cab.machineType === 1;
-                        mobileInfoWindow.setContent(`<div class="custom-infowindow" style="min-width:200px;padding:10px 14px;"><button class="info-close-btn" onclick="window.closeMobileInfoWindow()"><i class="fas fa-times"></i></button><h3 style="font-size:0.85rem;"><i class="fas fa-dice-d6"></i> ${cab.name}<span class="status-badge ${isOnline2?'status-online':'status-offline'}" style="margin-left:6px;">${isOnline2?'在线':'离线'}</span></h3><div class="detail"><span class="status-badge ${isShow2?'machine-type-show':'machine-type-normal'}">${isShow2?'秀机':'普通机'}</span></div><div class="detail"><i class="fas fa-location-dot"></i> ${cab.city}</div><div class="detail"><i class="fas fa-map-pin"></i> ${cab.address || '地址待补充'}</div><div class="badge-custom"><i class="fas fa-clock"></i> 实时数据</div></div>`);
+
+                        let rightContent = '';
+                        if (cab.img1 || cab.img2) {
+                            rightContent = `
+                                <div class="mobile-infowindow-right">
+                                    ${cab.img1 ? `<img src="${cab.img1}" onclick="window.open('${cab.img1}','_blank')" title="点击查看大图">` : ''}
+                                    ${cab.img2 ? `<img src="${cab.img2}" onclick="window.open('${cab.img2}','_blank')" title="点击查看大图">` : ''}
+                                    <button class="img-expand-btn" onclick="event.stopPropagation();window.open('${cab.img1 || cab.img2}','_blank')" style="font-size:0.55rem;padding:2px 8px;">
+                                        <i class="fas fa-expand"></i> 大图
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            rightContent = `<div class="mobile-infowindow-right"><div class="no-image" style="font-size:0.5rem;padding:10px 0;">无图</div></div>`;
+                        }
+
+                        mobileInfoWindow.setContent(`
+                            <div class="mobile-infowindow-wrapper">
+                                <button class="info-close-btn" onclick="window.closeMobileInfoWindow()" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.1);border:none;color:#aaa;cursor:pointer;font-size:10px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:10;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="mobile-infowindow-left">
+                                    <h3 style="margin:0 0 4px 0;color:#b4c4ff;font-size:0.75rem;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(124,142,224,0.3);padding-bottom:4px;padding-right:16px;">
+                                        <i class="fas fa-dice-d6"></i> ${cab.name.length > 12 ? cab.name.slice(0,12)+'..' : cab.name}
+                                        <span class="status-badge ${isOnline2?'status-online':'status-offline'}" style="font-size:0.5rem;">${isOnline2?'在线':'离线'}</span>
+                                    </h3>
+                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                        <span class="status-badge ${isShow2?'machine-type-show':'machine-type-normal'}" style="font-size:0.5rem;">${isShow2?'秀机':'普通'}</span>
+                                    </div>
+                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                        <i class="fas fa-location-dot" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
+                                        <span>${cab.city}</span>
+                                    </div>
+                                    <div class="detail" style="margin:3px 0;font-size:0.6rem;display:flex;align-items:center;gap:6px;">
+                                        <i class="fas fa-map-pin" style="width:12px;color:#7c8ee0;font-size:9px;text-align:center;"></i>
+                                        <span>${cab.address ? (cab.address.length > 10 ? cab.address.slice(0,10)+'..' : cab.address) : '地址待补'}</span>
+                                    </div>
+                                    <div class="badge-custom" style="background:rgba(44,59,114,0.8);display:inline-block;padding:1px 8px;font-size:0.5rem;margin-top:4px;border-radius:12px;">
+                                        <i class="fas fa-clock"></i> 实时
+                                    </div>
+                                </div>
+                                ${rightContent}
+                            </div>
+                        `);
                         mobileInfoWindow.open(mobileMap, [cab.lng, cab.lat]);
                     });
                     marker.setMap(mobileMap);
@@ -1341,7 +1420,6 @@
             document.getElementById('mobileCurrentCity').innerText = city;
             document.getElementById('mobileLocationTip').style.display = 'block';
 
-            // 用户标记使用原始GPS坐标
             if (userLng && userLat) {
                 createMobileUserMarker(userLng, userLat);
                 mobileMap.setCenter([userLng, userLat]);

@@ -810,7 +810,9 @@ async function fetchMachinesByCity(lng, lat, cityName) {
                 lat: lat,
                 lng: lng,
                 status: "unknown",
-                machineType: machineType
+                machineType: machineType,
+                img1: item.Img1 ? 'https://dancedemo.shenghuayule.com/Dance/' + item.Img1 : null,
+                img2: item.Img2 ? 'https://dancedemo.shenghuayule.com/Dance/' + item.Img2 : null
             };
         }).filter(item => item.lat && item.lng && item.lat !== 0 && item.lng !== 0);
 
@@ -872,6 +874,23 @@ function clearStatusCache() {
     statusCache.clear();
     console.log('🗑️ 状态缓存已清除');
 }
+
+// 模拟调用
+fetch('https://dancedemo.shenghuayule.com/Dance/OAuth/GetMachineListByLocation?lng=116.4&lat=39.9')
+    .then(r => r.json())
+    .then(data => {
+        console.log('API返回数据:', data);
+        // 查看第一个机台的图片字段
+        if (data && data.length > 0) {
+            console.log('第一个机台数据:', data[0]);
+            console.log('图片字段:', {
+                Img1: data[0].Img1,
+                img1: data[0].img1,
+                Img2: data[0].Img2,
+                img2: data[0].img2
+            });
+        }
+    });
 
 // ---------- 导出到全局 ----------
 window.provincesCities = provincesCities;

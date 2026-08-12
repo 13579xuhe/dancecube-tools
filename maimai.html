@@ -39,6 +39,11 @@
             --badge-text: #1d3b5a;
             --toggle-bg: #e3eefb;
             --toggle-text: #1f4466;
+            --locate-bg: #dce8f5;
+            --locate-text: #1d3b5a;
+            --nav-bg: #2a6b9f;
+            --nav-text: #ffffff;
+            --nav-hover: #1d4f7a;
         }
 
         /* ----- 暗色变量 (通过 .dark-theme 类启用) ----- */
@@ -72,6 +77,11 @@
             --badge-text: #c8def5;
             --toggle-bg: #2b405a;
             --toggle-text: #c2d8ef;
+            --locate-bg: #2f4a68;
+            --locate-text: #c8def5;
+            --nav-bg: #4a7da8;
+            --nav-text: #ffffff;
+            --nav-hover: #5a8db8;
         }
 
         /* ----- 全局重置 & 基础 ----- */
@@ -168,6 +178,9 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            max-width: 180px;
+            min-width: 0;
+            flex-shrink: 1;
         }
 
         .filter-group label {
@@ -177,7 +190,9 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            white-space: nowrap;
             transition: color 0.25s;
+            flex-shrink: 0;
         }
 
         .filter-group select {
@@ -189,12 +204,17 @@
             appearance: none;
             -webkit-appearance: none;
             font-size: 0.9rem;
-            min-width: 110px;
+            min-width: 70px;
+            max-width: 100%;
             cursor: pointer;
             outline: none;
             transition: 0.2s;
             color: var(--select-text);
             font-weight: 450;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            flex: 1;
         }
 
         .filter-group select:focus {
@@ -216,6 +236,7 @@
             color: var(--chip-text);
             white-space: nowrap;
             transition: background 0.25s, color 0.25s;
+            flex-shrink: 0;
         }
 
         .theme-toggle {
@@ -239,7 +260,7 @@
         /* ----- 卡片网格 ----- */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.6rem;
             margin-top: 0.6rem;
         }
@@ -254,6 +275,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
+            word-break: break-word;
         }
 
         .location-card:hover {
@@ -275,6 +298,10 @@
             margin-bottom: 0.6rem;
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: background 0.25s, color 0.25s;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .card-name {
@@ -284,6 +311,7 @@
             margin-bottom: 0.3rem;
             color: var(--text-primary);
             transition: color 0.25s;
+            word-break: break-word;
         }
 
         .card-address {
@@ -298,13 +326,14 @@
 
         .card-footer {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             margin-top: 1rem;
             padding-top: 0.6rem;
             border-top: 1px solid var(--footer-border);
-            gap: 6px;
+            gap: 8px;
             transition: border 0.25s;
+            flex-wrap: wrap;
         }
 
         .card-id {
@@ -316,6 +345,35 @@
             font-weight: 450;
             letter-spacing: 0.2px;
             transition: background 0.25s, color 0.25s;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-btn {
+            background: var(--nav-bg);
+            color: var(--nav-text);
+            border: none;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+        .nav-btn:hover {
+            background: var(--nav-hover);
+            transform: scale(1.05);
+        }
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
         /* 多彩点缀：卡片左侧细条 */
@@ -389,22 +447,75 @@
             }
             .filter-panel {
                 justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+            .filter-group {
+                max-width: 100%;
+                flex: 1 1 auto;
+                min-width: 120px;
             }
             .filter-group select {
-                min-width: 90px;
+                min-width: 60px;
                 flex: 1;
             }
+            .stat-chip {
+                font-size: 0.8rem;
+                padding: 0.2rem 0.9rem;
+            }
         }
+
         @media (max-width: 600px) {
             body { padding: 1rem; }
             .brand h1 { font-size: 1.5rem; }
             .filter-panel { gap: 8px; }
-            .filter-group { flex: 1; }
-            .stat-chip { font-size: 0.75rem; padding: 0.2rem 0.8rem; }
+            .filter-group {
+                flex: 1 1 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+            .filter-group select {
+                min-width: 50px;
+                font-size: 0.85rem;
+                padding: 0.4rem 1.4rem 0.4rem 0.7rem;
+            }
+            .stat-chip { font-size: 0.75rem; padding: 0.2rem 0.7rem; }
             .theme-toggle { padding: 0.2rem 0.6rem; font-size: 0.95rem; }
+            .location-card {
+                padding: 1.2rem 1.2rem 1.2rem;
+            }
+            .card-name {
+                font-size: 1rem;
+            }
+            .card-address {
+                font-size: 0.85rem;
+            }
+            .nav-btn {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .card-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .card-id {
+                text-align: center;
+            }
+            .nav-btn {
+                justify-content: center;
+            }
         }
+
         @media (max-width: 450px) {
             .card-grid { grid-template-columns: 1fr; }
+            .filter-group select {
+                font-size: 0.8rem;
+                padding: 0.35rem 1.2rem 0.35rem 0.6rem;
+                min-width: 40px;
+            }
+            .filter-group label {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -415,11 +526,11 @@
         <div class="brand">
             <h1>🎵 舞萌 · 机台</h1>
             <span class="badge">
-        <span class="color-dot dot-1"></span>
-        <span class="color-dot dot-2"></span>
-        <span class="color-dot dot-3"></span>
-        全国
-      </span>
+                <span class="color-dot dot-1"></span>
+                <span class="color-dot dot-2"></span>
+                <span class="color-dot dot-3"></span>
+                全国
+            </span>
         </div>
         <div class="filter-panel">
             <div class="filter-group">
@@ -460,81 +571,72 @@
         // 缓存省份->城市集合的映射
         let provinceCityMap = new Map();
 
-        // ---------- 主题切换 ----------
+        // ---------- 主题切换 (保存到 localStorage) ----------
+        const STORAGE_KEY = 'maimai_theme';
+        let isDark = localStorage.getItem(STORAGE_KEY) === 'dark';
+
         const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
-        let isDark = darkMedia.matches;
+        if (localStorage.getItem(STORAGE_KEY) === null) {
+            isDark = darkMedia.matches;
+        }
 
         function applyTheme(dark) {
             document.body.classList.toggle('dark-theme', dark);
             themeToggle.textContent = dark ? '☀️' : '🌙';
             isDark = dark;
+            localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
         }
         applyTheme(isDark);
-        darkMedia.addEventListener('change', (e) => applyTheme(e.matches));
+        darkMedia.addEventListener('change', (e) => {
+            if (localStorage.getItem(STORAGE_KEY) === null) {
+                applyTheme(e.matches);
+            }
+        });
         themeToggle.addEventListener('click', () => applyTheme(!isDark));
 
-        // ---------- 工具：从地址中提取城市（只提取城市名，不含省份） ----------
+        // ---------- 工具：提取城市 ----------
         function extractCity(address) {
             if (!address) return '未知';
-
-            // 方法1: 匹配 "XX市"（以"市"结尾的词语）—— 这是最准确的
-            // 注意：要匹配"吉林市"而不是"吉林省"
-            // 先尝试匹配 "XX市" 模式
             const cityMatch = address.match(/([^\s省市自治区]+市)/);
             if (cityMatch && cityMatch[1].length >= 2) {
                 return cityMatch[1];
             }
-
-            // 方法2: 匹配 "XX自治州"
             const prefectureMatch = address.match(/([^\s]+自治州)/);
             if (prefectureMatch && prefectureMatch[1].length >= 2) {
                 return prefectureMatch[1];
             }
-
-            // 方法3: 匹配 "XX盟"
             const leagueMatch = address.match(/([^\s]+盟)/);
             if (leagueMatch && leagueMatch[1].length >= 2 && !leagueMatch[1].includes('省')) {
                 return leagueMatch[1];
             }
-
-            // 方法4: 匹配 "XX地区"
             const regionMatch = address.match(/([^\s]+地区)/);
             if (regionMatch && regionMatch[1].length >= 2 && !regionMatch[1].includes('省')) {
                 return regionMatch[1];
             }
-
-            // 方法5: 如果地址中包含"市"字，提取"市"前面的部分
-            const cityIndex = address.indexOf('市');
-            if (cityIndex > 0) {
-                // 从"市"往前找2-6个字符
-                let start = Math.max(0, cityIndex - 6);
-                let candidate = address.substring(start, cityIndex + 1);
-                // 如果候选包含"省"、"自治区"等，尝试截取
-                if (candidate.includes('省') || candidate.includes('自治区')) {
-                    // 尝试从"省"或"自治区"后面开始取
-                    const provIndex = Math.max(candidate.lastIndexOf('省'), candidate.lastIndexOf('自治区'));
-                    if (provIndex > 0) {
-                        candidate = candidate.substring(provIndex + 1);
-                    }
+            const idx = address.indexOf('市');
+            if (idx > 1) {
+                let start = idx - 4;
+                if (start < 0) start = 0;
+                let candidate = address.substring(start, idx + 1);
+                const provIdx = Math.max(candidate.lastIndexOf('省'), candidate.lastIndexOf('自治区'));
+                if (provIdx > 0) {
+                    candidate = candidate.substring(provIdx + 1);
                 }
                 if (candidate.length >= 2 && candidate.includes('市')) {
                     return candidate;
                 }
             }
-
-            // 方法6: 如果都没有匹配，尝试取前3个字符作为城市名（排除省、自治区等）
-            let simple = address.replace(/^(北京市|天津市|上海市|重庆市|香港特别行政区|澳门特别行政区)/, '');
-            simple = simple.replace(/^(省|自治区|特别行政区)/, '').trim();
+            const specials = ['北京', '天津', '上海', '重庆', '香港', '澳门'];
+            for (let s of specials) {
+                if (address.includes(s)) {
+                    return s + '市';
+                }
+            }
+            let simple = address.replace(/^(省|自治区|特别行政区)/, '').trim();
             if (simple.length >= 2) {
                 const candidate = simple.slice(0, 3);
-                // 如果候选是"吉林"这样的，返回"吉林市"？不，这里只返回提取到的
-                // 但为了准确，如果候选后面跟了"市"，就返回完整
-                if (simple.length > 3 && simple[2] === '市') {
-                    return simple.slice(0, 3);
-                }
-                return candidate.length >= 2 ? candidate : '未知';
+                if (candidate.length >= 2) return candidate;
             }
-
             return '未知';
         }
 
@@ -549,26 +651,15 @@
             const map = new Map();
             locations.forEach(item => {
                 const province = item.province || '未知';
-                const city = extractCity(item.address || '');
+                let city = extractCity(item.address || '');
+                if (city.includes('省') || city.includes('自治区') || city.includes('特别行政区')) {
+                    const fallback = item.address.match(/([\u4e00-\u9fa5]{2,4}市)/);
+                    city = fallback ? fallback[1] : (item.address.slice(0, 3) || '未知');
+                }
                 if (!map.has(province)) {
                     map.set(province, new Set());
                 }
-                // 如果提取到的城市名包含"省"或"自治区"，说明提取失败了，尝试用更简单的方法
-                let finalCity = city;
-                if (city.includes('省') || city.includes('自治区') || city.includes('特别行政区')) {
-                    // 尝试从地址中直接找"XX市"
-                    const simpleMatch = item.address.match(/([\u4e00-\u9fa5]{2,4}市)/);
-                    if (simpleMatch) {
-                        finalCity = simpleMatch[1];
-                    } else {
-                        // 取地址前3个字符
-                        const short = item.address.slice(0, 3);
-                        if (short.length >= 2) {
-                            finalCity = short;
-                        }
-                    }
-                }
-                map.get(province).add(finalCity);
+                map.get(province).add(city);
             });
             return map;
         }
@@ -576,11 +667,9 @@
         // ---------- 获取某省份下的所有城市（排序） ----------
         function getCitiesByProvince(province) {
             if (province === 'all') {
-                // 全部省份：收集所有城市
                 const allCities = new Set();
                 for (const [_, cities] of provinceCityMap) {
                     for (const city of cities) {
-                        // 过滤掉包含"省"、"自治区"等不合理的城市名
                         if (city && !city.includes('省') && !city.includes('自治区') && !city.includes('特别行政区')) {
                             allCities.add(city);
                         }
@@ -611,19 +700,17 @@
             provinceSelect.value = 'all';
         }
 
-        // ---------- 根据省份更新城市下拉（只显示纯城市名，不拼接省份） ----------
+        // ---------- 根据省份更新城市下拉 ----------
         function updateCityDropdown(province) {
             const cities = getCitiesByProvince(province);
             citySelect.innerHTML = '<option value="all">全部</option>';
             cities.forEach(city => {
                 const opt = document.createElement('option');
                 opt.value = city;
-                // ★★★ 关键：只显示纯城市名，不加任何省份前缀 ★★★
                 opt.textContent = city;
                 citySelect.appendChild(opt);
             });
 
-            // 如果当前选中的城市在新的列表中不存在，重置为 'all'
             if (!cities.includes(currentCity) && currentCity !== 'all') {
                 currentCity = 'all';
                 citySelect.value = 'all';
@@ -631,7 +718,6 @@
                 citySelect.value = currentCity;
             }
 
-            // 如果有城市可选则启用，否则禁用
             citySelect.disabled = (cities.length === 0);
         }
 
@@ -639,30 +725,65 @@
         function filterAndRender() {
             let filtered = allLocations.slice();
 
-            // 省份过滤
             if (currentProvince !== 'all') {
                 filtered = filtered.filter(item => item.province === currentProvince);
             }
 
-            // 城市过滤：判断地址中是否包含选中的城市名
             if (currentCity !== 'all') {
-                filtered = filtered.filter(item => {
-                    return addressContainsCity(item.address || '', currentCity);
-                });
+                filtered = filtered.filter(item => addressContainsCity(item.address || '', currentCity));
             }
 
             filtered.sort((a, b) => (a.id || '').localeCompare(b.id || ''));
             renderCards(filtered);
         }
 
+        // ---------- 导航功能 ----------
+        function navigateTo(address, name) {
+            if (!address) {
+                alert('该机台暂无地址信息');
+                return;
+            }
+
+            // 构建导航URL - 优先使用高德地图，兼容百度地图和苹果地图
+            const encodedAddress = encodeURIComponent(address);
+            const encodedName = encodeURIComponent(name || '舞萌机台');
+
+            // 检测设备类型
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+
+            let navUrl = '';
+
+            if (isIOS) {
+                // iOS: 优先使用苹果地图，支持高德地图
+                navUrl = `http://maps.apple.com/?daddr=${encodedAddress}&q=${encodedName}`;
+            } else if (isAndroid) {
+                // Android: 尝试使用高德地图或百度地图
+                // 先尝试高德地图 (amap)
+                navUrl = `https://uri.amap.com/navigation?to=${encodedAddress}&mode=car&coordinate=gaode`;
+                // 如果高德地图未安装，会尝试打开浏览器，所以保留两个选项
+                // 我们提供一个备选方案：使用百度地图
+                // 但由于无法检测是否安装，我们使用一个通用方案：让用户选择
+            }
+
+            // 通用方案：使用高德地图URI (支持iOS和Android)
+            // 如果上面的特定方案不工作，使用这个
+            if (!navUrl) {
+                navUrl = `https://uri.amap.com/navigation?to=${encodedAddress}&mode=car&coordinate=gaode`;
+            }
+
+            // 打开导航
+            window.open(navUrl, '_blank');
+        }
+
         function renderCards(locations) {
             if (!locations || locations.length === 0) {
                 container.innerHTML = `
-          <div class="empty-state">
-            <p>📍 当前筛选无门店</p>
-            <div class="sub">试试调整省市选择</div>
-          </div>
-        `;
+                    <div class="empty-state">
+                        <p>📍 当前筛选无门店</p>
+                        <div class="sub">试试调整省市选择</div>
+                    </div>
+                `;
                 countDisplay.textContent = '0 家';
                 return;
             }
@@ -675,15 +796,18 @@
                 const id = item.id || '';
 
                 html += `
-          <div class="location-card">
-            <span class="card-province">${escapeHtml(province)}</span>
-            <div class="card-name">${escapeHtml(arcadeName)}</div>
-            <div class="card-address">${escapeHtml(address)}</div>
-            <div class="card-footer">
-              <span class="card-id">#${escapeHtml(id)}</span>
-            </div>
-          </div>
-        `;
+                    <div class="location-card">
+                        <span class="card-province">${escapeHtml(province)}</span>
+                        <div class="card-name">${escapeHtml(arcadeName)}</div>
+                        <div class="card-address">${escapeHtml(address)}</div>
+                        <div class="card-footer">
+                            <span class="card-id">#${escapeHtml(id)}</span>
+                            <button class="nav-btn" onclick="window.navigateTo('${escapeHtml(address)}', '${escapeHtml(arcadeName)}')">
+                                🧭 导航
+                            </button>
+                        </div>
+                    </div>
+                `;
             });
 
             container.innerHTML = html;
@@ -697,13 +821,13 @@
             return div.innerHTML;
         }
 
+        // 将导航函数暴露到全局
+        window.navigateTo = navigateTo;
+
         // ---------- 事件绑定 ----------
         provinceSelect.addEventListener('change', function(e) {
-            const selectedProvince = e.target.value;
-            currentProvince = selectedProvince;
-            // 更新城市下拉（只包含该省份的城市）
-            updateCityDropdown(selectedProvince);
-            // 城市重置为 all（已在 updateCityDropdown 中处理）
+            currentProvince = e.target.value;
+            updateCityDropdown(currentProvince);
             filterAndRender();
         });
 
@@ -726,11 +850,11 @@
             } catch (error) {
                 console.error('请求失败:', error);
                 container.innerHTML = `
-          <div class="empty-state">
-            <p>⚠️ 暂时无法加载机台信息</p>
-            <div class="sub">${error.message || '请检查网络连接'}</div>
-          </div>
-        `;
+                    <div class="empty-state">
+                        <p>⚠️ 暂时无法加载机台信息</p>
+                        <div class="sub">${escapeHtml(error.message || '请检查网络连接')}</div>
+                    </div>
+                `;
                 countDisplay.textContent = '加载失败';
                 return null;
             }
@@ -742,21 +866,18 @@
             if (!data) return;
 
             allLocations = data;
-            // 构建省份->城市映射
             provinceCityMap = buildProvinceCityMap(allLocations);
-            // 填充省份下拉
             populateProvinceDropdown(allLocations);
-            // 初始化城市下拉（全部省份的城市）
             updateCityDropdown('all');
             currentProvince = 'all';
             currentCity = 'all';
-            // 初始渲染全部
             filterAndRender();
         }
 
         init();
     })();
 
+    // 防止右键/选择/拖拽/F12等
     document.addEventListener('contextmenu', e=>e.preventDefault());
     document.addEventListener('selectstart', e=>e.preventDefault());
     document.addEventListener('dragstart', e=>{ if(e.target.tagName==='IMG') e.preventDefault(); });

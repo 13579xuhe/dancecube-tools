@@ -106,6 +106,32 @@
             min-width: 240px;
             max-width: 400px;
         }
+
+        .mobile-infowindow-wrapper .nav-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+            margin-top: 8px;
+        }
+        .mobile-infowindow-wrapper .nav-btns a {
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            text-align: center;
+            background: #2b6cb0;
+            color: white;
+            padding: 6px 6px;
+            border-radius: 16px;
+            font-size: 0.55rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .mobile-infowindow-wrapper .nav-btns a:nth-child(2) { background: #3385ff; }
+        .mobile-infowindow-wrapper .nav-btns a:nth-child(3) { background: #555; }
+
         .mobile-infowindow-left { flex: 1; min-width: 120px; }
         .mobile-infowindow-right { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; justify-content: center; border-left: 1px solid rgba(124, 142, 224, 0.3); padding-left: 8px; min-width: 60px; max-width: 100px; }
         .mobile-infowindow-right img { width: 90px; height: 68px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(124, 142, 224, 0.3); cursor: pointer; display: block; }
@@ -1200,6 +1226,11 @@
                                     <i class="fas fa-clock"></i> 实时数据
                                 </div>
                             </div>
+                            <div style="margin-top:10px;">
+    <button onclick="window.open('https://uri.amap.com/navigation?to=${cab.lng},${cab.lat},${encodeURIComponent(cab.name)}&mode=car', '_blank')" style="background:#3b82f6;border:none;color:white;padding:6px 16px;border-radius:20px;font-size:0.7rem;cursor:pointer;width:100%;">
+        <i class="fas fa-directions"></i> 导航
+    </button>
+</div>
                             ${rightContent}
                         </div>
                     `);
@@ -1428,7 +1459,21 @@
                                 <div class="badge-custom" style="background:rgba(44,59,114,0.8);display:inline-block;padding:1px 8px;font-size:0.5rem;margin-top:4px;border-radius:12px;">
                                     <i class="fas fa-clock"></i> 实时
                                 </div>
+                                <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+    <div class="nav-btns">
+    <a href="androidamap://navi?sourceApplication=舞立方&poiname=${encodeURIComponent(cab.name)}&lat=${cab.lat}&lon=${cab.lng}&dev=0&style=2">
+        <i class="fas fa-map"></i> 高德
+    </a>
+    <a href="baidumap://map/direction?destination=latlng:${cab.lat},${cab.lng}|name:${encodeURIComponent(cab.name)}&coord_type=gcj02&mode=driving">
+        <i class="fas fa-map"></i> 百度
+    </a>
+    <a href="http://maps.apple.com/?daddr=${cab.lat},${cab.lng}&q=${encodeURIComponent(cab.name)}">
+        <i class="fab fa-apple"></i> 地图
+    </a>
+</div>
+</div>
                             </div>
+
                             ${rightContent}
                         </div>
                     `);
